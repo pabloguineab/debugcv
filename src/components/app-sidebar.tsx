@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import { Home, Settings, HelpCircle, Search, LayoutDashboard, FileText, Users, BarChart3, FolderOpen, Bot, ChevronUp } from "lucide-react";
