@@ -1,27 +1,10 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, Users, Activity, TrendingUp } from "lucide-react";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-
-const chartData = [
-    { date: "Jan 24", visitors: 186 },
-    { date: "Jan 25", visitors: 305 },
-    { date: "Jan 26", visitors: 237 },
-    { date: "Jan 27", visitors: 273 },
-    { date: "Jan 28", visitors: 409 },
-    { date: "Jan 29", visitors: 214 },
-];
-
-const chartConfig = {
-    visitors: {
-        label: "Visitors",
-        color: "var(--chart-1)",
-    },
-};
+import { DashboardLineChart, DashboardRadarChart, DashboardRadialChart } from "./components/dashboard-charts";
 
 const tableData = [
     { header: "Cover page", type: "Cover page", status: "In Process", target: 18, limit: 5, reviewer: "Eddie Laine" },
@@ -87,47 +70,12 @@ export default function DashboardPage() {
                 </Card>
             </div>
 
-            {/* Chart Section - Shadcn Area Chart */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Total Visitors</CardTitle>
-                    <CardDescription>
-                        Total for the last 3 months
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-                        <AreaChart
-                            accessibilityLayer
-                            data={chartData}
-                            margin={{
-                                left: 12,
-                                right: 12,
-                            }}
-                        >
-                            <CartesianGrid vertical={false} />
-                            <XAxis
-                                dataKey="date"
-                                tickLine={false}
-                                axisLine={false}
-                                tickMargin={8}
-                                tickFormatter={(value) => value.slice(0, 3)}
-                            />
-                            <ChartTooltip
-                                cursor={false}
-                                content={<ChartTooltipContent indicator="line" />}
-                            />
-                            <Area
-                                dataKey="visitors"
-                                type="natural"
-                                fill="var(--color-visitors)"
-                                fillOpacity={0.4}
-                                stroke="var(--color-visitors)"
-                            />
-                        </AreaChart>
-                    </ChartContainer>
-                </CardContent>
-            </Card>
+            {/* Charts Section - 3 Charts Horizontal */}
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <DashboardRadarChart />
+                <DashboardRadialChart />
+                <DashboardLineChart />
+            </div>
 
             {/* Data Table */}
             <Card>
