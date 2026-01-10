@@ -139,27 +139,25 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                             </a>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <DropdownMenu>
-                            <div className="flex items-center w-full">
-                                <div className="flex items-center gap-2 flex-1 p-2">
-                                    <Avatar className="h-8 w-8 rounded-lg">
-                                        <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
-                                        <AvatarFallback className="rounded-lg">
-                                            {user?.name?.charAt(0)?.toUpperCase() || "U"}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    <div className="grid flex-1 text-left text-sm leading-tight">
-                                        <span className="truncate font-semibold">{user?.name || "shadcn"}</span>
-                                        <span className="truncate text-xs text-muted-foreground">{user?.email || "m@example.com"}</span>
-                                    </div>
-                                </div>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-2 hover:bg-sidebar-accent rounded-md">
-                                        <MoreVertical className="size-4" />
-                                    </button>
-                                </DropdownMenuTrigger>
+                    <SidebarMenuItem className="flex items-center">
+                        <div className="flex items-center gap-2 flex-1 p-2">
+                            <Avatar className="h-8 w-8 rounded-lg">
+                                <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
+                                <AvatarFallback className="rounded-lg">
+                                    {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                                </AvatarFallback>
+                            </Avatar>
+                            <div className="grid flex-1 text-left text-sm leading-tight">
+                                <span className="truncate font-semibold">{user?.name || "shadcn"}</span>
+                                <span className="truncate text-xs text-muted-foreground">{user?.email || "m@example.com"}</span>
                             </div>
+                        </div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <button className="p-2 hover:bg-sidebar-accent rounded-md" type="button">
+                                    <MoreVertical className="size-4" />
+                                </button>
+                            </DropdownMenuTrigger>
                             <DropdownMenuContent
                                 className="min-w-56 rounded-lg"
                                 side="right"
