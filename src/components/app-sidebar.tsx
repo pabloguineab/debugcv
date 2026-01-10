@@ -37,7 +37,6 @@ import {
     DropdownMenuContent,
     DropdownMenuGroup,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -134,24 +133,22 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
                                 className="w-56 rounded-lg"
-                                side="top"
+                                side="right"
                                 align="end"
                                 sideOffset={8}
                             >
-                                <DropdownMenuLabel className="p-0 font-normal">
-                                    <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                                        <Avatar className="h-8 w-8 rounded-lg">
-                                            <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
-                                            <AvatarFallback className="rounded-lg">
-                                                {user?.name?.charAt(0)?.toUpperCase() || "U"}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                        <div className="grid flex-1 text-left text-sm leading-tight">
-                                            <span className="truncate font-semibold">{user?.name || "shadcn"}</span>
-                                            <span className="truncate text-xs text-muted-foreground">{user?.email || "m@example.com"}</span>
-                                        </div>
+                                <div className="flex items-center gap-2 px-2 py-1.5 text-left text-sm">
+                                    <Avatar className="h-8 w-8 rounded-lg">
+                                        <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
+                                        <AvatarFallback className="rounded-lg">
+                                            {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <div className="grid flex-1 text-left text-sm leading-tight">
+                                        <span className="truncate font-semibold">{user?.name || "shadcn"}</span>
+                                        <span className="truncate text-xs text-muted-foreground">{user?.email || "m@example.com"}</span>
                                     </div>
-                                </DropdownMenuLabel>
+                                </div>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
                                     <DropdownMenuItem>
