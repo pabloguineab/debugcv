@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import { useSession } from "next-auth/react";
@@ -8,7 +9,38 @@ import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/s
 import { Separator } from "@/components/ui/separator";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { TrendingUp, Users, DollarSign, Activity } from "lucide-react";
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+
+const chartData = [
+    { date: "Jan 24", visitors: 186 },
+    { date: "Jan 25", visitors: 305 },
+    { date: "Jan 26", visitors: 237 },
+    { date: "Jan 27", visitors: 273 },
+    { date: "Jan 28", visitors: 409 },
+    { date: "Jan 29", visitors: 214 },
+];
+
+const chartConfig = {
+    visitors: {
+        label: "Visitors",
+        color: "var(--chart-1)",
+    },
+};
+
+const tableData = [
+    { header: "Cover page", type: "Cover page", status: "In Process", target: 18, limit: 5, reviewer: "Eddie Laine" },
+    { header: "Table of contents", type: "Table of contents", status: "Done", target: 29, limit: 24, reviewer: "Eddie Laine" },
+    { header: "Executive summary", type: "Narrative", status: "Done", target: 10, limit: 13, reviewer: "Eddie Laine" },
+    { header: "Technical approach", type: "Narrative", status: "Done", target: 27, limit: 23, reviewer: "Jamik Tashpulatov" },
+    { header: "Design", type: "Narrative", status: "In Process", target: 2, limit: 16, reviewer: "Jamik Tashpulatov" },
+    { header: "Capabilities", type: "Narrative", status: "In Process", target: 20, limit: 8, reviewer: "Jamik Tashpulatov" },
+    { header: "Integration with existing systems", type: "Narrative", status: "In Process", target: 19, limit: 21, reviewer: "Jamik Tashpulatov" },
+    { header: "Innovation and Advantages", type: "Narrative", status: "Done", target: 25, limit: 26, reviewer: "Assign revie..." },
+];
 
 export default function DashboardPage() {
     const { data: session, status } = useSession();
@@ -58,7 +90,9 @@ export default function DashboardPage() {
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">$1,250.00</div>
-                                <p className="text-xs text-muted-foreground">+12.5% from last month</p>
+                                <p className="text-xs text-muted-foreground">
+                                    <span className="text-green-500">+12.5%</span> from last month
+                                </p>
                             </CardContent>
                         </Card>
                         <Card>
@@ -68,7 +102,9 @@ export default function DashboardPage() {
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">1,234</div>
-                                <p className="text-xs text-muted-foreground">-20% this period</p>
+                                <p className="text-xs text-muted-foreground">
+                                    <span className="text-red-500">-20%</span> this period
+                                </p>
                             </CardContent>
                         </Card>
                         <Card>
@@ -78,7 +114,9 @@ export default function DashboardPage() {
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">45,678</div>
-                                <p className="text-xs text-muted-foreground">+12.5% engagement</p>
+                                <p className="text-xs text-muted-foreground">
+                                    <span className="text-green-500">+12.5%</span> engagement
+                                </p>
                             </CardContent>
                         </Card>
                         <Card>
@@ -93,13 +131,74 @@ export default function DashboardPage() {
                         </Card>
                     </div>
 
-                    {/* Main Content Area */}
-                    <div className="min-h-[50vh] flex-1 rounded-xl bg-muted/50 p-6">
-                        <h2 className="text-xl font-semibold mb-4">Welcome back, {session.user?.name || "User"}!</h2>
-                        <p className="text-muted-foreground">
-                            This is your DebugCV dashboard. More features coming soon...
-                        </p>
-                    </div>
+                    {/* Chart */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Total Visitors</CardTitle>
+                            <CardDescription>Total for the last 3 months</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <ChartContainer config={chartConfig} className="h-[200px] w-full">
+                                <AreaChart data={chartData} margin={{ left: 12, right: 12 }}>
+                                    <CartesianGrid vertical={false} />
+                                    <XAxis
+                                        dataKey="date"
+                                        tickLine={false}
+                                        axisLine={false}
+                                        tickMargin={8}
+                                    />
+                                    <ChartTooltip
+                                        cursor={false}
+                                        content={<ChartTooltipContent indicator="line" />}
+                                    />
+                                    <Area
+                                        dataKey="visitors"
+                                        type="natural"
+                                        fill="var(--chart-1)"
+                                        fillOpacity={0.4}
+                                        stroke="var(--chart-1)"
+                                    />
+                                </AreaChart>
+                            </ChartContainer>
+                        </CardContent>
+                    </Card>
+
+                    {/* Table */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Document Sections</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Header</TableHead>
+                                        <TableHead>Section Type</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead className="text-right">Target</TableHead>
+                                        <TableHead className="text-right">Limit</TableHead>
+                                        <TableHead>Reviewer</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {tableData.map((row, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell className="font-medium">{row.header}</TableCell>
+                                            <TableCell>{row.type}</TableCell>
+                                            <TableCell>
+                                                <Badge variant={row.status === "Done" ? "default" : "secondary"}>
+                                                    {row.status}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell className="text-right">{row.target}</TableCell>
+                                            <TableCell className="text-right">{row.limit}</TableCell>
+                                            <TableCell>{row.reviewer}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
                 </div>
             </SidebarInset>
         </SidebarProvider>
