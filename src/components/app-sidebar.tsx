@@ -46,19 +46,19 @@ import { Logo } from "@/components/Logo";
 
 // Menu Groups
 const jobsItems = [
-    { title: "Job Search", url: "#", icon: Globe },
-    { title: "Application Board", url: "#", icon: ClipboardList },
+    { title: "Job Search", url: "/dashboard/job-search", icon: Globe },
+    { title: "Application Board", url: "/dashboard/application-board", icon: ClipboardList },
 ];
 
 const resumesItems = [
-    { title: "My Versions", url: "#", icon: FileText },
-    { title: "ATS Score", url: "#", icon: Target },
-    { title: "Cover Letters", url: "#", icon: PenTool },
+    { title: "My Versions", url: "/dashboard/resumes", icon: FileText },
+    { title: "ATS Score", url: "/dashboard/ats-score", icon: Target },
+    { title: "Cover Letters", url: "/dashboard/cover-letters", icon: PenTool },
 ];
 
 const interviewItems = [
-    { title: "AI Simulator", url: "#", icon: Bot },
-    { title: "Playbooks", url: "#", icon: BookOpen },
+    { title: "AI Simulator", url: "/dashboard/interview-coach", icon: Bot },
+    { title: "Playbooks", url: "/dashboard/playbooks", icon: BookOpen },
 ];
 
 interface AppSidebarProps {
