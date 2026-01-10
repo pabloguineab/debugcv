@@ -1,22 +1,18 @@
-"use client";
+import { auth } from "@/lib/auth";
+import { DashboardLayoutClient } from "@/components/dashboard-layout-client";
+import { redirect } from "next/navigation";
 
-import { useSession } from "next-auth/react";
-import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import { DashboardHeader } from "@/components/dashboard-header";
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+    const session = await auth();
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-    const { data: session } = useSession();
+    // Optional: Protect route server-side if needed, though middleware likely handles it
+    if (!session?.user) {
+        // redirect("/auth/signin"); // Uncomment if strict server-side protection is desired
+    }
 
     return (
-        <SidebarProvider>
-            <AppSidebar user={session?.user} />
-            <SidebarInset>
-                <DashboardHeader />
-                <div className="flex flex-1 flex-col gap-4 p-4">
-                    {children}
-                </div>
-            </SidebarInset>
-        </SidebarProvider>
+        <DashboardLayoutClient user={session?.user}>
+            {children}
+        </DashboardLayoutClient>
     );
 }
