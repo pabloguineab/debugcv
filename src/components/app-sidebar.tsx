@@ -183,8 +183,17 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                                         </AvatarFallback>
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
-                                        <span className="truncate font-semibold">{user?.name || "shadcn"}</span>
-                                        <span className="truncate text-xs text-muted-foreground">{user?.email || "m@example.com"}</span>
+                                        {user?.name ? (
+                                            <>
+                                                <span className="truncate font-semibold">{user.name}</span>
+                                                <span className="truncate text-xs text-muted-foreground">{user.email}</span>
+                                            </>
+                                        ) : (
+                                            <div className="flex flex-col gap-1">
+                                                <div className="h-3 w-20 rounded bg-muted animate-pulse" />
+                                                <div className="h-2 w-24 rounded bg-muted animate-pulse" />
+                                            </div>
+                                        )}
                                     </div>
                                     <MoreVertical className="ml-auto size-4" />
                                 </SidebarMenuButton>
@@ -203,8 +212,17 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                                         </AvatarFallback>
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
-                                        <span className="truncate font-semibold">{user?.name || "shadcn"}</span>
-                                        <span className="truncate text-xs text-muted-foreground">{user?.email || "m@example.com"}</span>
+                                        {user?.name ? (
+                                            <>
+                                                <span className="truncate font-semibold">{user.name}</span>
+                                                <span className="truncate text-xs text-muted-foreground">{user.email}</span>
+                                            </>
+                                        ) : (
+                                            <div className="flex flex-col gap-1">
+                                                <div className="h-3 w-20 rounded bg-muted animate-pulse" />
+                                                <div className="h-2 w-24 rounded bg-muted animate-pulse" />
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 <DropdownMenuSeparator />
