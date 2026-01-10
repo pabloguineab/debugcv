@@ -133,43 +133,13 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
-                                className="min-w-56 rounded-lg"
-                                side="right"
+                                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                                side="top"
                                 align="end"
-                                sideOffset={8}
+                                sideOffset={4}
                             >
-                                <DropdownMenuLabel className="p-0 font-normal">
-                                    <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                                        <Avatar className="h-8 w-8 rounded-lg">
-                                            <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
-                                            <AvatarFallback className="rounded-lg">
-                                                {user?.name?.charAt(0)?.toUpperCase() || "U"}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                        <div className="grid flex-1 text-left text-sm leading-tight">
-                                            <span className="truncate font-semibold">{user?.name || "shadcn"}</span>
-                                            <span className="truncate text-xs text-muted-foreground">{user?.email || "m@example.com"}</span>
-                                        </div>
-                                    </div>
-                                </DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuGroup>
-                                    <DropdownMenuItem className="flex items-center gap-2">
-                                        <User className="size-4" />
-                                        Account
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="flex items-center gap-2">
-                                        <CreditCard className="size-4" />
-                                        Billing
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="flex items-center gap-2">
-                                        <Bell className="size-4" />
-                                        Notifications
-                                    </DropdownMenuItem>
-                                </DropdownMenuGroup>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/auth/signin" })} className="flex items-center gap-2">
-                                    <LogOut className="size-4" />
+                                <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/auth/signin" })}>
+                                    <LogOut className="mr-2 size-4" />
                                     Log out
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
