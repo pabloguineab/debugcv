@@ -73,17 +73,10 @@ interface AppSidebarProps {
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
     return (
         <Sidebar variant="inset" {...props}>
-            <SidebarHeader>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                            <a href="/dashboard" className="flex items-center gap-2">
-                                <Command className="size-4" />
-                                <span className="font-semibold">DebugCV</span>
-                            </a>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
+            <SidebarHeader className="p-4">
+                <a href="/dashboard">
+                    <span className="text-lg font-bold">DebugCV</span>
+                </a>
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
