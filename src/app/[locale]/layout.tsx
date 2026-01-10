@@ -6,6 +6,7 @@ import { getMessages } from 'next-intl/server';
 import { notFound } from "next/navigation";
 import { routing } from '@/i18n/routing';
 import { Providers } from "@/components/providers";
+import NextTopLoader from 'nextjs-toploader';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,6 +35,7 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body className={inter.className}>
+        <NextTopLoader color="#2563eb" showSpinner={false} height={3} />
         <Providers>
           <NextIntlClientProvider messages={messages}>
             {children}
