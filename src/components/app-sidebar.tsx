@@ -1,8 +1,28 @@
 // @ts-nocheck
 "use client";
 
-import { Home, Settings, HelpCircle, Search, LayoutDashboard, FileText, Users, BarChart3, FolderOpen, Bot, ChevronUp } from "lucide-react";
+import * as React from "react";
+import {
+    LayoutDashboard,
+    SquareTerminal,
+    BarChart3,
+    FolderKanban,
+    Users,
+    Database,
+    FileText,
+    Bot,
+    MoreHorizontal,
+    Settings,
+    HelpCircle,
+    Search,
+    ChevronsUpDown,
+    LogOut,
+    User,
+    CreditCard,
+    Bell,
+} from "lucide-react";
 import { signOut } from "next-auth/react";
+
 import {
     Sidebar,
     SidebarContent,
@@ -10,31 +30,35 @@ import {
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
+    SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarHeader,
 } from "@/components/ui/sidebar";
 import {
     DropdownMenu,
     DropdownMenuContent,
+    DropdownMenuGroup,
     DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const mainNavItems = [
+const homeItems = [
     { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-    { title: "Lifestyle", url: "#", icon: Home },
+    { title: "Lifecycle", url: "#", icon: SquareTerminal, isActive: true },
     { title: "Analytics", url: "#", icon: BarChart3 },
-    { title: "Projects", url: "#", icon: FolderOpen },
+    { title: "Projects", url: "#", icon: FolderKanban },
     { title: "Team", url: "#", icon: Users },
 ];
 
 const documentsItems = [
-    { title: "Data Library", url: "#", icon: FileText },
+    { title: "Data Library", url: "#", icon: Database },
     { title: "Reports", url: "#", icon: FileText },
     { title: "Word Assistant", url: "#", icon: Bot },
+    { title: "More", url: "#", icon: MoreHorizontal },
 ];
 
 interface AppSidebarProps {
@@ -45,20 +69,19 @@ interface AppSidebarProps {
     };
 }
 
-export function AppSidebar({ user }: AppSidebarProps) {
+export function AppSidebar({ user, ...props }: AppSidebarProps) {
     return (
-        <Sidebar>
+        <Sidebar variant="inset" {...props}>
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <a href="/dashboard">
-                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                                     <LayoutDashboard className="size-4" />
                                 </div>
-                                <div className="flex flex-col gap-0.5 leading-none">
-                                    <span className="font-semibold">DebugCV</span>
-                                    <span className="text-xs text-muted-foreground">Dashboard</span>
+                                <div className="grid flex-1 text-left text-sm leading-tight">
+                                    <span className="truncate font-semibold">Acme Inc.</span>
                                 </div>
                             </a>
                         </SidebarMenuButton>
@@ -70,11 +93,11 @@ export function AppSidebar({ user }: AppSidebarProps) {
                     <SidebarGroupLabel>Home</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {mainNavItems.map((item) => (
+                            {homeItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
+                                    <SidebarMenuButton asChild isActive={item.isActive}>
                                         <a href={item.url}>
-                                            <item.icon className="size-4" />
+                                            <item.icon />
                                             <span>{item.title}</span>
                                         </a>
                                     </SidebarMenuButton>
@@ -91,7 +114,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
                                         <a href={item.url}>
-                                            <item.icon className="size-4" />
+                                            <item.icon />
                                             <span>{item.title}</span>
                                         </a>
                                     </SidebarMenuButton>
@@ -106,7 +129,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
                             <a href="#">
-                                <Settings className="size-4" />
+                                <Settings />
                                 <span>Settings</span>
                             </a>
                         </SidebarMenuButton>
@@ -114,7 +137,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
                             <a href="#">
-                                <HelpCircle className="size-4" />
+                                <HelpCircle />
                                 <span>Get Help</span>
                             </a>
                         </SidebarMenuButton>
@@ -122,7 +145,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
                             <a href="#">
-                                <Search className="size-4" />
+                                <Search />
                                 <span>Search</span>
                             </a>
                         </SidebarMenuButton>
@@ -137,24 +160,55 @@ export function AppSidebar({ user }: AppSidebarProps) {
                                     <Avatar className="h-8 w-8 rounded-lg">
                                         <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
                                         <AvatarFallback className="rounded-lg">
-                                            {user?.name?.charAt(0) || "U"}
+                                            {user?.name?.charAt(0)?.toUpperCase() || "U"}
                                         </AvatarFallback>
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
-                                        <span className="truncate font-semibold">{user?.name || "User"}</span>
-                                        <span className="truncate text-xs text-muted-foreground">{user?.email || ""}</span>
+                                        <span className="truncate font-semibold">{user?.name || "shadcn"}</span>
+                                        <span className="truncate text-xs">{user?.email || "m@example.com"}</span>
                                     </div>
-                                    <ChevronUp className="ml-auto size-4" />
+                                    <ChevronsUpDown className="ml-auto size-4" />
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
                                 className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                                side="top"
+                                side="bottom"
                                 align="end"
                                 sideOffset={4}
                             >
+                                <DropdownMenuLabel className="p-0 font-normal">
+                                    <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                                        <Avatar className="h-8 w-8 rounded-lg">
+                                            <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
+                                            <AvatarFallback className="rounded-lg">
+                                                {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div className="grid flex-1 text-left text-sm leading-tight">
+                                            <span className="truncate font-semibold">{user?.name || "shadcn"}</span>
+                                            <span className="truncate text-xs">{user?.email || "m@example.com"}</span>
+                                        </div>
+                                    </div>
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                    <DropdownMenuItem>
+                                        <User />
+                                        Account
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <CreditCard />
+                                        Billing
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <Bell />
+                                        Notifications
+                                    </DropdownMenuItem>
+                                </DropdownMenuGroup>
+                                <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/auth/signin" })}>
-                                    Sign out
+                                    <LogOut />
+                                    Log out
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
