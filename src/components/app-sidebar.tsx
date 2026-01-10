@@ -13,13 +13,14 @@ import {
     Bot,
     MoreHorizontal,
     Settings,
-    HelpCircle,
+    CircleHelp,
     Search,
     ChevronsUpDown,
     LogOut,
     User,
     CreditCard,
     Bell,
+    Command,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
@@ -48,7 +49,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const homeItems = [
     { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-    { title: "Lifecycle", url: "#", icon: SquareTerminal, isActive: true },
+    { title: "Lifecycle", url: "#", icon: SquareTerminal },
     { title: "Analytics", url: "#", icon: BarChart3 },
     { title: "Projects", url: "#", icon: FolderKanban },
     { title: "Team", url: "#", icon: Users },
@@ -77,8 +78,8 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <a href="/dashboard">
-                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                                    <LayoutDashboard className="size-4" />
+                                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                                    <Command className="size-4" />
                                 </div>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
                                     <span className="truncate font-semibold">Acme Inc.</span>
@@ -95,7 +96,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                         <SidebarMenu>
                             {homeItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild isActive={item.isActive}>
+                                    <SidebarMenuButton asChild>
                                         <a href={item.url}>
                                             <item.icon />
                                             <span>{item.title}</span>
@@ -137,7 +138,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
                             <a href="#">
-                                <HelpCircle />
+                                <CircleHelp />
                                 <span>Get Help</span>
                             </a>
                         </SidebarMenuButton>

@@ -184,15 +184,22 @@ export default function DashboardPage() {
                                     {tableData.map((row, index) => (
                                         <TableRow key={index}>
                                             <TableCell className="font-medium">{row.header}</TableCell>
-                                            <TableCell>{row.type}</TableCell>
+                                            <TableCell className="text-muted-foreground">{row.type}</TableCell>
                                             <TableCell>
-                                                <Badge variant={row.status === "Done" ? "default" : "secondary"}>
-                                                    {row.status}
-                                                </Badge>
+                                                {row.status === "Done" ? (
+                                                    <span className="inline-flex items-center gap-1.5 text-sm">
+                                                        <span className="h-2 w-2 rounded-full bg-green-500"></span>
+                                                        Done
+                                                    </span>
+                                                ) : (
+                                                    <Badge variant="outline" className="text-muted-foreground">
+                                                        In Process
+                                                    </Badge>
+                                                )}
                                             </TableCell>
                                             <TableCell className="text-right">{row.target}</TableCell>
                                             <TableCell className="text-right">{row.limit}</TableCell>
-                                            <TableCell>{row.reviewer}</TableCell>
+                                            <TableCell className="text-muted-foreground">{row.reviewer}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
