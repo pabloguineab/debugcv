@@ -41,6 +41,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Logo } from "@/components/Logo";
 
 const homeItems = [
     { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -70,7 +71,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         <Sidebar variant="inset" {...props}>
             <SidebarHeader className="p-4">
                 <a href="/dashboard">
-                    <span className="text-lg font-bold">DebugCV</span>
+                    <Logo className="h-8 w-auto" />
                 </a>
             </SidebarHeader>
             <SidebarContent>
