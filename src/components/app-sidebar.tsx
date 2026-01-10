@@ -5,7 +5,7 @@ import * as React from "react";
 import {
     LayoutDashboard,
     ClipboardList,
-    Search,
+    Globe,
     FileText,
     Target,
     PenTool,
@@ -44,21 +44,21 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/components/Logo";
 
-const mainItems = [
-    { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-    { title: "Job Tracker", url: "#", icon: ClipboardList },
-    { title: "Smart Search", url: "#", icon: Search },
+// Menu Groups
+const jobsItems = [
+    { title: "Job Search", url: "#", icon: Globe },
+    { title: "Application Board", url: "#", icon: ClipboardList },
 ];
 
-const toolkitItems = [
-    { title: "My Resumes", url: "#", icon: FileText },
-    { title: "ATS Scanner", url: "#", icon: Target },
-    { title: "Cover Letter AI", url: "#", icon: PenTool },
+const resumesItems = [
+    { title: "My Versions", url: "#", icon: FileText },
+    { title: "ATS Score", url: "#", icon: Target },
+    { title: "Cover Letters", url: "#", icon: PenTool },
 ];
 
-const prepItems = [
-    { title: "Interview Coach", url: "#", icon: Bot },
-    { title: "Tech Playbooks", url: "#", icon: BookOpen },
+const interviewItems = [
+    { title: "AI Simulator", url: "#", icon: Bot },
+    { title: "Playbooks", url: "#", icon: BookOpen },
 ];
 
 interface AppSidebarProps {
@@ -78,11 +78,28 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                 </a>
             </SidebarHeader>
             <SidebarContent>
+                {/* Dashboard - Standalone Group */}
                 <SidebarGroup>
-                    <SidebarGroupLabel>MAIN</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {mainItems.map((item) => (
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <a href="/dashboard" className="flex items-center gap-2">
+                                        <LayoutDashboard className="size-4" />
+                                        <span>Dashboard</span>
+                                    </a>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+
+                {/* Jobs Group */}
+                <SidebarGroup>
+                    <SidebarGroupLabel>Jobs</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            {jobsItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
                                         <a href={item.url} className="flex items-center gap-2">
@@ -95,11 +112,13 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
+
+                {/* Resumes Group */}
                 <SidebarGroup>
-                    <SidebarGroupLabel>TOOLKIT</SidebarGroupLabel>
+                    <SidebarGroupLabel>Resumes</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {toolkitItems.map((item) => (
+                            {resumesItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
                                         <a href={item.url} className="flex items-center gap-2">
@@ -112,11 +131,13 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
+
+                {/* Interview Group */}
                 <SidebarGroup>
-                    <SidebarGroupLabel>PREP</SidebarGroupLabel>
+                    <SidebarGroupLabel>Interview</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {prepItems.map((item) => (
+                            {interviewItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
                                         <a href={item.url} className="flex items-center gap-2">
