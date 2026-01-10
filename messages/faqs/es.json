@@ -1,0 +1,112 @@
+{
+    "page_title": "Preguntas Frecuentes",
+    "page_subtitle": "Todo lo que necesitas saber sobre formato, ATS y estrategias de CV.",
+    "back_button": "Volver al Toolkit",
+    "search_placeholder": "Buscar preguntas (ej: longitud, foto, ATS)...",
+    "no_results": "No encontramos preguntas que coincidan con tu búsqueda.",
+    "show_all": "Ver todas las preguntas",
+    "feedback_question": "¿Fue útil esta respuesta?",
+    "feedback_thanks": "¡Gracias por tu feedback!",
+    "faqs": [
+        {
+            "question": "¿Qué tan largo debe ser mi CV?",
+            "category": "Formato / ATS",
+            "answer_html": "<p class=\"font-bold mb-2\">No te preocupes demasiado por la longitud: no es un punto crítico.</p><p class=\"mb-4\">La longitud del CV no importa tanto como la gente piensa. No hay una regla estricta sobre mantenerse en una página, y los reclutadores no rechazan CVs por tener dos o tres páginas.</p><p class=\"mb-4\">Los reclutadores escanean los CVs muy rápido y son muy buenos detectando información clave sin importar la longitud, así que tu trabajo es hacer que los detalles importantes sean fáciles de encontrar y no estén enterrados en relleno.</p><p class=\"mb-4\">Lo que les importa es si el contenido vale la pena leerse. Un CV corto lleno de paja es tan malo como uno largo lleno de palabras de moda.</p><p class=\"font-medium text-blue-600\">Concéntrate en el contenido y usa tanto espacio como necesites 👍</p>"
+        },
+        {
+            "question": "¿Qué plantilla debo usar?",
+            "category": "Formato / ATS",
+            "answer_html": "<p class=\"mb-4\">Primero que nada, <span class=\"font-bold\">no uses nada extravagante o sobre-diseñado</span>: los reclutadores odian eso. Su trabajo es encontrar información importante rápidamente, así que debes facilitarles esa tarea.</p><p class=\"mb-4\">Los reclutadores prefieren formatos sobrios, simples y predecibles, así que apégate a un diseño clásico con encabezados claros, espaciado consistente y una fuente legible. Debes usar los nombres de secciones clásicos a los que están acostumbrados (Perfil, Educación, Habilidades Técnicas, Experiencia, Proyectos, etc.) para minimizar su esfuerzo.</p><p class=\"mb-4 font-medium\">Sí, es aburrido, pero es lo que funciona. ¡Destacarás por el contenido, no por el diseño!</p><p class=\"text-sm bg-blue-50 p-3 rounded-lg border border-blue-100\">La única excepción es para... roles de diseño. Si aplicas a estas posiciones, tu CV debe considerarse parte de tu portafolio, por lo que se deben aplicar principios de diseño clave.</p>"
+        },
+        {
+            "question": "¿Qué formato de archivo debo usar?",
+            "category": "Formato / ATS",
+            "answer_html": "<p class=\"mb-4\">El formato del archivo puede decidir si tu CV se lee o no.</p><p class=\"mb-2 font-bold\">PDF es mejor porque:</p><ul class=\"list-disc pl-5 mb-4 space-y-1\"><li><strong>Cumplimiento ATS:</strong> preservan la estructura del documento y facilitan el análisis. La mayoría de los ATS están optimizados para PDF, así que es la única apuesta 100% segura.</li><li><strong>Control de contenido:</strong> evita que otros cambien casualmente tu información.</li></ul><p>Pero la clave es usar un <strong>PDF basado en texto</strong> (de Word o Google Docs), no uno basado en imagen como las exportaciones de Canva, porque los archivos de imagen hacen que tu texto sea invisible para los ATS. <span class=\"italic\">Prueba rápida: si puedes resaltar el texto en tu PDF, es seguro.</span></p>"
+        },
+        {
+            "question": "¿Debo incluir una foto en mi CV?",
+            "category": "Formato / ATS",
+            "answer_html": "<p class=\"mb-4\">En la mayoría de los casos, <strong>no</strong>. Aquí el porqué:</p><ul class=\"list-disc pl-5 mb-4 space-y-2\"><li><strong>Sesgo Inconsciente:</strong> Añadir una foto suele hacer más daño que bien. Puede causar sesgos, ya que los reclutadores (conscientemente o no) hacen juicios rápidos sobre edad, género o apariencia. En países como EE.UU., Reino Unido o Canadá, está incluso desaconsejado por leyes antidiscriminación.</li><li><strong>Cumplimiento ATS:</strong> Las fotos también confunden a los ATS, que están diseñados para leer texto, no imágenes.</li></ul><p class=\"mb-4\">Dicho esto, las fotos aún se esperan en algunas regiones para roles tradicionales (partes de Europa, Asia y Latam). Si debes incluir una, mantenla simple: fondo plano, ropa profesional y expresión neutral.</p><p class=\"font-medium\">A menos que la oferta o normas del país lo requieran claramente, es mejor saltarse la foto. Usa LinkedIn para tu imagen personal.</p>"
+        },
+        {
+            "question": "¿Qué fuentes y tamaños debo usar?",
+            "category": "Formato / ATS",
+            "answer_html": "<p class=\"mb-4\">No hay una regla secreta, pero debes preocuparte por la <strong>legibilidad</strong>.</p><p class=\"mb-4\">Para el <strong>Tamaño de Fuente</strong>, cualquier cosa entre 9 y 11 es aceptable, siendo 10 la opción por defecto y más segura.</p><p class=\"mb-4\">En cuanto al <strong>Estilo de Fuente</strong>, las fuentes Sans-Serif son un poco más fáciles de leer. Evita fuentes \"condensadas\".</p><p>No puedes equivocarte con <strong>Arial</strong> o <strong>Helvetica</strong>. Mi favorita personal es <strong>Calibri</strong>, porque los caracteres son más pequeños (puedes escribir oraciones más largas) pero se lee muy fácilmente.</p>"
+        },
+        {
+            "question": "¿Qué orden de secciones debo usar?",
+            "category": "Formato / ATS",
+            "answer_html": "<p class=\"mb-4\">El orden importa porque tu CV solo recibirá unos segundos de atención inicial. Queremos que la información clave sea accesible lo más rápido posible.</p><p class=\"mb-2 font-bold\">Orden sugerido:</p><ol class=\"list-decimal pl-5 mb-4 space-y-1\"><li>Información Personal</li><li>Resumen de Perfil (Profile Summary)</li><li>Habilidades Técnicas</li><li>Experiencia Laboral (con el trabajo más reciente en la 1ª página)</li><li>Educación</li></ol><p class=\"font-medium text-blue-600\">Esto determina el 95% de la decisión de filtrado, ¡así que clávalo!</p>"
+        },
+        {
+            "question": "¿Debo escribir en pasado o presente?",
+            "category": "Estilo",
+            "answer_html": "<p class=\"mb-2 font-bold\">Reglas fáciles para los tiempos verbales:</p><ul class=\"list-disc pl-5 mb-4 space-y-2\"><li>Para <strong>experiencias pasadas</strong>, usa siempre el tiempo pasado.</li><li>Para la <strong>experiencia actual</strong> (si sigue en curso), recomiendo usar el <strong>tiempo pasado</strong> también.</li></ul><p class=\"mb-2\">Prefiero el pasado para el rol actual porque:</p><ol class=\"list-decimal pl-5 space-y-1\"><li>Ayuda a acentuar logros / tareas completadas de forma más natural.</li><li>Proporciona consistencia en todo el CV.</li></ol>"
+        },
+        {
+            "question": "¿Debo basarme en los requisitos o cualificaciones de la oferta?",
+            "category": "Perfiles de Rol",
+            "answer_html": "<p class=\"mb-4\">La respuesta corta es: <strong>ambos</strong>.</p><ul class=\"list-disc pl-5 mb-4 space-y-1\"><li><strong>Deberes:</strong> son tareas que se espera que completes.</li><li><strong>Requisitos:</strong> son las habilidades o herramientas que usarás.</li></ul><p>A veces los requisitos incluyen tecnologías no vinculadas directamente a una \"responsabilidad\". Debes considerar esas tecnologías como parte de los deberes requeridos y abordar esa área en tu CV como si se mencionara explícitamente.</p>"
+        },
+        {
+            "question": "¿Puede el Título del CV ser un puesto que nunca he tenido?",
+            "category": "Info Personal",
+            "answer_html": "<p class=\"mb-4\"><strong>¡Sí, absolutamente!</strong> Usar un Título de CV que refleje el rol al que aspiras, incluso si no has tenido ese título exacto antes, está perfectamente bien.</p><p>El Título del CV es un encabezado que comunica tu identidad profesional y rol objetivo. Está destinado a ser descriptivo y aspiracional, en lugar de un registro de títulos pasados.</p>"
+        },
+        {
+            "question": "¿Debo incluir mi número de teléfono?",
+            "category": "Info Personal",
+            "answer_html": "<p class=\"mb-4\">No es obligatorio en 2025, sin embargo <strong>recomiendo añadirlo</strong>.</p><p>Algunos reclutadores todavía son \"de la vieja escuela\" y les gusta hacer llamadas al filtrar CVs: no querrás perderte estas oportunidades.</p>"
+        },
+        {
+            "question": "¿Debo incluir mi dirección completa?",
+            "category": "Info Personal",
+            "answer_html": "<p class=\"mb-4\">No necesitas incluir tu dirección completa.</p><p class=\"mb-4\">Sin embargo, decirles a los reclutadores tu ubicación importa. Necesitan saber dónde estás basado, especialmente si esperan que vayas a la oficina.</p><p>Como mínimo, lista la <strong>Ciudad y País</strong>. Ejemplo: \"Madrid, España\".</p>"
+        },
+        {
+            "question": "¿Debo mencionar el patrocinio de visa?",
+            "category": "Info Personal",
+            "answer_html": "<p class=\"mb-4\">Aunque no es obligatorio, sugiero añadirlo.</p><ul class=\"list-disc pl-5 mb-4 space-y-2\"><li><strong>Si NO necesitas patrocinio:</strong> escríbelo siempre (ej: \"Permiso de trabajo completo\").</li><li><strong>Si SÍ necesitas patrocinio:</strong> no lo escribas. Esto maximizará tus posibilidades en el filtrado inicial, aunque debes saber que podría ser un problema más adelante.</li></ul>"
+        },
+        {
+            "question": "¿Necesito un portafolio?",
+            "category": "Info Personal",
+            "answer_html": "<p class=\"mb-4\">Depende en gran medida de tu puesto objetivo.</p><ul class=\"list-disc pl-5 mb-4 space-y-2\"><li><strong>Roles de Diseño/Frontend creativo:</strong> SÍ necesitas un portafolio. Un visual es mucho más efectivo que palabras.</li><li><strong>Otros roles (Backend, DevOps):</strong> Un portafolio no decidirá tu aplicación, pero puede darte una pequeña ventaja. Si tienes tiempo, hazlo, pero no es prioridad crítica.</li></ul>"
+        },
+        {
+            "question": "¿Debo añadir mi GitHub si no tiene proyectos?",
+            "category": "Info Personal",
+            "answer_html": "<p class=\"mb-4\">Alrededor del 50% de los perfiles de GitHub en CVs técnicos solo tienen repositorios privados. <strong>No te preocupes si el tuyo está vacío.</strong></p><p class=\"mb-4\">Si ese es tu caso, puedes eliminar el enlace a GitHub: no queremos hacer perder el tiempo al revisor con un enlace vacío.</p><p>Sin embargo, si tienes repos públicos, es la mejor manera de que evalúen tus habilidades técnicas reales antes de una entrevista.</p>"
+        },
+        {
+            "question": "¿Realmente necesito un resumen de perfil?",
+            "category": "Profile Summary",
+            "answer_html": "<p class=\"mb-4\">La respuesta corta es que <strong>definitivamente sí</strong>, incluso si eres junior.</p><p class=\"mb-4\">Cuando revisan un CV por primera vez, los reclutadores solo tienen unos segundos. El resumen de perfil es esencialmente una reseña de tu propio CV, así que estás haciendo su trabajo por ellos.</p><p class=\"font-medium\">Es tu elevator pitch: ¡véndelo con fuerza!</p>"
+        },
+        {
+            "question": "¿El resumen debe ser en bullets o texto?",
+            "category": "Profile Summary",
+            "answer_html": "<p class=\"mb-4\">El Resumen de Perfil debería escribirse preferiblemente con <strong>bullet points</strong> (o una mezcla muy breve).</p><p>El único propósito es ayudar al Reclutador a revisar tu perfil y convencerlos de tomar una decisión antes de leer el resto. Por esa razón, el formato de lista es óptimo para la lectura rápida.</p>"
+        },
+        {
+            "question": "¿Debo añadir títulos no relacionados?",
+            "category": "Educación",
+            "answer_html": "<p class=\"mb-4\">Sí, siempre debes añadir tus títulos, incluso si no están directamente relacionados:</p><ol class=\"list-decimal pl-5 space-y-2\"><li><strong>Evitar tergiversación:</strong> Las empresas competitivas valoran la precisión. Si falta un título, pueden considerarlo una omisión deshonesta.</li><li><strong>Valor añadido:</strong> Muchos reclutadores ven esa experiencia como un valor añadido que te da una perspectiva diferente.</li></ol>"
+        },
+        {
+            "question": "¿Puedo cambiar el título de un trabajo?",
+            "category": "Experiencia",
+            "answer_html": "<p class=\"mb-4\">Los títulos en un CV deben ser <strong>descriptivos</strong>. A los reclutadores les importa más lo que has estado haciendo que lo que dice tu contrato.</p><p class=\"mb-2\">Si quieres ser 100% seguro, recomiendo:</p><p class=\"bg-gray-100 p-2 rounded text-center font-mono text-sm\">Título Oficial (Título Descriptivo)</p><p class=\"mt-2 text-sm text-gray-500\">Ejemplo: Consultor Técnico (Full-Stack Software Engineer)</p>"
+        },
+        {
+            "question": "¿Cómo listar múltiples roles de contrato?",
+            "category": "Experiencia",
+            "answer_html": "<p class=\"mb-4\">Si tu experiencia es mayormente por contrato:</p><ul class=\"list-disc pl-5 mb-4 space-y-2\"><li><strong>Misma Agencia:</strong> Crea un bloque con el nombre de la agencia y lista los clientes/proyectos debajo como \"Entregables Clave\".</li><li><strong>Directo con Clientes:</strong> Crea un bloque por cliente. Escribe \"(contrato)\" después del título del trabajo.</li></ul><p>Los reclutadores entienden esto, siempre que el estado de empleo sea claro.</p>"
+        },
+        {
+            "question": "¿Debo listar hobbies?",
+            "category": "Otros",
+            "answer_html": "<p class=\"mb-4\">No hay una regla clara. Usualmente elimino esta información para no diluir el contenido impactante.</p><p>La única excepción es cuando los hobbies proporcionan contexto sobre habilidades relevantes (ej: \"programación competitiva\"). Pero si quieres añadir un toque personal, eres libre de hacerlo.</p>"
+        }
+    ]
+}

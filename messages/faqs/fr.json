@@ -1,0 +1,20 @@
+{
+  "page_title": "Questions Fréquemment Posées",
+  "page_subtitle": "Tout ce que vous devez savoir sur le formatage, les ATS et les stratégies de CV.",
+  "back_button": "Retour à la Boîte à Outils",
+  "search_placeholder": "Rechercher des questions (ex: longueur, photo, ATS)...",
+  "no_results": "Nous n'avons pas trouvé de questions correspondant à votre recherche.",
+  "show_all": "Voir toutes les questions",
+  "feedback_question": "Cette réponse a-t-elle été utile?",
+  "feedback_thanks": "Merci pour votre retour!",
+  "categories": {
+    "format_ats": "Format / ATS",
+    "style": "Style",
+    "role_profiles": "Profils de Poste",
+    "personal_info": "Infos Personnelles",
+    "profile_summary": "Résumé de Profil",
+    "education": "Éducation",
+    "experience": "Expérience",
+    "other": "Autre"
+  }
+}
