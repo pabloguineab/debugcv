@@ -12,15 +12,14 @@ import {
     FileText,
     Bot,
     MoreHorizontal,
+    MoreVertical,
     Settings,
     CircleHelp,
     Search,
-    ChevronsUpDown,
     LogOut,
     User,
     CreditCard,
     Bell,
-    Command,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
@@ -142,11 +141,8 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton
-                                    size="lg"
-                                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                                >
+                            <div className="flex items-center w-full">
+                                <div className="flex items-center gap-2 flex-1 p-2">
                                     <Avatar className="h-8 w-8 rounded-lg">
                                         <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
                                         <AvatarFallback className="rounded-lg">
@@ -155,19 +151,23 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
                                         <span className="truncate font-semibold">{user?.name || "shadcn"}</span>
-                                        <span className="truncate text-xs">{user?.email || "m@example.com"}</span>
+                                        <span className="truncate text-xs text-muted-foreground">{user?.email || "m@example.com"}</span>
                                     </div>
-                                    <ChevronsUpDown className="ml-auto size-4" />
-                                </SidebarMenuButton>
-                            </DropdownMenuTrigger>
+                                </div>
+                                <DropdownMenuTrigger asChild>
+                                    <button className="p-2 hover:bg-sidebar-accent rounded-md">
+                                        <MoreVertical className="size-4" />
+                                    </button>
+                                </DropdownMenuTrigger>
+                            </div>
                             <DropdownMenuContent
-                                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                                side="bottom"
+                                className="min-w-56 rounded-lg"
+                                side="right"
                                 align="end"
-                                sideOffset={4}
+                                sideOffset={8}
                             >
                                 <DropdownMenuLabel className="p-0 font-normal">
-                                    <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                                    <div className="flex items-center gap-2 px-2 py-1.5 text-left text-sm">
                                         <Avatar className="h-8 w-8 rounded-lg">
                                             <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
                                             <AvatarFallback className="rounded-lg">
@@ -176,28 +176,28 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                                         </Avatar>
                                         <div className="grid flex-1 text-left text-sm leading-tight">
                                             <span className="truncate font-semibold">{user?.name || "shadcn"}</span>
-                                            <span className="truncate text-xs">{user?.email || "m@example.com"}</span>
+                                            <span className="truncate text-xs text-muted-foreground">{user?.email || "m@example.com"}</span>
                                         </div>
                                     </div>
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
-                                    <DropdownMenuItem>
-                                        <User />
+                                    <DropdownMenuItem className="flex items-center gap-2">
+                                        <User className="size-4" />
                                         Account
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        <CreditCard />
+                                    <DropdownMenuItem className="flex items-center gap-2">
+                                        <CreditCard className="size-4" />
                                         Billing
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        <Bell />
+                                    <DropdownMenuItem className="flex items-center gap-2">
+                                        <Bell className="size-4" />
                                         Notifications
                                     </DropdownMenuItem>
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/auth/signin" })}>
-                                    <LogOut />
+                                <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/auth/signin" })} className="flex items-center gap-2">
+                                    <LogOut className="size-4" />
                                     Log out
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
