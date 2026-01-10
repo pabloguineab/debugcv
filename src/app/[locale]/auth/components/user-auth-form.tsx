@@ -83,7 +83,7 @@ export function UserAuthForm({ className, buttonText = "Sign In with Email", ...
             </div>
 
             <div className="grid gap-2">
-                <Button variant="outline" type="button" disabled={isLoading} onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
+                <Button variant="outline" type="button" disabled={isLoading} onClick={() => signIn("google", { callbackUrl: "/" })}>
                     <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                         <path
                             fill="#4285F4"
@@ -104,11 +104,11 @@ export function UserAuthForm({ className, buttonText = "Sign In with Email", ...
                     </svg>
                     Google
                 </Button>
-                <Button variant="outline" type="button" disabled={isLoading} onClick={() => signIn("linkedin", { callbackUrl: "/dashboard" })}>
+                <Button variant="outline" type="button" disabled={isLoading} onClick={() => signIn("linkedin", { callbackUrl: "/" })}>
                     <Linkedin className="mr-2 h-4 w-4 text-[#0A66C2]" />
                     LinkedIn
                 </Button>
-                <Button variant="outline" type="button" disabled={isLoading} onClick={() => signIn("github", { callbackUrl: "/dashboard" })}>
+                <Button variant="outline" type="button" disabled={isLoading} onClick={() => signIn("github", { callbackUrl: "/" })}>
                     <Github className="mr-2 h-4 w-4" />
                     GitHub
                 </Button>
