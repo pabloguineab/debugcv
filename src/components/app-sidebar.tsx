@@ -179,7 +179,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                                     <Avatar className="h-8 w-8 rounded-lg">
                                         <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
                                         <AvatarFallback className="rounded-lg">
-                                            {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                                            {user?.name ? user.name.charAt(0).toUpperCase() : <User className="size-4" />}
                                         </AvatarFallback>
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
