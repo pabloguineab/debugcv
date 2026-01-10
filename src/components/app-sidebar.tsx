@@ -115,7 +115,10 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                     <SidebarMenuItem>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <button className="flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus:outline-none focus:ring-2 focus:ring-sidebar-ring">
+                                <SidebarMenuButton
+                                    size="lg"
+                                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                                >
                                     <Avatar className="h-8 w-8 rounded-lg">
                                         <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
                                         <AvatarFallback className="rounded-lg">
@@ -127,7 +130,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                                         <span className="truncate text-xs text-muted-foreground">{user?.email || "m@example.com"}</span>
                                     </div>
                                     <MoreVertical className="ml-auto size-4" />
-                                </button>
+                                </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
                                 className="min-w-56 rounded-lg"
@@ -136,7 +139,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                                 sideOffset={8}
                             >
                                 <DropdownMenuLabel className="p-0 font-normal">
-                                    <div className="flex items-center gap-2 px-2 py-1.5 text-left text-sm">
+                                    <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                                         <Avatar className="h-8 w-8 rounded-lg">
                                             <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
                                             <AvatarFallback className="rounded-lg">
