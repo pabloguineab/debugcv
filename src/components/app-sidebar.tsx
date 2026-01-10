@@ -4,14 +4,15 @@
 import * as React from "react";
 import {
     LayoutDashboard,
-    SquareTerminal,
-    BarChart3,
-    FolderKanban,
-    Users,
-    Database,
+    ClipboardList,
+    Search,
     FileText,
+    Target,
+    PenTool,
     Bot,
-    MoreHorizontal,
+    BookOpen,
+    Gem,
+    Settings,
     MoreVertical,
     LogOut,
     User,
@@ -43,19 +44,21 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/components/Logo";
 
-const homeItems = [
+const mainItems = [
     { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-    { title: "Lifecycle", url: "#", icon: SquareTerminal },
-    { title: "Analytics", url: "#", icon: BarChart3 },
-    { title: "Projects", url: "#", icon: FolderKanban },
-    { title: "Team", url: "#", icon: Users },
+    { title: "Job Tracker", url: "#", icon: ClipboardList },
+    { title: "Smart Search", url: "#", icon: Search },
 ];
 
-const documentsItems = [
-    { title: "Data Library", url: "#", icon: Database },
-    { title: "Reports", url: "#", icon: FileText },
-    { title: "Word Assistant", url: "#", icon: Bot },
-    { title: "More", url: "#", icon: MoreHorizontal },
+const toolkitItems = [
+    { title: "My Resumes", url: "#", icon: FileText },
+    { title: "ATS Scanner", url: "#", icon: Target },
+    { title: "Cover Letter AI", url: "#", icon: PenTool },
+];
+
+const prepItems = [
+    { title: "Interview Coach", url: "#", icon: Bot },
+    { title: "Tech Playbooks", url: "#", icon: BookOpen },
 ];
 
 interface AppSidebarProps {
@@ -76,10 +79,10 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Home</SidebarGroupLabel>
+                    <SidebarGroupLabel>MAIN</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {homeItems.map((item) => (
+                            {mainItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
                                         <a href={item.url} className="flex items-center gap-2">
@@ -93,10 +96,27 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                     </SidebarGroupContent>
                 </SidebarGroup>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Documents</SidebarGroupLabel>
+                    <SidebarGroupLabel>TOOLKIT</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {documentsItems.map((item) => (
+                            {toolkitItems.map((item) => (
+                                <SidebarMenuItem key={item.title}>
+                                    <SidebarMenuButton asChild>
+                                        <a href={item.url} className="flex items-center gap-2">
+                                            <item.icon className="size-4" />
+                                            <span>{item.title}</span>
+                                        </a>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+                <SidebarGroup>
+                    <SidebarGroupLabel>PREP</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            {prepItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
                                         <a href={item.url} className="flex items-center gap-2">
@@ -112,6 +132,22 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
             </SidebarContent>
             <SidebarFooter>
                 <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <a href="#" className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium">
+                                <Gem className="size-4" />
+                                <span>Get Expert Audit</span>
+                            </a>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <a href="#" className="flex items-center gap-2">
+                                <Settings className="size-4" />
+                                <span>Settings</span>
+                            </a>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
                     <SidebarMenuItem>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
