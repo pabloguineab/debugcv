@@ -31,6 +31,10 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart"
 
+// --- Global Blue Theme Colors ---
+const BLUE_PRIMARY = "#2563eb"; // blue-600
+const BLUE_SECONDARY = "#60a5fa"; // blue-400
+
 // --- Radar Chart Multiple ---
 const radarData = [
     { month: "January", desktop: 186, mobile: 80 },
@@ -43,12 +47,12 @@ const radarData = [
 
 const radarConfig = {
     desktop: {
-        label: "Desktop",
-        color: "hsl(var(--chart-1))",
+        label: "Engagement",
+        color: BLUE_PRIMARY,
     },
     mobile: {
-        label: "Mobile",
-        color: "hsl(var(--chart-2))",
+        label: "Outreach",
+        color: BLUE_SECONDARY,
     },
 } satisfies ChartConfig
 
@@ -73,15 +77,23 @@ export function DashboardRadarChart() {
                         <Radar
                             dataKey="desktop"
                             fill="var(--color-desktop)"
-                            fillOpacity={0.6}
+                            fillOpacity={0.5}
+                            stroke="var(--color-desktop)"
+                            strokeWidth={2}
                         />
-                        <Radar dataKey="mobile" fill="var(--color-mobile)" />
+                        <Radar
+                            dataKey="mobile"
+                            fill="var(--color-mobile)"
+                            fillOpacity={0.5}
+                            stroke="var(--color-mobile)"
+                            strokeWidth={2}
+                        />
                     </RadarChart>
                 </ChartContainer>
             </CardContent>
             <CardFooter className="flex-col gap-2 text-sm">
                 <div className="flex items-center gap-2 font-medium leading-none">
-                    Growing in 3 regions <TrendingUp className="h-4 w-4" />
+                    Growing in 3 regions <TrendingUp className="h-4 w-4 text-blue-500" />
                 </div>
                 <div className="flex items-center gap-2 leading-none text-muted-foreground">
                     January - June 2025
@@ -92,8 +104,10 @@ export function DashboardRadarChart() {
 }
 
 // --- Radial Chart Shape ---
+// Note: fill color must be set in data for RadialBar if not using config mapping perfectly, 
+// but ChartContainer handles css vars.
 const radialData = [
-    { browser: "safari", visitors: 1260, fill: "var(--color-safari)" },
+    { browser: "safari", visitors: 72, fill: BLUE_PRIMARY },
 ]
 
 const radialConfig = {
@@ -102,7 +116,7 @@ const radialConfig = {
     },
     safari: {
         label: "Safari",
-        color: "hsl(var(--chart-2))",
+        color: BLUE_PRIMARY,
     },
 } satisfies ChartConfig
 
@@ -120,9 +134,10 @@ export function DashboardRadialChart() {
                 >
                     <RadialBarChart
                         data={radialData}
-                        endAngle={100}
+                        endAngle={260} // Adjusted angle to look more like a gauge
                         innerRadius={80}
                         outerRadius={140}
+                        startAngle={0}
                     >
                         <PolarGrid
                             gridType="circle"
@@ -131,7 +146,7 @@ export function DashboardRadialChart() {
                             className="first:fill-muted last:fill-background"
                             polarRadius={[86, 74]}
                         />
-                        <RadialBar dataKey="visitors" background cornerRadius={10} />
+                        <RadialBar dataKey="visitors" background cornerRadius={10} fill={BLUE_PRIMARY} />
                         <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
                             <Label
                                 content={({ viewBox }) => {
@@ -168,7 +183,7 @@ export function DashboardRadialChart() {
             </CardContent>
             <CardFooter className="flex-col gap-2 text-sm">
                 <div className="flex items-center gap-2 font-medium leading-none">
-                    Good progress <TrendingUp className="h-4 w-4" />
+                    Good progress <TrendingUp className="h-4 w-4 text-blue-500" />
                 </div>
                 <div className="leading-none text-muted-foreground">
                     Finish your resume to reach 100%
@@ -191,11 +206,11 @@ const lineData = [
 const lineConfig = {
     desktop: {
         label: "Applications",
-        color: "hsl(var(--chart-1))",
+        color: BLUE_PRIMARY,
     },
     mobile: {
         label: "Interviews",
-        color: "hsl(var(--chart-2))",
+        color: BLUE_SECONDARY,
     },
 } satisfies ChartConfig
 
@@ -214,9 +229,11 @@ export function DashboardLineChart() {
                         margin={{
                             left: 12,
                             right: 12,
+                            top: 10,
+                            bottom: 10,
                         }}
                     >
-                        <CartesianGrid vertical={false} />
+                        <CartesianGrid vertical={false} strokeDasharray="3 3" />
                         <XAxis
                             dataKey="month"
                             tickLine={false}
@@ -228,16 +245,18 @@ export function DashboardLineChart() {
                         <Line
                             dataKey="desktop"
                             type="monotone"
-                            stroke="var(--color-desktop)"
+                            stroke={BLUE_PRIMARY}
                             strokeWidth={2}
-                            dot={false}
+                            dot={{ r: 4, fill: BLUE_PRIMARY }}
+                            activeDot={{ r: 6 }}
                         />
                         <Line
                             dataKey="mobile"
                             type="monotone"
-                            stroke="var(--color-mobile)"
+                            stroke={BLUE_SECONDARY}
                             strokeWidth={2}
-                            dot={false}
+                            dot={{ r: 4, fill: BLUE_SECONDARY }}
+                            activeDot={{ r: 6 }}
                         />
                     </LineChart>
                 </ChartContainer>
@@ -246,7 +265,7 @@ export function DashboardLineChart() {
                 <div className="flex w-full items-start gap-2 text-sm">
                     <div className="grid gap-2">
                         <div className="flex items-center gap-2 font-medium leading-none">
-                            High conversion rate <TrendingUp className="h-4 w-4" />
+                            High conversion rate <TrendingUp className="h-4 w-4 text-blue-500" />
                         </div>
                         <div className="flex items-center gap-2 leading-none text-muted-foreground">
                             Last 6 months activity
