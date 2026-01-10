@@ -93,8 +93,8 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                             {homeItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <a href={item.url}>
-                                            <item.icon />
+                                        <a href={item.url} className="flex items-center gap-2">
+                                            <item.icon className="size-4" />
                                             <span>{item.title}</span>
                                         </a>
                                     </SidebarMenuButton>
@@ -110,8 +110,8 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                             {documentsItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <a href={item.url}>
-                                            <item.icon />
+                                        <a href={item.url} className="flex items-center gap-2">
+                                            <item.icon className="size-4" />
                                             <span>{item.title}</span>
                                         </a>
                                     </SidebarMenuButton>
@@ -125,24 +125,24 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <a href="#">
-                                <Settings />
+                            <a href="#" className="flex items-center gap-2">
+                                <Settings className="size-4" />
                                 <span>Settings</span>
                             </a>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <a href="#">
-                                <CircleHelp />
+                            <a href="#" className="flex items-center gap-2">
+                                <CircleHelp className="size-4" />
                                 <span>Get Help</span>
                             </a>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <a href="#">
-                                <Search />
+                            <a href="#" className="flex items-center gap-2">
+                                <Search className="size-4" />
                                 <span>Search</span>
                             </a>
                         </SidebarMenuButton>
