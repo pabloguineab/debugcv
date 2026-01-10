@@ -43,6 +43,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/components/Logo";
+import { Link } from "@/i18n/routing";
 
 // Menu Groups
 const jobsItems = [
@@ -73,9 +74,9 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
     return (
         <Sidebar variant="inset" {...props}>
             <SidebarHeader className="p-4">
-                <a href="/dashboard">
+                <Link href="/dashboard">
                     <Logo className="h-8 w-auto" />
-                </a>
+                </Link>
             </SidebarHeader>
             <SidebarContent>
                 {/* Dashboard - Standalone Group */}
@@ -84,10 +85,10 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                         <SidebarMenu>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
-                                    <a href="/dashboard" className="flex items-center gap-2">
+                                    <Link href="/dashboard" className="flex items-center gap-2">
                                         <LayoutDashboard className="size-4" />
                                         <span>Dashboard</span>
-                                    </a>
+                                    </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         </SidebarMenu>
@@ -102,10 +103,10 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                             {jobsItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <a href={item.url} className="flex items-center gap-2">
+                                        <Link href={item.url} className="flex items-center gap-2">
                                             <item.icon className="size-4" />
                                             <span>{item.title}</span>
-                                        </a>
+                                        </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}
@@ -121,10 +122,10 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                             {resumesItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <a href={item.url} className="flex items-center gap-2">
+                                        <Link href={item.url} className="flex items-center gap-2">
                                             <item.icon className="size-4" />
                                             <span>{item.title}</span>
-                                        </a>
+                                        </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}
@@ -140,10 +141,10 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                             {interviewItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <a href={item.url} className="flex items-center gap-2">
+                                        <Link href={item.url} className="flex items-center gap-2">
                                             <item.icon className="size-4" />
                                             <span>{item.title}</span>
-                                        </a>
+                                        </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}
@@ -155,18 +156,18 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <a href="#" className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium">
+                            <Link href="#" className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium">
                                 <Gem className="size-4" />
                                 <span>Get Expert Audit</span>
-                            </a>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <a href="#" className="flex items-center gap-2">
+                            <Link href="#" className="flex items-center gap-2">
                                 <Settings className="size-4" />
                                 <span>Settings</span>
-                            </a>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
