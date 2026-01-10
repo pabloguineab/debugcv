@@ -134,7 +134,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
                                 className="w-56 rounded-lg"
-                                side="right"
+                                side="top"
                                 align="end"
                                 sideOffset={8}
                             >
