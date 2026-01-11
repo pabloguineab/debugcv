@@ -194,7 +194,7 @@ function StrategyContent() {
             </div>
 
             {/* Main Content Grid */}
-            <div className={`max-w-7xl mx-auto px-6 ${loading ? 'h-[calc(100vh-120px)] flex items-center justify-center' : 'py-8'}`}>
+            <div className={`max-w-7xl mx-auto px-6 ${loading ? 'h-[calc(100vh-120px)] flex items-center justify-center' : 'pt-6'}`}>
 
                 {loading ? (
                     <LoadingState company={company} role={role} />
