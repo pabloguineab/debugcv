@@ -126,16 +126,16 @@ export default function PlaybookPage() {
     };
 
     return (
-        <div className="relative flex flex-1 flex-col gap-6 p-4 md:p-6 overflow-hidden min-h-screen bg-gradient-to-br from-slate-50/50 via-white to-blue-50/20">
+        <div className="relative flex flex-1 flex-col gap-6 p-4 md:p-6 overflow-hidden">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="max-w-7xl mx-auto w-full flex flex-col flex-1 h-full"
             >
-                {/* Header Standardized to match Dashboard Layout */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 z-20 relative">
+                {/* Header Standardized to match Dashboard Layout (ATS Score / Application Board) */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
                     <div>
-                        <h1 className="text-2xl font-bold flex items-center gap-2 text-slate-900">
+                        <h1 className="text-2xl font-bold flex items-center gap-2">
                             <Sparkles className="w-6 h-6 text-blue-600" />
                             {t('title')}
                             <Badge variant="secondary" className="ml-2 text-blue-600 bg-blue-100 dark:bg-blue-900/30">
@@ -143,7 +143,7 @@ export default function PlaybookPage() {
                             </Badge>
                         </h1>
                         <p className="text-sm text-muted-foreground mt-1">
-                            {t('description_part1')}<span className="text-blue-600 font-semibold">{t('description_highlight')}</span>{t('description_part2')}
+                            Access insider-proven strategies.
                         </p>
                     </div>
                 </div>
@@ -151,9 +151,9 @@ export default function PlaybookPage() {
                 {/* Central Search Section - Takes remaining space */}
                 <div className="flex-1 flex items-center justify-center relative min-h-[500px] w-full mt-4 md:mt-8">
 
-                    {/* Background Animation Glows */}
+                    {/* Background Animation Glows - Subtle and clean */}
                     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-radial from-blue-100/40 to-transparent blur-3xl opacity-60" />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-radial from-blue-100/30 to-transparent blur-3xl opacity-50" />
                     </div>
 
                     {/* Orbiting Logos */}
