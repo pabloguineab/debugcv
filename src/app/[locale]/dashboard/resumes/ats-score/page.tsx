@@ -491,7 +491,7 @@ export default function ATSScannerPage() {
                     >
                         {/* Header - Minimalist */}
                         <div className="mb-6">
-                            <h1 className="text-2xl font-semibold mb-1.5">
+                            <h1 className="text-2xl font-semibold mb-1.5 dark:text-white">
                                 ATS Scanner <span className="text-blue-600 dark:text-blue-400">Pro</span>
                             </h1>
                             <p className="text-sm text-muted-foreground">
