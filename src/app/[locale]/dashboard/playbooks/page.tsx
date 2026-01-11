@@ -191,7 +191,7 @@ export default function PlaybookPage() {
                     })}
 
                     {/* Search Bar Island */}
-                    <div className="relative z-50 w-full max-w-4xl mx-auto px-4">
+                    <div className="relative z-50 w-full max-w-2xl mx-auto px-4">
                         <div className="flex flex-col md:flex-row items-center gap-2 p-2 bg-white rounded-2xl md:rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100">
 
                             {/* Company Combobox */}
