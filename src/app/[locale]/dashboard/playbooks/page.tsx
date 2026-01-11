@@ -192,7 +192,7 @@ export default function PlaybookPage() {
 
                     {/* Search Bar Island */}
                     <div className="relative z-50 w-full max-w-2xl mx-auto px-4">
-                        <div className="flex flex-col md:flex-row items-center gap-2 p-2 bg-white rounded-2xl md:rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100">
+                        <div className="flex flex-col md:flex-row items-center gap-2 p-2 bg-white dark:bg-slate-900 rounded-2xl md:rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100 dark:border-slate-800">
 
                             {/* Company Combobox */}
                             <div className="w-full md:flex-1 relative group pl-2">
@@ -208,7 +208,7 @@ export default function PlaybookPage() {
                                     }}
                                     onInputValueChange={setCompanyQuery}
                                 >
-                                    <div className="relative flex items-center px-4 hover:bg-slate-50 rounded-xl transition-colors h-12 md:h-14">
+                                    <div className="relative flex items-center px-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-xl transition-colors h-12 md:h-14">
                                         {selectedCompany && selectedCompanyLogo ? (
                                             <div className="relative w-10 h-10 mr-3 shrink-0 rounded-lg overflow-hidden bg-white border border-slate-100">
                                                 <Image
@@ -228,7 +228,7 @@ export default function PlaybookPage() {
                                         )}
                                         <ComboboxInput
                                             placeholder={t('search_placeholder_company')}
-                                            className="w-full bg-transparent border-none focus:ring-0 text-base font-medium h-full placeholder:text-slate-400 outline-none truncate"
+                                            className="w-full bg-transparent border-none focus:ring-0 text-base font-medium h-full placeholder:text-slate-400 dark:text-white outline-none truncate"
                                             onKeyDown={(e) => {
                                                 if (e.key === 'Enter' && companyQuery.length > 1) {
                                                     e.preventDefault();
@@ -280,7 +280,7 @@ export default function PlaybookPage() {
                             </div>
 
                             {/* Separator (Desktop) */}
-                            <div className="hidden md:block w-px h-6 bg-slate-200 mx-1" />
+                            <div className="hidden md:block w-px h-6 bg-slate-200 dark:bg-slate-700 mx-1" />
 
                             {/* Role Combobox */}
                             <div className="w-full md:flex-1 relative group">
@@ -289,11 +289,11 @@ export default function PlaybookPage() {
                                     onValueChange={(val) => setSelectedRole(String(val))}
                                     onInputValueChange={setRoleQuery}
                                 >
-                                    <div className="relative flex items-center px-4 hover:bg-slate-50 rounded-xl transition-colors h-12 md:h-14">
+                                    <div className="relative flex items-center px-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-xl transition-colors h-12 md:h-14">
                                         <Briefcase className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
                                         <ComboboxInput
                                             placeholder={t('search_placeholder_role')}
-                                            className="w-full bg-transparent border-none focus:ring-0 text-base font-medium h-full placeholder:text-slate-400 outline-none"
+                                            className="w-full bg-transparent border-none focus:ring-0 text-base font-medium h-full placeholder:text-slate-400 dark:text-white outline-none"
                                         />
                                     </div>
                                     <ComboboxContent align="start" className="w-[var(--radix-combobox-trigger-width)] md:w-80 p-0 overflow-hidden rounded-xl shadow-xl border-slate-200 z-50 bg-white">
