@@ -137,10 +137,10 @@ function StrategyContent() {
     };
 
     return (
-        <div className={`w-full bg-slate-50 font-sans ${loading ? 'h-[calc(100vh-56px)] overflow-y-hidden flex flex-col' : ''}`}>
+        <div className={`w-full font-sans ${loading ? 'h-[calc(100vh-56px)] overflow-y-hidden flex flex-col' : ''}`}>
 
             {/* Header / Hero Section */}
-            <div className="relative bg-white border-b border-slate-200 overflow-hidden">
+            <div className="relative bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 overflow-hidden">
 
                 <div className="max-w-7xl mx-auto px-6 py-6 relative z-10">
 
@@ -149,7 +149,7 @@ function StrategyContent() {
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="w-16 h-16 rounded-2xl bg-white border border-slate-200 shadow-lg flex items-center justify-center p-3 relative overflow-hidden"
+                                className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-lg flex items-center justify-center p-3 relative overflow-hidden"
                             >
                                 <Image
                                     src={logoParam || `https://cdn.brandfetch.io/${company.toLowerCase().replace(/\s+/g, '')}.com/w/400/h/400`}
@@ -173,7 +173,7 @@ function StrategyContent() {
                                     animate={{ opacity: 1, y: 0 }}
                                     className="flex items-center gap-3 mb-2"
                                 >
-                                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{company}</h1>
+                                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{company}</h1>
                                     <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wide border border-blue-200">
                                         {t('confidential_report')}
                                     </span>
@@ -182,10 +182,10 @@ function StrategyContent() {
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.1 }}
-                                    className="flex items-center text-slate-500 text-base font-medium"
+                                    className="flex items-center text-slate-500 dark:text-slate-400 text-base font-medium"
                                 >
                                     <Briefcase className="w-5 h-5 mr-2 text-slate-400" />
-                                    {t('strategy_for')} <span className="text-slate-800 font-bold ml-1">{role}</span>
+                                    {t('strategy_for')} <span className="text-slate-800 dark:text-white font-bold ml-1">{role}</span>
                                 </motion.div>
                             </div>
                         </div>
@@ -207,22 +207,22 @@ function StrategyContent() {
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/60"
+                                className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200/60 dark:border-slate-700"
                             >
-                                <h3 className="text-sm font-semibold text-slate-900 mb-4 flex items-center">
+                                <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-4 flex items-center">
                                     <Zap className="w-4 h-4 text-amber-500 mr-2" />
                                     {t('overview')}
                                 </h3>
 
                                 <div className="space-y-3">
-                                    <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                                    <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
                                         <div className="flex items-center gap-2">
                                             <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600">
                                                 <Target className="w-4 h-4" />
                                             </div>
                                             <div>
-                                                <p className="text-xs text-slate-500 font-medium uppercase">{t('difficulty')}</p>
-                                                <p className="text-sm text-slate-900 font-semibold">{strategyData.difficulty}</p>
+                                                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase">{t('difficulty')}</p>
+                                                <p className="text-sm text-slate-900 dark:text-white font-semibold">{strategyData.difficulty}</p>
                                             </div>
                                         </div>
                                         {(() => {
@@ -262,26 +262,26 @@ function StrategyContent() {
                                         })()}
                                     </div>
 
-                                    <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                                    <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
                                         <div className="flex items-center gap-2">
                                             <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
                                                 <Clock className="w-4 h-4" />
                                             </div>
                                             <div>
-                                                <p className="text-xs text-slate-500 font-medium uppercase">{t('duration')}</p>
-                                                <p className="text-sm text-slate-900 font-semibold">~{strategyData.avgProcessWeeks} {t('weeks')}</p>
+                                                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase">{t('duration')}</p>
+                                                <p className="text-sm text-slate-900 dark:text-white font-semibold">~{strategyData.avgProcessWeeks} {t('weeks')}</p>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                                    <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
                                         <div className="flex items-center gap-2">
                                             <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
                                                 <Users className="w-4 h-4" />
                                             </div>
                                             <div>
-                                                <p className="text-xs text-slate-500 font-medium uppercase">{t('stages')}</p>
-                                                <p className="text-sm text-slate-900 font-semibold">{strategyData.interviewStages} {t('interviews')}</p>
+                                                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase">{t('stages')}</p>
+                                                <p className="text-sm text-slate-900 dark:text-white font-semibold">{strategyData.interviewStages} {t('interviews')}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -331,19 +331,19 @@ function StrategyContent() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2 }}
-                                className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/60"
+                                className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200/60 dark:border-slate-700"
                             >
-                                <h3 className="text-sm font-semibold text-slate-900 mb-4 flex items-center">
+                                <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-4 flex items-center">
                                     <BrainCircuit className="w-4 h-4 text-indigo-600 mr-2" />
                                     {t('interview_process')}
                                 </h3>
 
-                                <div className="relative pl-6 border-l-2 border-slate-100 space-y-4">
+                                <div className="relative pl-6 border-l-2 border-slate-100 dark:border-slate-700 space-y-4">
                                     {(strategyData.steps || []).map((step, i) => (
                                         <div key={i} className="relative">
-                                            <div className="absolute -left-[29px] top-0 w-4 h-4 rounded-full bg-white border-3 border-indigo-500 shadow-sm" />
-                                            <h4 className="text-sm font-semibold text-slate-900 mb-1">{step.title}</h4>
-                                            <p className="text-xs text-slate-600 leading-relaxed">{step.desc}</p>
+                                            <div className="absolute -left-[29px] top-0 w-4 h-4 rounded-full bg-white dark:bg-slate-800 border-3 border-indigo-500 shadow-sm" />
+                                            <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-1">{step.title}</h4>
+                                            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{step.desc}</p>
                                         </div>
                                     ))}
                                 </div>
@@ -354,13 +354,13 @@ function StrategyContent() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3 }}
-                                className="bg-white rounded-2xl p-1 overflow-hidden shadow-sm border border-slate-200/60"
+                                className="bg-white dark:bg-slate-800 rounded-2xl p-1 overflow-hidden shadow-sm border border-slate-200/60 dark:border-slate-700"
                             >
                                 <div className="p-5 pb-0">
-                                    <h3 className="text-sm font-semibold text-slate-900 mb-2 flex items-center">
+                                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-2 flex items-center">
                                         <Lock className="w-4 h-4 text-slate-400 mr-2" />
                                         {t('recent_questions')}
-                                        <span className={`ml-2 text-xs font-medium ${strategyData.questions ? 'text-slate-500 bg-slate-100 border-slate-200' : 'text-blue-600 bg-blue-50 border-blue-100'} px-2 py-0.5 rounded-full border flex items-center justify-center min-w-[1.5rem]`}>
+                                        <span className={`ml-2 text-xs font-medium ${strategyData.questions ? 'text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 border-slate-200 dark:border-slate-600' : 'text-blue-600 bg-blue-50 border-blue-100'} px-2 py-0.5 rounded-full border flex items-center justify-center min-w-[1.5rem]`}>
                                             {strategyData.questions ? (
                                                 strategyData.questions.length
                                             ) : (
@@ -368,7 +368,7 @@ function StrategyContent() {
                                             )}
                                         </span>
                                     </h3>
-                                    <p className="text-xs text-slate-500 mb-4">
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
                                         {t('recent_questions_desc')}
                                     </p>
                                 </div>
