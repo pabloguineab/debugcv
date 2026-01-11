@@ -595,9 +595,9 @@ export default function ATSScannerPage() {
                                 </CardHeader>
                                 <CardContent className="p-0 pb-4 px-4">
                                     {/* Animated Browser Widget */}
-                                    <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-md relative h-64">
+                                    <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-md relative h-56">
                                         {/* Browser header */}
-                                        <div className="bg-gray-100 px-3 py-2 flex items-center gap-2 border-b border-gray-200">
+                                        <div className="bg-gray-100 px-3 py-2 flex items-center gap-2 border-b border-gray-200 relative z-10">
                                             <div className="flex gap-1.5">
                                                 <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
                                                 <div className="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
@@ -610,11 +610,11 @@ export default function ATSScannerPage() {
                                         </div>
 
                                         {/* Animation Container */}
-                                        <div className="relative h-64 overflow-hidden bg-white">
+                                        <div className="relative h-full bg-white">
                                             {/* Scrolling Content */}
                                             <motion.div
                                                 className="p-4 text-xs text-gray-600"
-                                                animate={{ y: [0, -100, -100, 0] }}
+                                                animate={{ y: [0, -60, -60, 0] }} // Reduced scroll distance
                                                 transition={{
                                                     duration: 8,
                                                     times: [0, 0.4, 0.9, 1],
@@ -657,10 +657,12 @@ export default function ATSScannerPage() {
                                                     </div>
                                                 </div>
 
-                                                {/* Selection Overlay - More visible */}
+                                                {/* Selection Overlay */}
                                                 <motion.div
-                                                    className="absolute top-[80px] left-[16px] right-[16px] bg-blue-500/30 dark:bg-blue-400/40 pointer-events-none z-20 rounded-sm border-2 border-blue-500/50"
-                                                    animate={{ height: [0, 300, 300, 0] }}
+                                                    className="absolute top-[40px] left-[16px] right-[16px] bg-blue-500/30 pointer-events-none z-10 rounded-sm border border-blue-400"
+                                                    animate={{
+                                                        height: [0, 140, 140, 0] // Reduced height
+                                                    }}
                                                     transition={{
                                                         duration: 8,
                                                         times: [0, 0.4, 0.9, 1],
@@ -675,9 +677,9 @@ export default function ATSScannerPage() {
                                             <motion.div
                                                 className="absolute z-50 pointer-events-none"
                                                 animate={{
-                                                    top: ["80px", "200px", "200px", "190px", "190px", "80px"],
-                                                    left: ["16px", "250px", "250px", "200px", "200px", "16px"],
-                                                    scale: [1, 1, 1, 1, 0.8, 1]
+                                                    top: ["40px", "140px", "140px", "130px", "130px", "40px"], // Adjusted coordinates
+                                                    left: ["16px", "200px", "200px", "150px", "150px", "16px"],
+                                                    scale: [1, 1, 1, 1, 0.9, 1]
                                                 }}
                                                 transition={{
                                                     duration: 8,
@@ -688,13 +690,13 @@ export default function ATSScannerPage() {
                                                 }}
                                             >
                                                 <svg className="w-5 h-5 text-black fill-black drop-shadow-md" viewBox="0 0 24 24" fill="none">
-                                                    <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                    <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" fill="currentColor" stroke="white" strokeWidth="1" />
                                                 </svg>
                                             </motion.div>
 
                                             {/* Context Menu */}
                                             <motion.div
-                                                className="absolute top-[150px] left-[140px] bg-white rounded-lg shadow-xl border border-gray-200 py-1 text-[11px] z-40 w-32 origin-top-left"
+                                                className="absolute top-[100px] left-[100px] bg-white rounded-lg shadow-xl border border-gray-200 py-1 text-[11px] z-40 w-28 origin-top-left"
                                                 initial={{ opacity: 0, scale: 0.8 }}
                                                 animate={{
                                                     opacity: [0, 0, 1, 1, 0, 0],
@@ -707,9 +709,9 @@ export default function ATSScannerPage() {
                                                     repeatDelay: 1
                                                 }}
                                             >
-                                                <div className="px-3 py-1.5 text-gray-500">Search Google</div>
+                                                <div className="px-3 py-1 text-gray-500">Search</div>
                                                 <motion.div
-                                                    className="px-3 py-1.5 bg-blue-600 text-white font-medium flex justify-between items-center"
+                                                    className="px-3 py-1 bg-blue-600 text-white font-medium flex justify-between items-center"
                                                     animate={{ scale: [1, 1, 0.95, 1, 1] }}
                                                     transition={{
                                                         duration: 8,
@@ -720,7 +722,7 @@ export default function ATSScannerPage() {
                                                 >
                                                     Copy <span>⌘C</span>
                                                 </motion.div>
-                                                <div className="px-3 py-1.5 text-gray-500">Share...</div>
+                                                <div className="px-3 py-1 text-gray-500">Share...</div>
                                             </motion.div>
                                         </div>
                                     </div>
