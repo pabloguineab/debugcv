@@ -137,7 +137,7 @@ function StrategyContent() {
     };
 
     return (
-        <div className={`w-full bg-slate-50 font-sans ${loading ? 'h-screen overflow-hidden flex flex-col' : ''}`}>
+        <div className={`w-full bg-slate-50 font-sans ${loading ? 'h-[calc(100vh-56px)] overflow-y-hidden flex flex-col' : ''}`}>
 
             {/* Header / Hero Section */}
             <div className="relative bg-white border-b border-slate-200 overflow-hidden">
