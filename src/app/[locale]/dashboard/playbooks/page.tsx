@@ -210,12 +210,12 @@ export default function PlaybookPage() {
                                 >
                                     <div className="relative flex items-center px-4 hover:bg-slate-50 rounded-xl transition-colors h-12 md:h-14">
                                         {selectedCompany && selectedCompanyLogo ? (
-                                            <div className="relative w-7 h-7 mr-3 shrink-0 rounded-md overflow-hidden bg-white border border-slate-100">
+                                            <div className="relative w-10 h-10 mr-3 shrink-0 rounded-lg overflow-hidden bg-white border border-slate-100">
                                                 <Image
                                                     src={selectedCompanyLogo}
                                                     alt={selectedCompany}
                                                     fill
-                                                    className="object-contain p-0.5"
+                                                    className="object-contain rounded-md"
                                                     onError={(e) => {
                                                         const target = e.target as HTMLImageElement;
                                                         target.style.display = 'none';
