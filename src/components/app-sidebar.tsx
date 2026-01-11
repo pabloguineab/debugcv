@@ -191,27 +191,30 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                                 <SidebarMenuButton
                                     size="lg"
                                     className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                                    asChild
                                 >
-                                    <Avatar className="h-8 w-8 rounded-lg">
-                                        <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
-                                        <AvatarFallback className="rounded-lg">
-                                            {user?.name ? user.name.charAt(0).toUpperCase() : <User className="size-4" />}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    <div className="grid flex-1 text-left text-sm leading-tight">
-                                        {user?.name ? (
-                                            <>
-                                                <span className="truncate font-semibold">{user.name}</span>
-                                                <span className="truncate text-xs text-muted-foreground">{user.email}</span>
-                                            </>
-                                        ) : (
-                                            <div className="flex flex-col gap-1">
-                                                <div className="h-3 w-20 rounded bg-muted animate-pulse" />
-                                                <div className="h-2 w-24 rounded bg-muted animate-pulse" />
-                                            </div>
-                                        )}
+                                    <div className="flex w-full items-center gap-2">
+                                        <Avatar className="h-8 w-8 rounded-lg">
+                                            <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
+                                            <AvatarFallback className="rounded-lg">
+                                                {user?.name ? user.name.charAt(0).toUpperCase() : <User className="size-4" />}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div className="grid flex-1 text-left text-sm leading-tight">
+                                            {user?.name ? (
+                                                <>
+                                                    <span className="truncate font-semibold">{user.name}</span>
+                                                    <span className="truncate text-xs text-muted-foreground">{user.email}</span>
+                                                </>
+                                            ) : (
+                                                <div className="flex flex-col gap-1">
+                                                    <div className="h-3 w-20 rounded bg-muted animate-pulse" />
+                                                    <div className="h-2 w-24 rounded bg-muted animate-pulse" />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <MoreVertical className="ml-auto size-4" />
                                     </div>
-                                    <MoreVertical className="ml-auto size-4" />
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
