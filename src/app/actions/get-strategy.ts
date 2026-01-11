@@ -84,7 +84,7 @@ export async function getStrategyOverview(company: string, role: string, locale:
             }
         });
 
-        const content = response.text(); // Note: SDK might behave differently on different versions. .text() or .text
+        const content = response.text; // Fixed: SDK uses property accessor
         if (!content) return null;
 
         // Clean potentially markdown wrapped json
@@ -127,7 +127,7 @@ export async function getStrategyQuestions(company: string, role: string, locale
             }
         });
 
-        const content = response.text();
+        const content = response.text;
         if (!content) return [];
 
         const cleanContent = content.replace(/```json/g, '').replace(/```/g, '').trim();
