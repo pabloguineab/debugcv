@@ -87,11 +87,6 @@ export async function searchJobs(
 
         if (!response.ok) {
             console.error(`JSearch API Error: ${response.status} ${response.statusText}`);
-            if (response.status === 429) {
-                // Throwing this specific error allows the frontend to show the "AI is taking a break" UI
-                // instead of a generic empty state.
-                throw new Error('RATE_LIMIT_EXCEEDED');
-            }
             return [];
         }
 
