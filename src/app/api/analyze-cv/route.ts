@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 // @ts-ignore
-const pdf = require("pdf-parse");
+// Removed pdf-parse dependency
 
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
@@ -20,36 +20,21 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // Convert File to Buffer for pdf-parse
+        // Convert File to Base64 for Gemini
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
-
-        // Extract text from PDF
-        let cvText = "";
-        try {
-            const data = await pdf(buffer);
-            cvText = data.text;
-        } catch (error) {
-            console.error("Error parsing PDF:", error);
-            return NextResponse.json(
-                { error: "Failed to parse PDF file" },
-                { status: 500 }
-            );
-        }
+        const base64Data = buffer.toString("base64");
 
         // Prepare prompt for Gemini
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         const prompt = `
         Act as an expert ATS (Applicant Tracking System) and Resume Coach.
-        Analyze the following Resume content against the provided Job Description.
+        Analyze the attached Resume PDF against the provided Job Description.
         
         Job Title: ${jobTitle || "Not specified"}
         Job Description:
         "${jobDescription.substring(0, 5000)}"
-
-        Resume Content:
-        "${cvText.substring(0, 5000)}"
 
         Provide a detailed analysis in strictly VALID JSON format (no markdown, no backticks) with the following specific structure:
         {
@@ -71,7 +56,16 @@ export async function POST(req: NextRequest) {
         5. Return ONLY the JSON string.
         `;
 
-        const result = await model.generateContent(prompt);
+        const result = await model.generateContent([
+            prompt,
+            {
+                inlineData: {
+                    data: base64Data,
+                    mimeType: file.type || "application/pdf",
+                },
+            },
+        ]);
+
         const response = await result.response;
         let text = response.text();
 
