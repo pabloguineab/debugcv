@@ -73,10 +73,16 @@ interface AppSidebarProps {
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
     return (
         <Sidebar variant="inset" {...props}>
-            <SidebarHeader className="p-4">
-                <Link href="/dashboard">
-                    <Logo className="h-8 w-auto" />
-                </Link>
+            <SidebarHeader>
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton size="lg" asChild className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+                            <Link href="/dashboard" className="flex items-center gap-2">
+                                <Logo className="h-8 w-auto ml-1" />
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
                 {/* Dashboard - Standalone Group */}
