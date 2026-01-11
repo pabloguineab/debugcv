@@ -202,7 +202,7 @@ function StrategyContent() {
             </div>
 
             {/* Main Content Grid */}
-            <div className="max-w-7xl mx-auto px-6 py-12">
+            <div className="max-w-7xl mx-auto px-6 py-8">
 
                 {loading ? (
                     <LoadingState company={company} role={role} />
@@ -215,22 +215,22 @@ function StrategyContent() {
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200/60"
+                                className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/60"
                             >
-                                <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center">
-                                    <Zap className="w-5 h-5 text-amber-500 mr-2" />
+                                <h3 className="text-sm font-semibold text-slate-900 mb-4 flex items-center">
+                                    <Zap className="w-4 h-4 text-amber-500 mr-2" />
                                     {t('overview')}
                                 </h3>
 
-                                <div className="space-y-6">
-                                    <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600">
-                                                <Target className="w-5 h-5" />
+                                <div className="space-y-3">
+                                    <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+                                                <Target className="w-4 h-4" />
                                             </div>
                                             <div>
-                                                <p className="text-xs text-slate-500 font-bold uppercase">{t('difficulty')}</p>
-                                                <p className="text-slate-900 font-bold">{strategyData.difficulty}</p>
+                                                <p className="text-xs text-slate-500 font-medium uppercase">{t('difficulty')}</p>
+                                                <p className="text-sm text-slate-900 font-semibold">{strategyData.difficulty}</p>
                                             </div>
                                         </div>
                                         {(() => {
@@ -270,26 +270,26 @@ function StrategyContent() {
                                         })()}
                                     </div>
 
-                                    <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                                                <Clock className="w-5 h-5" />
+                                    <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                                <Clock className="w-4 h-4" />
                                             </div>
                                             <div>
-                                                <p className="text-xs text-slate-500 font-bold uppercase">{t('duration')}</p>
-                                                <p className="text-slate-900 font-bold">~{strategyData.avgProcessWeeks} {t('weeks')}</p>
+                                                <p className="text-xs text-slate-500 font-medium uppercase">{t('duration')}</p>
+                                                <p className="text-sm text-slate-900 font-semibold">~{strategyData.avgProcessWeeks} {t('weeks')}</p>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
-                                                <Users className="w-5 h-5" />
+                                    <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+                                                <Users className="w-4 h-4" />
                                             </div>
                                             <div>
-                                                <p className="text-xs text-slate-500 font-bold uppercase">{t('stages')}</p>
-                                                <p className="text-slate-900 font-bold">{strategyData.interviewStages} {t('interviews')}</p>
+                                                <p className="text-xs text-slate-500 font-medium uppercase">{t('stages')}</p>
+                                                <p className="text-sm text-slate-900 font-semibold">{strategyData.interviewStages} {t('interviews')}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -301,12 +301,12 @@ function StrategyContent() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.1 }}
-                                className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 shadow-xl text-white relative overflow-hidden"
+                                className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-5 shadow-lg text-white relative overflow-hidden"
                             >
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl" />
+                                <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/20 rounded-full blur-3xl" />
 
-                                <h3 className="text-lg font-bold mb-6 flex items-center relative z-10">
-                                    <Trophy className="w-5 h-5 text-yellow-400 mr-2" />
+                                <h3 className="text-sm font-semibold mb-4 flex items-center relative z-10">
+                                    <Trophy className="w-4 h-4 text-yellow-400 mr-2" />
                                     {t('critical_focus_areas')}
                                 </h3>
 
@@ -339,19 +339,19 @@ function StrategyContent() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2 }}
-                                className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200/60"
+                                className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/60"
                             >
-                                <h3 className="text-xl font-bold text-slate-900 mb-8 flex items-center">
-                                    <BrainCircuit className="w-6 h-6 text-indigo-600 mr-3" />
+                                <h3 className="text-sm font-semibold text-slate-900 mb-4 flex items-center">
+                                    <BrainCircuit className="w-4 h-4 text-indigo-600 mr-2" />
                                     {t('interview_process')}
                                 </h3>
 
-                                <div className="relative pl-8 border-l-2 border-slate-100 space-y-10">
+                                <div className="relative pl-6 border-l-2 border-slate-100 space-y-4">
                                     {(strategyData.steps || []).map((step, i) => (
                                         <div key={i} className="relative">
-                                            <div className="absolute -left-[41px] top-0 w-5 h-5 rounded-full bg-white border-4 border-indigo-500 shadow-sm" />
-                                            <h4 className="text-lg font-bold text-slate-900 mb-2">{step.title}</h4>
-                                            <p className="text-slate-600 leading-relaxed">{step.desc}</p>
+                                            <div className="absolute -left-[29px] top-0 w-4 h-4 rounded-full bg-white border-3 border-indigo-500 shadow-sm" />
+                                            <h4 className="text-sm font-semibold text-slate-900 mb-1">{step.title}</h4>
+                                            <p className="text-xs text-slate-600 leading-relaxed">{step.desc}</p>
                                         </div>
                                     ))}
                                 </div>
