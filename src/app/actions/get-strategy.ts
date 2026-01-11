@@ -3,12 +3,8 @@
 import { GoogleGenAI } from "@google/genai";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
-// Using the correct model name for Gemini 3 Pro Preview based on user's request and provided docs
-const GEMINI_MODEL = "gemini-2.0-flash-thinking-exp-1219"; // Updated model as requested in previous turn for ATS, safer to use the one known working or preview if specifically asked. But playbooks code used 'gemini-3-flash-preview'. Keeping as is or safer 'gemini-2.0-flash-thinking-exp-1219' if 'gemini-3' is strictly preview.
-// Reverting to what was in code: "gemini-3-flash-preview"
-// Actually, let's use the same one I used for the other task which is 'gemini-2.0-flash-thinking-exp-1219'?
-// No, the code I read explicitly said "gemini-3-flash-preview". I will stick to that to be faithful to the "Migrate" instruction.
-const TARGET_MODEL = "gemini-2.0-flash-thinking-exp-1219";
+// Using the same model as ATS Scanner
+const TARGET_MODEL = "gemini-3-flash-preview";
 
 // Initialize using the GoogleGenAI SDK (v1alpha might be needed for some features but sticking to default unless required)
 const ai = GEMINI_API_KEY ? new GoogleGenAI({ apiKey: GEMINI_API_KEY }) : null;
