@@ -44,7 +44,7 @@ export function UserAuthForm({ className, buttonText = "Sign In with Email", ...
                             disabled={isLoading}
                         />
                     </div>
-                    <Button disabled={isLoading}>
+                    <Button disabled={isLoading} className="bg-blue-600 hover:bg-blue-700 text-white w-full">
                         {isLoading && (
                             <svg
                                 className="mr-2 h-4 w-4 animate-spin"
