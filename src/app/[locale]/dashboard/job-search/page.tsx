@@ -14,6 +14,16 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import {
+    Empty,
+    EmptyContent,
+    EmptyDescription,
+    EmptyHeader,
+    EmptyMedia,
+    EmptyTitle,
+} from "@/components/ui/empty";
+import { Spinner } from "@/components/ui/spinner";
+
 
 export default function JobSearchPage() {
     const { data: session, status } = useSession();
@@ -348,23 +358,18 @@ export default function JobSearchPage() {
             <div className="space-y-6">
 
                 {loading && !searched && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {[1, 2, 3, 4, 5, 6].map((i) => (
-                            <Card key={i} className="h-64">
-                                <CardHeader>
-                                    <div className="flex gap-4">
-                                        <Skeleton className="h-12 w-12 rounded-lg" />
-                                        <div className="space-y-2">
-                                            <Skeleton className="h-4 w-40" />
-                                            <Skeleton className="h-3 w-24" />
-                                        </div>
-                                    </div>
-                                </CardHeader>
-                                <CardContent>
-                                    <Skeleton className="h-20 w-full" />
-                                </CardContent>
-                            </Card>
-                        ))}
+                    <div className="flex justify-center py-20">
+                        <Empty className="w-full max-w-md bg-white dark:bg-slate-900/50 border rounded-xl shadow-sm">
+                            <EmptyHeader>
+                                <EmptyMedia variant="icon" className="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+                                    <Spinner className="h-5 w-5" />
+                                </EmptyMedia>
+                                <EmptyTitle>Searching for jobs...</EmptyTitle>
+                                <EmptyDescription>
+                                    We are scanning multiple platforms to find the best matches for you.
+                                </EmptyDescription>
+                            </EmptyHeader>
+                        </Empty>
                     </div>
                 )}
 
