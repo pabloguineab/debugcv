@@ -238,19 +238,19 @@ export default function PlaybookPage() {
                                             }}
                                         />
                                     </div>
-                                    <ComboboxContent align="start" className="w-[var(--radix-combobox-trigger-width)] md:w-80 p-0 overflow-hidden rounded-xl shadow-xl border-slate-200 z-50 bg-white">
+                                    <ComboboxContent align="start" className="w-[var(--radix-combobox-trigger-width)] md:w-80 p-0 overflow-hidden rounded-xl shadow-xl border-slate-200 dark:border-slate-700 z-50 bg-white dark:bg-slate-800">
                                         <ComboboxList className="max-h-64 p-2 overflow-y-auto">
                                             {/* Custom "Use [Company]" Option */}
                                             {companyQuery.length > 1 && (
                                                 <ComboboxItem
                                                     value={companyQuery}
-                                                    className="flex items-center p-2 rounded-lg cursor-pointer hover:bg-blue-50 data-[highlighted]:bg-blue-50 mb-1 border-b border-slate-50"
+                                                    className="flex items-center p-2 rounded-lg cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-700 data-[highlighted]:bg-blue-50 dark:data-[highlighted]:bg-slate-700 mb-1 border-b border-slate-50 dark:border-slate-700"
                                                 >
-                                                    <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mr-3 shrink-0 text-blue-600">
+                                                    <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-3 shrink-0 text-blue-600 dark:text-blue-400">
                                                         <Sparkles className="w-3 h-3" />
                                                     </div>
                                                     <div className="flex flex-col">
-                                                        <span className="font-bold text-slate-800 text-sm">{t('use_company', { company: companyQuery })}</span>
+                                                        <span className="font-bold text-slate-800 dark:text-slate-200 text-sm">{t('use_company', { company: companyQuery })}</span>
                                                         <span className="text-xs text-slate-400">{t('search_company_desc')}</span>
                                                     </div>
                                                 </ComboboxItem>
@@ -260,12 +260,12 @@ export default function PlaybookPage() {
                                                 <ComboboxItem
                                                     key={company.name}
                                                     value={company.name}
-                                                    className="flex items-center p-2 rounded-lg cursor-pointer hover:bg-blue-50 data-[highlighted]:bg-blue-50"
+                                                    className="flex items-center p-2 rounded-lg cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-700 data-[highlighted]:bg-blue-50 dark:data-[highlighted]:bg-slate-700"
                                                 >
-                                                    <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center mr-3 shrink-0 text-xs text-slate-500 font-medium">
+                                                    <div className="w-6 h-6 rounded bg-slate-100 dark:bg-slate-700 flex items-center justify-center mr-3 shrink-0 text-xs text-slate-500 dark:text-slate-400 font-medium">
                                                         {company.name[0]}
                                                     </div>
-                                                    <span className="font-medium text-slate-700 text-sm">{company.name}</span>
+                                                    <span className="font-medium text-slate-700 dark:text-slate-200 text-sm">{company.name}</span>
                                                 </ComboboxItem>
                                             ))}
 
@@ -296,7 +296,7 @@ export default function PlaybookPage() {
                                             className="w-full bg-transparent border-none focus:ring-0 text-base font-medium h-full placeholder:text-slate-400 dark:text-white outline-none"
                                         />
                                     </div>
-                                    <ComboboxContent align="start" className="w-[var(--radix-combobox-trigger-width)] md:w-80 p-0 overflow-hidden rounded-xl shadow-xl border-slate-200 z-50 bg-white">
+                                    <ComboboxContent align="start" className="w-[var(--radix-combobox-trigger-width)] md:w-80 p-0 overflow-hidden rounded-xl shadow-xl border-slate-200 dark:border-slate-700 z-50 bg-white dark:bg-slate-800">
                                         <ComboboxList className="max-h-64 p-2 overflow-y-auto">
                                             {filteredRoles.length === 0 && (
                                                 <ComboboxEmpty className="py-4 text-center text-slate-500 text-sm">
@@ -307,10 +307,10 @@ export default function PlaybookPage() {
                                                 <ComboboxItem
                                                     key={role}
                                                     value={role}
-                                                    className="flex items-center p-2 rounded-lg cursor-pointer hover:bg-indigo-50 data-[highlighted]:bg-indigo-50"
+                                                    className="flex items-center p-2 rounded-lg cursor-pointer hover:bg-indigo-50 dark:hover:bg-slate-700 data-[highlighted]:bg-indigo-50 dark:data-[highlighted]:bg-slate-700"
                                                 >
-                                                    <span className="font-medium text-slate-700">{role}</span>
-                                                    {selectedRole === role && <Check className="ml-auto w-4 h-4 text-indigo-600" />}
+                                                    <span className="font-medium text-slate-700 dark:text-slate-200">{role}</span>
+                                                    {selectedRole === role && <Check className="ml-auto w-4 h-4 text-indigo-600 dark:text-indigo-400" />}
                                                 </ComboboxItem>
                                             ))}
                                         </ComboboxList>
