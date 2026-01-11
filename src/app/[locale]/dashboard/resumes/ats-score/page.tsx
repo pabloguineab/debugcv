@@ -422,21 +422,39 @@ export default function ATSScannerPage() {
         setActiveUsers(1247 + Math.floor(Math.random() * 10));
     }, []);
 
-    const handleAnalyzeJob = () => {
-        if (!jobDescription.trim() || !selectedFile) return;
+    const performAnalysis = async (file: File, desc: string, title: string) => {
         setIsAnalyzing(true);
         setResult(null);
+        setError(null);
 
-        // Simulate analysis
-        setTimeout(() => {
-            setResult({
-                score: Math.floor(Math.random() * (95 - 75) + 75), // Random score 75-95
-                summary: `Análisis de compatibilidad para ${jobTitle || "la oferta"}: Tu perfil tiene una buena coincidencia con los requisitos detectados.`,
-                critical_errors: jobDescription.length < 100 ? ["Descripción muy corta para un análisis preciso"] : [],
-                improvements: ["Añadir más palabras clave técnicas", "Cuantificar logros relacionados con el puesto"]
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("jobDescription", desc);
+            formData.append("jobTitle", title);
+
+            const response = await fetch("/api/analyze-cv", {
+                method: "POST",
+                body: formData,
             });
+
+            if (!response.ok) {
+                throw new Error("Error en el análisis");
+            }
+
+            const data = await response.json();
+            setResult(data);
+        } catch (err) {
+            console.error("Analysis failed:", err);
+            setError("Hubo un error analizando tu CV. Asegúrate de que el archivo es válido y la descripción del puesto es clara.");
+        } finally {
             setIsAnalyzing(false);
-        }, 2500);
+        }
+    };
+
+    const handleAnalyzeJob = () => {
+        if (!jobDescription.trim() || !selectedFile) return;
+        performAnalysis(selectedFile, jobDescription, jobTitle);
     };
 
     // Calculate category scores
@@ -507,17 +525,7 @@ export default function ATSScannerPage() {
 
         // Auto-trigger analysis if job details are present
         if (jobTitle.trim() && jobDescription.trim()) {
-            setIsAnalyzing(true);
-            // Simulate analysis
-            setTimeout(() => {
-                setResult({
-                    score: Math.floor(Math.random() * (95 - 75) + 75),
-                    summary: `Análisis de compatibilidad para ${jobTitle}: Tu perfil tiene una buena coincidencia con los requisitos detectados.`,
-                    critical_errors: jobDescription.length < 100 ? ["Descripción muy corta para un análisis preciso"] : [],
-                    improvements: ["Añadir más palabras clave técnicas", "Cuantificar logros relacionados con el puesto"]
-                });
-                setIsAnalyzing(false);
-            }, 2500);
+            performAnalysis(file, jobDescription, jobTitle);
         }
     };
 
