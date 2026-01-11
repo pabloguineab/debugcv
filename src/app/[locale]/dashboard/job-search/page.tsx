@@ -123,24 +123,24 @@ export default function JobSearchPage() {
 
     const setAllQueriesAndRunFirstBatch = async (queries: string[], mainQuery: string, locationVal: string) => {
         setSearchQueries(queries);
-        const queriesToRun = queries.slice(0, 2);
+        // Run only 1 query initially to avoid hitting rate limits immediately
+        const queriesToRun = queries.slice(0, 1);
         if (queriesToRun.length === 0) queriesToRun.push(mainQuery);
-        setNextQueryIndex(2);
+        setNextQueryIndex(1);
         setPage(1);
         setVisibleCount(12);
 
         const count = await runBatchSearch(queriesToRun, locationVal, true, 1);
 
-        if (count < 12 && queries.length > 2) {
-            const nextBatch = queries.slice(2, 4);
-            setNextQueryIndex(4);
+        if (count < 12 && queries.length > 1) {
+            const nextBatch = queries.slice(1, 2);
+            setNextQueryIndex(2);
             await runBatchSearch(nextBatch, locationVal, false, 1);
         }
     };
 
     const runBatchSearch = async (queriesToRun: string[], locationVal: string, resetJobs: boolean, pageNum: number = 1): Promise<number> => {
         try {
-            setError(null);
             setError(null);
 
             const resultsArray: Job[][] = [];
@@ -175,7 +175,7 @@ export default function JobSearchPage() {
 
                 // Small delay to be polite to the API and avoid 429
                 if (queriesToRun.length > 1) {
-                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    await new Promise(resolve => setTimeout(resolve, 2000));
                 }
             }
             const allNewJobs = resultsArray.flat();
