@@ -527,7 +527,7 @@ export default function ATSScannerPage() {
                         </div>
 
                         {/* Upload Area - Ultra Compact & Centered */}
-                        <div className="max-w-md mx-auto">
+                        <div className="max-w-lg mx-auto">
                             <Card>
                                 <CardContent className="p-4">
                                     <Empty className="py-6">
