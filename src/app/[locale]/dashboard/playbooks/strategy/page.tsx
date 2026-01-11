@@ -137,7 +137,7 @@ function StrategyContent() {
     };
 
     return (
-        <div className={`min-h-screen w-full bg-slate-50 font-sans ${loading ? 'overflow-hidden' : 'pb-8'}`}>
+        <div className={`min-h-screen w-full bg-slate-50 font-sans ${loading ? 'overflow-hidden' : ''}`}>
 
             {/* Header / Hero Section */}
             <div className="relative bg-white border-b border-slate-200 overflow-hidden">
