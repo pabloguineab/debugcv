@@ -509,33 +509,6 @@ export default function ATSScannerPage() {
 
                         {/* Upload Area - Following shadcn Empty docs style */}
                         <div className="max-w-2xl mx-auto">
-                            {/* Compact Benefits - Inline & Centered Above */}
-                            <div className="flex flex-wrap justify-center gap-2 mb-4">
-                                {[
-                                    { icon: ShieldCheck, color: "text-emerald-600 dark:text-emerald-500", text: "100% Privado" },
-                                    { icon: Zap, color: "text-amber-600 dark:text-amber-500", text: "Análisis en 10s" },
-                                    { icon: Users, color: "text-purple-600 dark:text-purple-500", text: "Por Recruiters" },
-                                ].map((item, i) => (
-                                    <div key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/50 rounded-md text-xs">
-                                        <item.icon className={`w-3.5 h-3.5 ${item.color}`} />
-                                        <span className="font-medium">{item.text}</span>
-                                    </div>
-                                ))}
-                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/30 rounded-md text-xs">
-                                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                                    <motion.span
-                                        className="font-medium"
-                                        key={Math.floor(Date.now() / 10000)}
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ duration: 0.5 }}
-                                    >
-                                        {1247 + Math.floor(Math.random() * 10)}
-                                    </motion.span>
-                                    <span className="text-muted-foreground">activos</span>
-                                </div>
-                            </div>
-
                             <Empty className="border">
                                 <EmptyHeader>
                                     <EmptyMedia variant="icon">
@@ -578,6 +551,33 @@ export default function ATSScannerPage() {
                                     <span className="text-xs">PDF, DOC, DOCX (max. 5MB)</span>
                                 </Button>
                             </Empty>
+
+                            {/* Compact Benefits - Inline & Centered Below */}
+                            <div className="flex flex-wrap justify-center gap-2 mt-4">
+                                {[
+                                    { icon: ShieldCheck, color: "text-emerald-600 dark:text-emerald-500", text: "100% Privado" },
+                                    { icon: Zap, color: "text-amber-600 dark:text-amber-500", text: "Análisis en 10s" },
+                                    { icon: Users, color: "text-purple-600 dark:text-purple-500", text: "Por Recruiters" },
+                                ].map((item, i) => (
+                                    <div key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/50 rounded-md text-xs">
+                                        <item.icon className={`w-3.5 h-3.5 ${item.color}`} />
+                                        <span className="font-medium">{item.text}</span>
+                                    </div>
+                                ))}
+                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/30 rounded-md text-xs">
+                                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                                    <motion.span
+                                        className="font-medium"
+                                        key={Math.floor(Date.now() / 10000)}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ duration: 0.5 }}
+                                    >
+                                        {1247 + Math.floor(Math.random() * 10)}
+                                    </motion.span>
+                                    <span className="text-muted-foreground">activos</span>
+                                </div>
+                            </div>
                         </div>
                     </motion.div>
                 )}
