@@ -249,7 +249,7 @@ function AnalyzingAnimation() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex items-center justify-center min-h-[60vh]"
+            className="flex flex-1 items-center justify-center min-h-[calc(100vh-12rem)]"
         >
             <Card className="max-w-2xl w-full">
                 <CardContent className="p-8">
