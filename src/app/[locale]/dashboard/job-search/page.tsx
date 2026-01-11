@@ -386,12 +386,18 @@ export default function JobSearchPage() {
                 )}
 
                 {searched && displayedJobs.length === 0 && !loading && !error && (
-                    <div className="text-center py-12">
-                        <div className="mx-auto h-24 w-24 rounded-full bg-muted flex items-center justify-center mb-4">
-                            <Briefcase className="h-10 w-10 text-muted-foreground" />
-                        </div>
-                        <h3 className="text-lg font-semibold">No jobs found</h3>
-                        <p className="text-muted-foreground">Try adjusting your search terms or location.</p>
+                    <div className="flex justify-center py-12">
+                        <Empty className="w-full max-w-md bg-white dark:bg-slate-900/50 border rounded-xl shadow-sm">
+                            <EmptyHeader>
+                                <EmptyMedia variant="icon" className="bg-slate-100 dark:bg-slate-800 text-slate-500">
+                                    <Briefcase className="h-5 w-5" />
+                                </EmptyMedia>
+                                <EmptyTitle>No jobs found</EmptyTitle>
+                                <EmptyDescription>
+                                    Try adjusting your search terms or location.
+                                </EmptyDescription>
+                            </EmptyHeader>
+                        </Empty>
                     </div>
                 )}
 
