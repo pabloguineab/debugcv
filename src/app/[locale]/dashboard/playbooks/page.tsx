@@ -99,8 +99,8 @@ export default function PlaybookPage() {
         r.toLowerCase().includes(roleSearch.toLowerCase())
     );
 
-    const [radius, setRadius] = useState(300);
-    const [logoSize, setLogoSize] = useState(100);
+    const [radius, setRadius] = useState(250);
+    const [logoSize, setLogoSize] = useState(70);
 
     // Ajuste de radio para móvil y laptops
     useEffect(() => {
@@ -113,12 +113,12 @@ export default function PlaybookPage() {
                 setLogoSize(45);
             } else if (width < 1500 || height < 900) {
                 // Laptop / Pantallas medianas (Optimized for 14" MacBook Pro)
-                setRadius(220); // Increased from 200
-                setLogoSize(80); // Increased from 60 to make them pop
+                setRadius(180); // Decreased from 220
+                setLogoSize(60); // Decreased from 80
             } else {
                 // Pantallas grandes
-                setRadius(300);
-                setLogoSize(90);
+                setRadius(280);
+                setLogoSize(72);
             }
         };
 
@@ -127,10 +127,10 @@ export default function PlaybookPage() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const inputHeight = "h-16 md:h-20"; // Responsive height
+    const inputHeight = "h-14 md:h-16"; // Compact responsive height
 
     return (
-        <div className="min-h-screen w-full relative overflow-hidden flex flex-col items-center justify-center p-4 md:p-6 pb-32 md:pb-60 font-sans bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+        <div className="min-h-screen w-full relative overflow-hidden flex flex-col items-center justify-center p-4 md:p-6 pb-20 md:pb-40 font-sans bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
 
             {/* Premium Light Background */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -173,7 +173,7 @@ export default function PlaybookPage() {
                         <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-green-500 animate-pulse shadow-lg shadow-green-500/50" />
                     </motion.div>
 
-                    <h1 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight mb-3 md:mb-5 leading-tight">
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight mb-3 md:mb-5 leading-tight">
                         <span className="text-slate-900">
                             {t('title')}
                         </span>
@@ -185,7 +185,7 @@ export default function PlaybookPage() {
                 </motion.div>
 
                 {/* Search Section Container */}
-                <div className="relative w-full h-[350px] md:h-[500px] flex items-center justify-center">
+                <div className="relative w-full h-[300px] md:h-[420px] flex items-center justify-center">
 
                     {/* Company Logos Flotantes */}
                     {displayedCompanies.map((company, index) => {
@@ -432,7 +432,7 @@ export default function PlaybookPage() {
                             {/* Search Button */}
                             <motion.button
                                 className={`
-                  ${inputHeight} px-8 md:px-12 rounded-2xl font-bold text-base md:text-lg transition-all duration-300 flex items-center justify-center gap-2 md:gap-3 relative overflow-hidden w-full md:w-auto mt-2 md:mt-0
+                  ${inputHeight} px-6 md:px-10 rounded-2xl font-bold text-sm md:text-base transition-all duration-300 flex items-center justify-center gap-2 md:gap-3 relative overflow-hidden w-full md:w-auto mt-2 md:mt-0
                   ${selectedCompany && selectedRole
                                         ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg cursor-pointer'
                                         : 'bg-slate-100 text-slate-400 cursor-not-allowed'}
