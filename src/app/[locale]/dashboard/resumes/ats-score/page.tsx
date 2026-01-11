@@ -507,110 +507,160 @@ export default function ATSScannerPage() {
                             </p>
                         </div>
 
-                        {/* Upload Area - Following shadcn Empty docs style */}
-                        <div className="max-w-2xl mx-auto">
-                            <Empty className="border">
-                                <EmptyHeader>
-                                    <EmptyMedia variant="icon">
-                                        <FileText className="w-6 h-6" />
-                                    </EmptyMedia>
-                                    <EmptyTitle>No Resume Selected</EmptyTitle>
-                                    <EmptyDescription>
-                                        Select a resume from your library or import a new one from your device to start the ATS analysis.
-                                    </EmptyDescription>
-                                </EmptyHeader>
-                                <EmptyContent>
-                                    <div className="flex gap-2">
-                                        <Button variant="outline">
-                                            <FileText className="w-4 h-4 mr-2" />
-                                            Select Resume
-                                        </Button>
-                                        <Button
-                                            onClick={() => document.getElementById('file-upload-input')?.click()}
-                                        >
-                                            <Upload className="w-4 h-4 mr-2" />
-                                            Import Resume
-                                        </Button>
-                                    </div>
-                                    <input
-                                        id="file-upload-input"
-                                        type="file"
-                                        accept=".pdf,.doc,.docx"
-                                        onChange={(e) => {
-                                            const file = e.target.files?.[0];
-                                            if (file) handleFileSelect(file);
-                                        }}
-                                        className="hidden"
-                                    />
-                                </EmptyContent>
-                                <Button
-                                    variant="link"
-                                    className="text-muted-foreground"
-                                    size="sm"
-                                >
-                                    <span className="text-xs">PDF, DOC, DOCX (max. 5MB)</span>
-                                </Button>
-                            </Empty>
-
-                            {/* Compact Benefits - Inline & Centered Below */}
-                            <div className="flex flex-wrap justify-center gap-2 mt-4">
-                                {[
-                                    { icon: ShieldCheck, color: "text-emerald-600 dark:text-emerald-500", text: "100% Privado" },
-                                    { icon: Zap, color: "text-amber-600 dark:text-amber-500", text: "Análisis en 10s" },
-                                    { icon: Users, color: "text-purple-600 dark:text-purple-500", text: "Por Recruiters" },
-                                ].map((item, i) => (
-                                    <div key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/50 rounded-md text-xs">
-                                        <item.icon className={`w-3.5 h-3.5 ${item.color}`} />
-                                        <span className="font-medium">{item.text}</span>
-                                    </div>
-                                ))}
-                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/30 rounded-md text-xs">
-                                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                                    <motion.span
-                                        className="font-medium"
-                                        key={Math.floor(Date.now() / 10000)}
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ duration: 0.5 }}
-                                    >
-                                        {1247 + Math.floor(Math.random() * 10)}
-                                    </motion.span>
-                                    <span className="text-muted-foreground">activos</span>
+                        {/* Compact Benefits - Horizontal at top */}
+                        <div className="flex flex-wrap justify-center gap-2 mb-4">
+                            {[
+                                { icon: ShieldCheck, color: "text-emerald-600 dark:text-emerald-500", text: "100% Privado" },
+                                { icon: Zap, color: "text-amber-600 dark:text-amber-500", text: "Análisis en 10s" },
+                                { icon: Users, color: "text-purple-600 dark:text-purple-500", text: "Por Recruiters" },
+                            ].map((item, i) => (
+                                <div key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/50 rounded-md text-xs">
+                                    <item.icon className={`w-3.5 h-3.5 ${item.color}`} />
+                                    <span className="font-medium">{item.text}</span>
                                 </div>
+                            ))}
+                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/30 rounded-md text-xs">
+                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                                <motion.span
+                                    className="font-medium"
+                                    key={Math.floor(Date.now() / 10000)}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ duration: 0.5 }}
+                                >
+                                    {1247 + Math.floor(Math.random() * 10)}
+                                </motion.span>
+                                <span className="text-muted-foreground">activos</span>
                             </div>
+                        </div>
 
-                            {/* Job Offer Input Section */}
-                            <div className="grid md:grid-cols-2 gap-4 mt-6">
-                                {/* Left: Animated Copy Offer Widget */}
-                                <Card className="border-dashed overflow-hidden">
-                                    <CardHeader className="pb-3">
-                                        <CardTitle className="text-sm font-medium">Quick Paste</CardTitle>
-                                        <CardDescription className="text-xs">
-                                            Copy the job offer from LinkedIn, Indeed, etc.
-                                        </CardDescription>
-                                    </CardHeader>
-                                    <CardContent className="p-0 pb-4 px-4">
-                                        {/* Animated Browser Widget */}
-                                        <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-md relative h-80">
-                                            {/* Browser header */}
-                                            <div className="bg-gray-100 px-3 py-2 flex items-center gap-2 border-b border-gray-200">
-                                                <div className="flex gap-1.5">
-                                                    <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
-                                                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
-                                                    <div className="w-2.5 h-2.5 rounded-full bg-green-400"></div>
-                                                </div>
-                                                <div className="flex-1 bg-white rounded px-2 py-1 text-[10px] text-gray-400 truncate flex items-center">
-                                                    <span className="w-3 h-3 bg-gray-200 rounded-full mr-1"></span>
-                                                    linkedin.com/jobs/view/38291...
-                                                </div>
+                        {/* Main Content Grid - 3 columns */}
+                        <div className="grid lg:grid-cols-3 gap-4">
+                            {/* Upload Area */}
+                            <Card className="border lg:col-span-1">
+                                <CardContent className="p-6">
+                                    <Empty>
+                                        <EmptyHeader>
+                                            <EmptyMedia variant="icon">
+                                                <FileText className="w-6 h-6" />
+                                            </EmptyMedia>
+                                            <EmptyTitle className="text-sm">No Resume Selected</EmptyTitle>
+                                            <EmptyDescription className="text-xs">
+                                                Select or import a resume to start
+                                            </EmptyDescription>
+                                        </EmptyHeader>
+                                        <EmptyContent>
+                                            <div className="flex flex-col gap-2">
+                                                <Button variant="outline" size="sm">
+                                                    <FileText className="w-3.5 h-3.5 mr-1.5" />
+                                                    Select Resume
+                                                </Button>
+                                                <Button
+                                                    size="sm"
+                                                    onClick={() => document.getElementById('file-upload-input')?.click()}
+                                                >
+                                                    <Upload className="w-3.5 h-3.5 mr-1.5" />
+                                                    Import Resume
+                                                </Button>
                                             </div>
+                                            <input
+                                                id="file-upload-input"
+                                                type="file"
+                                                accept=".pdf,.doc,.docx"
+                                                onChange={(e) => {
+                                                    const file = e.target.files?.[0];
+                                                    if (file) handleFileSelect(file);
+                                                }}
+                                                className="hidden"
+                                            />
+                                        </EmptyContent>
+                                        <Button
+                                            variant="link"
+                                            className="text-muted-foreground h-auto p-0 mt-2"
+                                            size="sm"
+                                        >
+                                            <span className="text-xs">PDF, DOC, DOCX (max. 5MB)</span>
+                                        </Button>
+                                    </Empty>
+                                </CardContent>
+                            </Card>
 
-                                            {/* Animation Container */}
-                                            <div className="relative h-64 overflow-hidden bg-white">
-                                                {/* Scrolling Content */}
+                            {/* Animated Copy Offer Widget */}
+                            <Card className="border-dashed overflow-hidden lg:col-span-1">
+                                <CardHeader className="pb-3">
+                                    <CardTitle className="text-sm font-medium">Quick Paste</CardTitle>
+                                    <CardDescription className="text-xs">
+                                        Copy the job offer from LinkedIn, Indeed, etc.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="p-0 pb-4 px-4">
+                                    {/* Animated Browser Widget */}
+                                    <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-md relative h-64">
+                                        {/* Browser header */}
+                                        <div className="bg-gray-100 px-3 py-2 flex items-center gap-2 border-b border-gray-200">
+                                            <div className="flex gap-1.5">
+                                                <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
+                                                <div className="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
+                                                <div className="w-2.5 h-2.5 rounded-full bg-green-400"></div>
+                                            </div>
+                                            <div className="flex-1 bg-white rounded px-2 py-1 text-[10px] text-gray-400 truncate flex items-center">
+                                                <span className="w-3 h-3 bg-gray-200 rounded-full mr-1"></span>
+                                                linkedin.com/jobs/view/38291...
+                                            </div>
+                                        </div>
+
+                                        {/* Animation Container */}
+                                        <div className="relative h-64 overflow-hidden bg-white">
+                                            {/* Scrolling Content */}
+                                            <motion.div
+                                                className="p-4 text-xs text-gray-600"
+                                                animate={{ y: [0, -100, -100, 0] }}
+                                                transition={{
+                                                    duration: 8,
+                                                    times: [0, 0.4, 0.9, 1],
+                                                    repeat: Infinity,
+                                                    repeatDelay: 1,
+                                                    ease: "easeInOut"
+                                                }}
+                                            >
+                                                <div className="flex items-start gap-3 mb-4">
+                                                    <div className="w-10 h-10 bg-blue-600 rounded flex items-center justify-center text-white font-bold text-lg">In</div>
+                                                    <div>
+                                                        <h3 className="font-bold text-gray-900 text-sm">Senior Software Engineer</h3>
+                                                        <p className="text-gray-500 text-[10px]">TechStart Inc • Madrid (Hybrid)</p>
+                                                        <div className="flex gap-1 mt-1">
+                                                            <span className="text-[9px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded">Actively hiring</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="space-y-3 relative z-0">
+                                                    <p className="text-[11px] leading-relaxed">
+                                                        We are looking for a <span className="font-semibold text-gray-800">Senior Frontend Engineer</span> to join our core product team.
+                                                    </p>
+
+                                                    <div>
+                                                        <h4 className="font-bold text-gray-800 text-[11px] mb-1">Requirements:</h4>
+                                                        <ul className="space-y-1 text-[10px] list-disc pl-4">
+                                                            <li>5+ years of experience with <span className="font-semibold">React, TypeScript</span></li>
+                                                            <li>Experience with Next.js and state management</li>
+                                                            <li>Strong understanding of web performance</li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <div className="bg-yellow-50 p-2 rounded border border-yellow-200">
+                                                        <h4 className="font-bold text-gray-800 text-[11px] mb-1">Benefits:</h4>
+                                                        <ul className="space-y-1 text-[10px] list-disc pl-4">
+                                                            <li>Competitive salary (€60k - €90k)</li>
+                                                            <li>Remote-first culture</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                {/* Selection Overlay */}
                                                 <motion.div
-                                                    className="p-4 text-xs text-gray-600"
-                                                    animate={{ y: [0, -100, -100, 0] }}
+                                                    className="absolute top-[80px] left-[16px] right-[16px] bg-blue-500/20 mix-blend-multiply pointer-events-none z-10 rounded-sm"
+                                                    animate={{ height: [0, 300, 300, 0] }}
                                                     transition={{
                                                         duration: 8,
                                                         times: [0, 0.4, 0.9, 1],
@@ -618,149 +668,103 @@ export default function ATSScannerPage() {
                                                         repeatDelay: 1,
                                                         ease: "easeInOut"
                                                     }}
-                                                >
-                                                    <div className="flex items-start gap-3 mb-4">
-                                                        <div className="w-10 h-10 bg-blue-600 rounded flex items-center justify-center text-white font-bold text-lg">In</div>
-                                                        <div>
-                                                            <h3 className="font-bold text-gray-900 text-sm">Senior Software Engineer</h3>
-                                                            <p className="text-gray-500 text-[10px]">TechStart Inc • Madrid (Hybrid)</p>
-                                                            <div className="flex gap-1 mt-1">
-                                                                <span className="text-[9px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded">Actively hiring</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                />
+                                            </motion.div>
 
-                                                    <div className="space-y-3 relative z-0">
-                                                        <p className="text-[11px] leading-relaxed">
-                                                            We are looking for a <span className="font-semibold text-gray-800">Senior Frontend Engineer</span> to join our core product team.
-                                                        </p>
+                                            {/* Cursor Animation */}
+                                            <motion.div
+                                                className="absolute z-50 pointer-events-none"
+                                                animate={{
+                                                    top: ["80px", "200px", "200px", "190px", "190px", "80px"],
+                                                    left: ["16px", "250px", "250px", "200px", "200px", "16px"],
+                                                    scale: [1, 1, 1, 1, 0.8, 1]
+                                                }}
+                                                transition={{
+                                                    duration: 8,
+                                                    times: [0, 0.4, 0.5, 0.6, 0.65, 1],
+                                                    repeat: Infinity,
+                                                    repeatDelay: 1,
+                                                    ease: "easeInOut"
+                                                }}
+                                            >
+                                                <svg className="w-5 h-5 text-black fill-black drop-shadow-md" viewBox="0 0 24 24" fill="none">
+                                                    <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                </svg>
+                                            </motion.div>
 
-                                                        <div>
-                                                            <h4 className="font-bold text-gray-800 text-[11px] mb-1">Requirements:</h4>
-                                                            <ul className="space-y-1 text-[10px] list-disc pl-4">
-                                                                <li>5+ years of experience with <span className="font-semibold">React, TypeScript</span></li>
-                                                                <li>Experience with Next.js and state management</li>
-                                                                <li>Strong understanding of web performance</li>
-                                                            </ul>
-                                                        </div>
-
-                                                        <div className="bg-yellow-50 p-2 rounded border border-yellow-200">
-                                                            <h4 className="font-bold text-gray-800 text-[11px] mb-1">Benefits:</h4>
-                                                            <ul className="space-y-1 text-[10px] list-disc pl-4">
-                                                                <li>Competitive salary (€60k - €90k)</li>
-                                                                <li>Remote-first culture</li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Selection Overlay */}
-                                                    <motion.div
-                                                        className="absolute top-[80px] left-[16px] right-[16px] bg-blue-500/20 mix-blend-multiply pointer-events-none z-10 rounded-sm"
-                                                        animate={{ height: [0, 300, 300, 0] }}
-                                                        transition={{
-                                                            duration: 8,
-                                                            times: [0, 0.4, 0.9, 1],
-                                                            repeat: Infinity,
-                                                            repeatDelay: 1,
-                                                            ease: "easeInOut"
-                                                        }}
-                                                    />
-                                                </motion.div>
-
-                                                {/* Cursor Animation */}
+                                            {/* Context Menu */}
+                                            <motion.div
+                                                className="absolute top-[150px] left-[140px] bg-white rounded-lg shadow-xl border border-gray-200 py-1 text-[11px] z-40 w-32 origin-top-left"
+                                                initial={{ opacity: 0, scale: 0.8 }}
+                                                animate={{
+                                                    opacity: [0, 0, 1, 1, 0, 0],
+                                                    scale: [0.8, 0.8, 1, 1, 0.8, 0.8]
+                                                }}
+                                                transition={{
+                                                    duration: 8,
+                                                    times: [0, 0.45, 0.5, 0.8, 0.9, 1],
+                                                    repeat: Infinity,
+                                                    repeatDelay: 1
+                                                }}
+                                            >
+                                                <div className="px-3 py-1.5 text-gray-500">Search Google</div>
                                                 <motion.div
-                                                    className="absolute z-50 pointer-events-none"
-                                                    animate={{
-                                                        top: ["80px", "200px", "200px", "190px", "190px", "80px"],
-                                                        left: ["16px", "250px", "250px", "200px", "200px", "16px"],
-                                                        scale: [1, 1, 1, 1, 0.8, 1]
-                                                    }}
+                                                    className="px-3 py-1.5 bg-blue-600 text-white font-medium flex justify-between items-center"
+                                                    animate={{ scale: [1, 1, 0.95, 1, 1] }}
                                                     transition={{
                                                         duration: 8,
-                                                        times: [0, 0.4, 0.5, 0.6, 0.65, 1],
-                                                        repeat: Infinity,
-                                                        repeatDelay: 1,
-                                                        ease: "easeInOut"
-                                                    }}
-                                                >
-                                                    <svg className="w-5 h-5 text-black fill-black drop-shadow-md" viewBox="0 0 24 24" fill="none">
-                                                        <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                                    </svg>
-                                                </motion.div>
-
-                                                {/* Context Menu */}
-                                                <motion.div
-                                                    className="absolute top-[150px] left-[140px] bg-white rounded-lg shadow-xl border border-gray-200 py-1 text-[11px] z-40 w-32 origin-top-left"
-                                                    initial={{ opacity: 0, scale: 0.8 }}
-                                                    animate={{
-                                                        opacity: [0, 0, 1, 1, 0, 0],
-                                                        scale: [0.8, 0.8, 1, 1, 0.8, 0.8]
-                                                    }}
-                                                    transition={{
-                                                        duration: 8,
-                                                        times: [0, 0.45, 0.5, 0.8, 0.9, 1],
+                                                        times: [0, 0.6, 0.65, 0.7, 1],
                                                         repeat: Infinity,
                                                         repeatDelay: 1
                                                     }}
                                                 >
-                                                    <div className="px-3 py-1.5 text-gray-500">Search Google</div>
-                                                    <motion.div
-                                                        className="px-3 py-1.5 bg-blue-600 text-white font-medium flex justify-between items-center"
-                                                        animate={{ scale: [1, 1, 0.95, 1, 1] }}
-                                                        transition={{
-                                                            duration: 8,
-                                                            times: [0, 0.6, 0.65, 0.7, 1],
-                                                            repeat: Infinity,
-                                                            repeatDelay: 1
-                                                        }}
-                                                    >
-                                                        Copy <span>⌘C</span>
-                                                    </motion.div>
-                                                    <div className="px-3 py-1.5 text-gray-500">Share...</div>
+                                                    Copy <span>⌘C</span>
                                                 </motion.div>
-                                            </div>
+                                                <div className="px-3 py-1.5 text-gray-500">Share...</div>
+                                            </motion.div>
                                         </div>
-                                    </CardContent>
-                                </Card>
+                                    </div>
+                                </CardContent>
+                            </Card>
 
-                                {/* Right: Manual Input */}
-                                <Card>
-                                    <CardHeader className="pb-3">
-                                        <CardTitle className="text-sm font-medium">Job Details</CardTitle>
-                                        <CardDescription className="text-xs">
-                                            Enter the job title and description manually
-                                        </CardDescription>
-                                    </CardHeader>
-                                    <CardContent className="space-y-3">
-                                        <div className="space-y-2">
-                                            <label htmlFor="job-title" className="text-xs font-medium">
-                                                Job Title
-                                            </label>
-                                            <input
-                                                id="job-title"
-                                                type="text"
-                                                placeholder="e.g. Senior Frontend Developer"
-                                                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label htmlFor="job-description" className="text-xs font-medium">
-                                                Job Description
-                                            </label>
-                                            <textarea
-                                                id="job-description"
-                                                placeholder="Paste or type the job description here..."
-                                                rows={6}
-                                                className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none"
-                                            />
-                                        </div>
-                                        <Button className="w-full" size="sm">
-                                            <Target className="w-4 h-4 mr-2" />
-                                            Analyze Match
-                                        </Button>
-                                    </CardContent>
-                                </Card>
-                            </div>
+
+                            {/* Manual Input */}
+                            <Card className="lg:col-span-1">
+                                <CardHeader className="pb-3">
+                                    <CardTitle className="text-sm font-medium">Job Details</CardTitle>
+                                    <CardDescription className="text-xs">
+                                        Enter the job title and description manually
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-3">
+                                    <div className="space-y-2">
+                                        <label htmlFor="job-title" className="text-xs font-medium">
+                                            Job Title
+                                        </label>
+                                        <input
+                                            id="job-title"
+                                            type="text"
+                                            placeholder="e.g. Senior Frontend Developer"
+                                            className="flex h-8 w-full rounded-md border border-input bg-transparent px-2 py-1 text-xs shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label htmlFor="job-description" className="text-xs font-medium">
+                                            Job Description
+                                        </label>
+                                        <textarea
+                                            id="job-description"
+                                            placeholder="Paste or type the job description here..."
+                                            rows={5}
+                                            className="flex w-full rounded-md border border-input bg-transparent px-2 py-1.5 text-xs shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none"
+                                        />
+                                    </div>
+                                    <Button className="w-full" size="sm">
+                                        <Target className="w-3.5 h-3.5 mr-1.5" />
+                                        Analyze Match
+                                    </Button>
+                                </CardContent>
+                            </Card>
                         </div>
                     </motion.div>
                 )}
@@ -951,6 +955,6 @@ export default function ATSScannerPage() {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </div>
+        </div >
     );
 }
