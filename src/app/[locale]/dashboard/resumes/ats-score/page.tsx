@@ -526,54 +526,50 @@ export default function ATSScannerPage() {
                             </div>
                         </div>
 
-                        {/* Upload Area - Ultra Compact & Centered */}
-                        <div className="max-w-lg mx-auto">
-                            <Card>
-                                <CardContent className="p-4">
-                                    <Empty className="py-6">
-                                        <EmptyHeader>
-                                            <EmptyMedia variant="icon">
-                                                <FileText className="w-5 h-5" />
-                                            </EmptyMedia>
-                                            <EmptyTitle className="text-sm">No Resume Selected</EmptyTitle>
-                                            <EmptyDescription className="text-xs">
-                                                Select from your library or import a new one
-                                            </EmptyDescription>
-                                        </EmptyHeader>
-                                        <EmptyContent>
-                                            <div className="flex items-center justify-center gap-2">
-                                                <Button variant="outline" size="sm">
-                                                    <FileText className="w-3.5 h-3.5 mr-1.5" />
-                                                    Select Resume
-                                                </Button>
-                                                <Button size="sm" asChild>
-                                                    <label htmlFor="file-upload-input" className="cursor-pointer">
-                                                        <Upload className="w-3.5 h-3.5 mr-1.5" />
-                                                        Import Resume
-                                                    </label>
-                                                </Button>
-                                                <input
-                                                    id="file-upload-input"
-                                                    type="file"
-                                                    accept=".pdf,.doc,.docx"
-                                                    onChange={(e) => {
-                                                        const file = e.target.files?.[0];
-                                                        if (file) handleFileSelect(file);
-                                                    }}
-                                                    className="hidden"
-                                                />
-                                            </div>
-                                        </EmptyContent>
-                                        <Button
-                                            variant="link"
-                                            className="text-muted-foreground h-auto p-0 text-xs"
-                                            size="sm"
-                                        >
-                                            PDF, DOC, DOCX (max. 5MB)
+                        {/* Upload Area - Following shadcn Empty docs style */}
+                        <div className="max-w-2xl mx-auto">
+                            <Empty className="border">
+                                <EmptyHeader>
+                                    <EmptyMedia variant="icon">
+                                        <FileText className="w-6 h-6" />
+                                    </EmptyMedia>
+                                    <EmptyTitle>No Resume Selected</EmptyTitle>
+                                    <EmptyDescription>
+                                        Select a resume from your library or import a new one from your device to start the ATS analysis.
+                                    </EmptyDescription>
+                                </EmptyHeader>
+                                <EmptyContent>
+                                    <div className="flex gap-2">
+                                        <Button variant="outline">
+                                            <FileText className="w-4 h-4 mr-2" />
+                                            Select Resume
                                         </Button>
-                                    </Empty>
-                                </CardContent>
-                            </Card>
+                                        <Button
+                                            onClick={() => document.getElementById('file-upload-input')?.click()}
+                                        >
+                                            <Upload className="w-4 h-4 mr-2" />
+                                            Import Resume
+                                        </Button>
+                                    </div>
+                                    <input
+                                        id="file-upload-input"
+                                        type="file"
+                                        accept=".pdf,.doc,.docx"
+                                        onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) handleFileSelect(file);
+                                        }}
+                                        className="hidden"
+                                    />
+                                </EmptyContent>
+                                <Button
+                                    variant="link"
+                                    className="text-muted-foreground"
+                                    size="sm"
+                                >
+                                    <span className="text-xs">PDF, DOC, DOCX (max. 5MB)</span>
+                                </Button>
+                            </Empty>
                         </div>
                     </motion.div>
                 )}
