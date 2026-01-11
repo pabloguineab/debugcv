@@ -548,9 +548,6 @@ export default function ATSScannerPage() {
                                 <h1 className="text-2xl font-bold flex items-center gap-2 dark:text-white">
                                     <Target className="w-6 h-6 text-blue-600" />
                                     ATS Scanner
-                                    <Badge variant="secondary" className="ml-2 text-blue-600 bg-blue-100 dark:bg-blue-900/30">
-                                        Pro
-                                    </Badge>
                                 </h1>
                                 <p className="text-sm text-muted-foreground mt-1">
                                     Analyze your resume just like Fortune 500 companies do

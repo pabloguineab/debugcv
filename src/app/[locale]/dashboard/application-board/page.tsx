@@ -208,9 +208,6 @@ export default function ApplicationBoardPage() {
                         <h1 className="text-2xl font-bold flex items-center gap-2">
                             <Briefcase className="w-6 h-6 text-blue-600" />
                             Application Board
-                            <Badge variant="secondary" className="ml-2 text-blue-600 bg-blue-100 dark:bg-blue-900/30">
-                                Pro
-                            </Badge>
                         </h1>
                         <p className="text-sm text-muted-foreground mt-1">
                             Track and organize your job applications in one place

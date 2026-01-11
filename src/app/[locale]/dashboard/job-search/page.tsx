@@ -272,9 +272,6 @@ export default function JobSearchPage() {
                     <h1 className="text-2xl font-bold flex items-center gap-2 dark:text-white">
                         <Target className="w-6 h-6 text-blue-600" />
                         Job Search
-                        <Badge variant="secondary" className="ml-2 text-blue-600 bg-blue-100 dark:bg-blue-900/30">
-                            Pro
-                        </Badge>
                     </h1>
                     <p className="text-sm text-muted-foreground mt-1">
                         Find opportunities tailored to your profile
