@@ -86,7 +86,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                         <SidebarMenu>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
-                                    <Link href="/dashboard" className="flex items-center gap-2">
+                                    <Link href="/dashboard" className="flex items-center gap-2 w-full">
                                         <LayoutDashboard className="size-4" />
                                         <span>Dashboard</span>
                                     </Link>
@@ -104,7 +104,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                             {jobsItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <Link href={item.url} className="flex items-center gap-2">
+                                        <Link href={item.url} className="flex items-center gap-2 w-full">
                                             <item.icon className="size-4" />
                                             <span>{item.title}</span>
                                         </Link>
@@ -123,7 +123,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                             {resumesItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <Link href={item.url} className="flex items-center gap-2">
+                                        <Link href={item.url} className="flex items-center gap-2 w-full">
                                             <item.icon className="size-4" />
                                             <span>{item.title}</span>
                                         </Link>
@@ -142,7 +142,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                             {interviewItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <Link href={item.url} className="flex items-center gap-2">
+                                        <Link href={item.url} className="flex items-center gap-2 w-full">
                                             <item.icon className="size-4" />
                                             <span>{item.title}</span>
                                         </Link>
@@ -157,7 +157,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link href="#" className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium">
+                            <Link href="#" className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium w-full">
                                 <Gem className="size-4" />
                                 <span>Get Expert Audit</span>
                             </Link>
@@ -165,7 +165,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link href="#" className="flex items-center gap-2 text-green-600 dark:text-green-500 font-medium group">
+                            <Link href="#" className="flex items-center gap-2 text-green-600 dark:text-green-500 font-medium group w-full">
                                 <Gift className="size-4" />
                                 <span className="flex-1">Refer a Friend</span>
                                 <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-bold dark:bg-green-900/40 dark:text-green-400 group-data-[collapsible=icon]:hidden">
@@ -176,7 +176,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link href="#" className="flex items-center gap-2">
+                            <Link href="#" className="flex items-center gap-2 w-full">
                                 <Settings className="size-4" />
                                 <span>Settings</span>
                             </Link>
