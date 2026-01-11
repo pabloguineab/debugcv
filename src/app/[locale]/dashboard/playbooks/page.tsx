@@ -184,7 +184,7 @@ export default function PlaybookPage() {
                                 }}
                             >
                                 <div className="relative w-full h-full rounded-xl bg-white/90 backdrop-blur-sm shadow-sm border border-slate-100 flex items-center justify-center p-3">
-                                    <Image src={company.localLogo} alt={company.name} fill className="object-contain p-1" />
+                                    <Image src={company.localLogo} alt={company.name} fill className="object-contain p-1 rounded-lg" />
                                 </div>
                             </motion.div>
                         );
