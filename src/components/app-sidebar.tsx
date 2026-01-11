@@ -188,7 +188,7 @@ export function AppSidebar({ user, onOpenReferModal, ...props }: AppSidebarProps
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
-                    <SidebarMenuItem>
+                    <SidebarMenuItem className="mt-4">
                         <DropdownMenu>
                             <DropdownMenuTrigger
                                 render={
