@@ -490,9 +490,9 @@ export default function ATSScannerPage() {
                         className="max-w-5xl mx-auto w-full"
                     >
                         {/* Header - Minimalist */}
-                        <div className="mb-8">
+                        <div className="mb-6">
                             <h1 className="text-2xl font-semibold mb-1.5">
-                                ATS Scanner <span className="text-blue-600 dark:text-blue-500">Pro</span>
+                                ATS Scanner <span className="text-blue-600 dark:text-blue-400">Pro</span>
                             </h1>
                             <p className="text-sm text-muted-foreground">
                                 Analiza tu CV como los sistemas de empresas Fortune 500
@@ -501,7 +501,7 @@ export default function ATSScannerPage() {
 
                         <div className="grid md:grid-cols-[1fr,280px] gap-4">
                             {/* Upload Area - Clean */}
-                            <Card className="border">
+                            <Card>
                                 <CardContent className="p-6">
                                     <div
                                         onDrop={(e) => {
@@ -510,7 +510,7 @@ export default function ATSScannerPage() {
                                             if (file) handleFileSelect(file);
                                         }}
                                         onDragOver={(e) => e.preventDefault()}
-                                        className="relative flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-10 hover:border-blue-500 dark:hover:border-blue-400 transition-colors cursor-pointer group"
+                                        className="relative flex flex-col items-center justify-center border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-lg p-10 hover:border-blue-500 dark:hover:border-blue-400 transition-colors cursor-pointer group"
                                     >
                                         <input
                                             type="file"
@@ -523,7 +523,7 @@ export default function ATSScannerPage() {
                                             id="file-upload"
                                         />
                                         <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center w-full">
-                                            <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-950 rounded-xl group-hover:bg-blue-100 dark:group-hover:bg-blue-900 transition-colors">
+                                            <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-950/50 rounded-xl group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors">
                                                 <Upload className="w-8 h-8 text-blue-600 dark:text-blue-400" />
                                             </div>
 
@@ -558,7 +558,7 @@ export default function ATSScannerPage() {
                                         desc: "+10,000 procesos"
                                     }
                                 ].map((item, i) => (
-                                    <Card key={i} className="border">
+                                    <Card key={i}>
                                         <CardContent className="p-3.5">
                                             <div className="flex items-start gap-3">
                                                 <div className="p-2 bg-muted rounded-lg shrink-0">
@@ -566,7 +566,7 @@ export default function ATSScannerPage() {
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <p className="text-sm font-medium mb-0.5">{item.text}</p>
-                                                    <p className="text-xs text-muted-foreground">{item.desc}</p>
+                                                    <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
                                                 </div>
                                             </div>
                                         </CardContent>
@@ -574,10 +574,10 @@ export default function ATSScannerPage() {
                                 ))}
 
                                 {/* Stats Card */}
-                                <Card className="border bg-muted/30">
+                                <Card className="bg-muted/30">
                                     <CardContent className="p-3.5">
                                         <div className="flex items-center gap-2 mb-2">
-                                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
                                             <span className="text-xs text-muted-foreground">Usuarios activos hoy</span>
                                         </div>
                                         <p className="text-2xl font-semibold mb-0.5">1,247</p>
