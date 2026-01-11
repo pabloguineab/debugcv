@@ -87,7 +87,7 @@ function ReportSection({
                     <div className="flex items-center gap-3">
                         {issueCount !== undefined && (
                             <Badge variant={status === "success" ? "default" : status === "error" ? "destructive" : "secondary"} className={status ? statusColors[status] : ""}>
-                                {issueCount === 0 ? "Sin problemas" : `${issueCount} problema${issueCount > 1 ? 's' : ''}`}
+                                {issueCount === 0 ? "No issues" : `${issueCount} issue${issueCount > 1 ? 's' : ''}`}
                             </Badge>
                         )}
                         {isOpen ? <ChevronUp className="w-5 h-5 text-gray-400" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
@@ -170,7 +170,7 @@ function ExpandableCategory({
                                 ? "bg-emerald-50 text-emerald-600"
                                 : "bg-gray-100 text-gray-600"
                                 }`}>
-                                {item.issues === 0 ? "Sin problemas" : `${item.issues} prob.`}
+                                {item.issues === 0 ? "No issues" : `${item.issues} issues`}
                             </Badge>
                         </div>
                     ))}
@@ -207,13 +207,13 @@ function AnalyzingAnimation() {
     const [categoryProgress, setCategoryProgress] = useState([0, 0, 0, 0]);
 
     const steps = [
-        "Analizando tu resume",
-        "Analizando tu experiencia",
-        "Extrayendo tus habilidades",
-        "Generando recomendaciones"
+        "Scanning resume structure",
+        "Evaluating experience impact",
+        "Extracting matching skills",
+        "Generating strategic insights"
     ];
 
-    const categories = ["CONTENIDO", "SECCIÓN", "ESENCIALES ATS", "ADAPTACIÓN"];
+    const categories = ["CONTENT", "SECTION", "ATS ESSENTIALS", "ADAPTATION"];
 
     useEffect(() => {
         const stepInterval = setInterval(() => {
@@ -256,7 +256,7 @@ function AnalyzingAnimation() {
                     <div className="grid md:grid-cols-2 gap-8">
                         {/* Left side - Score */}
                         <div className="text-center">
-                            <h2 className="text-xl font-bold text-gray-900 mb-6">Tu Puntuación</h2>
+                            <h2 className="text-xl font-bold text-gray-900 mb-6">Your Score</h2>
                             <div className="relative w-32 h-32 mx-auto mb-6">
                                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                                     <circle cx="50" cy="50" r="40" stroke="#e5e7eb" strokeWidth="8" fill="none" />
@@ -392,13 +392,13 @@ function FileUploadSimple({ onFileSelect }: { onFileSelect: (file: File) => void
                 </motion.div>
 
                 <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                    {isDragging ? '¡Suelta tu archivo aquí!' : 'Arrastra tu CV aquí'}
+                    {isDragging ? 'Drop your file here!' : 'Drag your resume here'}
                 </h3>
-                <p className="text-sm text-gray-500 mb-4">o haz clic para seleccionar</p>
+                <p className="text-sm text-gray-500 mb-4">or click to select</p>
 
                 <div className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg">
                     <FileText className="w-4 h-4 text-gray-600" />
-                    <span className="text-xs text-gray-600 font-medium">PDF, DOC, DOCX (máx. 5MB)</span>
+                    <span className="text-xs text-gray-600 font-medium">PDF, DOC, DOCX (max 5MB)</span>
                 </div>
             </label>
         </div>
@@ -444,7 +444,7 @@ export default function ATSScannerPage() {
             setResult(data);
         } catch (err) {
             console.error("Analysis failed:", err);
-            setError("Hubo un error analizando tu CV. Asegúrate de que el archivo es válido y la descripción del puesto es clara.");
+            setError("There was an error analyzing your resume. Please ensure the file is valid and the job description is clear.");
         } finally {
             setIsAnalyzing(false);
         }
@@ -463,42 +463,42 @@ export default function ATSScannerPage() {
         const totalIssues = errorCount + improvementCount;
 
         return {
-            contenido: {
+            content: {
                 score: Math.max(50, 100 - errorCount * 8),
                 issues: Math.min(errorCount, 5),
                 items: [
-                    { name: "Tasa de Análisis ATS", status: "success" as const, issues: 0 },
-                    { name: "Cuantificando el Impacto", status: errorCount > 0 ? "error" as const : "success" as const, issues: Math.min(3, errorCount) },
-                    { name: "Repetición", status: improvementCount > 3 ? "error" as const : "success" as const, issues: Math.min(2, Math.floor(improvementCount / 2)) },
-                    { name: "Ortografía y Gramática", status: totalIssues > 5 ? "error" as const : "success" as const, issues: Math.min(13, totalIssues) },
+                    { name: "ATS Analysis Rate", status: "success" as const, issues: 0 },
+                    { name: "Quantifying Impact", status: errorCount > 0 ? "error" as const : "success" as const, issues: Math.min(3, errorCount) },
+                    { name: "Repetition", status: improvementCount > 3 ? "error" as const : "success" as const, issues: Math.min(2, Math.floor(improvementCount / 2)) },
+                    { name: "Spelling & Grammar", status: totalIssues > 5 ? "error" as const : "success" as const, issues: Math.min(13, totalIssues) },
                 ]
             },
-            secciones: {
+            sections: {
                 score: Math.max(60, 100 - improvementCount * 5),
                 issues: Math.min(2, Math.floor(improvementCount / 3)),
                 items: [
-                    { name: "Secciones Esenciales", status: improvementCount > 2 ? "error" as const : "success" as const, issues: improvementCount > 2 ? 1 : 0 },
-                    { name: "Información de Contacto", status: "error" as const, issues: 1 },
+                    { name: "Essential Sections", status: improvementCount > 2 ? "error" as const : "success" as const, issues: improvementCount > 2 ? 1 : 0 },
+                    { name: "Contact Information", status: "error" as const, issues: 1 },
                 ]
             },
-            esenciales: {
+            essentials: {
                 score: 90,
                 issues: 0,
                 items: [
-                    { name: "Formato y Tamaño del Archivo", status: "success" as const, issues: 0 },
-                    { name: "Diseño", status: errorCount > 3 ? "error" as const : "success" as const, issues: errorCount > 3 ? 1 : 0 },
-                    { name: "Dirección de Correo Electrónico", status: "success" as const, issues: 0 },
-                    { name: "Hipervínculo en Encabezado", status: "success" as const, issues: 0 },
+                    { name: "File Format & Size", status: "success" as const, issues: 0 },
+                    { name: "Design & Layout", status: errorCount > 3 ? "error" as const : "success" as const, issues: errorCount > 3 ? 1 : 0 },
+                    { name: "Email Address", status: "success" as const, issues: 0 },
+                    { name: "Header Hyperlinks", status: "success" as const, issues: 0 },
                 ]
             },
-            adaptacion: {
+            adaptation: {
                 score: Math.max(70, result.score),
                 issues: totalIssues > 10 ? 3 : totalIssues > 5 ? 2 : 1,
                 items: [
-                    { name: "Habilidades Duras", status: "warning" as const, issues: 0 },
-                    { name: "Habilidades Blandas", status: "warning" as const, issues: 0 },
-                    { name: "Verbos de Acción", status: "warning" as const, issues: 0 },
-                    { name: "Título Adaptado", status: "warning" as const, issues: 0 },
+                    { name: "Hard Skills", status: "warning" as const, issues: 0 },
+                    { name: "Soft Skills", status: "warning" as const, issues: 0 },
+                    { name: "Action Verbs", status: "warning" as const, issues: 0 },
+                    { name: "Job Title Match", status: "warning" as const, issues: 0 },
                 ]
             }
         };
@@ -902,7 +902,7 @@ export default function ATSScannerPage() {
                                 <div className="lg:sticky lg:top-20 space-y-4">
                                     <Card>
                                         <CardHeader className="pb-4">
-                                            <CardTitle className="text-base">Tu Puntuación</CardTitle>
+                                            <CardTitle className="text-base">Your Score</CardTitle>
                                         </CardHeader>
                                         <CardContent className="space-y-4">
                                             {/* Score Circle */}
@@ -927,7 +927,7 @@ export default function ATSScannerPage() {
                                                         <span className="text-xs text-muted-foreground">/100</span>
                                                     </div>
                                                 </div>
-                                                <p className="text-xs text-muted-foreground">{totalIssues} problemas encontrados</p>
+                                                <p className="text-xs text-muted-foreground">{totalIssues} issues found</p>
                                             </div>
 
                                             <Separator />
@@ -935,24 +935,24 @@ export default function ATSScannerPage() {
                                             {/* Categories */}
                                             <div className="space-y-2">
                                                 <ExpandableCategory
-                                                    name="Contenido"
-                                                    score={categories.contenido.score}
-                                                    items={categories.contenido.items}
+                                                    name="Content"
+                                                    score={categories.content.score}
+                                                    items={categories.content.items}
                                                 />
                                                 <ExpandableCategory
-                                                    name="Secciones"
-                                                    score={categories.secciones.score}
-                                                    items={categories.secciones.items}
+                                                    name="Sections"
+                                                    score={categories.sections.score}
+                                                    items={categories.sections.items}
                                                 />
                                                 <ExpandableCategory
-                                                    name="Esenciales ATS"
-                                                    score={categories.esenciales.score}
-                                                    items={categories.esenciales.items}
+                                                    name="ATS Essentials"
+                                                    score={categories.essentials.score}
+                                                    items={categories.essentials.items}
                                                 />
                                                 <ExpandableCategory
-                                                    name="Adaptación"
-                                                    score={categories.adaptacion.score}
-                                                    items={categories.adaptacion.items}
+                                                    name="Adaptation"
+                                                    score={categories.adaptation.score}
+                                                    items={categories.adaptation.items}
                                                 />
                                             </div>
 
@@ -960,7 +960,7 @@ export default function ATSScannerPage() {
                                             <div className="pt-2">
                                                 <Link href="/#pricing">
                                                     <Button className="w-full" size="sm">
-                                                        <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Optimizar CV
+                                                        <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Optimize Resume
                                                     </Button>
                                                 </Link>
                                             </div>
@@ -976,10 +976,10 @@ export default function ATSScannerPage() {
 
                                             <div className="space-y-1">
                                                 <h3 className="font-bold text-base text-blue-950 dark:text-blue-50 leading-tight">
-                                                    Simulación ATS Empresarial
+                                                    Enterprise ATS Simulation
                                                 </h3>
                                                 <p className="text-xs text-blue-800 dark:text-blue-200 leading-relaxed px-1">
-                                                    Algoritmos calibrados con sistemas Fortune 500 (Workday, Lever).
+                                                    Calibrated with Fortune 500 systems (Workday, Lever).
                                                 </p>
                                             </div>
 
@@ -988,7 +988,7 @@ export default function ATSScannerPage() {
                                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                                                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
                                                 </span>
-                                                Matching en Tiempo Real
+                                                Real-time Matching
                                             </div>
                                         </CardContent>
                                     </Card>
@@ -1000,42 +1000,42 @@ export default function ATSScannerPage() {
                                 <div className="flex items-center justify-between mb-4">
                                     <div className="flex items-center gap-2">
                                         <FileText className="w-5 h-5 text-muted-foreground" />
-                                        <h2 className="text-lg font-semibold">Análisis de Contenido</h2>
+                                        <h2 className="text-lg font-semibold">Content Analysis</h2>
                                     </div>
                                     <Badge variant="destructive" className="text-xs">
-                                        {totalIssues} problemas
+                                        {totalIssues} issues
                                     </Badge>
                                 </div>
 
                                 {/* Report Sections */}
                                 <div className="space-y-3">
                                     {/* ATS Rate */}
-                                    <ReportSection icon={Shield} title="Tasa de Análisis ATS" issueCount={0} status="success" defaultOpen={true}>
+                                    <ReportSection icon={Shield} title="ATS Analysis Rate" issueCount={0} status="success" defaultOpen={true}>
                                         <div className="space-y-3 text-sm">
                                             <p className="text-muted-foreground leading-relaxed">
-                                                Un <strong>Sistema de Seguimiento de Solicitudes (ATS)</strong> es usado por empleadores para escanear solicitudes.
+                                                An <strong>Applicant Tracking System (ATS)</strong> is used by employers to scan applications.
                                             </p>
 
                                             <StatusBox
                                                 status="success"
-                                                title="¡Genial!"
-                                                description="Hemos analizado el 100% de tu CV exitosamente."
+                                                title="Great!"
+                                                description="We have successfully analyzed 100% of your resume."
                                             />
                                         </div>
                                     </ReportSection>
 
                                     {/* Impact */}
-                                    <ReportSection icon={Target} title="Cuantificar el Impacto" issueCount={result.critical_errors.length} status={result.critical_errors.length > 0 ? "error" : "success"}>
+                                    <ReportSection icon={Target} title="Quantify Impact" issueCount={result.critical_errors.length} status={result.critical_errors.length > 0 ? "error" : "success"}>
                                         <div className="space-y-3 text-sm">
                                             <p className="text-muted-foreground">
-                                                Tu CV debe mostrar el <strong>impacto</strong> que has tenido en posiciones previas.
+                                                Your resume must show the <strong>impact</strong> you've had in previous roles.
                                             </p>
 
                                             {result.critical_errors.length > 0 && (
                                                 <StatusBox
                                                     status="error"
-                                                    title="Mejora necesaria"
-                                                    description="Tu experiencia carece de logros cuantificables."
+                                                    title="Improvement Needed"
+                                                    description="Your experience lacks quantifiable achievements."
                                                 />
                                             )}
 
@@ -1053,10 +1053,10 @@ export default function ATSScannerPage() {
                                     </ReportSection>
 
                                     {/* Improvements */}
-                                    <ReportSection icon={Sparkles} title="Mejoras Sugeridas" issueCount={result.improvements.length} status={result.improvements.length > 2 ? "warning" : "success"}>
+                                    <ReportSection icon={Sparkles} title="Suggested Improvements" issueCount={result.improvements.length} status={result.improvements.length > 2 ? "warning" : "success"}>
                                         <div className="space-y-3 text-sm">
                                             <p className="text-muted-foreground">
-                                                Mejoras opcionales que pueden aumentar el impacto de tu CV.
+                                                Optional improvements that can increase your resume's impact.
                                             </p>
 
                                             <div className="space-y-1.5">
@@ -1073,16 +1073,16 @@ export default function ATSScannerPage() {
                                     </ReportSection>
 
                                     {/* File Format */}
-                                    <ReportSection icon={FileCheck} title="Formato y Tamaño" issueCount={0} status="success">
+                                    <ReportSection icon={FileCheck} title="Format & Size" issueCount={0} status="success">
                                         <div className="space-y-3 text-sm">
                                             <p className="text-muted-foreground">
-                                                Tu CV debe ser menor de 2MB y en formato PDF.
+                                                Your resume should be under 2MB and in PDF format.
                                             </p>
 
                                             <StatusBox
                                                 status="success"
-                                                title="Perfecto"
-                                                description="Formato correcto (PDF) y tamaño adecuado."
+                                                title="Perfect"
+                                                description="Correct format (PDF) and suitable size."
                                             />
                                         </div>
                                     </ReportSection>
@@ -1091,11 +1091,11 @@ export default function ATSScannerPage() {
                                 {/* Mobile CTA */}
                                 <div className="lg:hidden mt-6 space-y-2">
                                     <Button onClick={() => setResult(null)} variant="outline" className="w-full" size="sm">
-                                        <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Nueva Carga
+                                        <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> New Upload
                                     </Button>
                                     <Link href="/#pricing">
                                         <Button className="w-full" size="sm">
-                                            <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Optimizar CV
+                                            <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Optimize Resume
                                         </Button>
                                     </Link>
                                 </div>
