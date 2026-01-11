@@ -291,7 +291,7 @@ export default function JobSearchPage() {
     };
 
     return (
-        <div className="flex flex-1 flex-col gap-8 p-6 md:p-8 max-w-7xl mx-auto w-full">
+        <div className="flex flex-1 flex-col gap-6 p-4 md:p-6 max-w-7xl mx-auto w-full">
             {/* Hidden Input for File Upload */}
             <input
                 type="file"
@@ -302,13 +302,13 @@ export default function JobSearchPage() {
             />
 
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold flex items-center gap-2 dark:text-white tracking-tight">
-                        <Target className="w-8 h-8 text-blue-600" />
+                    <h1 className="text-2xl font-bold flex items-center gap-2 dark:text-white">
+                        <Target className="w-6 h-6 text-blue-600" />
                         Job Search
                     </h1>
-                    <p className="text-muted-foreground mt-2 text-lg">
+                    <p className="text-sm text-muted-foreground mt-1">
                         Find your next career opportunity based on your skills.
                     </p>
                 </div>
