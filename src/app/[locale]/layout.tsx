@@ -33,7 +33,7 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <body className={inter.className}>
         <NextTopLoader color="#2563eb" showSpinner={false} height={3} />
         <Providers>

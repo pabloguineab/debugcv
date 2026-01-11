@@ -45,6 +45,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/components/Logo";
 import { Link } from "@/i18n/routing";
+import { ModeToggle } from "@/components/mode-toggle";
 
 // Menu Groups
 const jobsItems = [
@@ -74,10 +75,11 @@ interface AppSidebarProps {
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
     return (
         <Sidebar variant="inset" {...props}>
-            <SidebarHeader className="p-4">
+            <SidebarHeader className="p-4 flex flex-row items-center justify-between">
                 <Link href="/dashboard" className="flex items-center gap-2">
                     <Logo className="h-8 w-auto" />
                 </Link>
+                <ModeToggle />
             </SidebarHeader>
             <SidebarContent>
                 {/* Dashboard - Standalone Group */}
