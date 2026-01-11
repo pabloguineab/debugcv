@@ -498,43 +498,60 @@ export default function ATSScannerPage() {
                         className="max-w-5xl mx-auto w-full"
                     >
                         {/* Header - Minimalist */}
-                        <div className="mb-6">
-                            <h1 className="text-2xl font-semibold mb-1.5 dark:text-white">
+                        <div className="mb-4">
+                            <h1 className="text-xl font-semibold mb-1 dark:text-white">
                                 ATS Scanner <span className="text-blue-600 dark:text-blue-400">Pro</span>
                             </h1>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-xs text-muted-foreground">
                                 Analiza tu CV como los sistemas de empresas Fortune 500
                             </p>
                         </div>
 
-                        <div className="grid md:grid-cols-[1fr,280px] gap-4">
-                            {/* Upload Area - Clean Empty State */}
+                        {/* Compact Benefits - Inline */}
+                        <div className="flex flex-wrap gap-2 mb-4">
+                            {[
+                                { icon: ShieldCheck, color: "text-emerald-600 dark:text-emerald-500", text: "100% Privado" },
+                                { icon: Zap, color: "text-amber-600 dark:text-amber-500", text: "Análisis en 10s" },
+                                { icon: Users, color: "text-purple-600 dark:text-purple-500", text: "Por Recruiters" },
+                            ].map((item, i) => (
+                                <div key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/50 rounded-md text-xs">
+                                    <item.icon className={`w-3.5 h-3.5 ${item.color}`} />
+                                    <span className="font-medium">{item.text}</span>
+                                </div>
+                            ))}
+                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/30 rounded-md text-xs">
+                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                                <span className="font-medium">1,247</span>
+                                <span className="text-muted-foreground">activos</span>
+                            </div>
+                        </div>
+
+                        {/* Upload Area - Ultra Compact & Centered */}
+                        <div className="max-w-md mx-auto">
                             <Card>
-                                <CardContent className="p-8">
-                                    <Empty>
+                                <CardContent className="p-4">
+                                    <Empty className="py-6">
                                         <EmptyHeader>
                                             <EmptyMedia variant="icon">
-                                                <FileText className="w-12 h-12" />
+                                                <FileText className="w-5 h-5" />
                                             </EmptyMedia>
-                                            <EmptyTitle>No Resume Selected</EmptyTitle>
-                                            <EmptyDescription>
-                                                Select a resume from your library or import a new one from your device to start the ATS analysis.
+                                            <EmptyTitle className="text-sm">No Resume Selected</EmptyTitle>
+                                            <EmptyDescription className="text-xs">
+                                                Select from your library or import a new one
                                             </EmptyDescription>
                                         </EmptyHeader>
                                         <EmptyContent>
-                                            <div className="flex flex-col sm:flex-row gap-2">
-                                                <Button variant="outline">
-                                                    <FileText className="w-4 h-4 mr-2" />
+                                            <div className="flex items-center justify-center gap-2">
+                                                <Button variant="outline" size="sm">
+                                                    <FileText className="w-3.5 h-3.5 mr-1.5" />
                                                     Select Resume
                                                 </Button>
-                                                <label htmlFor="file-upload-input">
-                                                    <Button asChild>
-                                                        <span className="cursor-pointer">
-                                                            <Upload className="w-4 h-4 mr-2" />
-                                                            Import Resume
-                                                        </span>
-                                                    </Button>
-                                                </label>
+                                                <Button size="sm" asChild>
+                                                    <label htmlFor="file-upload-input" className="cursor-pointer">
+                                                        <Upload className="w-3.5 h-3.5 mr-1.5" />
+                                                        Import Resume
+                                                    </label>
+                                                </Button>
                                                 <input
                                                     id="file-upload-input"
                                                     type="file"
@@ -549,63 +566,14 @@ export default function ATSScannerPage() {
                                         </EmptyContent>
                                         <Button
                                             variant="link"
-                                            className="text-muted-foreground"
+                                            className="text-muted-foreground h-auto p-0 text-xs"
                                             size="sm"
                                         >
-                                            <span className="flex items-center gap-1">
-                                                Supported formats: PDF, DOC, DOCX (max. 5MB)
-                                            </span>
+                                            PDF, DOC, DOCX (max. 5MB)
                                         </Button>
                                     </Empty>
                                 </CardContent>
                             </Card>
-
-                            {/* Sidebar - Compact Benefits */}
-                            <div className="space-y-3">
-                                {[
-                                    {
-                                        icon: ShieldCheck,
-                                        text: "100% Privado",
-                                        desc: "Tu CV se elimina después"
-                                    },
-                                    {
-                                        icon: Zap,
-                                        text: "Análisis en 10s",
-                                        desc: "Resultados instantáneos"
-                                    },
-                                    {
-                                        icon: Users,
-                                        text: "Por Recruiters",
-                                        desc: "+10,000 procesos"
-                                    }
-                                ].map((item, i) => (
-                                    <Card key={i}>
-                                        <CardContent className="p-3.5">
-                                            <div className="flex items-start gap-3">
-                                                <div className="p-2 bg-muted rounded-lg shrink-0">
-                                                    <item.icon className="w-4 h-4" />
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-medium mb-0.5">{item.text}</p>
-                                                    <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
-                                                </div>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                ))}
-
-                                {/* Stats Card */}
-                                <Card className="bg-muted/30">
-                                    <CardContent className="p-3.5">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                                            <span className="text-xs text-muted-foreground">Usuarios activos hoy</span>
-                                        </div>
-                                        <p className="text-2xl font-semibold mb-0.5">1,247</p>
-                                        <p className="text-xs text-muted-foreground">CVs analizados (24h)</p>
-                                    </CardContent>
-                                </Card>
-                            </div>
                         </div>
                     </motion.div>
                 )}
