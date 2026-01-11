@@ -28,7 +28,7 @@ export async function analyzeCvFile(formData: FormData): Promise<CVCriteria | nu
         const mimeType = file.type || 'application/pdf';
 
         const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
         const prompt = `
             You are an expert Job Search Assistant.
