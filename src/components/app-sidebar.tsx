@@ -64,15 +64,16 @@ const interviewItems = [
     { title: "Playbooks", url: "/dashboard/playbooks", icon: BookOpen },
 ];
 
-interface AppSidebarProps {
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
     user?: {
         name?: string | null;
         email?: string | null;
         image?: string | null;
     };
+    onOpenReferModal: () => void;
 }
 
-export function AppSidebar({ user, ...props }: AppSidebarProps) {
+export function AppSidebar({ user, onOpenReferModal, ...props }: AppSidebarProps) {
     return (
         <Sidebar variant="inset" {...props}>
             <SidebarHeader className="p-4 flex flex-row items-center justify-between">
@@ -80,7 +81,6 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                     <Logo className="h-8 w-auto dark:hidden" />
                     <Logo variant="white" className="h-8 w-auto hidden dark:block" />
                 </Link>
-                <ModeToggle />
             </SidebarHeader>
             <SidebarContent>
                 {/* Dashboard - Standalone Group */}
@@ -168,13 +168,16 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link href="#" className="flex items-center gap-2 text-green-600 dark:text-green-500 font-medium group w-full">
+                            <div
+                                onClick={onOpenReferModal}
+                                className="flex items-center gap-2 text-green-600 dark:text-green-500 font-medium group w-full cursor-pointer"
+                            >
                                 <Gift className="size-4" />
                                 <span className="flex-1">Refer a Friend</span>
                                 <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-bold dark:bg-green-900/40 dark:text-green-400 group-data-[collapsible=icon]:hidden">
                                     -30%
                                 </span>
-                            </Link>
+                            </div>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>

@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { DashboardHeader } from "@/components/dashboard-header";
+import { ReferFriendModal } from "@/components/refer-friend-modal";
 
 interface DashboardLayoutClientProps {
     children: React.ReactNode;
@@ -14,13 +16,19 @@ interface DashboardLayoutClientProps {
 }
 
 export function DashboardLayoutClient({ children, user }: DashboardLayoutClientProps) {
+    const [isReferModalOpen, setIsReferModalOpen] = useState(false);
+
     return (
         <SidebarProvider>
-            <AppSidebar user={user} />
+            <AppSidebar user={user} onOpenReferModal={() => setIsReferModalOpen(true)} />
             <SidebarInset>
                 <DashboardHeader />
-                <div className="flex flex-1 flex-col gap-4 p-4">
+                <div className="flex flex-1 flex-col gap-4 p-4 relative min-h-[calc(100vh-4rem)]">
                     {children}
+                    <ReferFriendModal
+                        open={isReferModalOpen}
+                        onClose={() => setIsReferModalOpen(false)}
+                    />
                 </div>
             </SidebarInset>
         </SidebarProvider>

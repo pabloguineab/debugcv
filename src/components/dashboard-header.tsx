@@ -11,13 +11,14 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const routeNames: Record<string, string> = {
     "/dashboard": "Dashboard",
     "/dashboard/job-search": "Job Search",
     "/dashboard/application-board": "Application Board",
     "/dashboard/resumes": "My Versions",
-    "/dashboard/ats-score": "ATS Score",
+    "/dashboard/resumes/ats-score": "ATS Score",
     "/dashboard/cover-letters": "Cover Letters",
     "/dashboard/interview-coach": "AI Simulator",
     "/dashboard/playbooks": "Playbooks",
@@ -56,6 +57,12 @@ export function DashboardHeader() {
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
+
+            {/* Spacer to push ModeToggle to the right */}
+            <div className="flex-1" />
+
+            {/* Mode Toggle in top-right corner */}
+            <ModeToggle />
         </header>
     );
 }

@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
     ChevronDown, ChevronUp, Check, X, AlertCircle, FileText,
     Target, Shield, FileCheck, ShieldCheck, Zap, Users, Sparkles, RefreshCw,
-    CheckCircle2, XCircle, HelpCircle, Mail, Upload
+    CheckCircle2, XCircle, HelpCircle, Mail, Upload, ArrowRight
 } from "lucide-react";
 import {
     Card,
@@ -59,7 +59,7 @@ function ReportSection({
     children,
     defaultOpen = false
 }: {
-    icon: React.ElementType;
+    icon: any;
     title: string;
     issueCount?: number;
     status?: "success" | "warning" | "error";
@@ -77,23 +77,21 @@ function ReportSection({
     return (
         <Card>
             <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-                <CollapsibleTrigger asChild>
-                    <button className="w-full flex items-center justify-between p-5 hover:bg-accent transition-colors">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-blue-50 rounded-lg">
-                                <Icon className="w-5 h-5 text-blue-600" />
-                            </div>
-                            <h3 className="font-semibold text-gray-900 uppercase tracking-wide text-sm">{title}</h3>
+                <CollapsibleTrigger className="w-full flex items-center justify-between p-5 hover:bg-accent transition-colors">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 bg-blue-50 rounded-lg">
+                            <Icon className="w-5 h-5 text-blue-600" />
                         </div>
-                        <div className="flex items-center gap-3">
-                            {issueCount !== undefined && (
-                                <Badge variant={status === "success" ? "default" : status === "error" ? "destructive" : "secondary"} className={status ? statusColors[status] : ""}>
-                                    {issueCount === 0 ? "Sin problemas" : `${issueCount} problema${issueCount > 1 ? 's' : ''}`}
-                                </Badge>
-                            )}
-                            {isOpen ? <ChevronUp className="w-5 h-5 text-gray-400" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
-                        </div>
-                    </button>
+                        <h3 className="font-semibold text-gray-900 uppercase tracking-wide text-sm">{title}</h3>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        {issueCount !== undefined && (
+                            <Badge variant={status === "success" ? "default" : status === "error" ? "destructive" : "secondary"} className={status ? statusColors[status] : ""}>
+                                {issueCount === 0 ? "Sin problemas" : `${issueCount} problema${issueCount > 1 ? 's' : ''}`}
+                            </Badge>
+                        )}
+                        {isOpen ? <ChevronUp className="w-5 h-5 text-gray-400" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
+                    </div>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                     <Separator />
@@ -111,11 +109,9 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
     const [isOpen, setIsOpen] = useState(false);
     return (
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-            <CollapsibleTrigger asChild>
-                <button className="w-full flex items-start gap-2 py-3 text-left hover:text-blue-600 transition-colors">
-                    <HelpCircle className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
-                    <span className="text-sm font-medium text-blue-600">{question}</span>
-                </button>
+            <CollapsibleTrigger className="w-full flex items-start gap-2 py-3 text-left hover:text-blue-600 transition-colors">
+                <HelpCircle className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
+                <span className="text-sm font-medium text-blue-600">{question}</span>
             </CollapsibleTrigger>
             <CollapsibleContent>
                 <p className="text-sm text-gray-600 pl-6 pb-3 leading-relaxed">{answer}</p>
@@ -144,21 +140,19 @@ function ExpandableCategory({
 
     return (
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-            <CollapsibleTrigger asChild>
-                <button className="w-full flex items-center justify-between py-3 hover:bg-accent transition-colors rounded-lg px-2 -mx-2">
-                    <span className="text-sm font-medium text-gray-700 uppercase tracking-wide">{name}</span>
-                    <div className="flex items-center gap-2">
-                        <Badge variant="secondary" className="bg-amber-100 text-amber-600">
-                            {score}%
-                        </Badge>
-                        <motion.div
-                            animate={{ rotate: isOpen ? 180 : 0 }}
-                            transition={{ duration: 0.2 }}
-                        >
-                            <ChevronDown className="w-4 h-4 text-gray-400" />
-                        </motion.div>
-                    </div>
-                </button>
+            <CollapsibleTrigger className="w-full flex items-center justify-between py-3 hover:bg-accent transition-colors rounded-lg px-2 -mx-2">
+                <span className="text-sm font-medium text-gray-700 uppercase tracking-wide">{name}</span>
+                <div className="flex items-center gap-2">
+                    <Badge variant="secondary" className="bg-amber-100 text-amber-600">
+                        {score}%
+                    </Badge>
+                    <motion.div
+                        animate={{ rotate: isOpen ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
+                    >
+                        <ChevronDown className="w-4 h-4 text-gray-400" />
+                    </motion.div>
+                </div>
             </CollapsibleTrigger>
             <CollapsibleContent>
                 <div className="pl-4 pb-3 space-y-2">
@@ -422,6 +416,11 @@ export default function ATSScannerPage() {
     const [jobTitle, setJobTitle] = useState("");
     const [jobDescription, setJobDescription] = useState("");
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [activeUsers, setActiveUsers] = useState(1254);
+
+    useEffect(() => {
+        setActiveUsers(1247 + Math.floor(Math.random() * 10));
+    }, []);
 
     const handleAnalyzeJob = () => {
         if (!jobDescription.trim() || !selectedFile) return;
@@ -489,6 +488,17 @@ export default function ATSScannerPage() {
         };
     }, [result]);
 
+    const handleQuickPaste = async () => {
+        try {
+            const text = await navigator.clipboard.readText();
+            if (text) {
+                setJobDescription(text);
+            }
+        } catch (err) {
+            console.error('Failed to read clipboard', err);
+        }
+    };
+
     const handleFileSelect = async (file: File) => {
         if (!session) { router.push("/auth/signin"); return; }
         setSelectedFile(file);
@@ -523,49 +533,233 @@ export default function ATSScannerPage() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="max-w-5xl mx-auto w-full"
+                        className="max-w-7xl mx-auto w-full flex flex-col gap-6"
                     >
                         {/* Header - Minimalist */}
-                        <div className="mb-4">
-                            <h1 className="text-xl font-semibold mb-1 dark:text-white">
-                                ATS Scanner <span className="text-blue-600 dark:text-blue-400">Pro</span>
-                            </h1>
-                            <p className="text-xs text-muted-foreground">
-                                Analiza tu CV como los sistemas de empresas Fortune 500
-                            </p>
-                        </div>
-
-                        {/* Compact Benefits - Horizontal at top */}
-                        <div className="flex flex-wrap justify-center gap-2 mb-4">
-                            {[
-                                { icon: ShieldCheck, color: "text-emerald-600 dark:text-emerald-500", text: "100% Privado" },
-                                { icon: Zap, color: "text-amber-600 dark:text-amber-500", text: "Análisis en 10s" },
-                                { icon: Users, color: "text-purple-600 dark:text-purple-500", text: "Por Recruiters" },
-                            ].map((item, i) => (
-                                <div key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/50 rounded-md text-xs">
-                                    <item.icon className={`w-3.5 h-3.5 ${item.color}`} />
-                                    <span className="font-medium">{item.text}</span>
-                                </div>
-                            ))}
-                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/30 rounded-md text-xs">
-                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                                <motion.span
-                                    className="font-medium"
-                                    key={Math.floor(Date.now() / 10000)}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ duration: 0.5 }}
-                                >
-                                    {1247 + Math.floor(Math.random() * 10)}
-                                </motion.span>
-                                <span className="text-muted-foreground">activos</span>
+                        {/* Header - Desktop Style */}
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+                            <div>
+                                <h1 className="text-2xl font-bold flex items-center gap-2 dark:text-white">
+                                    <Target className="w-6 h-6 text-blue-600" />
+                                    ATS Scanner
+                                    <Badge variant="secondary" className="ml-2 text-blue-600 bg-blue-100 dark:bg-blue-900/30">
+                                        Pro
+                                    </Badge>
+                                </h1>
+                                <p className="text-sm text-muted-foreground mt-1">
+                                    Analyze your resume just like Fortune 500 companies do
+                                </p>
                             </div>
                         </div>
 
+
+
                         {/* Main Content Grid - 3 columns */}
                         <div className="grid lg:grid-cols-3 gap-4">
+                            {/* Animated Copy Offer Widget */}
+                            <Card className="border-dashed overflow-hidden lg:col-span-1">
+                                <CardHeader className="pb-3">
+                                    <CardTitle className="text-sm font-medium">Quick Paste</CardTitle>
+                                    <CardDescription className="text-xs">
+                                        Copy the job offer from LinkedIn, Indeed, etc.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="p-0 pb-4 px-4">
+                                    {/* Animated Browser Widget - From ATSReviewModal */}
+                                    <div
+                                        onClick={handleQuickPaste}
+                                        className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900 shadow-md relative h-64 cursor-pointer group hover:border-blue-400 dark:hover:border-blue-500 transition-colors"
+                                    >
+                                        {/* Browser header */}
+                                        <div className="bg-gray-100 dark:bg-gray-800 px-3 py-2 flex items-center gap-2 border-b border-gray-200 dark:border-gray-700">
+                                            <div className="flex gap-1.5">
+                                                <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
+                                                <div className="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
+                                                <div className="w-2.5 h-2.5 rounded-full bg-green-400"></div>
+                                            </div>
+                                            <div className="flex-1 bg-white dark:bg-gray-700 rounded px-2 py-1 text-[10px] text-gray-400 dark:text-gray-500 truncate flex items-center">
+                                                <span className="w-3 h-3 bg-gray-200 dark:bg-gray-600 rounded-full mr-1"></span>
+                                                linkedin.com/jobs/view/38291...
+                                            </div>
+                                        </div>
+
+                                        {/* Animation Container */}
+                                        <div className="relative h-52 overflow-hidden bg-white dark:bg-gray-900">
+                                            {/* Scrolling Content */}
+                                            <motion.div
+                                                className="p-4 text-xs text-gray-600 dark:text-gray-300"
+                                                animate={{ y: [0, -100, -100, 0] }}
+                                                transition={{
+                                                    duration: 8,
+                                                    times: [0, 0.4, 0.9, 1],
+                                                    repeat: Infinity,
+                                                    repeatDelay: 1,
+                                                    ease: "easeInOut"
+                                                }}
+                                            >
+                                                <div className="flex items-start gap-3 mb-4">
+                                                    <div className="w-10 h-10 bg-blue-600 rounded flex items-center justify-center text-white font-bold text-lg">In</div>
+                                                    <div>
+                                                        <h3 className="font-bold text-gray-900 dark:text-gray-100 text-sm">Senior Software Engineer</h3>
+                                                        <p className="text-gray-500 dark:text-gray-400 text-[10px]">TechStart Inc • Madrid (Hybrid)</p>
+                                                        <div className="flex gap-1 mt-1">
+                                                            <span className="text-[9px] bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400 px-1.5 py-0.5 rounded">Actively hiring</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="space-y-3 relative z-0">
+                                                    <p className="text-[11px] leading-relaxed">
+                                                        We are looking for a <span className="font-semibold text-gray-800 dark:text-gray-200">Senior Frontend Engineer</span> to join our core product team. You will be responsible for building high-performance web applications using modern technologies.
+                                                    </p>
+
+                                                    <div>
+                                                        <h4 className="font-bold text-gray-800 dark:text-gray-200 text-[11px] mb-1">Requirements:</h4>
+                                                        <ul className="space-y-1 text-[10px] list-disc pl-4">
+                                                            <li>5+ years of experience with <span className="font-semibold">React, TypeScript</span> and Node.js.</li>
+                                                            <li>Experience with Next.js and state management tools.</li>
+                                                            <li>Strong understanding of web performance and SEO.</li>
+                                                            <li>Experience in CI/CD pipelines and testing (Jest, Cypress).</li>
+                                                            <li>Excellent problem-solving skills and mentorship ability.</li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <div className="bg-yellow-50 dark:bg-yellow-900/30 p-2 rounded border border-yellow-200 dark:border-yellow-700/50">
+                                                        <h4 className="font-bold text-gray-800 dark:text-gray-200 text-[11px] mb-1">Benefits:</h4>
+                                                        <ul className="space-y-1 text-[10px] list-disc pl-4">
+                                                            <li>Competitive salary (€60k - €90k).</li>
+                                                            <li>Remote-first culture with flexible hours.</li>
+                                                            <li>Health insurance and gym membership.</li>
+                                                            <li>Stock options and annual bonus.</li>
+                                                            <li>Annual retreat to tropical locations.</li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <div className="pt-2 border-t border-gray-100 dark:border-gray-800">
+                                                        <h4 className="font-bold text-gray-800 dark:text-gray-200 text-[11px] mb-1">About the Team</h4>
+                                                        <p className="text-[10px]">We are a diverse team of engineering enthusiasts who love open source and clean code.</p>
+                                                    </div>
+                                                </div>
+
+                                                {/* Selection Overlay - Grows with scroll */}
+                                                <motion.div
+                                                    className="absolute top-[80px] left-[16px] right-[16px] bg-blue-500/20 dark:bg-blue-400/30 mix-blend-normal pointer-events-none z-10 rounded-sm"
+                                                    animate={{
+                                                        height: [0, 200, 200, 0]
+                                                    }}
+                                                    transition={{
+                                                        duration: 8,
+                                                        times: [0, 0.4, 0.9, 1],
+                                                        repeat: Infinity,
+                                                        repeatDelay: 1,
+                                                        ease: "easeInOut"
+                                                    }}
+                                                />
+                                            </motion.div>
+
+                                            {/* Cursor Animation - Follows selection then clicks Copy */}
+                                            <motion.div
+                                                className="absolute z-50 pointer-events-none"
+                                                animate={{
+                                                    top: ["80px", "180px", "180px", "150px", "150px", "80px"],
+                                                    left: ["16px", "200px", "200px", "150px", "150px", "16px"],
+                                                    scale: [1, 1, 1, 1, 0.8, 1]
+                                                }}
+                                                transition={{
+                                                    duration: 8,
+                                                    times: [0, 0.4, 0.5, 0.6, 0.65, 1],
+                                                    repeat: Infinity,
+                                                    repeatDelay: 1,
+                                                    ease: "easeInOut"
+                                                }}
+                                            >
+                                                <svg className="w-5 h-5 text-black dark:text-white fill-current drop-shadow-md" viewBox="0 0 24 24" fill="none">
+                                                    <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" fill="currentColor" stroke="white" strokeWidth="1" className="dark:stroke-gray-900" />
+                                                </svg>
+                                            </motion.div>
+
+                                            {/* Context Menu - Fixed position where cursor lands */}
+                                            <motion.div
+                                                className="absolute top-[120px] left-[120px] bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-1 text-[11px] z-40 w-28 origin-top-left"
+                                                initial={{ opacity: 0, scale: 0.8 }}
+                                                animate={{
+                                                    opacity: [0, 0, 1, 1, 0, 0],
+                                                    scale: [0.8, 0.8, 1, 1, 0.8, 0.8]
+                                                }}
+                                                transition={{
+                                                    duration: 8,
+                                                    times: [0, 0.45, 0.5, 0.8, 0.9, 1],
+                                                    repeat: Infinity,
+                                                    repeatDelay: 1
+                                                }}
+                                            >
+                                                <div className="px-3 py-1.5 text-gray-500 dark:text-gray-400">Search Google</div>
+                                                <motion.div
+                                                    className="px-3 py-1.5 bg-blue-600 text-white font-medium flex justify-between items-center"
+                                                    animate={{ scale: [1, 1, 0.95, 1, 1] }}
+                                                    transition={{
+                                                        duration: 8,
+                                                        times: [0, 0.6, 0.65, 0.7, 1],
+                                                        repeat: Infinity,
+                                                        repeatDelay: 1
+                                                    }}
+                                                >
+                                                    Copy <span>⌘C</span>
+                                                </motion.div>
+                                                <div className="px-3 py-1.5 text-gray-500 dark:text-gray-400">Share...</div>
+                                            </motion.div>
+                                        </div>
+
+                                        {/* Hover Overlay */}
+                                        <div className="absolute inset-0 bg-blue-50/0 group-hover:bg-blue-50/30 dark:group-hover:bg-blue-900/20 transition-colors z-50 flex items-center justify-center pointer-events-none">
+                                            <div className="bg-white dark:bg-gray-800 shadow-lg rounded-full px-4 py-2 font-medium text-sm text-blue-600 dark:text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0 flex items-center gap-2">
+                                                <span className="text-lg">📋</span> Click to Paste
+                                            </div>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            {/* Manual Input */}
+                            <Card className="lg:col-span-1 flex flex-col">
+                                <CardHeader className="pb-3">
+                                    <CardTitle className="text-sm font-medium">Job Details</CardTitle>
+                                    <CardDescription className="text-xs">
+                                        Enter the job title and description manually
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-3 flex-1 flex flex-col">
+                                    <div className="space-y-2">
+                                        <label htmlFor="job-title" className="text-xs font-medium">
+                                            Job Title
+                                        </label>
+                                        <input
+                                            id="job-title"
+                                            type="text"
+                                            value={jobTitle}
+                                            onChange={(e) => setJobTitle(e.target.value)}
+                                            placeholder="e.g. Senior Frontend Developer"
+                                            className="flex h-8 w-full rounded-md border border-input bg-transparent px-2 py-1 text-xs shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                        />
+                                    </div>
+                                    <div className="space-y-2 flex-1 flex flex-col">
+                                        <label htmlFor="job-description" className="text-xs font-medium">
+                                            Job Description
+                                        </label>
+                                        <textarea
+                                            id="job-description"
+                                            value={jobDescription}
+                                            onChange={(e) => setJobDescription(e.target.value)}
+                                            placeholder="Paste or type the job description here..."
+                                            className="flex w-full rounded-md border border-input bg-transparent px-2 py-1.5 text-xs shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none flex-1"
+                                        />
+                                    </div>
+
+                                </CardContent>
+                            </Card>
+
                             {/* Upload Area */}
-                            <Card className="border lg:col-span-1 order-3">
+                            <Card className="border lg:col-span-1">
                                 <CardContent className="p-6">
                                     <Empty>
                                         <EmptyHeader>
@@ -642,191 +836,51 @@ export default function ATSScannerPage() {
                                     </Empty>
                                 </CardContent>
                             </Card>
-
-                            {/* Animated Copy Offer Widget */}
-                            <Card className="border-dashed overflow-hidden lg:col-span-1 order-1">
-                                <CardHeader className="pb-3">
-                                    <CardTitle className="text-sm font-medium">Quick Paste</CardTitle>
-                                    <CardDescription className="text-xs">
-                                        Copy the job offer from LinkedIn, Indeed, etc.
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent className="p-0 pb-4 px-4">
-                                    {/* Animated Browser Widget */}
-                                    <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-md relative h-56">
-                                        {/* Browser header */}
-                                        <div className="bg-gray-100 px-3 py-2 flex items-center gap-2 border-b border-gray-200 relative z-10">
-                                            <div className="flex gap-1.5">
-                                                <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
-                                                <div className="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
-                                                <div className="w-2.5 h-2.5 rounded-full bg-green-400"></div>
-                                            </div>
-                                            <div className="flex-1 bg-white rounded px-2 py-1 text-[10px] text-gray-400 truncate flex items-center">
-                                                <span className="w-3 h-3 bg-gray-200 rounded-full mr-1"></span>
-                                                linkedin.com/jobs/view/38291...
-                                            </div>
-                                        </div>
-
-                                        {/* Animation Container */}
-                                        <div className="relative h-full bg-white">
-                                            {/* Scrolling Content */}
-                                            <motion.div
-                                                className="p-4 text-xs text-gray-600"
-                                                animate={{ y: [0, -60, -60, 0] }} // Reduced scroll distance
-                                                transition={{
-                                                    duration: 8,
-                                                    times: [0, 0.4, 0.9, 1],
-                                                    repeat: Infinity,
-                                                    repeatDelay: 1,
-                                                    ease: "easeInOut"
-                                                }}
-                                            >
-                                                <div className="flex items-start gap-3 mb-4">
-                                                    <div className="w-10 h-10 bg-blue-600 rounded flex items-center justify-center text-white font-bold text-lg">In</div>
-                                                    <div>
-                                                        <h3 className="font-bold text-gray-900 text-sm">Senior Software Engineer</h3>
-                                                        <p className="text-gray-500 text-[10px]">TechStart Inc • Madrid (Hybrid)</p>
-                                                        <div className="flex gap-1 mt-1">
-                                                            <span className="text-[9px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded">Actively hiring</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="space-y-3 relative z-0">
-                                                    <p className="text-[11px] leading-relaxed">
-                                                        We are looking for a <span className="font-semibold text-gray-800">Senior Frontend Engineer</span> to join our core product team.
-                                                    </p>
-
-                                                    <div>
-                                                        <h4 className="font-bold text-gray-800 text-[11px] mb-1">Requirements:</h4>
-                                                        <ul className="space-y-1 text-[10px] list-disc pl-4">
-                                                            <li>5+ years of experience with <span className="font-semibold">React, TypeScript</span></li>
-                                                            <li>Experience with Next.js and state management</li>
-                                                            <li>Strong understanding of web performance</li>
-                                                        </ul>
-                                                    </div>
-
-                                                    <div className="bg-yellow-50 p-2 rounded border border-yellow-200">
-                                                        <h4 className="font-bold text-gray-800 text-[11px] mb-1">Benefits:</h4>
-                                                        <ul className="space-y-1 text-[10px] list-disc pl-4">
-                                                            <li>Competitive salary (€60k - €90k)</li>
-                                                            <li>Remote-first culture</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-
-                                                {/* Selection Overlay */}
-                                                <motion.div
-                                                    className="absolute top-[40px] left-[16px] right-[16px] bg-blue-500/30 pointer-events-none z-10 rounded-sm border border-blue-400"
-                                                    animate={{
-                                                        height: [0, 140, 140, 0] // Reduced height
-                                                    }}
-                                                    transition={{
-                                                        duration: 8,
-                                                        times: [0, 0.4, 0.9, 1],
-                                                        repeat: Infinity,
-                                                        repeatDelay: 1,
-                                                        ease: "easeInOut"
-                                                    }}
-                                                />
-                                            </motion.div>
-
-                                            {/* Cursor Animation */}
-                                            <motion.div
-                                                className="absolute z-50 pointer-events-none"
-                                                animate={{
-                                                    top: ["40px", "140px", "140px", "130px", "130px", "40px"], // Adjusted coordinates
-                                                    left: ["16px", "200px", "200px", "150px", "150px", "16px"],
-                                                    scale: [1, 1, 1, 1, 0.9, 1]
-                                                }}
-                                                transition={{
-                                                    duration: 8,
-                                                    times: [0, 0.4, 0.5, 0.6, 0.65, 1],
-                                                    repeat: Infinity,
-                                                    repeatDelay: 1,
-                                                    ease: "easeInOut"
-                                                }}
-                                            >
-                                                <svg className="w-5 h-5 text-black fill-black drop-shadow-md" viewBox="0 0 24 24" fill="none">
-                                                    <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" fill="currentColor" stroke="white" strokeWidth="1" />
-                                                </svg>
-                                            </motion.div>
-
-                                            {/* Context Menu */}
-                                            <motion.div
-                                                className="absolute top-[100px] left-[100px] bg-white rounded-lg shadow-xl border border-gray-200 py-1 text-[11px] z-40 w-28 origin-top-left"
-                                                initial={{ opacity: 0, scale: 0.8 }}
-                                                animate={{
-                                                    opacity: [0, 0, 1, 1, 0, 0],
-                                                    scale: [0.8, 0.8, 1, 1, 0.8, 0.8]
-                                                }}
-                                                transition={{
-                                                    duration: 8,
-                                                    times: [0, 0.45, 0.5, 0.8, 0.9, 1],
-                                                    repeat: Infinity,
-                                                    repeatDelay: 1
-                                                }}
-                                            >
-                                                <div className="px-3 py-1 text-gray-500">Search</div>
-                                                <motion.div
-                                                    className="px-3 py-1 bg-blue-600 text-white font-medium flex justify-between items-center"
-                                                    animate={{ scale: [1, 1, 0.95, 1, 1] }}
-                                                    transition={{
-                                                        duration: 8,
-                                                        times: [0, 0.6, 0.65, 0.7, 1],
-                                                        repeat: Infinity,
-                                                        repeatDelay: 1
-                                                    }}
-                                                >
-                                                    Copy <span>⌘C</span>
-                                                </motion.div>
-                                                <div className="px-3 py-1 text-gray-500">Share...</div>
-                                            </motion.div>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-
-
-                            {/* Manual Input */}
-                            <Card className="lg:col-span-1 order-2">
-                                <CardHeader className="pb-3">
-                                    <CardTitle className="text-sm font-medium">Job Details</CardTitle>
-                                    <CardDescription className="text-xs">
-                                        Enter the job title and description manually
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent className="space-y-3">
-                                    <div className="space-y-2">
-                                        <label htmlFor="job-title" className="text-xs font-medium">
-                                            Job Title
-                                        </label>
-                                        <input
-                                            id="job-title"
-                                            type="text"
-                                            value={jobTitle}
-                                            onChange={(e) => setJobTitle(e.target.value)}
-                                            placeholder="e.g. Senior Frontend Developer"
-                                            className="flex h-8 w-full rounded-md border border-input bg-transparent px-2 py-1 text-xs shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label htmlFor="job-description" className="text-xs font-medium">
-                                            Job Description
-                                        </label>
-                                        <textarea
-                                            id="job-description"
-                                            value={jobDescription}
-                                            onChange={(e) => setJobDescription(e.target.value)}
-                                            placeholder="Paste or type the job description here..."
-                                            rows={5}
-                                            className="flex w-full rounded-md border border-input bg-transparent px-2 py-1.5 text-xs shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none"
-                                        />
-                                    </div>
-
-                                </CardContent>
-                            </Card>
                         </div>
+
+                        {/* Benefits Section - Centered at bottom */}
+                        <div className="flex flex-wrap justify-center gap-2 mt-8 mb-4">
+                            {[
+                                { icon: ShieldCheck, color: "text-emerald-600 dark:text-emerald-500", text: "100% Private" },
+                                { icon: Zap, color: "text-amber-600 dark:text-amber-500", text: "Analysis in 10s" },
+                                { icon: Users, color: "text-purple-600 dark:text-purple-500", text: "By Recruiters" },
+                            ].map((item, i) => (
+                                <div key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/50 rounded-md text-xs">
+                                    <item.icon className={`w-3.5 h-3.5 ${item.color}`} />
+                                    <span className="font-medium">{item.text}</span>
+                                </div>
+                            ))}
+                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/30 rounded-md text-xs">
+                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                                <motion.span
+                                    className="font-medium"
+                                >
+                                    {activeUsers}
+                                </motion.span>
+                                <span className="text-muted-foreground">active</span>
+                            </div>
+                        </div>
+
+                        {/* Pro Feature Hint */}
+                        <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border-blue-200 dark:border-blue-800">
+                            <CardContent className="flex items-center justify-between p-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg">
+                                        <Sparkles className="w-5 h-5 text-blue-600" />
+                                    </div>
+                                    <div>
+                                        <p className="font-medium text-sm">AI-Powered Match Analysis</p>
+                                        <p className="text-xs text-muted-foreground">
+                                            Get instant match scores between your resume and job descriptions
+                                        </p>
+                                    </div>
+                                </div>
+                                <Button variant="outline" size="sm" className="gap-1">
+                                    Learn More
+                                    <ArrowRight className="w-3 h-3" />
+                                </Button>
+                            </CardContent>
+                        </Card>
                     </motion.div>
                 )}
 
