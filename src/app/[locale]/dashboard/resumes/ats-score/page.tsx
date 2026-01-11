@@ -335,15 +335,41 @@ function AnalyzingAnimation() {
     );
 }
 
-// Simple File Upload Component
+// Enhanced File Upload Component
 function FileUploadSimple({ onFileSelect }: { onFileSelect: (file: File) => void }) {
+    const [isDragging, setIsDragging] = useState(false);
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) onFileSelect(file);
     };
 
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const file = e.dataTransfer.files?.[0];
+        if (file) onFileSelect(file);
+    };
+
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = () => {
+        setIsDragging(false);
+    };
+
     return (
-        <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-12 hover:border-blue-500 transition-colors cursor-pointer">
+        <div
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            className={`relative flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-12 transition-all cursor-pointer group ${isDragging
+                ? 'border-blue-500 bg-blue-50 scale-105'
+                : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50/50'
+                }`}
+        >
             <input
                 type="file"
                 accept=".pdf,.doc,.docx"
@@ -351,10 +377,29 @@ function FileUploadSimple({ onFileSelect }: { onFileSelect: (file: File) => void
                 className="hidden"
                 id="file-upload"
             />
-            <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center">
-                <Upload className="w-12 h-12 text-gray-400 mb-4" />
-                <p className="text-lg font-semibold text-gray-700 mb-2">Arrastra tu CV aquí o haz clic para seleccionar</p>
-                <p className="text-sm text-gray-500">PDF, DOC, o DOCX (máx. 5MB)</p>
+            <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center w-full">
+                <motion.div
+                    animate={{
+                        y: isDragging ? -10 : 0,
+                        scale: isDragging ? 1.1 : 1
+                    }}
+                    className="mb-6 relative"
+                >
+                    <div className="absolute inset-0 bg-blue-500 rounded-full blur-xl opacity-20 group-hover:opacity-30 transition-opacity" />
+                    <div className="relative bg-gradient-to-br from-blue-500 to-blue-600 p-6 rounded-2xl shadow-lg group-hover:shadow-xl transition-all">
+                        <Upload className="w-12 h-12 text-white" />
+                    </div>
+                </motion.div>
+
+                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                    {isDragging ? '¡Suelta tu archivo aquí!' : 'Arrastra tu CV aquí'}
+                </h3>
+                <p className="text-sm text-gray-500 mb-4">o haz clic para seleccionar</p>
+
+                <div className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg">
+                    <FileText className="w-4 h-4 text-gray-600" />
+                    <span className="text-xs text-gray-600 font-medium">PDF, DOC, DOCX (máx. 5MB)</span>
+                </div>
             </label>
         </div>
     );
@@ -434,40 +479,111 @@ export default function ATSScannerPage() {
     const totalIssues = result ? result.critical_errors.length + result.improvements.length : 0;
 
     return (
-        <div className="flex flex-1 flex-col gap-4 p-4">
+        <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
             <AnimatePresence mode="wait">
                 {/* Upload State */}
                 {!result && !isAnalyzing && !error && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                        <div className="mb-6">
-                            <h1 className="text-3xl font-bold tracking-tight mb-2">ATS Scanner <span className="text-blue-600">Pro</span></h1>
-                            <p className="text-muted-foreground">Analiza tu CV como los sistemas de empresas Fortune 500</p>
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="max-w-5xl mx-auto w-full"
+                    >
+                        {/* Header - Minimalist */}
+                        <div className="mb-8">
+                            <h1 className="text-2xl font-semibold mb-1.5">
+                                ATS Scanner <span className="text-blue-600 dark:text-blue-500">Pro</span>
+                            </h1>
+                            <p className="text-sm text-muted-foreground">
+                                Analiza tu CV como los sistemas de empresas Fortune 500
+                            </p>
                         </div>
 
-                        <div className="grid md:grid-cols-3 gap-4">
-                            <div className="md:col-span-2">
-                                <Card>
-                                    <CardContent className="p-6">
-                                        <FileUploadSimple onFileSelect={handleFileSelect} />
-                                    </CardContent>
-                                </Card>
-                            </div>
+                        <div className="grid md:grid-cols-[1fr,280px] gap-4">
+                            {/* Upload Area - Clean */}
+                            <Card className="border">
+                                <CardContent className="p-6">
+                                    <div
+                                        onDrop={(e) => {
+                                            e.preventDefault();
+                                            const file = e.dataTransfer.files?.[0];
+                                            if (file) handleFileSelect(file);
+                                        }}
+                                        onDragOver={(e) => e.preventDefault()}
+                                        className="relative flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-10 hover:border-blue-500 dark:hover:border-blue-400 transition-colors cursor-pointer group"
+                                    >
+                                        <input
+                                            type="file"
+                                            accept=".pdf,.doc,.docx"
+                                            onChange={(e) => {
+                                                const file = e.target.files?.[0];
+                                                if (file) handleFileSelect(file);
+                                            }}
+                                            className="hidden"
+                                            id="file-upload"
+                                        />
+                                        <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center w-full">
+                                            <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-950 rounded-xl group-hover:bg-blue-100 dark:group-hover:bg-blue-900 transition-colors">
+                                                <Upload className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                                            </div>
+
+                                            <p className="text-sm font-medium mb-1">Arrastra tu CV aquí</p>
+                                            <p className="text-xs text-muted-foreground mb-3">o haz clic para seleccionar</p>
+
+                                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted rounded text-xs text-muted-foreground">
+                                                <FileText className="w-3.5 h-3.5" />
+                                                <span>PDF, DOC, DOCX (máx. 5MB)</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            {/* Sidebar - Compact Benefits */}
                             <div className="space-y-3">
-                                {[{ icon: ShieldCheck, color: "text-emerald-500", text: "100% Privado", desc: "Tu CV se elimina después" },
-                                { icon: Zap, color: "text-amber-500", text: "Análisis en 10s", desc: "Resultados instantáneos" },
-                                { icon: Users, color: "text-purple-500", text: "Por Recruiters", desc: "+10,000 procesos" }].map((item, i) => (
-                                    <Card key={i}>
-                                        <CardContent className="p-4">
-                                            <div className="flex items-center gap-3">
-                                                <item.icon className={`w-5 h-5 ${item.color}`} />
-                                                <div>
-                                                    <p className="font-medium text-gray-900 text-sm">{item.text}</p>
-                                                    <p className="text-gray-400 text-xs">{item.desc}</p>
+                                {[
+                                    {
+                                        icon: ShieldCheck,
+                                        text: "100% Privado",
+                                        desc: "Tu CV se elimina después"
+                                    },
+                                    {
+                                        icon: Zap,
+                                        text: "Análisis en 10s",
+                                        desc: "Resultados instantáneos"
+                                    },
+                                    {
+                                        icon: Users,
+                                        text: "Por Recruiters",
+                                        desc: "+10,000 procesos"
+                                    }
+                                ].map((item, i) => (
+                                    <Card key={i} className="border">
+                                        <CardContent className="p-3.5">
+                                            <div className="flex items-start gap-3">
+                                                <div className="p-2 bg-muted rounded-lg shrink-0">
+                                                    <item.icon className="w-4 h-4" />
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-sm font-medium mb-0.5">{item.text}</p>
+                                                    <p className="text-xs text-muted-foreground">{item.desc}</p>
                                                 </div>
                                             </div>
                                         </CardContent>
                                     </Card>
                                 ))}
+
+                                {/* Stats Card */}
+                                <Card className="border bg-muted/30">
+                                    <CardContent className="p-3.5">
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                                            <span className="text-xs text-muted-foreground">Usuarios activos hoy</span>
+                                        </div>
+                                        <p className="text-2xl font-semibold mb-0.5">1,247</p>
+                                        <p className="text-xs text-muted-foreground">CVs analizados (24h)</p>
+                                    </CardContent>
+                                </Card>
                             </div>
                         </div>
                     </motion.div>
@@ -483,38 +599,39 @@ export default function ATSScannerPage() {
                             {/* Score Card - Sticky */}
                             <div className="lg:col-span-4 xl:col-span-3">
                                 <Card className="lg:sticky lg:top-20">
-                                    <CardHeader>
-                                        <CardTitle>Tu Puntuación</CardTitle>
+                                    <CardHeader className="pb-4">
+                                        <CardTitle className="text-base">Tu Puntuación</CardTitle>
                                     </CardHeader>
-                                    <CardContent>
+                                    <CardContent className="space-y-4">
                                         {/* Score Circle */}
-                                        <div className="text-center mb-6">
-                                            <div className="relative w-32 h-32 mx-auto mb-3">
+                                        <div className="text-center">
+                                            <div className="relative w-28 h-28 mx-auto mb-2">
                                                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                                                    <circle cx="50" cy="50" r="40" stroke="#e5e7eb" strokeWidth="8" fill="none" />
+                                                    <circle cx="50" cy="50" r="40" stroke="currentColor" className="text-muted" strokeWidth="6" fill="none" />
                                                     <motion.circle
                                                         initial={{ strokeDashoffset: 251 }}
                                                         animate={{ strokeDashoffset: 251 - (result.score / 100 * 251) }}
                                                         transition={{ duration: 1 }}
                                                         cx="50" cy="50" r="40"
-                                                        stroke={result.score >= 70 ? "#f59e0b" : result.score >= 50 ? "#f59e0b" : "#ef4444"}
-                                                        strokeWidth="8" fill="none" strokeDasharray="251" strokeLinecap="round"
+                                                        stroke="currentColor"
+                                                        className={result.score >= 70 ? "text-amber-500" : result.score >= 50 ? "text-amber-500" : "text-red-500"}
+                                                        strokeWidth="6" fill="none" strokeDasharray="251" strokeLinecap="round"
                                                     />
                                                 </svg>
                                                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                                    <span className={`text-4xl font-bold ${result.score >= 70 ? "text-amber-500" : result.score >= 50 ? "text-amber-500" : "text-red-500"}`}>
+                                                    <span className={`text-3xl font-semibold ${result.score >= 70 ? "text-amber-500" : result.score >= 50 ? "text-amber-500" : "text-red-500"}`}>
                                                         {result.score}
                                                     </span>
-                                                    <span className="text-gray-400 text-sm">/100</span>
+                                                    <span className="text-xs text-muted-foreground">/100</span>
                                                 </div>
                                             </div>
-                                            <p className="text-muted-foreground">{totalIssues} Problemas</p>
+                                            <p className="text-xs text-muted-foreground">{totalIssues} problemas encontrados</p>
                                         </div>
 
-                                        <Separator className="my-4" />
+                                        <Separator />
 
                                         {/* Categories */}
-                                        <div className="space-y-3">
+                                        <div className="space-y-2">
                                             <ExpandableCategory
                                                 name="Contenido"
                                                 score={categories.contenido.score}
@@ -538,10 +655,10 @@ export default function ATSScannerPage() {
                                         </div>
 
                                         {/* CTA */}
-                                        <div className="mt-6">
+                                        <div className="pt-2">
                                             <Link href="/#pricing">
-                                                <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white">
-                                                    <Sparkles className="w-4 h-4 mr-2" /> Optimizar CV
+                                                <Button className="w-full" size="sm">
+                                                    <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Optimizar CV
                                                 </Button>
                                             </Link>
                                         </div>
@@ -551,72 +668,54 @@ export default function ATSScannerPage() {
 
                             {/* Main Content */}
                             <div className="lg:col-span-8 xl:col-span-9">
-                                <div className="flex items-center justify-between mb-6">
-                                    <div className="flex items-center gap-3">
-                                        <div className="p-2 bg-blue-100 rounded-lg">
-                                            <FileText className="w-6 h-6 text-blue-600" />
-                                        </div>
-                                        <h1 className="text-2xl font-bold text-gray-900 uppercase tracking-wide">Contenido</h1>
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center gap-2">
+                                        <FileText className="w-5 h-5 text-muted-foreground" />
+                                        <h2 className="text-lg font-semibold">Análisis de Contenido</h2>
                                     </div>
-                                    <Badge variant="destructive" className="px-4 py-2">
-                                        {totalIssues} problemas encontrados
+                                    <Badge variant="destructive" className="text-xs">
+                                        {totalIssues} problemas
                                     </Badge>
                                 </div>
 
                                 {/* Report Sections */}
-                                <div className="space-y-4">
-                                    {/* Tasa de Análisis ATS */}
+                                <div className="space-y-3">
+                                    {/* ATS Rate */}
                                     <ReportSection icon={Shield} title="Tasa de Análisis ATS" issueCount={0} status="success" defaultOpen={true}>
-                                        <div className="space-y-4">
-                                            <p className="text-gray-600">
-                                                Un <strong>Sistema de Seguimiento de Solicitudes</strong> comúnmente referido como <strong>ATS</strong> es un sistema utilizado por empleadores para escanear un gran número de solicitudes.
+                                        <div className="space-y-3 text-sm">
+                                            <p className="text-muted-foreground leading-relaxed">
+                                                Un <strong>Sistema de Seguimiento de Solicitudes (ATS)</strong> es usado por empleadores para escanear solicitudes.
                                             </p>
 
                                             <StatusBox
                                                 status="success"
                                                 title="¡Genial!"
-                                                description="Hemos analizado el 100% de tu CV exitosamente usando un ATS líder en la industria."
+                                                description="Hemos analizado el 100% de tu CV exitosamente."
                                             />
-
-                                            <Card className="bg-gray-50">
-                                                <CardHeader>
-                                                    <CardTitle className="text-sm">Preguntas Frecuentes</CardTitle>
-                                                </CardHeader>
-                                                <CardContent className="space-y-2">
-                                                    <FAQItem
-                                                        question="¿Qué es un resume compatible con ATS?"
-                                                        answer="Un resume compatible con ATS es aquel que puede ser escaneado e interpretado fácilmente por un sistema de seguimiento de solicitantes."
-                                                    />
-                                                    <FAQItem
-                                                        question="¿Cómo hago que mi resume sea compatible con ATS?"
-                                                        answer="Para hacer que tu resume sea compatible con ATS, debes formatear tu resume adecuadamente, siguiendo un diseño simple y estructurado."
-                                                    />
-                                                </CardContent>
-                                            </Card>
                                         </div>
                                     </ReportSection>
 
-                                    {/* Cuantificar Impacto */}
+                                    {/* Impact */}
                                     <ReportSection icon={Target} title="Cuantificar el Impacto" issueCount={result.critical_errors.length} status={result.critical_errors.length > 0 ? "error" : "success"}>
-                                        <div className="space-y-4">
-                                            <p className="text-gray-600">
-                                                Cualquier buen CV mostrará el <strong>impacto</strong> que has tenido en las posiciones previas que has ocupado.
+                                        <div className="space-y-3 text-sm">
+                                            <p className="text-muted-foreground">
+                                                Tu CV debe mostrar el <strong>impacto</strong> que has tenido en posiciones previas.
                                             </p>
 
                                             {result.critical_errors.length > 0 && (
                                                 <StatusBox
                                                     status="error"
-                                                    title="¡Oh, no!"
-                                                    description="Tu sección de experiencia carece de logros cuantificables."
+                                                    title="Mejora necesaria"
+                                                    description="Tu experiencia carece de logros cuantificables."
                                                 />
                                             )}
 
-                                            <div className="space-y-2">
+                                            <div className="space-y-1.5">
                                                 {result.critical_errors.map((err, i) => (
-                                                    <Card key={i} className="bg-red-50 border-red-100">
-                                                        <CardContent className="p-4 flex gap-3">
-                                                            <X className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
-                                                            <p className="text-gray-700 text-sm">{err}</p>
+                                                    <Card key={i} className="bg-red-50 dark:bg-red-950 border-red-100 dark:border-red-900">
+                                                        <CardContent className="p-3 flex gap-2">
+                                                            <X className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                                                            <p className="text-xs">{err}</p>
                                                         </CardContent>
                                                     </Card>
                                                 ))}
@@ -624,19 +723,19 @@ export default function ATSScannerPage() {
                                         </div>
                                     </ReportSection>
 
-                                    {/* Mejoras Sugeridas */}
+                                    {/* Improvements */}
                                     <ReportSection icon={Sparkles} title="Mejoras Sugeridas" issueCount={result.improvements.length} status={result.improvements.length > 2 ? "warning" : "success"}>
-                                        <div className="space-y-4">
-                                            <p className="text-gray-600">
-                                                Estas son mejoras opcionales que pueden aumentar el impacto de tu CV.
+                                        <div className="space-y-3 text-sm">
+                                            <p className="text-muted-foreground">
+                                                Mejoras opcionales que pueden aumentar el impacto de tu CV.
                                             </p>
 
-                                            <div className="space-y-2">
+                                            <div className="space-y-1.5">
                                                 {result.improvements.map((imp, i) => (
-                                                    <Card key={i} className="bg-amber-50 border-amber-100">
-                                                        <CardContent className="p-4 flex gap-3">
-                                                            <AlertCircle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
-                                                            <p className="text-gray-700 text-sm">{imp}</p>
+                                                    <Card key={i} className="bg-amber-50 dark:bg-amber-950 border-amber-100 dark:border-amber-900">
+                                                        <CardContent className="p-3 flex gap-2">
+                                                            <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                                                            <p className="text-xs">{imp}</p>
                                                         </CardContent>
                                                     </Card>
                                                 ))}
@@ -644,30 +743,30 @@ export default function ATSScannerPage() {
                                         </div>
                                     </ReportSection>
 
-                                    {/* Formato y Tamaño */}
-                                    <ReportSection icon={FileCheck} title="Formato y Tamaño del Archivo" issueCount={0} status="success">
-                                        <div className="space-y-4">
-                                            <p className="text-gray-600">
-                                                Idealmente, tu CV debe ser menor de 2MB y en formato PDF.
+                                    {/* File Format */}
+                                    <ReportSection icon={FileCheck} title="Formato y Tamaño" issueCount={0} status="success">
+                                        <div className="space-y-3 text-sm">
+                                            <p className="text-muted-foreground">
+                                                Tu CV debe ser menor de 2MB y en formato PDF.
                                             </p>
 
                                             <StatusBox
                                                 status="success"
-                                                title="¡Buen trabajo!"
-                                                description="Tu archivo de CV tiene el formato correcto (PDF) y un tamaño adecuado."
+                                                title="Perfecto"
+                                                description="Formato correcto (PDF) y tamaño adecuado."
                                             />
                                         </div>
                                     </ReportSection>
                                 </div>
 
                                 {/* Mobile CTA */}
-                                <div className="lg:hidden mt-8 space-y-2">
-                                    <Button onClick={() => setResult(null)} variant="outline" className="w-full">
-                                        <RefreshCw className="w-4 h-4 mr-2" /> Nueva Carga
+                                <div className="lg:hidden mt-6 space-y-2">
+                                    <Button onClick={() => setResult(null)} variant="outline" className="w-full" size="sm">
+                                        <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Nueva Carga
                                     </Button>
                                     <Link href="/#pricing">
-                                        <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white">
-                                            <Sparkles className="w-4 h-4 mr-2" /> Optimizar CV
+                                        <Button className="w-full" size="sm">
+                                            <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Optimizar CV
                                         </Button>
                                     </Link>
                                 </div>
