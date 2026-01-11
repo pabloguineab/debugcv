@@ -189,7 +189,10 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                         <DropdownMenu>
                             <DropdownMenuTrigger
                                 render={
-                                    <div className="flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring cursor-pointer h-12 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:!p-0 group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:justify-center">
+                                    <button
+                                        type="button"
+                                        className="flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring cursor-pointer h-12 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:!p-0 group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:justify-center"
+                                    >
                                         <Avatar className="h-8 w-8 rounded-lg">
                                             <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
                                             <AvatarFallback className="rounded-lg">
@@ -210,7 +213,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                                             )}
                                         </div>
                                         <MoreVertical className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
-                                    </div>
+                                    </button>
                                 }
                             />
                             <DropdownMenuContent
