@@ -899,72 +899,89 @@ export default function ATSScannerPage() {
                         <div className="grid lg:grid-cols-12 gap-6">
                             {/* Score Card - Sticky */}
                             <div className="lg:col-span-4 xl:col-span-3">
-                                <Card className="lg:sticky lg:top-20">
-                                    <CardHeader className="pb-4">
-                                        <CardTitle className="text-base">Tu Puntuación</CardTitle>
-                                    </CardHeader>
-                                    <CardContent className="space-y-4">
-                                        {/* Score Circle */}
-                                        <div className="text-center">
-                                            <div className="relative w-28 h-28 mx-auto mb-2">
-                                                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                                                    <circle cx="50" cy="50" r="40" stroke="currentColor" className="text-muted" strokeWidth="6" fill="none" />
-                                                    <motion.circle
-                                                        initial={{ strokeDashoffset: 251 }}
-                                                        animate={{ strokeDashoffset: 251 - (result.score / 100 * 251) }}
-                                                        transition={{ duration: 1 }}
-                                                        cx="50" cy="50" r="40"
-                                                        stroke="currentColor"
-                                                        className={result.score >= 70 ? "text-amber-500" : result.score >= 50 ? "text-amber-500" : "text-red-500"}
-                                                        strokeWidth="6" fill="none" strokeDasharray="251" strokeLinecap="round"
-                                                    />
-                                                </svg>
-                                                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                                    <span className={`text-3xl font-semibold ${result.score >= 70 ? "text-amber-500" : result.score >= 50 ? "text-amber-500" : "text-red-500"}`}>
-                                                        {result.score}
-                                                    </span>
-                                                    <span className="text-xs text-muted-foreground">/100</span>
+                                <div className="lg:sticky lg:top-20 space-y-4">
+                                    <Card>
+                                        <CardHeader className="pb-4">
+                                            <CardTitle className="text-base">Tu Puntuación</CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="space-y-4">
+                                            {/* Score Circle */}
+                                            <div className="text-center">
+                                                <div className="relative w-28 h-28 mx-auto mb-2">
+                                                    <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                                                        <circle cx="50" cy="50" r="40" stroke="currentColor" className="text-muted" strokeWidth="6" fill="none" />
+                                                        <motion.circle
+                                                            initial={{ strokeDashoffset: 251 }}
+                                                            animate={{ strokeDashoffset: 251 - (result.score / 100 * 251) }}
+                                                            transition={{ duration: 1 }}
+                                                            cx="50" cy="50" r="40"
+                                                            stroke="currentColor"
+                                                            className={result.score >= 70 ? "text-amber-500" : result.score >= 50 ? "text-amber-500" : "text-red-500"}
+                                                            strokeWidth="6" fill="none" strokeDasharray="251" strokeLinecap="round"
+                                                        />
+                                                    </svg>
+                                                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                                        <span className={`text-3xl font-semibold ${result.score >= 70 ? "text-amber-500" : result.score >= 50 ? "text-amber-500" : "text-red-500"}`}>
+                                                            {result.score}
+                                                        </span>
+                                                        <span className="text-xs text-muted-foreground">/100</span>
+                                                    </div>
+                                                </div>
+                                                <p className="text-xs text-muted-foreground">{totalIssues} problemas encontrados</p>
+                                            </div>
+
+                                            <Separator />
+
+                                            {/* Categories */}
+                                            <div className="space-y-2">
+                                                <ExpandableCategory
+                                                    name="Contenido"
+                                                    score={categories.contenido.score}
+                                                    items={categories.contenido.items}
+                                                />
+                                                <ExpandableCategory
+                                                    name="Secciones"
+                                                    score={categories.secciones.score}
+                                                    items={categories.secciones.items}
+                                                />
+                                                <ExpandableCategory
+                                                    name="Esenciales ATS"
+                                                    score={categories.esenciales.score}
+                                                    items={categories.esenciales.items}
+                                                />
+                                                <ExpandableCategory
+                                                    name="Adaptación"
+                                                    score={categories.adaptacion.score}
+                                                    items={categories.adaptacion.items}
+                                                />
+                                            </div>
+
+                                            {/* CTA */}
+                                            <div className="pt-2">
+                                                <Link href="/#pricing">
+                                                    <Button className="w-full" size="sm">
+                                                        <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Optimizar CV
+                                                    </Button>
+                                                </Link>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+
+                                    {/* AI Info Card */}
+                                    <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 border-blue-200 dark:border-blue-800">
+                                        <CardContent className="p-4 flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <div className="p-2 bg-blue-100 dark:bg-blue-900/60 rounded-lg">
+                                                    <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                                                </div>
+                                                <div>
+                                                    <p className="font-semibold text-sm text-blue-900 dark:text-blue-100">AI-Powered Analysis</p>
+                                                    <p className="text-[10px] text-blue-700 dark:text-blue-300">Powered by Gemini 3 Flash</p>
                                                 </div>
                                             </div>
-                                            <p className="text-xs text-muted-foreground">{totalIssues} problemas encontrados</p>
-                                        </div>
-
-                                        <Separator />
-
-                                        {/* Categories */}
-                                        <div className="space-y-2">
-                                            <ExpandableCategory
-                                                name="Contenido"
-                                                score={categories.contenido.score}
-                                                items={categories.contenido.items}
-                                            />
-                                            <ExpandableCategory
-                                                name="Secciones"
-                                                score={categories.secciones.score}
-                                                items={categories.secciones.items}
-                                            />
-                                            <ExpandableCategory
-                                                name="Esenciales ATS"
-                                                score={categories.esenciales.score}
-                                                items={categories.esenciales.items}
-                                            />
-                                            <ExpandableCategory
-                                                name="Adaptación"
-                                                score={categories.adaptacion.score}
-                                                items={categories.adaptacion.items}
-                                            />
-                                        </div>
-
-                                        {/* CTA */}
-                                        <div className="pt-2">
-                                            <Link href="/#pricing">
-                                                <Button className="w-full" size="sm">
-                                                    <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Optimizar CV
-                                                </Button>
-                                            </Link>
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                                        </CardContent>
+                                    </Card>
+                                </div>
                             </div>
 
                             {/* Main Content */}
