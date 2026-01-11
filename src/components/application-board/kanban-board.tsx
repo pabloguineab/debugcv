@@ -248,10 +248,15 @@ function JobCard({ application, onDragStart, onEdit, onDelete }: JobCardProps) {
                         )}
 
                         {/* Salary */}
-                        {application.expectedSalary && Array.isArray(application.expectedSalary) && (
+                        {application.expectedSalary && (
                             <div className="flex items-center gap-1 text-xs font-medium text-green-600 dark:text-green-400">
                                 <DollarSign className="w-3 h-3" />
-                                <span>{application.expectedSalary[0]}k-{application.expectedSalary[1]}k</span>
+                                <span>
+                                    {Array.isArray(application.expectedSalary) && application.expectedSalary.length === 2
+                                        ? `${application.expectedSalary[0]}k-${application.expectedSalary[1]}k`
+                                        : String(application.expectedSalary)
+                                    }
+                                </span>
                             </div>
                         )}
                     </div>
