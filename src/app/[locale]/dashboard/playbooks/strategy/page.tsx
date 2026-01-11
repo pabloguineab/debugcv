@@ -137,7 +137,7 @@ function StrategyContent() {
     };
 
     return (
-        <div className={`w-full bg-slate-50 font-sans ${loading ? 'min-h-screen overflow-hidden' : ''}`}>
+        <div className={`w-full bg-slate-50 font-sans ${loading ? 'h-screen overflow-hidden flex flex-col' : ''}`}>
 
             {/* Header / Hero Section */}
             <div className="relative bg-white border-b border-slate-200 overflow-hidden">
@@ -194,7 +194,7 @@ function StrategyContent() {
             </div>
 
             {/* Main Content Grid */}
-            <div className={`max-w-7xl mx-auto px-6 ${loading ? 'h-[calc(100vh-120px)] flex items-center justify-center' : 'pt-6'}`}>
+            <div className={`max-w-7xl mx-auto px-6 ${loading ? 'flex-1 flex items-center justify-center' : 'pt-6'}`}>
 
                 {loading ? (
                     <LoadingState company={company} role={role} />
