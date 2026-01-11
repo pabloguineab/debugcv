@@ -967,17 +967,28 @@ export default function ATSScannerPage() {
                                         </CardContent>
                                     </Card>
 
-                                    {/* AI Info Card */}
-                                    <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 border-blue-200 dark:border-blue-800">
-                                        <CardContent className="p-4 flex items-center justify-between">
-                                            <div className="flex items-center gap-3">
-                                                <div className="p-2 bg-blue-100 dark:bg-blue-900/60 rounded-lg">
-                                                    <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                                                </div>
-                                                <div>
-                                                    <p className="font-semibold text-sm text-blue-900 dark:text-blue-100">AI-Powered Analysis</p>
-                                                    <p className="text-[10px] text-blue-700 dark:text-blue-300">Powered by Gemini 3 Flash</p>
-                                                </div>
+                                    {/* ATS Logic Card */}
+                                    <Card className="bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border-blue-200 dark:border-blue-800 shadow-sm">
+                                        <CardContent className="p-6 flex flex-col items-center text-center gap-4 min-h-[200px] justify-center">
+                                            <div className="p-3 bg-white dark:bg-blue-900/50 rounded-xl shadow-sm ring-1 ring-blue-100 dark:ring-blue-800">
+                                                <ShieldCheck className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <h3 className="font-bold text-lg text-blue-950 dark:text-blue-50 leading-tight">
+                                                    Simulación ATS Empresarial
+                                                </h3>
+                                                <p className="text-sm text-blue-800 dark:text-blue-200 leading-relaxed px-2">
+                                                    Calibrado con los mismos algoritmos de filtrado que usan las empresas Fortune 500 y sistemas como Workday o Lever.
+                                                </p>
+                                            </div>
+
+                                            <div className="mt-2 flex items-center gap-2 text-xs font-semibold text-blue-700 dark:text-blue-300 bg-blue-100/50 dark:bg-blue-900/30 px-3 py-1 rounded-full border border-blue-200 dark:border-blue-800">
+                                                <span className="relative flex h-2 w-2">
+                                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                                                </span>
+                                                Matching en Tiempo Real
                                             </div>
                                         </CardContent>
                                     </Card>
