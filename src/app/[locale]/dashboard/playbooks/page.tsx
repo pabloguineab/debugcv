@@ -133,7 +133,7 @@ export default function PlaybookPage() {
                 className="max-w-7xl mx-auto w-full flex flex-col flex-1 h-full"
             >
                 {/* Header Standardized to match Dashboard Layout (ATS Score / Application Board) */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                     <div>
                         <h1 className="text-2xl font-bold flex items-center gap-2">
                             <Sparkles className="w-6 h-6 text-blue-600" />
@@ -149,11 +149,11 @@ export default function PlaybookPage() {
                 </div>
 
                 {/* Central Search Section - Takes remaining space */}
-                <div className="flex-1 flex items-center justify-start relative w-full pt-32">
+                <div className="flex-1 flex items-center justify-center relative min-h-[500px] w-full mt-4 md:mt-8">
 
                     {/* Background Animation Glows - Subtle and clean */}
                     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                        <div className="absolute top-[160px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-radial from-blue-100/30 to-transparent blur-3xl opacity-50" />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-radial from-blue-100/30 to-transparent blur-3xl opacity-50" />
                     </div>
 
                     {/* Orbiting Logos */}
