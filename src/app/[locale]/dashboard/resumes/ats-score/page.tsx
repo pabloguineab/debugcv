@@ -69,9 +69,9 @@ function ReportSection({
     const [isOpen, setIsOpen] = useState(defaultOpen);
 
     const statusColors = {
-        success: "bg-emerald-100 text-emerald-600 border-emerald-200",
-        warning: "bg-amber-100 text-amber-600 border-amber-200",
-        error: "bg-red-100 text-red-600 border-red-200"
+        success: "bg-emerald-100 text-emerald-600 border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-400 dark:border-emerald-800",
+        warning: "bg-amber-100 text-amber-600 border-amber-200 dark:bg-amber-900/40 dark:text-amber-400 dark:border-amber-800",
+        error: "bg-red-100 text-red-600 border-red-200 dark:bg-red-900/40 dark:text-red-400 dark:border-red-800"
     };
 
     return (
@@ -79,10 +79,10 @@ function ReportSection({
             <Collapsible open={isOpen} onOpenChange={setIsOpen}>
                 <CollapsibleTrigger className="w-full flex items-center justify-between p-5 hover:bg-accent transition-colors">
                     <div className="flex items-center gap-3">
-                        <div className="p-2 bg-blue-50 rounded-lg">
-                            <Icon className="w-5 h-5 text-blue-600" />
+                        <div className="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                            <Icon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                         </div>
-                        <h3 className="font-semibold text-gray-900 uppercase tracking-wide text-sm">{title}</h3>
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wide text-sm">{title}</h3>
                     </div>
                     <div className="flex items-center gap-3">
                         {issueCount !== undefined && (
@@ -141,9 +141,9 @@ function ExpandableCategory({
     return (
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
             <CollapsibleTrigger className="w-full flex items-center justify-between py-3 hover:bg-accent transition-colors rounded-lg px-2 -mx-2">
-                <span className="text-sm font-medium text-gray-700 uppercase tracking-wide">{name}</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wide">{name}</span>
                 <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="bg-amber-100 text-amber-600">
+                    <Badge variant="secondary" className="bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400">
                         {score}%
                     </Badge>
                     <motion.div
@@ -160,15 +160,15 @@ function ExpandableCategory({
                         <div key={i} className="flex items-center justify-between gap-2 py-1.5">
                             <div className="flex items-center gap-2 min-w-0">
                                 {item.status === "success" ? (
-                                    <Check className="w-4 h-4 text-emerald-500 shrink-0" />
+                                    <Check className="w-4 h-4 text-emerald-500 dark:text-emerald-400 shrink-0" />
                                 ) : (
-                                    <X className="w-4 h-4 text-red-500 shrink-0" />
+                                    <X className="w-4 h-4 text-red-500 dark:text-red-400 shrink-0" />
                                 )}
-                                <span className="text-sm text-gray-600 truncate">{item.name}</span>
+                                <span className="text-sm text-gray-600 dark:text-gray-400 truncate">{item.name}</span>
                             </div>
                             <Badge variant={item.issues === 0 ? "default" : "secondary"} className={`text-xs whitespace-nowrap shrink-0 ${item.issues === 0
-                                ? "bg-emerald-50 text-emerald-600"
-                                : "bg-gray-100 text-gray-600"
+                                ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
+                                : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
                                 }`}>
                                 {item.issues === 0 ? "No issues" : `${item.issues} issues`}
                             </Badge>
@@ -183,9 +183,9 @@ function ExpandableCategory({
 // Result Status Box
 function StatusBox({ status, title, description }: { status: "success" | "warning" | "error"; title: string; description: string }) {
     const configs = {
-        success: { bg: "bg-emerald-50", border: "border-emerald-200", icon: CheckCircle2, iconColor: "text-emerald-500" },
-        warning: { bg: "bg-amber-50", border: "border-amber-200", icon: AlertCircle, iconColor: "text-amber-500" },
-        error: { bg: "bg-red-50", border: "border-red-200", icon: XCircle, iconColor: "text-red-500" }
+        success: { bg: "bg-emerald-50 dark:bg-emerald-950/30", border: "border-emerald-200 dark:border-emerald-900", icon: CheckCircle2, iconColor: "text-emerald-500 dark:text-emerald-400" },
+        warning: { bg: "bg-amber-50 dark:bg-amber-950/30", border: "border-amber-200 dark:border-amber-900", icon: AlertCircle, iconColor: "text-amber-500 dark:text-amber-400" },
+        error: { bg: "bg-red-50 dark:bg-red-950/30", border: "border-red-200 dark:border-red-900", icon: XCircle, iconColor: "text-red-500 dark:text-red-400" }
     };
     const config = configs[status];
     const Icon = config.icon;
@@ -194,8 +194,8 @@ function StatusBox({ status, title, description }: { status: "success" | "warnin
         <Card className={`${config.bg} ${config.border} border`}>
             <CardContent className="p-6 text-center">
                 <Icon className={`w-10 h-10 ${config.iconColor} mx-auto mb-3`} />
-                <p className="font-bold text-gray-900 mb-1">{title}</p>
-                <p className="text-sm text-gray-600">{description}</p>
+                <p className="font-bold text-gray-900 dark:text-gray-100 mb-1">{title}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{description}</p>
             </CardContent>
         </Card>
     );
