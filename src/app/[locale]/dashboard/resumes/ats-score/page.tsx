@@ -256,10 +256,10 @@ function AnalyzingAnimation() {
                     <div className="grid md:grid-cols-2 gap-8">
                         {/* Left side - Score */}
                         <div className="text-center">
-                            <h2 className="text-xl font-bold text-gray-900 mb-6">Your Score</h2>
+                            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">Your Score</h2>
                             <div className="relative w-32 h-32 mx-auto mb-6">
                                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                                    <circle cx="50" cy="50" r="40" stroke="#e5e7eb" strokeWidth="8" fill="none" />
+                                    <circle cx="50" cy="50" r="40" stroke="currentColor" className="text-gray-200 dark:text-gray-800" strokeWidth="8" fill="none" />
                                     <motion.circle
                                         cx="50" cy="50" r="40"
                                         stroke="#3b82f6"
@@ -273,7 +273,7 @@ function AnalyzingAnimation() {
                                     />
                                 </svg>
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                    <span className="text-2xl font-bold text-blue-600">
+                                    <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                                         {Math.round(((currentStep + 1) / steps.length * 100) - 5)}%
                                     </span>
                                 </div>
@@ -281,7 +281,7 @@ function AnalyzingAnimation() {
                             <div className="space-y-3">
                                 {categories.map((item, i) => (
                                     <div key={i} className="flex items-center justify-between text-sm">
-                                        <span className={categoryProgress[i] > 0 ? "text-gray-700" : "text-gray-400"}>
+                                        <span className={categoryProgress[i] > 0 ? "text-gray-700 dark:text-gray-300" : "text-gray-400 dark:text-gray-600"}>
                                             {item}
                                         </span>
                                         <Progress value={categoryProgress[i]} className="w-24 h-2" />
@@ -291,7 +291,7 @@ function AnalyzingAnimation() {
                         </div>
 
                         {/* Right side - Steps */}
-                        <div className="bg-blue-50 rounded-xl p-6 flex flex-col justify-center">
+                        <div className="bg-blue-50 dark:bg-slate-800 rounded-xl p-6 flex flex-col justify-center">
                             {steps.map((step, i) => (
                                 <motion.div
                                     key={i}
@@ -307,22 +307,22 @@ function AnalyzingAnimation() {
                                         <motion.div
                                             initial={{ scale: 0 }}
                                             animate={{ scale: 1 }}
-                                            className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center"
+                                            className="w-6 h-6 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center"
                                         >
                                             <Check className="w-4 h-4 text-white" />
                                         </motion.div>
                                     ) : i === currentStep ? (
                                         <div className="w-6 h-6 flex items-center justify-center">
                                             <motion.div
-                                                className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full"
+                                                className="w-5 h-5 border-2 border-blue-600 dark:border-blue-400 border-t-transparent rounded-full"
                                                 animate={{ rotate: 360 }}
                                                 transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                                             />
                                         </div>
                                     ) : (
-                                        <div className="w-6 h-6 border-2 border-gray-300 rounded-full" />
+                                        <div className="w-6 h-6 border-2 border-gray-300 dark:border-gray-600 rounded-full" />
                                     )}
-                                    <span className={`font-medium ${i <= currentStep ? "text-gray-800" : "text-gray-400"}`}>
+                                    <span className={`font-medium ${i <= currentStep ? "text-gray-800 dark:text-gray-200" : "text-gray-400 dark:text-gray-500"}`}>
                                         {step}
                                     </span>
                                 </motion.div>
