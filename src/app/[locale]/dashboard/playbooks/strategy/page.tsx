@@ -143,7 +143,7 @@ function StrategyContent() {
             <div className="relative bg-white border-b border-slate-200 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-indigo-50/50" />
 
-                <div className="max-w-7xl mx-auto px-6 py-12 relative z-10">
+                <div className="max-w-7xl mx-auto px-6 py-6 relative z-10">
                     <button
                         onClick={() => router.back()}
                         className="flex items-center text-slate-500 hover:text-slate-800 transition-colors mb-8 group"
@@ -157,14 +157,14 @@ function StrategyContent() {
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="w-24 h-24 rounded-3xl bg-white border border-slate-200 shadow-xl flex items-center justify-center p-4 relative overflow-hidden"
+                                className="w-16 h-16 rounded-2xl bg-white border border-slate-200 shadow-lg flex items-center justify-center p-3 relative overflow-hidden"
                             >
                                 <Image
                                     src={logoParam || `https://cdn.brandfetch.io/${company.toLowerCase().replace(/\s+/g, '')}.com/w/400/h/400`}
                                     alt={company}
-                                    width={80}
-                                    height={80}
-                                    className="object-contain rounded-xl"
+                                    width={56}
+                                    height={56}
+                                    className="object-contain rounded-lg"
                                     onError={(e) => {
                                         // Fallback si no carga la imagen
                                         const target = e.target as HTMLImageElement;
@@ -181,7 +181,7 @@ function StrategyContent() {
                                     animate={{ opacity: 1, y: 0 }}
                                     className="flex items-center gap-3 mb-2"
                                 >
-                                    <h1 className="text-4xl font-black text-slate-900 tracking-tight">{company}</h1>
+                                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{company}</h1>
                                     <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wide border border-blue-200">
                                         {t('confidential_report')}
                                     </span>
@@ -190,7 +190,7 @@ function StrategyContent() {
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.1 }}
-                                    className="flex items-center text-slate-500 text-lg font-medium"
+                                    className="flex items-center text-slate-500 text-base font-medium"
                                 >
                                     <Briefcase className="w-5 h-5 mr-2 text-slate-400" />
                                     {t('strategy_for')} <span className="text-slate-800 font-bold ml-1">{role}</span>
