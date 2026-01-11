@@ -12,34 +12,36 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { ModeToggle } from "@/components/mode-toggle";
+import { Fragment } from "react";
 
 const routeNames: Record<string, string> = {
-    "/dashboard": "Dashboard",
-    "/dashboard/job-search": "Job Search",
-    "/dashboard/application-board": "Application Board",
-    "/dashboard/resumes": "My Versions",
-    "/dashboard/resumes/ats-score": "ATS Score",
-    "/dashboard/cover-letters": "Cover Letters",
-    "/dashboard/interview-coach": "AI Simulator",
-    "/dashboard/playbooks": "Playbooks",
+    "dashboard": "Dashboard",
+    "job-search": "Job Search",
+    "application-board": "Application Board",
+    "resumes": "My Versions",
+    "ats-score": "ATS Score",
+    "cover-letters": "Cover Letters",
+    "interview-coach": "AI Simulator",
+    "playbooks": "Playbooks",
+    "strategy": "Strategy",
 };
 
 export function DashboardHeader() {
     const pathname = usePathname();
-    // Remove local prefix if present (e.g. /en/dashboard -> /dashboard)
-    // Assuming pathname might contain locale like /en/dashboard/...
-    // Simpler approach: match the end of the string
 
-    let currentName = "Dashboard";
+    // Extract the path segments after locale (e.g., /en/dashboard/playbooks/strategy -> ['dashboard', 'playbooks', 'strategy'])
+    const segments = pathname?.split('/').filter(Boolean) || [];
+    // Remove locale segment if present (2-letter codes like 'en', 'es')
+    const dashboardIndex = segments.findIndex(s => s === 'dashboard');
+    const pathSegments = dashboardIndex >= 0 ? segments.slice(dashboardIndex) : segments;
 
-    // Normalize path to exclude locale if possible, or just match segments
-    // A robust way normally involves useLocale from next-intl, but let's try simple matching first.
+    // Build breadcrumb items
+    const breadcrumbItems = pathSegments.map((segment, index) => {
+        const name = routeNames[segment] || segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ');
+        const href = '/' + pathSegments.slice(0, index + 1).join('/');
+        const isLast = index === pathSegments.length - 1;
 
-    // Check exact matches first
-    Object.keys(routeNames).forEach((path) => {
-        if (pathname?.endsWith(path)) {
-            currentName = routeNames[path];
-        }
+        return { name, href, isLast };
     });
 
     return (
@@ -51,10 +53,18 @@ export function DashboardHeader() {
                     <BreadcrumbItem className="hidden md:block">
                         <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
                     </BreadcrumbItem>
-                    <BreadcrumbSeparator className="hidden md:block" />
-                    <BreadcrumbItem>
-                        <BreadcrumbPage>{currentName}</BreadcrumbPage>
-                    </BreadcrumbItem>
+                    {breadcrumbItems.map((item, index) => (
+                        <Fragment key={item.href}>
+                            <BreadcrumbSeparator className="hidden md:block" />
+                            <BreadcrumbItem>
+                                {item.isLast ? (
+                                    <BreadcrumbPage>{item.name}</BreadcrumbPage>
+                                ) : (
+                                    <BreadcrumbLink href={item.href}>{item.name}</BreadcrumbLink>
+                                )}
+                            </BreadcrumbItem>
+                        </Fragment>
+                    ))}
                 </BreadcrumbList>
             </Breadcrumb>
 
@@ -66,3 +76,4 @@ export function DashboardHeader() {
         </header>
     );
 }
+
