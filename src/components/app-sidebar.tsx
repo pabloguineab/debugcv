@@ -77,7 +77,8 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         <Sidebar variant="inset" {...props}>
             <SidebarHeader className="p-4 flex flex-row items-center justify-between">
                 <Link href="/dashboard" className="flex items-center gap-2">
-                    <Logo className="h-8 w-auto" />
+                    <Logo className="h-8 w-auto dark:hidden" />
+                    <Logo variant="white" className="h-8 w-auto hidden dark:block" />
                 </Link>
                 <ModeToggle />
             </SidebarHeader>

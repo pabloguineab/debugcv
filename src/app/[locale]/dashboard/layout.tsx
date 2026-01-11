@@ -6,11 +6,6 @@ import { redirect } from "next/navigation";
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
     const session = await getServerSession(authOptions);
 
-    // Optional: Protect route server-side if needed, though middleware likely handles it
-    if (!session?.user) {
-        // redirect("/auth/signin"); // Uncomment if strict server-side protection is desired
-    }
-
     return (
         <DashboardLayoutClient user={session?.user}>
             {children}
