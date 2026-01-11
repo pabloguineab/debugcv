@@ -273,11 +273,9 @@ function AnalyzingAnimation() {
                                     />
                                 </svg>
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                    <motion.div
-                                        className="w-6 h-6 border-3 border-blue-500 border-t-transparent rounded-full"
-                                        animate={{ rotate: 360 }}
-                                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                                    />
+                                    <span className="text-2xl font-bold text-blue-600">
+                                        {Math.round((currentStep + 1) / steps.length * 100)}%
+                                    </span>
                                 </div>
                             </div>
                             <div className="space-y-3">
