@@ -60,19 +60,19 @@ export function DashboardRadarChart() {
     return (
         <Card>
             <CardHeader className="items-center pb-2">
-                <CardTitle>Global Presence</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-sm">Global Presence</CardTitle>
+                <CardDescription className="text-xs">
                     Regional metrics
                 </CardDescription>
             </CardHeader>
             <CardContent className="pb-0">
                 <ChartContainer
                     config={radarConfig}
-                    className="mx-auto h-[180px]"
+                    className="mx-auto h-[150px]"
                 >
                     <RadarChart data={radarData}>
                         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                        <PolarAngleAxis dataKey="month" tick={{ fontSize: 10 }} />
+                        <PolarAngleAxis dataKey="month" tick={{ fontSize: 9 }} />
                         <PolarGrid />
                         <Radar
                             dataKey="desktop"
@@ -91,9 +91,9 @@ export function DashboardRadarChart() {
                     </RadarChart>
                 </ChartContainer>
             </CardContent>
-            <CardFooter className="flex-col gap-1 text-sm pt-2 items-center justify-center text-center">
+            <CardFooter className="flex-col gap-1 text-xs pt-2 items-center justify-center text-center">
                 <div className="flex items-center gap-2 font-medium leading-none justify-center">
-                    Growing in 3 regions <TrendingUp className="h-4 w-4 text-blue-500" />
+                    Growing in 3 regions <TrendingUp className="h-3 w-3 text-blue-500" />
                 </div>
                 <div className="flex items-center gap-2 leading-none text-muted-foreground justify-center">
                     Jan - Jun 2025
@@ -122,27 +122,28 @@ export function DashboardRadialChart() {
     return (
         <Card className="flex flex-col">
             <CardHeader className="items-center pb-2">
-                <CardTitle>Completion Rate</CardTitle>
-                <CardDescription>Profile status</CardDescription>
+                <CardTitle className="text-sm">Completion Rate</CardTitle>
+                <CardDescription className="text-xs">Profile status</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pb-0">
                 <ChartContainer
                     config={radialConfig}
-                    className="mx-auto h-[180px]"
+                    className="mx-auto h-[150px]"
                 >
                     <RadialBarChart
                         data={radialData}
                         endAngle={260}
-                        innerRadius={80}
-                        outerRadius={130}
+                        innerRadius={70}
+                        outerRadius={105}
                         startAngle={0}
+                        barSize={12}
                     >
                         <PolarGrid
                             gridType="circle"
                             radialLines={false}
                             stroke="none"
                             className="first:fill-muted last:fill-background"
-                            polarRadius={[86, 74]}
+                            polarRadius={[76, 64]}
                         />
                         <RadialBar dataKey="visitors" background cornerRadius={10} fill={BLUE_PRIMARY} />
                         <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
@@ -159,14 +160,14 @@ export function DashboardRadialChart() {
                                                 <tspan
                                                     x={viewBox.cx}
                                                     y={viewBox.cy}
-                                                    className="fill-foreground text-3xl font-bold"
+                                                    className="fill-foreground text-2xl font-bold"
                                                 >
                                                     72%
                                                 </tspan>
                                                 <tspan
                                                     x={viewBox.cx}
-                                                    y={(viewBox.cy || 0) + 20}
-                                                    className="fill-muted-foreground text-xs"
+                                                    y={(viewBox.cy || 0) + 16}
+                                                    className="fill-muted-foreground text-[10px]"
                                                 >
                                                     Completed
                                                 </tspan>
@@ -179,9 +180,9 @@ export function DashboardRadialChart() {
                     </RadialBarChart>
                 </ChartContainer>
             </CardContent>
-            <CardFooter className="flex-col gap-1 text-sm pt-2 items-center justify-center text-center">
+            <CardFooter className="flex-col gap-1 text-xs pt-2 items-center justify-center text-center">
                 <div className="flex items-center gap-2 font-medium leading-none justify-center">
-                    Good progress <TrendingUp className="h-4 w-4 text-blue-500" />
+                    Good progress <TrendingUp className="h-3 w-3 text-blue-500" />
                 </div>
                 <div className="leading-none text-muted-foreground text-center">
                     Finish resume to reach 100%
@@ -198,7 +199,7 @@ const lineData = [
     { month: "Mar", desktop: 237, mobile: 120 },
     { month: "Apr", desktop: 73, mobile: 190 },
     { month: "May", desktop: 209, mobile: 130 },
-    { month: "Jun", desktop: 214, mobile: 140 },
+    { month: "June", desktop: 214, mobile: 140 },
 ]
 
 const lineConfig = {
@@ -216,11 +217,11 @@ export function DashboardLineChart() {
     return (
         <Card>
             <CardHeader className="items-center pb-2">
-                <CardTitle>Application History</CardTitle>
-                <CardDescription>Apps vs Interviews</CardDescription>
+                <CardTitle className="text-sm">Application History</CardTitle>
+                <CardDescription className="text-xs">Apps vs Interviews</CardDescription>
             </CardHeader>
             <CardContent className="pb-0 pl-0">
-                <ChartContainer config={lineConfig} className="mx-auto h-[180px] w-full">
+                <ChartContainer config={lineConfig} className="mx-auto h-[150px] w-full">
                     <LineChart
                         accessibilityLayer
                         data={lineData}
@@ -245,23 +246,23 @@ export function DashboardLineChart() {
                             type="monotone"
                             stroke={BLUE_PRIMARY}
                             strokeWidth={2}
-                            dot={{ r: 3, fill: BLUE_PRIMARY }}
-                            activeDot={{ r: 5 }}
+                            dot={{ r: 2, fill: BLUE_PRIMARY }}
+                            activeDot={{ r: 4 }}
                         />
                         <Line
                             dataKey="mobile"
                             type="monotone"
                             stroke={BLUE_SECONDARY}
                             strokeWidth={2}
-                            dot={{ r: 3, fill: BLUE_SECONDARY }}
-                            activeDot={{ r: 5 }}
+                            dot={{ r: 2, fill: BLUE_SECONDARY }}
+                            activeDot={{ r: 4 }}
                         />
                     </LineChart>
                 </ChartContainer>
             </CardContent>
-            <CardFooter className="flex-col gap-1 text-sm pt-4 items-center justify-center text-center">
+            <CardFooter className="flex-col gap-1 text-xs pt-4 items-center justify-center text-center">
                 <div className="flex items-center gap-2 font-medium leading-none justify-center">
-                    High conversion rate <TrendingUp className="h-4 w-4 text-blue-500" />
+                    High conversion rate <TrendingUp className="h-3 w-3 text-blue-500" />
                 </div>
                 <div className="flex items-center gap-2 leading-none text-muted-foreground justify-center">
                     Last 6 months activity
