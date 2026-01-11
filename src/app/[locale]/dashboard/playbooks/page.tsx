@@ -149,7 +149,7 @@ export default function PlaybookPage() {
                 </div>
 
                 {/* Central Search Section - Takes remaining space */}
-                <div className="flex-1 flex items-center justify-center relative min-h-[500px] w-full mt-4 md:mt-8">
+                <div className="flex-1 flex items-center justify-center relative min-h-[500px] w-full">
 
                     {/* Background Animation Glows - Subtle and clean */}
                     <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -183,7 +183,7 @@ export default function PlaybookPage() {
                                     setSelectedCompanyLogo(company.localLogo);
                                 }}
                             >
-                                <div className="relative w-full h-full rounded-2xl bg-white/90 backdrop-blur-sm shadow-sm border border-slate-100 flex items-center justify-center p-3">
+                                <div className="relative w-full h-full rounded-xl bg-white/90 backdrop-blur-sm shadow-sm border border-slate-100 flex items-center justify-center p-3">
                                     <Image src={company.localLogo} alt={company.name} fill className="object-contain p-1" />
                                 </div>
                             </motion.div>
