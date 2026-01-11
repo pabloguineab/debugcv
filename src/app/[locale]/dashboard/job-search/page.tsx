@@ -141,7 +141,11 @@ export default function JobSearchPage() {
     const runBatchSearch = async (queriesToRun: string[], locationVal: string, resetJobs: boolean, pageNum: number = 1): Promise<number> => {
         try {
             setError(null);
-            const searchPromises = queriesToRun.map(q => {
+            setError(null);
+
+            const resultsArray: Job[][] = [];
+
+            for (const q of queriesToRun) {
                 let finalQ = q;
                 const locTrimmed = locationVal.trim();
 
@@ -160,15 +164,20 @@ export default function JobSearchPage() {
 
                 console.log(`[runBatchSearch] Final query: "${finalQ}"`);
 
-                return searchJobs(finalQ, {
+                const jobs = await searchJobs(finalQ, {
                     remote_jobs_only: false,
                     date_posted: 'month',
                     num_pages: 2,
                     page: pageNum
                 });
-            });
 
-            const resultsArray = await Promise.all(searchPromises);
+                resultsArray.push(jobs);
+
+                // Small delay to be polite to the API and avoid 429
+                if (queriesToRun.length > 1) {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+            }
             const allNewJobs = resultsArray.flat();
 
             // Deduplicate by job_id

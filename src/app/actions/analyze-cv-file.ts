@@ -28,6 +28,7 @@ export async function analyzeCvFile(formData: FormData): Promise<CVCriteria | nu
         const mimeType = file.type || 'application/pdf';
 
         const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+        // Using 'gemini-3-flash-preview' model as requested, matching ATS route configuration.
         const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
         const prompt = `
