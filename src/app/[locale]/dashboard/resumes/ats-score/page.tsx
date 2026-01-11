@@ -27,6 +27,14 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import {
+    Empty,
+    EmptyContent,
+    EmptyDescription,
+    EmptyHeader,
+    EmptyMedia,
+    EmptyTitle,
+} from "@/components/ui/empty";
 
 type AnalysisResult = {
     score: number;
@@ -500,42 +508,55 @@ export default function ATSScannerPage() {
                         </div>
 
                         <div className="grid md:grid-cols-[1fr,280px] gap-4">
-                            {/* Upload Area - Clean */}
+                            {/* Upload Area - Clean Empty State */}
                             <Card>
-                                <CardContent className="p-6">
-                                    <div
-                                        onDrop={(e) => {
-                                            e.preventDefault();
-                                            const file = e.dataTransfer.files?.[0];
-                                            if (file) handleFileSelect(file);
-                                        }}
-                                        onDragOver={(e) => e.preventDefault()}
-                                        className="relative flex flex-col items-center justify-center border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-lg p-10 hover:border-blue-500 dark:hover:border-blue-400 transition-colors cursor-pointer group"
-                                    >
-                                        <input
-                                            type="file"
-                                            accept=".pdf,.doc,.docx"
-                                            onChange={(e) => {
-                                                const file = e.target.files?.[0];
-                                                if (file) handleFileSelect(file);
-                                            }}
-                                            className="hidden"
-                                            id="file-upload"
-                                        />
-                                        <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center w-full">
-                                            <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-950/50 rounded-xl group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors">
-                                                <Upload className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                                <CardContent className="p-8">
+                                    <Empty>
+                                        <EmptyHeader>
+                                            <EmptyMedia variant="icon">
+                                                <FileText className="w-12 h-12" />
+                                            </EmptyMedia>
+                                            <EmptyTitle>No Resume Selected</EmptyTitle>
+                                            <EmptyDescription>
+                                                Select a resume from your library or import a new one from your device to start the ATS analysis.
+                                            </EmptyDescription>
+                                        </EmptyHeader>
+                                        <EmptyContent>
+                                            <div className="flex flex-col sm:flex-row gap-2">
+                                                <Button variant="outline">
+                                                    <FileText className="w-4 h-4 mr-2" />
+                                                    Select Resume
+                                                </Button>
+                                                <label htmlFor="file-upload-input">
+                                                    <Button asChild>
+                                                        <span className="cursor-pointer">
+                                                            <Upload className="w-4 h-4 mr-2" />
+                                                            Import Resume
+                                                        </span>
+                                                    </Button>
+                                                </label>
+                                                <input
+                                                    id="file-upload-input"
+                                                    type="file"
+                                                    accept=".pdf,.doc,.docx"
+                                                    onChange={(e) => {
+                                                        const file = e.target.files?.[0];
+                                                        if (file) handleFileSelect(file);
+                                                    }}
+                                                    className="hidden"
+                                                />
                                             </div>
-
-                                            <p className="text-sm font-medium mb-1">Arrastra tu CV aquí</p>
-                                            <p className="text-xs text-muted-foreground mb-3">o haz clic para seleccionar</p>
-
-                                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted rounded text-xs text-muted-foreground">
-                                                <FileText className="w-3.5 h-3.5" />
-                                                <span>PDF, DOC, DOCX (máx. 5MB)</span>
-                                            </div>
-                                        </label>
-                                    </div>
+                                        </EmptyContent>
+                                        <Button
+                                            variant="link"
+                                            className="text-muted-foreground"
+                                            size="sm"
+                                        >
+                                            <span className="flex items-center gap-1">
+                                                Supported formats: PDF, DOC, DOCX (max. 5MB)
+                                            </span>
+                                        </Button>
+                                    </Empty>
                                 </CardContent>
                             </Card>
 
