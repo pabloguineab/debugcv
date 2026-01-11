@@ -498,7 +498,7 @@ export default function ATSScannerPage() {
                         className="max-w-5xl mx-auto w-full"
                     >
                         {/* Header - Minimalist */}
-                        <div className="mb-4">
+                        <div className="mb-4 text-center">
                             <h1 className="text-xl font-semibold mb-1 dark:text-white">
                                 ATS Scanner <span className="text-blue-600 dark:text-blue-400">Pro</span>
                             </h1>
@@ -507,27 +507,35 @@ export default function ATSScannerPage() {
                             </p>
                         </div>
 
-                        {/* Compact Benefits - Inline */}
-                        <div className="flex flex-wrap gap-2 mb-4">
-                            {[
-                                { icon: ShieldCheck, color: "text-emerald-600 dark:text-emerald-500", text: "100% Privado" },
-                                { icon: Zap, color: "text-amber-600 dark:text-amber-500", text: "Análisis en 10s" },
-                                { icon: Users, color: "text-purple-600 dark:text-purple-500", text: "Por Recruiters" },
-                            ].map((item, i) => (
-                                <div key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/50 rounded-md text-xs">
-                                    <item.icon className={`w-3.5 h-3.5 ${item.color}`} />
-                                    <span className="font-medium">{item.text}</span>
-                                </div>
-                            ))}
-                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/30 rounded-md text-xs">
-                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                                <span className="font-medium">1,247</span>
-                                <span className="text-muted-foreground">activos</span>
-                            </div>
-                        </div>
-
                         {/* Upload Area - Following shadcn Empty docs style */}
                         <div className="max-w-2xl mx-auto">
+                            {/* Compact Benefits - Inline & Centered Above */}
+                            <div className="flex flex-wrap justify-center gap-2 mb-4">
+                                {[
+                                    { icon: ShieldCheck, color: "text-emerald-600 dark:text-emerald-500", text: "100% Privado" },
+                                    { icon: Zap, color: "text-amber-600 dark:text-amber-500", text: "Análisis en 10s" },
+                                    { icon: Users, color: "text-purple-600 dark:text-purple-500", text: "Por Recruiters" },
+                                ].map((item, i) => (
+                                    <div key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/50 rounded-md text-xs">
+                                        <item.icon className={`w-3.5 h-3.5 ${item.color}`} />
+                                        <span className="font-medium">{item.text}</span>
+                                    </div>
+                                ))}
+                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/30 rounded-md text-xs">
+                                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                                    <motion.span
+                                        className="font-medium"
+                                        key={Math.floor(Date.now() / 10000)}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ duration: 0.5 }}
+                                    >
+                                        {1247 + Math.floor(Math.random() * 10)}
+                                    </motion.span>
+                                    <span className="text-muted-foreground">activos</span>
+                                </div>
+                            </div>
+
                             <Empty className="border">
                                 <EmptyHeader>
                                     <EmptyMedia variant="icon">
