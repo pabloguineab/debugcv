@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
         const base64Data = buffer.toString("base64");
 
         // Prepare prompt for Gemini
-        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-thinking-exp-1219" });
+        const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
         const prompt = `
         Act as an expert ATS (Applicant Tracking System) and Resume Coach.
