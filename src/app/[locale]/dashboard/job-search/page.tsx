@@ -6,7 +6,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from 'framer-motion';
 import { Search, MapPin, Briefcase, Sparkles, Target, Plus, ArrowDown, Globe, Building2, CheckCircle2 } from 'lucide-react';
 import { searchJobs, type Job } from '@/app/actions/search-jobs';
-import { getUserCvCriteria } from '@/app/actions/get-user-cv-criteria';
+import { getUserCvCriteria, type CVCriteria } from '@/app/actions/get-user-cv-criteria';
+import { analyzeCvFile } from '@/app/actions/analyze-cv-file';
 import { CompanyLogo } from "@/components/company-logo";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -63,6 +64,31 @@ export default function JobSearchPage() {
         }
     }, [jobs, isRemote]);
 
+    // Common logic to process criteria and start search
+    const processCriteriaAndSearch = async (criteria: CVCriteria) => {
+        const queries = criteria.search_queries || [];
+        const mainQuery = queries[0] || criteria.role;
+        const newLocation = criteria.location || '';
+
+        let displayQuery = mainQuery;
+        if (newLocation) {
+            const fullSuffix = ` in ${newLocation}`;
+            const city = newLocation.split(',')[0].trim();
+            const citySuffix = ` in ${city}`;
+
+            if (displayQuery.toLowerCase().endsWith(fullSuffix.toLowerCase())) {
+                displayQuery = displayQuery.slice(0, -fullSuffix.length).trim();
+            } else if (city && displayQuery.toLowerCase().endsWith(citySuffix.toLowerCase())) {
+                displayQuery = displayQuery.slice(0, -citySuffix.length).trim();
+            }
+        }
+
+        setQuery(displayQuery);
+        setLocation(newLocation);
+
+        await setAllQueriesAndRunFirstBatch(queries, mainQuery, newLocation);
+    };
+
     // Handlers
     const handleAnalyzeCV = async () => {
         setAnalyzingCv(true);
@@ -71,33 +97,15 @@ export default function JobSearchPage() {
             const criteria = await getUserCvCriteria();
 
             if (!criteria) {
-                alert("⚠️ No encontramos tu CV. Por favor ve al 'ATS Scanner' y sube tu CV más reciente.");
+                // Fallback UI or toast would be better here than alert, but keeping existing logic for now
+                // We could suggest using "Import CV" if this fails
+                alert("⚠️ No encontramos tu CV en el perfil. Prueba usando el botón 'Import CV' para subir uno.");
                 setLoading(false);
                 setAnalyzingCv(false);
                 return;
             }
 
-            const queries = criteria.search_queries || [];
-            const mainQuery = queries[0] || criteria.role;
-            const newLocation = criteria.location || '';
-
-            let displayQuery = mainQuery;
-            if (newLocation) {
-                const fullSuffix = ` in ${newLocation}`;
-                const city = newLocation.split(',')[0].trim();
-                const citySuffix = ` in ${city}`;
-
-                if (displayQuery.toLowerCase().endsWith(fullSuffix.toLowerCase())) {
-                    displayQuery = displayQuery.slice(0, -fullSuffix.length).trim();
-                } else if (city && displayQuery.toLowerCase().endsWith(citySuffix.toLowerCase())) {
-                    displayQuery = displayQuery.slice(0, -citySuffix.length).trim();
-                }
-            }
-
-            setQuery(displayQuery);
-            setLocation(newLocation);
-
-            await setAllQueriesAndRunFirstBatch(queries, mainQuery, newLocation);
+            await processCriteriaAndSearch(criteria);
             await new Promise(resolve => setTimeout(resolve, 1500));
 
         } catch (error: any) {
@@ -280,13 +288,33 @@ export default function JobSearchPage() {
         fileInputRef.current?.click();
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            // In a real app, we would upload and parse this file.
-            // For now, we'll trigger the analyze CV flow which uses the stored profile CV
-            // and show a message that simulates the import processing.
-            handleAnalyzeCV();
+            setAnalyzingCv(true);
+            setLoading(true);
+            try {
+                const formData = new FormData();
+                formData.append("file", file);
+
+                const criteria = await analyzeCvFile(formData);
+
+                if (criteria) {
+                    await processCriteriaAndSearch(criteria);
+                } else {
+                    alert("No pudimos analizar el archivo. Asegúrate de que es un PDF válido.");
+                }
+            } catch (error) {
+                console.error("Error analyzing uploaded file:", error);
+                setError('general');
+            } finally {
+                setAnalyzingCv(false);
+                setLoading(false);
+                // Reset input
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                }
+            }
         }
     };
 
