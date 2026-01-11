@@ -3,7 +3,9 @@
 import * as React from "react"
 import { mergeProps } from "@base-ui/react/merge-props"
 import { useRender } from "@base-ui/react/use-render"
-import { cva, type VariantProps } from "class-variance-authority"
+import { Slot } from "@radix-ui/react-slot"
+import { VariantProps, cva } from "class-variance-authority"
+import { PanelLeft, X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -20,6 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { useIsMobile } from "@/hooks/use-mobile"
@@ -499,59 +502,64 @@ const sidebarMenuButtonVariants = cva(
   }
 )
 
-function SidebarMenuButton({
-  render,
-  isActive = false,
-  variant = "default",
-  size = "default",
-  tooltip,
-  className,
-  ...props
-}: useRender.ComponentProps<"button"> &
+const SidebarMenuButton = React.forwardRef<
+  HTMLButtonElement,
   React.ComponentProps<"button"> & {
+    asChild?: boolean
     isActive?: boolean
     tooltip?: string | React.ComponentProps<typeof TooltipContent>
-  } & VariantProps<typeof sidebarMenuButtonVariants>) {
-  const { isMobile, state } = useSidebar()
-  const comp = useRender({
-    defaultTagName: "button",
-    props: mergeProps<"button">(
-      {
-        className: cn(sidebarMenuButtonVariants({ variant, size }), className),
-      },
-      props
-    ),
-    render: !tooltip ? render : TooltipTrigger,
-    state: {
-      slot: "sidebar-menu-button",
-      sidebar: "menu-button",
-      size,
-      active: isActive,
+  } & VariantProps<typeof sidebarMenuButtonVariants>
+>(
+  (
+    {
+      asChild = false,
+      isActive = false,
+      variant = "default",
+      size = "default",
+      tooltip,
+      className,
+      ...props
     },
-  })
+    ref
+  ) => {
+    const Comp = asChild ? Slot : "button"
+    const { isMobile, state } = useSidebar()
 
-  if (!tooltip) {
-    return comp
-  }
-
-  if (typeof tooltip === "string") {
-    tooltip = {
-      children: tooltip,
-    }
-  }
-
-  return (
-    <Tooltip>
-      {comp}
-      <TooltipContent
-        side="right"
-        align="center"
-        hidden={state !== "collapsed" || isMobile}
-        {...tooltip}
+    const button = (
+      <Comp
+        ref={ref}
+        data-sidebar="menu-button"
+        data-size={size}
+        data-active={isActive}
+        className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+        {...props}
       />
-    </Tooltip>
-  )
-}
+    )
+
+    if (!tooltip) {
+      return button
+    }
+
+    if (typeof tooltip === "string") {
+      tooltip = {
+        children: tooltip,
+      }
+    }
+
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>{button}</TooltipTrigger>
+        <TooltipContent
+          side="right"
+          align="center"
+          hidden={state !== "collapsed" || isMobile}
+          {...tooltip}
+        />
+      </Tooltip>
+    )
+  }
+)
+SidebarMenuButton.displayName = "SidebarMenuButton"
 
 function SidebarMenuAction({
   className,
@@ -569,7 +577,7 @@ function SidebarMenuAction({
         className: cn(
           "text-sidebar-foreground ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground peer-hover/menu-button:text-sidebar-accent-foreground absolute top-1.5 right-1 aspect-square w-5 rounded-[calc(var(--radius-sm)-2px)] p-0 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5 peer-data-[size=sm]/menu-button:top-1 focus-visible:ring-2 [&>svg]:size-4 flex items-center justify-center outline-hidden transition-transform group-data-[collapsible=icon]:hidden after:absolute after:-inset-2 md:after:hidden [&>svg]:shrink-0",
           showOnHover &&
-            "peer-data-active/menu-button:text-sidebar-accent-foreground group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-open:opacity-100 md:opacity-0",
+          "peer-data-active/menu-button:text-sidebar-accent-foreground group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-open:opacity-100 md:opacity-0",
           className
         ),
       },

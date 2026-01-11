@@ -187,30 +187,32 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <div className="flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring cursor-pointer h-12 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:!p-0 group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:justify-center">
-                                    <Avatar className="h-8 w-8 rounded-lg">
-                                        <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
-                                        <AvatarFallback className="rounded-lg">
-                                            {user?.name ? user.name.charAt(0).toUpperCase() : <User className="size-4" />}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-                                        {user?.name ? (
-                                            <>
-                                                <span className="truncate font-semibold">{user.name}</span>
-                                                <span className="truncate text-xs text-muted-foreground">{user.email}</span>
-                                            </>
-                                        ) : (
-                                            <div className="flex flex-col gap-1">
-                                                <div className="h-3 w-20 rounded bg-muted animate-pulse" />
-                                                <div className="h-2 w-24 rounded bg-muted animate-pulse" />
-                                            </div>
-                                        )}
+                            <DropdownMenuTrigger
+                                render={
+                                    <div className="flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring cursor-pointer h-12 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:!p-0 group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:justify-center">
+                                        <Avatar className="h-8 w-8 rounded-lg">
+                                            <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
+                                            <AvatarFallback className="rounded-lg">
+                                                {user?.name ? user.name.charAt(0).toUpperCase() : <User className="size-4" />}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                                            {user?.name ? (
+                                                <>
+                                                    <span className="truncate font-semibold">{user.name}</span>
+                                                    <span className="truncate text-xs text-muted-foreground">{user.email}</span>
+                                                </>
+                                            ) : (
+                                                <div className="flex flex-col gap-1">
+                                                    <div className="h-3 w-20 rounded bg-muted animate-pulse" />
+                                                    <div className="h-2 w-24 rounded bg-muted animate-pulse" />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <MoreVertical className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
                                     </div>
-                                    <MoreVertical className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
-                                </div>
-                            </DropdownMenuTrigger>
+                                }
+                            />
                             <DropdownMenuContent
                                 className="w-56 rounded-lg"
                                 side="right"
