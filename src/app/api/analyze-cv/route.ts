@@ -48,12 +48,12 @@ export async function POST(req: NextRequest) {
             ]
         }
 
-        Crucial:
         1. Be strict but creating.
         2. Focus on keyword matching (skills, tools, certifications).
-        3. Start the summary with "Análisis de compatibilidad para [Job Title]:"
-        4. If the resume is completely irrelevant, give a low score (<40).
-        5. Return ONLY the JSON string.
+        3. All output MUST be in English.
+        4. Start the summary with "Compatibility analysis for [Job Title]:"
+        5. If the resume is completely irrelevant, give a low score (<40).
+        6. Return ONLY the JSON string.
         `;
 
         const result = await model.generateContent([
