@@ -59,20 +59,20 @@ const radarConfig = {
 export function DashboardRadarChart() {
     return (
         <Card>
-            <CardHeader className="items-center pb-4">
+            <CardHeader className="items-center pb-2">
                 <CardTitle>Global Presence</CardTitle>
                 <CardDescription>
-                    Regional engagement metrics
+                    Regional metrics
                 </CardDescription>
             </CardHeader>
             <CardContent className="pb-0">
                 <ChartContainer
                     config={radarConfig}
-                    className="mx-auto aspect-square max-h-[250px]"
+                    className="mx-auto h-[180px]"
                 >
                     <RadarChart data={radarData}>
                         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                        <PolarAngleAxis dataKey="month" />
+                        <PolarAngleAxis dataKey="month" tick={{ fontSize: 10 }} />
                         <PolarGrid />
                         <Radar
                             dataKey="desktop"
@@ -91,12 +91,12 @@ export function DashboardRadarChart() {
                     </RadarChart>
                 </ChartContainer>
             </CardContent>
-            <CardFooter className="flex-col gap-2 text-sm">
-                <div className="flex items-center gap-2 font-medium leading-none">
+            <CardFooter className="flex-col gap-1 text-sm pt-2 items-center justify-center text-center">
+                <div className="flex items-center gap-2 font-medium leading-none justify-center">
                     Growing in 3 regions <TrendingUp className="h-4 w-4 text-blue-500" />
                 </div>
-                <div className="flex items-center gap-2 leading-none text-muted-foreground">
-                    January - June 2025
+                <div className="flex items-center gap-2 leading-none text-muted-foreground justify-center">
+                    Jan - Jun 2025
                 </div>
             </CardFooter>
         </Card>
@@ -104,8 +104,6 @@ export function DashboardRadarChart() {
 }
 
 // --- Radial Chart Shape ---
-// Note: fill color must be set in data for RadialBar if not using config mapping perfectly, 
-// but ChartContainer handles css vars.
 const radialData = [
     { browser: "safari", visitors: 72, fill: BLUE_PRIMARY },
 ]
@@ -123,20 +121,20 @@ const radialConfig = {
 export function DashboardRadialChart() {
     return (
         <Card className="flex flex-col">
-            <CardHeader className="items-center pb-0">
+            <CardHeader className="items-center pb-2">
                 <CardTitle>Completion Rate</CardTitle>
-                <CardDescription>Profile optimization status</CardDescription>
+                <CardDescription>Profile status</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pb-0">
                 <ChartContainer
                     config={radialConfig}
-                    className="mx-auto aspect-square max-h-[250px]"
+                    className="mx-auto h-[180px]"
                 >
                     <RadialBarChart
                         data={radialData}
-                        endAngle={260} // Adjusted angle to look more like a gauge
+                        endAngle={260}
                         innerRadius={80}
-                        outerRadius={140}
+                        outerRadius={130}
                         startAngle={0}
                     >
                         <PolarGrid
@@ -161,14 +159,14 @@ export function DashboardRadialChart() {
                                                 <tspan
                                                     x={viewBox.cx}
                                                     y={viewBox.cy}
-                                                    className="fill-foreground text-4xl font-bold"
+                                                    className="fill-foreground text-3xl font-bold"
                                                 >
                                                     72%
                                                 </tspan>
                                                 <tspan
                                                     x={viewBox.cx}
-                                                    y={(viewBox.cy || 0) + 24}
-                                                    className="fill-muted-foreground text-[16px]"
+                                                    y={(viewBox.cy || 0) + 20}
+                                                    className="fill-muted-foreground text-xs"
                                                 >
                                                     Completed
                                                 </tspan>
@@ -181,12 +179,12 @@ export function DashboardRadialChart() {
                     </RadialBarChart>
                 </ChartContainer>
             </CardContent>
-            <CardFooter className="flex-col gap-2 text-sm">
-                <div className="flex items-center gap-2 font-medium leading-none">
+            <CardFooter className="flex-col gap-1 text-sm pt-2 items-center justify-center text-center">
+                <div className="flex items-center gap-2 font-medium leading-none justify-center">
                     Good progress <TrendingUp className="h-4 w-4 text-blue-500" />
                 </div>
-                <div className="leading-none text-muted-foreground">
-                    Finish your resume to reach 100%
+                <div className="leading-none text-muted-foreground text-center">
+                    Finish resume to reach 100%
                 </div>
             </CardFooter>
         </Card>
@@ -195,17 +193,17 @@ export function DashboardRadialChart() {
 
 // --- Line Chart Multiple ---
 const lineData = [
-    { month: "January", desktop: 186, mobile: 80 },
-    { month: "February", desktop: 305, mobile: 200 },
-    { month: "March", desktop: 237, mobile: 120 },
-    { month: "April", desktop: 73, mobile: 190 },
+    { month: "Jan", desktop: 186, mobile: 80 },
+    { month: "Feb", desktop: 305, mobile: 200 },
+    { month: "Mar", desktop: 237, mobile: 120 },
+    { month: "Apr", desktop: 73, mobile: 190 },
     { month: "May", desktop: 209, mobile: 130 },
-    { month: "June", desktop: 214, mobile: 140 },
+    { month: "Jun", desktop: 214, mobile: 140 },
 ]
 
 const lineConfig = {
     desktop: {
-        label: "Applications",
+        label: "Apps",
         color: BLUE_PRIMARY,
     },
     mobile: {
@@ -217,20 +215,20 @@ const lineConfig = {
 export function DashboardLineChart() {
     return (
         <Card>
-            <CardHeader>
+            <CardHeader className="items-center pb-2">
                 <CardTitle>Application History</CardTitle>
-                <CardDescription>Applications vs Interviews</CardDescription>
+                <CardDescription>Apps vs Interviews</CardDescription>
             </CardHeader>
-            <CardContent>
-                <ChartContainer config={lineConfig}>
+            <CardContent className="pb-0 pl-0">
+                <ChartContainer config={lineConfig} className="mx-auto h-[180px] w-full">
                     <LineChart
                         accessibilityLayer
                         data={lineData}
                         margin={{
                             left: 12,
                             right: 12,
-                            top: 10,
-                            bottom: 10,
+                            top: 5,
+                            bottom: 5,
                         }}
                     >
                         <CartesianGrid vertical={false} strokeDasharray="3 3" />
@@ -239,7 +237,7 @@ export function DashboardLineChart() {
                             tickLine={false}
                             axisLine={false}
                             tickMargin={8}
-                            tickFormatter={(value) => value.slice(0, 3)}
+                            tick={{ fontSize: 10 }}
                         />
                         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
                         <Line
@@ -247,30 +245,26 @@ export function DashboardLineChart() {
                             type="monotone"
                             stroke={BLUE_PRIMARY}
                             strokeWidth={2}
-                            dot={{ r: 4, fill: BLUE_PRIMARY }}
-                            activeDot={{ r: 6 }}
+                            dot={{ r: 3, fill: BLUE_PRIMARY }}
+                            activeDot={{ r: 5 }}
                         />
                         <Line
                             dataKey="mobile"
                             type="monotone"
                             stroke={BLUE_SECONDARY}
                             strokeWidth={2}
-                            dot={{ r: 4, fill: BLUE_SECONDARY }}
-                            activeDot={{ r: 6 }}
+                            dot={{ r: 3, fill: BLUE_SECONDARY }}
+                            activeDot={{ r: 5 }}
                         />
                     </LineChart>
                 </ChartContainer>
             </CardContent>
-            <CardFooter>
-                <div className="flex w-full items-start gap-2 text-sm">
-                    <div className="grid gap-2">
-                        <div className="flex items-center gap-2 font-medium leading-none">
-                            High conversion rate <TrendingUp className="h-4 w-4 text-blue-500" />
-                        </div>
-                        <div className="flex items-center gap-2 leading-none text-muted-foreground">
-                            Last 6 months activity
-                        </div>
-                    </div>
+            <CardFooter className="flex-col gap-1 text-sm pt-4 items-center justify-center text-center">
+                <div className="flex items-center gap-2 font-medium leading-none justify-center">
+                    High conversion rate <TrendingUp className="h-4 w-4 text-blue-500" />
+                </div>
+                <div className="flex items-center gap-2 leading-none text-muted-foreground justify-center">
+                    Last 6 months activity
                 </div>
             </CardFooter>
         </Card>
