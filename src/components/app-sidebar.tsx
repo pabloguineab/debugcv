@@ -18,6 +18,7 @@ import {
     User,
     CreditCard,
     Bell,
+    Gift,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
@@ -159,6 +160,17 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                             <Link href="#" className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium">
                                 <Gem className="size-4" />
                                 <span>Get Expert Audit</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <Link href="#" className="flex items-center gap-2 text-green-600 dark:text-green-500 font-medium group">
+                                <Gift className="size-4" />
+                                <span className="flex-1">Refer a Friend</span>
+                                <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-bold dark:bg-green-900/40 dark:text-green-400 group-data-[collapsible=icon]:hidden">
+                                    -30%
+                                </span>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
