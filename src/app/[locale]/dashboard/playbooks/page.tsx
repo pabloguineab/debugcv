@@ -98,12 +98,12 @@ export default function PlaybookPage() {
                 setLogoSize(48);
             } else if (width < 1500 || height < 900) {
                 // Laptop
-                setRadius(200); // Restored balance
-                setLogoSize(68); // Better visibility
+                setRadius(240); // Increased significantly
+                setLogoSize(85); // Increased significantly
             } else {
                 // Desktop
-                setRadius(280);
-                setLogoSize(80);
+                setRadius(320);
+                setLogoSize(100);
             }
         };
 
@@ -167,7 +167,7 @@ export default function PlaybookPage() {
                 </motion.div>
 
                 {/* Search Animation Container */}
-                <div className="relative w-full h-[320px] md:h-[450px] flex items-center justify-center">
+                <div className="relative w-full h-[350px] md:h-[500px] flex items-center justify-center">
 
                     {/* Logos */}
                     {displayedCompanies.map((company, index) => {
@@ -204,11 +204,11 @@ export default function PlaybookPage() {
                     })}
 
                     {/* Central Search Bar - Using Shadcn/Base-UI Comboboxes */}
-                    <div className="relative z-50 w-full max-w-2xl mx-auto px-4">
-                        <div className="flex flex-col md:flex-row items-center gap-2 p-2 bg-white rounded-2xl shadow-xl border border-slate-200">
+                    <div className="relative z-50 w-full max-w-3xl mx-auto px-4">
+                        <div className="flex flex-col md:flex-row items-center gap-1 p-1.5 bg-white rounded-2xl md:rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100">
 
                             {/* Company Combobox */}
-                            <div className="w-full md:flex-1 relative group">
+                            <div className="w-full md:flex-1 relative group pl-2">
                                 <Combobox
                                     value={selectedCompany}
                                     onValueChange={(val) => {
@@ -219,11 +219,11 @@ export default function PlaybookPage() {
                                     }}
                                     onInputValueChange={setCompanyQuery}
                                 >
-                                    <div className="relative flex items-center px-3 bg-slate-50/50 rounded-xl hover:bg-slate-100/80 transition-colors border border-transparent focus-within:border-blue-200 focus-within:bg-blue-50/30 h-12 md:h-14">
-                                        <Building2 className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
+                                    <div className="relative flex items-center px-2 hover:bg-slate-50 rounded-xl transition-colors h-11 md:h-12">
+                                        <Building2 className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
                                         <ComboboxInput
                                             placeholder={t('search_placeholder_company')}
-                                            className="w-full bg-transparent border-none focus:ring-0 text-sm md:text-base font-medium h-full placeholder:text-slate-400 outline-none"
+                                            className="w-full bg-transparent border-none focus:ring-0 text-sm font-medium h-full placeholder:text-slate-400 outline-none"
                                         />
                                     </div>
                                     <ComboboxContent align="start" className="w-[var(--radix-combobox-trigger-width)] md:w-80 p-0 overflow-hidden rounded-xl shadow-xl border-slate-200 z-50 bg-white">
@@ -260,11 +260,11 @@ export default function PlaybookPage() {
                                     onValueChange={(val) => setSelectedRole(String(val))}
                                     onInputValueChange={setRoleQuery}
                                 >
-                                    <div className="relative flex items-center px-3 bg-slate-50/50 rounded-xl hover:bg-slate-100/80 transition-colors border border-transparent focus-within:border-indigo-200 focus-within:bg-indigo-50/30 h-12 md:h-14">
-                                        <Briefcase className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
+                                    <div className="relative flex items-center px-2 hover:bg-slate-50 rounded-xl transition-colors h-11 md:h-12">
+                                        <Briefcase className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
                                         <ComboboxInput
                                             placeholder={t('search_placeholder_role')}
-                                            className="w-full bg-transparent border-none focus:ring-0 text-sm md:text-base font-medium h-full placeholder:text-slate-400 outline-none"
+                                            className="w-full bg-transparent border-none focus:ring-0 text-sm font-medium h-full placeholder:text-slate-400 outline-none"
                                         />
                                     </div>
                                     <ComboboxContent align="start" className="w-[var(--radix-combobox-trigger-width)] md:w-80 p-0 overflow-hidden rounded-xl shadow-xl border-slate-200 z-50 bg-white">
@@ -296,13 +296,13 @@ export default function PlaybookPage() {
                                 onClick={handleSearch}
                                 disabled={!selectedCompany || !selectedRole}
                                 className={`
-                                    h-12 md:h-14 px-6 md:px-8 rounded-xl font-bold text-sm md:text-base transition-all flex items-center justify-center gap-2 shadow-sm whitespace-nowrap w-full md:w-auto
+                                    h-11 md:h-12 px-6 rounded-xl md:rounded-full font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-sm whitespace-nowrap w-full md:w-auto
                                     ${selectedCompany && selectedRole
-                                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:shadow-md'
+                                        ? 'bg-blue-600 text-white hover:bg-blue-700'
                                         : 'bg-slate-100 text-slate-400 cursor-not-allowed'}
                                 `}
                             >
-                                <TrendingUp className="w-5 h-5" />
+                                <TrendingUp className="w-4 h-4" />
                                 <span className="hidden md:inline">{t('search_button')}</span>
                                 <span className="md:hidden">Buscar</span>
                             </motion.button>
