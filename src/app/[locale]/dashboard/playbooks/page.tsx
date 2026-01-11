@@ -1,14 +1,21 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Building2, Briefcase, Check, Sparkles, TrendingUp } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Sparkles, TrendingUp, Building2, Briefcase, Check } from 'lucide-react';
 import Image from 'next/image';
 import { companiesData, rolesData } from '@/lib/company-data';
-import { searchCompanies } from '@/app/actions/search-companies';
 import { CompanyResult } from '@/types/company';
 import { useTranslations } from 'next-intl';
+import {
+    Combobox,
+    ComboboxInput,
+    ComboboxContent,
+    ComboboxList,
+    ComboboxItem,
+    ComboboxEmpty,
+} from '@/components/ui/combobox';
 
 // Logos flotantes (burbujas visuales solamente - estáticas para decoración)
 const displayedCompanies = [
@@ -39,70 +46,48 @@ const getCirclePosition = (angle: number, radius: number) => {
 export default function PlaybookPage() {
     const t = useTranslations('playbook');
     const router = useRouter();
-    const [selectedCompany, setSelectedCompany] = useState('');
+
+    // Selection States
+    const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
+    const [selectedRole, setSelectedRole] = useState<string | null>(null);
     const [selectedCompanyLogo, setSelectedCompanyLogo] = useState<string | null>(null);
-    const [selectedRole, setSelectedRole] = useState('');
 
-    const [companySearch, setCompanySearch] = useState('');
-    const [roleSearch, setRoleSearch] = useState('');
+    // Filter States
+    const [companyQuery, setCompanyQuery] = useState('');
+    const [roleQuery, setRoleQuery] = useState('');
 
-    const [showCompanyDropdown, setShowCompanyDropdown] = useState(false);
-    const [showRoleDropdown, setShowRoleDropdown] = useState(false);
-
-    // Estado para resultados de la API
+    // API Results (Mocked/Local for now mixed)
     const [apiCompanies, setApiCompanies] = useState<CompanyResult[]>([]);
-    // const [isSearching, setIsSearching] = useState(false); // Unused for now
 
-    const companyRef = useRef<HTMLDivElement>(null);
-    const roleRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (companyRef.current && !companyRef.current.contains(event.target as Node)) {
-                setShowCompanyDropdown(false);
-            }
-            if (roleRef.current && !roleRef.current.contains(event.target as Node)) {
-                setShowRoleDropdown(false);
-            }
-        }
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    // Efecto para buscar empresas con debounce
     useEffect(() => {
         const timer = setTimeout(async () => {
-            if (companySearch.length >= 2) {
-                // Logic commented out to prevent suggestions in original code, enabling if desired or keeping consistent
-                // const results = await searchCompanies(companySearch);
-                // setApiCompanies(results);
+            if (companyQuery.length >= 2) {
+                // In future: setApiCompanies(await searchCompanies(companyQuery));
             } else {
                 setApiCompanies([]);
             }
-        }, 300); // 300ms delay
-
+        }, 300);
         return () => clearTimeout(timer);
-    }, [companySearch]);
+    }, [companyQuery]);
 
-    // Combinar resultados: si hay búsqueda API, usarlos; si no, filtrar locales
-    // Convertimos los locales al formato de la API para unificar el renderizado
+    // Derived Lists
     const localFiltered = companiesData
-        .filter(c => c.toLowerCase().includes(companySearch.toLowerCase()))
+        .filter(c => c.toLowerCase().includes(companyQuery.toLowerCase()))
         .slice(0, 50)
         .map(c => ({ name: c, domain: '', logo: null }));
 
-    const displayedDropdownCompanies = (companySearch.length >= 2 && apiCompanies.length > 0)
+    const displayedDropdownCompanies = (companyQuery.length >= 2 && apiCompanies.length > 0)
         ? apiCompanies
         : localFiltered;
 
     const filteredRoles = roles.filter(r =>
-        r.toLowerCase().includes(roleSearch.toLowerCase())
+        r.toLowerCase().includes(roleQuery.toLowerCase())
     );
 
-    const [radius, setRadius] = useState(250);
-    const [logoSize, setLogoSize] = useState(70);
+    // Responsive Animation Vars
+    const [radius, setRadius] = useState(260); // Slightly larger than prev "compact"
+    const [logoSize, setLogoSize] = useState(75); // Slightly larger logos
 
-    // Ajuste de radio para móvil y laptops
     useEffect(() => {
         const handleResize = () => {
             const width = window.innerWidth;
@@ -110,15 +95,15 @@ export default function PlaybookPage() {
 
             if (width < 768) {
                 setRadius(140);
-                setLogoSize(45);
+                setLogoSize(48);
             } else if (width < 1500 || height < 900) {
-                // Laptop / Pantallas medianas (Optimized for 14" MacBook Pro)
-                setRadius(180); // Decreased from 220
-                setLogoSize(60); // Decreased from 80
+                // Laptop
+                setRadius(200); // Restored balance
+                setLogoSize(68); // Better visibility
             } else {
-                // Pantallas grandes
+                // Desktop
                 setRadius(280);
-                setLogoSize(72);
+                setLogoSize(80);
             }
         };
 
@@ -127,7 +112,18 @@ export default function PlaybookPage() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const inputHeight = "h-14 md:h-16"; // Compact responsive height
+    const handleSearch = () => {
+        if (selectedCompany && selectedRole) {
+            // Encode manually to avoid issues with special chars
+            const params = new URLSearchParams();
+            params.set('company', selectedCompany);
+            params.set('role', selectedRole);
+            if (selectedCompanyLogo) {
+                params.set('logo', selectedCompanyLogo);
+            }
+            router.push(`/dashboard/playbooks/strategy?${params.toString()}`);
+        }
+    };
 
     return (
         <div className="min-h-screen w-full relative overflow-hidden flex flex-col items-center justify-center p-4 md:p-6 pb-20 md:pb-40 font-sans bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
@@ -136,20 +132,7 @@ export default function PlaybookPage() {
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute -top-1/4 -left-1/4 w-[700px] h-[700px] rounded-full bg-gradient-radial from-blue-100/50 to-transparent blur-3xl opacity-40 md:opacity-100" />
                 <div className="absolute -bottom-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-gradient-radial from-indigo-100/50 to-transparent blur-3xl opacity-40 md:opacity-100" />
-
-                <motion.div
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[500px] h-[300px] md:h-[500px] rounded-full border border-blue-200/20"
-                    animate={{ scale: [1, 1.05, 1], opacity: [0.3, 0.5, 0.3] }}
-                    transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <motion.div
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] md:w-[650px] h-[400px] md:h-[650px] rounded-full border border-indigo-200/15"
-                    animate={{ scale: [1, 1.03, 1], opacity: [0.2, 0.4, 0.2] }}
-                    transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-                />
             </div>
-
-
 
             {/* Main Content */}
             <div className="relative z-10 w-full max-w-7xl flex flex-col items-center text-center pt-20 md:pt-0">
@@ -159,7 +142,7 @@ export default function PlaybookPage() {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                    className="mb-6 md:mb-8 relative px-4 z-30"
+                    className="mb-8 md:mb-12 relative px-4 z-30"
                 >
                     <motion.div
                         className="inline-flex items-center gap-2 px-3 py-1.5 md:px-5 md:py-2.5 rounded-full bg-blue-50 border border-blue-100 mb-4 md:mb-6 shadow-sm"
@@ -170,7 +153,6 @@ export default function PlaybookPage() {
                     >
                         <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-blue-500" />
                         <span className="text-xs md:text-sm font-bold text-blue-600 tracking-wide">{t('subtitle')}</span>
-                        <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-green-500 animate-pulse shadow-lg shadow-green-500/50" />
                     </motion.div>
 
                     <h1 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight mb-3 md:mb-5 leading-tight">
@@ -179,298 +161,156 @@ export default function PlaybookPage() {
                         </span>
                     </h1>
 
-                    <p className="text-base md:text-lg text-slate-600 max-w-xl mx-auto leading-relaxed font-medium mb-2 px-2">
+                    <p className="text-base md:text-lg text-slate-600 max-w-xl mx-auto leading-relaxed font-medium px-2">
                         {t('description_part1')}<span className="text-blue-600 font-bold">{t('description_highlight')}</span>{t('description_part2')}
                     </p>
                 </motion.div>
 
-                {/* Search Section Container */}
-                <div className="relative w-full h-[300px] md:h-[420px] flex items-center justify-center">
+                {/* Search Animation Container */}
+                <div className="relative w-full h-[320px] md:h-[450px] flex items-center justify-center">
 
-                    {/* Company Logos Flotantes */}
+                    {/* Logos */}
                     {displayedCompanies.map((company, index) => {
                         const position = getCirclePosition(company.angle, radius);
-
                         return (
                             <motion.div
                                 key={company.name}
                                 className="absolute group cursor-pointer"
-                                style={{
-                                    width: logoSize,
-                                    height: logoSize,
-                                }}
-                                initial={{ x: 0, y: 0, opacity: 0, scale: 0.3 }}
+                                style={{ width: logoSize, height: logoSize }}
+                                initial={{ opacity: 0, scale: 0.3 }}
                                 animate={{
-                                    x: [position.x, position.x + Math.cos((company.angle * Math.PI) / 180) * 20, position.x],
-                                    y: [position.y, position.y + Math.sin((company.angle * Math.PI) / 180) * 20, position.y],
+                                    x: [position.x, position.x + Math.cos((company.angle * Math.PI) / 180) * 15, position.x],
+                                    y: [position.y, position.y + Math.sin((company.angle * Math.PI) / 180) * 15, position.y],
                                     opacity: 1,
                                     scale: 1,
                                 }}
                                 transition={{
-                                    x: {
-                                        duration: 7 + index * 0.3,
-                                        repeat: Infinity,
-                                        repeatType: "reverse",
-                                        ease: "easeInOut",
-                                    },
-                                    y: {
-                                        duration: 7 + index * 0.3,
-                                        repeat: Infinity,
-                                        repeatType: "reverse",
-                                        ease: "easeInOut",
-                                    },
+                                    x: { duration: 7 + index * 0.3, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" },
+                                    y: { duration: 7 + index * 0.3, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" },
                                     opacity: { duration: 0.8, delay: index * 0.06 },
-                                    scale: { duration: 0.8, delay: index * 0.06, type: "spring", stiffness: 200 },
+                                    scale: { duration: 0.8, delay: index * 0.06 }
                                 }}
-                                whileHover={{
-                                    scale: 1.2,
-                                    zIndex: 20,
-                                    transition: { duration: 0.3, type: "spring", stiffness: 300 }
+                                whileHover={{ scale: 1.2, zIndex: 20 }}
+                                onClick={() => {
+                                    setSelectedCompany(company.name);
+                                    setSelectedCompanyLogo(company.localLogo);
                                 }}
                             >
-                                <div className="relative w-full h-full rounded-2xl md:rounded-3xl bg-white/80 backdrop-blur-sm shadow-sm border border-slate-100 flex items-center justify-center p-3 md:p-5">
-                                    <div className="relative w-full h-full z-10">
-                                        <Image
-                                            src={company.localLogo}
-                                            alt={company.name}
-                                            fill
-                                            className="object-contain p-1 opacity-80 group-hover:opacity-100 transition-opacity"
-                                        />
-                                    </div>
+                                <div className="relative w-full h-full rounded-2xl bg-white/90 backdrop-blur-sm shadow-sm border border-slate-100 flex items-center justify-center p-3">
+                                    <Image src={company.localLogo} alt={company.name} fill className="object-contain p-1" />
                                 </div>
                             </motion.div>
                         );
                     })}
 
-                    {/* Central Search Interface */}
-                    <div className="relative z-50 w-full max-w-5xl mx-auto px-4">
-                        <div className="relative flex flex-col md:flex-row items-center gap-3 md:gap-4 bg-white/90 backdrop-blur-xl p-3 md:p-5 rounded-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] border border-slate-200/60 ring-1 ring-slate-100">
+                    {/* Central Search Bar - Using Shadcn/Base-UI Comboboxes */}
+                    <div className="relative z-50 w-full max-w-2xl mx-auto px-4">
+                        <div className="flex flex-col md:flex-row items-center gap-2 p-2 bg-white rounded-2xl shadow-xl border border-slate-200">
 
-                            {/* Company Input */}
-                            <div className="relative w-full md:flex-1" ref={companyRef}>
-                                <div
-                                    className={`
-                    flex items-center ${inputHeight} px-4 md:px-7 rounded-2xl transition-all duration-300 cursor-text
-                    ${showCompanyDropdown
-                                            ? 'bg-blue-50/50 border-2 border-blue-400/50 shadow-sm'
-                                            : 'bg-slate-50 border-2 border-transparent hover:bg-slate-100'}
-                  `}
-                                    onClick={() => setShowCompanyDropdown(true)}
+                            {/* Company Combobox */}
+                            <div className="w-full md:flex-1 relative group">
+                                <Combobox
+                                    value={selectedCompany}
+                                    onValueChange={(val) => {
+                                        if (val) {
+                                            setSelectedCompany(String(val));
+                                            setSelectedCompanyLogo(`https://cdn.brandfetch.io/${String(val).toLowerCase().replace(/\s+/g, '')}.com/w/400/h/400`);
+                                        }
+                                    }}
+                                    onInputValueChange={setCompanyQuery}
                                 >
-                                    {selectedCompany ? (
-                                        <div className="p-2 rounded-xl bg-white border border-blue-100 transition-all mr-3 md:mr-4 shadow-sm w-10 h-10 md:w-14 md:h-14 flex items-center justify-center overflow-hidden shrink-0">
-                                            <div className="relative w-full h-full">
-                                                <Image
-                                                    src={selectedCompanyLogo || `https://cdn.brandfetch.io/${selectedCompany.toLowerCase().replace(/\s+/g, '')}.com/w/400/h/400`}
-                                                    alt={selectedCompany}
-                                                    fill
-                                                    className="object-contain rounded-md"
-                                                    onError={(e) => {
-                                                        const target = e.target as HTMLImageElement;
-                                                        target.style.display = 'none';
-                                                        const parent = target.parentElement?.parentElement;
-                                                        if (parent) {
-                                                            parent.innerHTML = '<div class="p-2 md:p-3.5 rounded-xl md:rounded-2xl bg-blue-100 transition-all shadow-sm"><svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg></div>';
-                                                        }
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className="p-2 md:p-3.5 rounded-xl md:rounded-2xl bg-blue-100 transition-all mr-3 md:mr-4 shrink-0">
-                                            <Building2 className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
-                                        </div>
-                                    )}
-
-                                    <div className="flex-1 flex flex-col items-start justify-center overflow-hidden">
-                                        <span className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5 md:mb-1">{t('company_label')}</span>
-                                        <input
-                                            type="text"
+                                    <div className="relative flex items-center px-3 bg-slate-50/50 rounded-xl hover:bg-slate-100/80 transition-colors border border-transparent focus-within:border-blue-200 focus-within:bg-blue-50/30 h-12 md:h-14">
+                                        <Building2 className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
+                                        <ComboboxInput
                                             placeholder={t('search_placeholder_company')}
-                                            className="w-full bg-transparent border-none outline-none text-slate-800 text-base md:text-lg font-semibold placeholder:text-slate-400 placeholder:font-medium truncate"
-                                            value={companySearch}
-                                            onChange={(e) => {
-                                                setCompanySearch(e.target.value);
-                                                setSelectedCompany('');
-                                                setSelectedCompanyLogo(null);
-                                                setShowCompanyDropdown(true);
-                                            }}
-                                            onFocus={() => {
-                                                setShowCompanyDropdown(true);
-                                            }}
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter' && companySearch.trim()) {
-                                                    setSelectedCompany(companySearch.trim());
-                                                    setShowCompanyDropdown(false);
-                                                    setTimeout(() => {
-                                                        if (roleRef.current) {
-                                                            const input = roleRef.current.querySelector('input');
-                                                            input?.focus();
-                                                        }
-                                                        setShowRoleDropdown(true);
-                                                    }, 100);
-                                                }
-                                            }}
+                                            className="w-full bg-transparent border-none focus:ring-0 text-sm md:text-base font-medium h-full placeholder:text-slate-400 outline-none"
                                         />
                                     </div>
-                                </div>
-
-                                <AnimatePresence>
-                                    {showCompanyDropdown && companySearch.trim().length > 0 && (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                                            exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                                            transition={{ duration: 0.2 }}
-                                            className="absolute top-full left-0 right-0 mt-2 bg-white backdrop-blur-xl border border-slate-200 rounded-2xl shadow-xl max-h-[300px] overflow-hidden z-50 text-left"
-                                        >
-                                            <div className="p-2 max-h-[300px] overflow-y-auto custom-scrollbar">
-                                                {companySearch && (
-                                                    <motion.div
-                                                        className="flex items-center px-4 py-3 hover:bg-blue-50/50 rounded-xl cursor-pointer transition-all group border-b border-slate-50 mb-1"
-                                                        onClick={() => {
-                                                            setSelectedCompany(companySearch);
-                                                            setCompanySearch(companySearch);
-                                                            setShowCompanyDropdown(false);
-                                                            setSelectedCompanyLogo(`https://cdn.brandfetch.io/${companySearch.toLowerCase().replace(/\s+/g, '')}.com/w/400/h/400`);
-                                                            setTimeout(() => {
-                                                                if (roleRef.current) {
-                                                                    const input = roleRef.current.querySelector('input');
-                                                                    input?.focus();
-                                                                }
-                                                                setShowRoleDropdown(true);
-                                                            }, 100);
-                                                        }}
-                                                    >
-                                                        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3 text-blue-600 shrink-0">
-                                                            <Sparkles className="w-4 h-4" />
-                                                        </div>
-                                                        <div className="flex flex-col overflow-hidden">
-                                                            <span className="text-slate-800 font-bold truncate">{t('use_company', { company: companySearch })}</span>
-                                                            <span className="text-slate-400 text-[10px] md:text-xs truncate">{t('search_company_desc')}</span>
-                                                        </div>
-                                                    </motion.div>
-                                                )}
-                                            </div>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
+                                    <ComboboxContent align="start" className="w-[var(--radix-combobox-trigger-width)] md:w-80 p-0 overflow-hidden rounded-xl shadow-xl border-slate-200 z-50 bg-white">
+                                        <ComboboxList className="max-h-64 p-2 overflow-y-auto">
+                                            {displayedDropdownCompanies.length === 0 && (
+                                                <ComboboxEmpty className="py-4 text-center text-slate-500 text-sm">
+                                                    {t('no_roles')}
+                                                </ComboboxEmpty>
+                                            )}
+                                            {displayedDropdownCompanies.map((company) => (
+                                                <ComboboxItem
+                                                    key={company.name}
+                                                    value={company.name}
+                                                    className="flex items-center p-2 rounded-lg cursor-pointer hover:bg-blue-50 data-[highlighted]:bg-blue-50"
+                                                >
+                                                    <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center mr-3 shrink-0 text-xs">
+                                                        {company.name[0]}
+                                                    </div>
+                                                    <span className="font-medium text-slate-700">{company.name}</span>
+                                                </ComboboxItem>
+                                            ))}
+                                        </ComboboxList>
+                                    </ComboboxContent>
+                                </Combobox>
                             </div>
 
-                            {/* Divider - Hidden on Mobile */}
-                            <div className="hidden md:block w-px h-12 bg-slate-200/60" />
+                            {/* Separator (Desktop) */}
+                            <div className="hidden md:block w-px h-8 bg-slate-200 mx-1" />
 
-                            {/* Role Input */}
-                            <div className="relative w-full md:flex-1" ref={roleRef}>
-                                <div
-                                    className={`
-                    flex items-center ${inputHeight} px-4 md:px-7 rounded-2xl transition-all duration-300 cursor-text
-                    ${showRoleDropdown
-                                            ? 'bg-indigo-50/50 border-2 border-indigo-400/50 shadow-sm'
-                                            : 'bg-slate-50 border-2 border-transparent hover:bg-slate-100'}
-                  `}
-                                    onClick={() => setShowRoleDropdown(true)}
+                            {/* Role Combobox */}
+                            <div className="w-full md:flex-1 relative group">
+                                <Combobox
+                                    value={selectedRole}
+                                    onValueChange={(val) => setSelectedRole(String(val))}
+                                    onInputValueChange={setRoleQuery}
                                 >
-                                    <div className={`p-2 md:p-3.5 rounded-xl md:rounded-2xl ${selectedRole ? 'bg-indigo-600 shadow-md' : 'bg-indigo-100'} transition-all mr-3 md:mr-4 shrink-0`}>
-                                        <Briefcase className={`w-5 h-5 md:w-6 md:h-6 ${selectedRole ? 'text-white' : 'text-indigo-600'}`} />
-                                    </div>
-
-                                    <div className="flex-1 flex flex-col items-start justify-center overflow-hidden">
-                                        <span className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5 md:mb-1">{t('role_label')}</span>
-                                        <input
-                                            type="text"
+                                    <div className="relative flex items-center px-3 bg-slate-50/50 rounded-xl hover:bg-slate-100/80 transition-colors border border-transparent focus-within:border-indigo-200 focus-within:bg-indigo-50/30 h-12 md:h-14">
+                                        <Briefcase className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
+                                        <ComboboxInput
                                             placeholder={t('search_placeholder_role')}
-                                            className="w-full bg-transparent border-none outline-none text-slate-800 text-base md:text-lg font-semibold placeholder:text-slate-400 placeholder:font-medium truncate"
-                                            value={selectedRole || roleSearch}
-                                            onChange={(e) => {
-                                                setRoleSearch(e.target.value);
-                                                setSelectedRole('');
-                                                setShowRoleDropdown(true);
-                                            }}
-                                            onFocus={() => setShowRoleDropdown(true)}
+                                            className="w-full bg-transparent border-none focus:ring-0 text-sm md:text-base font-medium h-full placeholder:text-slate-400 outline-none"
                                         />
                                     </div>
-                                </div>
-
-                                <AnimatePresence>
-                                    {showRoleDropdown && (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                                            exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                                            transition={{ duration: 0.2 }}
-                                            className="absolute top-full left-0 right-0 mt-2 bg-white backdrop-blur-xl border border-slate-200 rounded-2xl shadow-xl max-h-[300px] overflow-hidden z-50 text-left"
-                                        >
-                                            <div className="p-2 max-h-[300px] overflow-y-auto custom-scrollbar">
-                                                {filteredRoles.map((role, i) => (
-                                                    <motion.div
-                                                        key={role}
-                                                        className="flex items-center px-4 py-3 hover:bg-indigo-50/50 rounded-xl cursor-pointer transition-all group"
-                                                        onClick={() => {
-                                                            setSelectedRole(role);
-                                                            setRoleSearch('');
-                                                            setShowRoleDropdown(false);
-                                                        }}
-                                                        initial={{ opacity: 0, x: -10 }}
-                                                        animate={{ opacity: 1, x: 0 }}
-                                                        transition={{ delay: i * 0.02 }}
-                                                    >
-                                                        <span className="text-slate-700 font-bold flex-1 text-left group-hover:text-indigo-600 transition-colors text-sm md:text-base">{role}</span>
-                                                        {selectedRole === role && (
-                                                            <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center shadow-md">
-                                                                <Check className="w-3 h-3 text-white" strokeWidth={3} />
-                                                            </div>
-                                                        )}
-                                                    </motion.div>
-                                                ))}
-                                            </div>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
+                                    <ComboboxContent align="start" className="w-[var(--radix-combobox-trigger-width)] md:w-80 p-0 overflow-hidden rounded-xl shadow-xl border-slate-200 z-50 bg-white">
+                                        <ComboboxList className="max-h-64 p-2 overflow-y-auto">
+                                            {filteredRoles.length === 0 && (
+                                                <ComboboxEmpty className="py-4 text-center text-slate-500 text-sm">
+                                                    {t('no_roles')}
+                                                </ComboboxEmpty>
+                                            )}
+                                            {filteredRoles.map((role) => (
+                                                <ComboboxItem
+                                                    key={role}
+                                                    value={role}
+                                                    className="flex items-center p-2 rounded-lg cursor-pointer hover:bg-indigo-50 data-[highlighted]:bg-indigo-50"
+                                                >
+                                                    <span className="font-medium text-slate-700">{role}</span>
+                                                    {selectedRole === role && <Check className="ml-auto w-4 h-4 text-indigo-600" />}
+                                                </ComboboxItem>
+                                            ))}
+                                        </ComboboxList>
+                                    </ComboboxContent>
+                                </Combobox>
                             </div>
 
                             {/* Search Button */}
                             <motion.button
-                                className={`
-                  ${inputHeight} px-6 md:px-10 rounded-2xl font-bold text-sm md:text-base transition-all duration-300 flex items-center justify-center gap-2 md:gap-3 relative overflow-hidden w-full md:w-auto mt-2 md:mt-0
-                  ${selectedCompany && selectedRole
-                                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg cursor-pointer'
-                                        : 'bg-slate-100 text-slate-400 cursor-not-allowed'}
-                `}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                onClick={handleSearch}
                                 disabled={!selectedCompany || !selectedRole}
-                                whileTap={{ scale: selectedCompany && selectedRole ? 0.96 : 1 }}
-                                onClick={() => {
-                                    if (selectedCompany && selectedRole) {
-                                        const params = new URLSearchParams();
-                                        params.set('company', selectedCompany);
-                                        params.set('role', selectedRole);
-                                        if (selectedCompanyLogo) {
-                                            params.set('logo', selectedCompanyLogo);
-                                        }
-                                        router.push(`/dashboard/playbooks/strategy?${params.toString()}`);
-                                    }
-                                }}
+                                className={`
+                                    h-12 md:h-14 px-6 md:px-8 rounded-xl font-bold text-sm md:text-base transition-all flex items-center justify-center gap-2 shadow-sm whitespace-nowrap w-full md:w-auto
+                                    ${selectedCompany && selectedRole
+                                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:shadow-md'
+                                        : 'bg-slate-100 text-slate-400 cursor-not-allowed'}
+                                `}
                             >
-                                {selectedCompany && selectedRole && (
-                                    <motion.div
-                                        className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600"
-                                        initial={{ x: '100%' }}
-                                        whileHover={{ x: 0 }}
-                                        transition={{ duration: 0.3 }}
-                                    />
-                                )}
-                                <TrendingUp className="w-5 h-5 md:w-6 md:h-6 relative z-10" />
-                                <span className="relative z-10">{t('search_button')}</span>
+                                <TrendingUp className="w-5 h-5" />
+                                <span className="hidden md:inline">{t('search_button')}</span>
+                                <span className="md:hidden">Buscar</span>
                             </motion.button>
-
                         </div>
                     </div>
 
                 </div>
             </div>
-
-
         </div>
     );
-
 }
