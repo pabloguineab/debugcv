@@ -274,7 +274,7 @@ function AnalyzingAnimation() {
                                 </svg>
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <span className="text-2xl font-bold text-blue-600">
-                                        {Math.round((currentStep + 1) / steps.length * 100)}%
+                                        {Math.round(((currentStep + 1) / steps.length * 100) - 5)}%
                                     </span>
                                 </div>
                             </div>
