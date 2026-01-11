@@ -98,12 +98,12 @@ export default function PlaybookPage() {
                 setLogoSize(48);
             } else if (width < 1500 || height < 900) {
                 // Laptop
-                setRadius(240); // Increased significantly
-                setLogoSize(85); // Increased significantly
+                setRadius(210); // Balanced size
+                setLogoSize(70); // Balanced size
             } else {
                 // Desktop
-                setRadius(320);
-                setLogoSize(100);
+                setRadius(300);
+                setLogoSize(90);
             }
         };
 
@@ -207,44 +207,81 @@ export default function PlaybookPage() {
                     <div className="relative z-50 w-full max-w-3xl mx-auto px-4">
                         <div className="flex flex-col md:flex-row items-center gap-1 p-1.5 bg-white rounded-2xl md:rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100">
 
-                            {/* Company Combobox */}
                             <div className="w-full md:flex-1 relative group pl-2">
                                 <Combobox
                                     value={selectedCompany}
                                     onValueChange={(val) => {
                                         if (val) {
-                                            setSelectedCompany(String(val));
-                                            setSelectedCompanyLogo(`https://cdn.brandfetch.io/${String(val).toLowerCase().replace(/\s+/g, '')}.com/w/400/h/400`);
+                                            const companyName = String(val);
+                                            setSelectedCompany(companyName);
+                                            // Always try to fetch logo for selected company
+                                            setSelectedCompanyLogo(`https://cdn.brandfetch.io/${companyName.toLowerCase().replace(/\s+/g, '')}.com/w/400/h/400`);
                                         }
                                     }}
                                     onInputValueChange={setCompanyQuery}
                                 >
                                     <div className="relative flex items-center px-2 hover:bg-slate-50 rounded-xl transition-colors h-11 md:h-12">
-                                        <Building2 className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
+                                        {selectedCompany && selectedCompanyLogo ? (
+                                            <div className="relative w-6 h-6 mr-2 shrink-0 rounded-md overflow-hidden bg-white border border-slate-100">
+                                                <Image
+                                                    src={selectedCompanyLogo}
+                                                    alt={selectedCompany}
+                                                    fill
+                                                    className="object-contain p-0.5"
+                                                    onError={(e) => {
+                                                        // Fallback to icon if logo fails
+                                                        const target = e.target as HTMLImageElement;
+                                                        target.style.display = 'none';
+                                                        target.parentElement!.innerHTML = '';
+                                                        // We can't easily replace with SVG here without state, so we just hide image container border
+                                                        target.parentElement!.classList.remove('border', 'bg-white');
+                                                    }}
+                                                />
+                                            </div>
+                                        ) : (
+                                            <Building2 className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
+                                        )}
                                         <ComboboxInput
                                             placeholder={t('search_placeholder_company')}
-                                            className="w-full bg-transparent border-none focus:ring-0 text-sm font-medium h-full placeholder:text-slate-400 outline-none"
+                                            className="w-full bg-transparent border-none focus:ring-0 text-sm font-medium h-full placeholder:text-slate-400 outline-none truncate"
                                         />
                                     </div>
                                     <ComboboxContent align="start" className="w-[var(--radix-combobox-trigger-width)] md:w-80 p-0 overflow-hidden rounded-xl shadow-xl border-slate-200 z-50 bg-white">
                                         <ComboboxList className="max-h-64 p-2 overflow-y-auto">
-                                            {displayedDropdownCompanies.length === 0 && (
-                                                <ComboboxEmpty className="py-4 text-center text-slate-500 text-sm">
-                                                    {t('no_roles')}
-                                                </ComboboxEmpty>
+                                            {/* Custom "Use [Company]" Option */}
+                                            {companyQuery.length > 1 && (
+                                                <ComboboxItem
+                                                    value={companyQuery}
+                                                    className="flex items-center p-2 rounded-lg cursor-pointer hover:bg-blue-50 data-[highlighted]:bg-blue-50 mb-1 border-b border-slate-50"
+                                                >
+                                                    <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mr-3 shrink-0 text-blue-600">
+                                                        <Sparkles className="w-3 h-3" />
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <span className="font-bold text-slate-800 text-sm">{t('use_company', { company: companyQuery })}</span>
+                                                        <span className="text-[10px] text-slate-400">{t('search_company_desc')}</span>
+                                                    </div>
+                                                </ComboboxItem>
                                             )}
+
                                             {displayedDropdownCompanies.map((company) => (
                                                 <ComboboxItem
                                                     key={company.name}
                                                     value={company.name}
                                                     className="flex items-center p-2 rounded-lg cursor-pointer hover:bg-blue-50 data-[highlighted]:bg-blue-50"
                                                 >
-                                                    <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center mr-3 shrink-0 text-xs">
+                                                    <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center mr-3 shrink-0 text-xs text-slate-500 font-medium">
                                                         {company.name[0]}
                                                     </div>
-                                                    <span className="font-medium text-slate-700">{company.name}</span>
+                                                    <span className="font-medium text-slate-700 text-sm">{company.name}</span>
                                                 </ComboboxItem>
                                             ))}
+
+                                            {displayedDropdownCompanies.length === 0 && companyQuery.length < 2 && (
+                                                <ComboboxEmpty className="py-2 text-center text-slate-400 text-xs">
+                                                    {t('start_typing')}
+                                                </ComboboxEmpty>
+                                            )}
                                         </ComboboxList>
                                     </ComboboxContent>
                                 </Combobox>
