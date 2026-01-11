@@ -137,7 +137,7 @@ function StrategyContent() {
     };
 
     return (
-        <div className="min-h-screen w-full bg-slate-50 font-sans pb-20">
+        <div className={`min-h-screen w-full bg-slate-50 font-sans ${loading ? 'overflow-hidden' : 'pb-8'}`}>
 
             {/* Header / Hero Section */}
             <div className="relative bg-white border-b border-slate-200 overflow-hidden">
@@ -194,7 +194,7 @@ function StrategyContent() {
             </div>
 
             {/* Main Content Grid */}
-            <div className="max-w-7xl mx-auto px-6 py-8">
+            <div className={`max-w-7xl mx-auto px-6 ${loading ? 'h-[calc(100vh-120px)] flex items-center justify-center' : 'py-8'}`}>
 
                 {loading ? (
                     <LoadingState company={company} role={role} />
@@ -524,7 +524,7 @@ function LoadingState({ company, role }: { company: string; role: string }) {
     }, [steps.length]);
 
     return (
-        <div className="min-h-[50vh] w-full flex flex-col items-center justify-center bg-slate-50">
+        <div className="w-full flex flex-col items-center justify-center">
             <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
