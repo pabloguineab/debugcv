@@ -657,9 +657,9 @@ export default function ATSScannerPage() {
                                                     </div>
                                                 </div>
 
-                                                {/* Selection Overlay */}
+                                                {/* Selection Overlay - More visible */}
                                                 <motion.div
-                                                    className="absolute top-[80px] left-[16px] right-[16px] bg-blue-500/20 mix-blend-multiply pointer-events-none z-10 rounded-sm"
+                                                    className="absolute top-[80px] left-[16px] right-[16px] bg-blue-500/30 dark:bg-blue-400/40 pointer-events-none z-20 rounded-sm border-2 border-blue-500/50"
                                                     animate={{ height: [0, 300, 300, 0] }}
                                                     transition={{
                                                         duration: 8,
