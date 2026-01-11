@@ -141,16 +141,8 @@ function StrategyContent() {
 
             {/* Header / Hero Section */}
             <div className="relative bg-white border-b border-slate-200 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-indigo-50/50" />
 
                 <div className="max-w-7xl mx-auto px-6 py-6 relative z-10">
-                    <button
-                        onClick={() => router.back()}
-                        className="flex items-center text-slate-500 hover:text-slate-800 transition-colors mb-8 group"
-                    >
-                        <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-                        {t('back_search')}
-                    </button>
 
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                         <div className="flex items-center gap-6">
