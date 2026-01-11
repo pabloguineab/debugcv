@@ -969,24 +969,24 @@ export default function ATSScannerPage() {
 
                                     {/* ATS Logic Card */}
                                     <Card className="bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border-blue-200 dark:border-blue-800 shadow-sm">
-                                        <CardContent className="p-6 flex flex-col items-center text-center gap-4 min-h-[200px] justify-center">
-                                            <div className="p-3 bg-white dark:bg-blue-900/50 rounded-xl shadow-sm ring-1 ring-blue-100 dark:ring-blue-800">
-                                                <ShieldCheck className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                                        <CardContent className="p-5 flex flex-col items-center text-center gap-3 justify-center">
+                                            <div className="p-2 bg-white dark:bg-blue-900/50 rounded-lg shadow-sm ring-1 ring-blue-100 dark:ring-blue-800">
+                                                <ShieldCheck className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                                             </div>
 
-                                            <div className="space-y-2">
-                                                <h3 className="font-bold text-lg text-blue-950 dark:text-blue-50 leading-tight">
+                                            <div className="space-y-1">
+                                                <h3 className="font-bold text-base text-blue-950 dark:text-blue-50 leading-tight">
                                                     Simulación ATS Empresarial
                                                 </h3>
-                                                <p className="text-sm text-blue-800 dark:text-blue-200 leading-relaxed px-2">
-                                                    Calibrado con los mismos algoritmos de filtrado que usan las empresas Fortune 500 y sistemas como Workday o Lever.
+                                                <p className="text-xs text-blue-800 dark:text-blue-200 leading-relaxed px-1">
+                                                    Algoritmos calibrados con sistemas Fortune 500 (Workday, Lever).
                                                 </p>
                                             </div>
 
-                                            <div className="mt-2 flex items-center gap-2 text-xs font-semibold text-blue-700 dark:text-blue-300 bg-blue-100/50 dark:bg-blue-900/30 px-3 py-1 rounded-full border border-blue-200 dark:border-blue-800">
-                                                <span className="relative flex h-2 w-2">
+                                            <div className="flex items-center gap-1.5 text-[10px] font-semibold text-blue-700 dark:text-blue-300 bg-blue-100/50 dark:bg-blue-900/30 px-2.5 py-0.5 rounded-full border border-blue-200 dark:border-blue-800">
+                                                <span className="relative flex h-1.5 w-1.5">
                                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                                                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
                                                 </span>
                                                 Matching en Tiempo Real
                                             </div>
