@@ -7,7 +7,10 @@ import Silk from "./ui/Silk";
 
 export function AuthSidePanel() {
     return (
-        <div className="relative h-full w-full overflow-hidden bg-[#101012] text-white rounded-br-[200px]">
+        <div
+            className="relative h-full w-full overflow-hidden bg-[#101012] text-white"
+            style={{ borderBottomRightRadius: '200px' }}
+        >
 
             {/* Silk Background */}
             <div className="absolute inset-0 z-0 animate-in fade-in duration-1000">
