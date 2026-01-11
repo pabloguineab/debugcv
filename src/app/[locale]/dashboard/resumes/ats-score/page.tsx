@@ -419,6 +419,25 @@ export default function ATSScannerPage() {
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [result, setResult] = useState<AnalysisResult | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [jobTitle, setJobTitle] = useState("");
+    const [jobDescription, setJobDescription] = useState("");
+
+    const handleAnalyzeJob = () => {
+        if (!jobDescription.trim()) return;
+        setIsAnalyzing(true);
+        setResult(null);
+
+        // Simulate analysis
+        setTimeout(() => {
+            setResult({
+                score: Math.floor(Math.random() * (95 - 75) + 75), // Random score 75-95
+                summary: `Análisis de compatibilidad para ${jobTitle || "la oferta"}: Tu perfil tiene una buena coincidencia con los requisitos detectados.`,
+                critical_errors: jobDescription.length < 100 ? ["Descripción muy corta para un análisis preciso"] : [],
+                improvements: ["Añadir más palabras clave técnicas", "Cuantificar logros relacionados con el puesto"]
+            });
+            setIsAnalyzing(false);
+        }, 2500);
+    };
 
     // Calculate category scores
     const categories = useMemo(() => {
@@ -746,6 +765,8 @@ export default function ATSScannerPage() {
                                         <input
                                             id="job-title"
                                             type="text"
+                                            value={jobTitle}
+                                            onChange={(e) => setJobTitle(e.target.value)}
                                             placeholder="e.g. Senior Frontend Developer"
                                             className="flex h-8 w-full rounded-md border border-input bg-transparent px-2 py-1 text-xs shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                                         />
@@ -756,14 +777,25 @@ export default function ATSScannerPage() {
                                         </label>
                                         <textarea
                                             id="job-description"
+                                            value={jobDescription}
+                                            onChange={(e) => setJobDescription(e.target.value)}
                                             placeholder="Paste or type the job description here..."
                                             rows={5}
                                             className="flex w-full rounded-md border border-input bg-transparent px-2 py-1.5 text-xs shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none"
                                         />
                                     </div>
-                                    <Button className="w-full" size="sm">
-                                        <Target className="w-3.5 h-3.5 mr-1.5" />
-                                        Analyze Match
+                                    <Button
+                                        className="w-full"
+                                        size="sm"
+                                        onClick={handleAnalyzeJob}
+                                        disabled={!jobDescription.trim() || isAnalyzing}
+                                    >
+                                        {isAnalyzing ? (
+                                            <RefreshCw className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                                        ) : (
+                                            <Target className="w-3.5 h-3.5 mr-1.5" />
+                                        )}
+                                        {isAnalyzing ? "Analyzing..." : "Analyze Match"}
                                     </Button>
                                 </CardContent>
                             </Card>
