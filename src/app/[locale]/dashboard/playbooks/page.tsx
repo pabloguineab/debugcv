@@ -229,6 +229,13 @@ export default function PlaybookPage() {
                                         <ComboboxInput
                                             placeholder={t('search_placeholder_company')}
                                             className="w-full bg-transparent border-none focus:ring-0 text-base font-medium h-full placeholder:text-slate-400 outline-none truncate"
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' && companyQuery.length > 1) {
+                                                    e.preventDefault();
+                                                    setSelectedCompany(companyQuery);
+                                                    setSelectedCompanyLogo(`https://cdn.brandfetch.io/${companyQuery.toLowerCase().replace(/\s+/g, '')}.com/w/400/h/400`);
+                                                }
+                                            }}
                                         />
                                     </div>
                                     <ComboboxContent align="start" className="w-[var(--radix-combobox-trigger-width)] md:w-80 p-0 overflow-hidden rounded-xl shadow-xl border-slate-200 z-50 bg-white">
