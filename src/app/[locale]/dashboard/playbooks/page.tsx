@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { companiesData, rolesData } from '@/lib/company-data';
 import { CompanyResult } from '@/types/company';
 import { useTranslations } from 'next-intl';
+import { Badge } from "@/components/ui/badge";
 import {
     Combobox,
     ComboboxInput,
@@ -85,8 +86,8 @@ export default function PlaybookPage() {
     );
 
     // Responsive Animation Vars
-    const [radius, setRadius] = useState(260); // Slightly larger than prev "compact"
-    const [logoSize, setLogoSize] = useState(75); // Slightly larger logos
+    const [radius, setRadius] = useState(240); // Initial guess
+    const [logoSize, setLogoSize] = useState(85); // Initial guess
 
     useEffect(() => {
         const handleResize = () => {
@@ -114,7 +115,6 @@ export default function PlaybookPage() {
 
     const handleSearch = () => {
         if (selectedCompany && selectedRole) {
-            // Encode manually to avoid issues with special chars
             const params = new URLSearchParams();
             params.set('company', selectedCompany);
             params.set('role', selectedRole);
@@ -126,56 +126,43 @@ export default function PlaybookPage() {
     };
 
     return (
-        <div className="min-h-screen w-full relative overflow-hidden flex flex-col items-center justify-center p-4 md:p-6 pb-20 md:pb-40 font-sans bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
-
-            {/* Premium Light Background */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-1/4 -left-1/4 w-[700px] h-[700px] rounded-full bg-gradient-radial from-blue-100/50 to-transparent blur-3xl opacity-40 md:opacity-100" />
-                <div className="absolute -bottom-1/4 -right-1/4 w-[700px] h-[700px] rounded-full bg-gradient-radial from-indigo-100/50 to-transparent blur-3xl opacity-40 md:opacity-100" />
-            </div>
-
-            {/* Main Content */}
-            <div className="relative z-10 w-full max-w-7xl flex flex-col items-center text-center pt-20 md:pt-0">
-
-                {/* Title Section */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                    className="mb-8 md:mb-12 relative px-4 z-30"
-                >
-                    <motion.div
-                        className="inline-flex items-center gap-2 px-3 py-1.5 md:px-5 md:py-2.5 rounded-full bg-blue-50 border border-blue-100 mb-4 md:mb-6 shadow-sm"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.2 }}
-                        whileHover={{ scale: 1.05 }}
-                    >
-                        <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-blue-500" />
-                        <span className="text-xs md:text-sm font-bold text-blue-600 tracking-wide">{t('subtitle')}</span>
-                    </motion.div>
-
-                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight mb-3 md:mb-5 leading-tight">
-                        <span className="text-slate-900">
+        <div className="relative flex flex-1 flex-col gap-6 p-4 md:p-6 overflow-hidden min-h-screen bg-gradient-to-br from-slate-50/50 via-white to-blue-50/20">
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="max-w-7xl mx-auto w-full flex flex-col flex-1 h-full"
+            >
+                {/* Header Standardized to match Dashboard Layout */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 z-20 relative">
+                    <div>
+                        <h1 className="text-2xl font-bold flex items-center gap-2 text-slate-900">
+                            <Sparkles className="w-6 h-6 text-blue-600" />
                             {t('title')}
-                        </span>
-                    </h1>
+                            <Badge variant="secondary" className="ml-2 text-blue-600 bg-blue-100 dark:bg-blue-900/30">
+                                Pro
+                            </Badge>
+                        </h1>
+                        <p className="text-sm text-muted-foreground mt-1">
+                            {t('description_part1')}<span className="text-blue-600 font-semibold">{t('description_highlight')}</span>{t('description_part2')}
+                        </p>
+                    </div>
+                </div>
 
-                    <p className="text-base md:text-lg text-slate-600 max-w-xl mx-auto leading-relaxed font-medium px-2">
-                        {t('description_part1')}<span className="text-blue-600 font-bold">{t('description_highlight')}</span>{t('description_part2')}
-                    </p>
-                </motion.div>
+                {/* Central Search Section - Takes remaining space */}
+                <div className="flex-1 flex items-center justify-center relative min-h-[500px] w-full mt-4 md:mt-8">
 
-                {/* Search Animation Container */}
-                <div className="relative w-full h-[350px] md:h-[500px] flex items-center justify-center">
+                    {/* Background Animation Glows */}
+                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-radial from-blue-100/40 to-transparent blur-3xl opacity-60" />
+                    </div>
 
-                    {/* Logos */}
+                    {/* Orbiting Logos */}
                     {displayedCompanies.map((company, index) => {
                         const position = getCirclePosition(company.angle, radius);
                         return (
                             <motion.div
                                 key={company.name}
-                                className="absolute group cursor-pointer"
+                                className="absolute group cursor-pointer z-10"
                                 style={{ width: logoSize, height: logoSize }}
                                 initial={{ opacity: 0, scale: 0.3 }}
                                 animate={{
@@ -190,7 +177,7 @@ export default function PlaybookPage() {
                                     opacity: { duration: 0.8, delay: index * 0.06 },
                                     scale: { duration: 0.8, delay: index * 0.06 }
                                 }}
-                                whileHover={{ scale: 1.2, zIndex: 20 }}
+                                whileHover={{ scale: 1.2, zIndex: 30 }}
                                 onClick={() => {
                                     setSelectedCompany(company.name);
                                     setSelectedCompanyLogo(company.localLogo);
@@ -203,10 +190,11 @@ export default function PlaybookPage() {
                         );
                     })}
 
-                    {/* Central Search Bar - Using Shadcn/Base-UI Comboboxes */}
+                    {/* Search Bar Island */}
                     <div className="relative z-50 w-full max-w-3xl mx-auto px-4">
                         <div className="flex flex-col md:flex-row items-center gap-1 p-1.5 bg-white rounded-2xl md:rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100">
 
+                            {/* Company Combobox */}
                             <div className="w-full md:flex-1 relative group pl-2">
                                 <Combobox
                                     value={selectedCompany}
@@ -229,11 +217,8 @@ export default function PlaybookPage() {
                                                     fill
                                                     className="object-contain p-0.5"
                                                     onError={(e) => {
-                                                        // Fallback to icon if logo fails
                                                         const target = e.target as HTMLImageElement;
                                                         target.style.display = 'none';
-                                                        target.parentElement!.innerHTML = '';
-                                                        // We can't easily replace with SVG here without state, so we just hide image container border
                                                         target.parentElement!.classList.remove('border', 'bg-white');
                                                     }}
                                                 />
@@ -259,7 +244,7 @@ export default function PlaybookPage() {
                                                     </div>
                                                     <div className="flex flex-col">
                                                         <span className="font-bold text-slate-800 text-sm">{t('use_company', { company: companyQuery })}</span>
-                                                        <span className="text-[10px] text-slate-400">{t('search_company_desc')}</span>
+                                                        <span className="text-xs text-slate-400">{t('search_company_desc')}</span>
                                                     </div>
                                                 </ComboboxItem>
                                             )}
@@ -288,7 +273,7 @@ export default function PlaybookPage() {
                             </div>
 
                             {/* Separator (Desktop) */}
-                            <div className="hidden md:block w-px h-8 bg-slate-200 mx-1" />
+                            <div className="hidden md:block w-px h-6 bg-slate-200 mx-1" />
 
                             {/* Role Combobox */}
                             <div className="w-full md:flex-1 relative group">
@@ -345,9 +330,9 @@ export default function PlaybookPage() {
                             </motion.button>
                         </div>
                     </div>
-
                 </div>
-            </div>
+
+            </motion.div>
         </div>
     );
 }
