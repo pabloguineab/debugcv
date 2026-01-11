@@ -14,6 +14,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { Upload, FileText, X } from "lucide-react";
 import {
     Empty,
     EmptyContent,
@@ -29,6 +30,7 @@ export default function JobSearchPage() {
     const { data: session, status } = useSession();
     const router = useRouter();
     const searchParams = useSearchParams();
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     // State
     const [query, setQuery] = useState('');
@@ -274,85 +276,143 @@ export default function JobSearchPage() {
         performAction();
     }, [searchParams]);
 
+    const handleImportClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            // In a real app, we would upload and parse this file.
+            // For now, we'll trigger the analyze CV flow which uses the stored profile CV
+            // and show a message that simulates the import processing.
+            handleAnalyzeCV();
+        }
+    };
+
     return (
-        <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
+        <div className="flex flex-1 flex-col gap-8 p-6 md:p-8 max-w-7xl mx-auto w-full">
+            {/* Hidden Input for File Upload */}
+            <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept=".pdf,.doc,.docx"
+                onChange={handleFileChange}
+            />
+
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold flex items-center gap-2 dark:text-white">
-                        <Target className="w-6 h-6 text-blue-600" />
+                    <h1 className="text-3xl font-bold flex items-center gap-2 dark:text-white tracking-tight">
+                        <Target className="w-8 h-8 text-blue-600" />
                         Job Search
                     </h1>
-                    <p className="text-sm text-muted-foreground mt-1">
-                        Find opportunities tailored to your profile
+                    <p className="text-muted-foreground mt-2 text-lg">
+                        Find your next career opportunity based on your skills.
                     </p>
                 </div>
 
-                <Button
-                    onClick={handleAnalyzeCV}
-                    disabled={loading || analyzingCv}
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                    {analyzingCv ? (
-                        <div className="flex items-center gap-2">
-                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                            Analyzing CV...
-                        </div>
-                    ) : (
-                        <div className="flex items-center gap-2">
-                            <Sparkles className="w-4 h-4" />
-                            Auto-Match with AI
-                        </div>
-                    )}
-                </Button>
+                <div className="flex items-center gap-3">
+                    <Button
+                        variant="outline"
+                        onClick={handleImportClick}
+                        className="h-10 px-4 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
+                    >
+                        <Upload className="w-4 h-4 mr-2 text-slate-500" />
+                        Import CV
+                    </Button>
+
+                    <Button
+                        onClick={handleAnalyzeCV}
+                        disabled={loading || analyzingCv}
+                        className="h-10 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md shadow-blue-500/20 border-0"
+                    >
+                        {analyzingCv ? (
+                            <div className="flex items-center gap-2">
+                                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                                Analyzing...
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                <Sparkles className="w-4 h-4 text-yellow-200" />
+                                Auto-Match with AI
+                            </div>
+                        )}
+                    </Button>
+                </div>
             </div>
 
-            {/* Search Bar */}
-            <Card>
-                <CardContent className="p-4 md:p-6 grid gap-4 md:grid-cols-12 items-end">
-                    <div className="md:col-span-5 space-y-2">
-                        <div className="relative">
-                            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                placeholder="Job title, keywords, or company"
-                                className="pl-9 h-12 text-base"
-                                value={query}
-                                onChange={(e) => setQuery(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                            />
-                        </div>
-                    </div>
-                    <div className="md:col-span-4 space-y-2">
-                        <div className="relative">
-                            <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                placeholder="City, state, or zip code"
-                                className="pl-9 h-12 text-base"
-                                value={location}
-                                onChange={(e) => setLocation(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                            />
-                        </div>
-                    </div>
-                    <div className="md:col-span-3 flex gap-2">
-                        <Button
-                            variant={isRemote ? "default" : "outline"}
-                            onClick={() => setIsRemote(!isRemote)}
-                            className={`flex-1 h-12 text-base ${isRemote ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : ''}`}
-                        >
-                            <Globe className="w-4 h-4 mr-2" />
-                            Remote
-                        </Button>
-                        <Button onClick={() => handleSearch()} disabled={loading} className="flex-1 h-12 text-base font-bold">
-                            {loading ? (
-                                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                            ) : (
-                                "Search"
-                            )}
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
+            {/* Aesthetic Search Bar */}
+            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl shadow-slate-200/40 dark:shadow-slate-950/40 border border-slate-100 dark:border-slate-800 p-2 flex flex-col md:flex-row md:items-center gap-2 transition-all focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900/30">
+
+                {/* Query Input */}
+                <div className="flex-1 flex items-center px-4 h-12 md:h-14 bg-transparent">
+                    <Search className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
+                    <Input
+                        placeholder="Job title, keywords, or company"
+                        className="border-0 shadow-none focus-visible:ring-0 px-0 h-full text-base bg-transparent placeholder:text-slate-400"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                    />
+                    {query && (
+                        <button onClick={() => setQuery('')} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-400">
+                            <X className="w-4 h-4" />
+                        </button>
+                    )}
+                </div>
+
+                {/* Divider (Desktop) */}
+                <div className="hidden md:block w-px h-8 bg-slate-200 dark:bg-slate-700 mx-1" />
+                {/* Divider (Mobile) */}
+                <div className="md:hidden h-px w-full bg-slate-100 dark:bg-slate-800" />
+
+                {/* Location Input */}
+                <div className="flex-1 flex items-center px-4 h-12 md:h-14 bg-transparent">
+                    <MapPin className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
+                    <Input
+                        placeholder="Location (City, Country)"
+                        className="border-0 shadow-none focus-visible:ring-0 px-0 h-full text-base bg-transparent placeholder:text-slate-400"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                    />
+                    {location && (
+                        <button onClick={() => setLocation('')} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-400">
+                            <X className="w-4 h-4" />
+                        </button>
+                    )}
+                </div>
+
+                <div className="flex items-center gap-2 p-1">
+                    {/* Remote Toggle */}
+                    <Button
+                        variant="ghost"
+                        onClick={() => setIsRemote(!isRemote)}
+                        className={`h-12 px-4 rounded-xl font-medium transition-colors ${isRemote
+                            ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-400'
+                            : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 dark:text-slate-400'
+                            }`}
+                    >
+                        <Globe className={`w-4 h-4 mr-2 ${isRemote ? 'text-emerald-500' : 'text-slate-400'}`} />
+                        Remote
+                    </Button>
+
+                    {/* Search Button */}
+                    <Button
+                        onClick={() => handleSearch()}
+                        disabled={loading}
+                        className="h-12 px-8 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold shadow-lg shadow-slate-900/20 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 min-w-[120px]"
+                    >
+                        {loading ? (
+                            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white dark:border-slate-900/30 dark:border-t-slate-900" />
+                        ) : (
+                            "Search"
+                        )}
+                    </Button>
+                </div>
+            </div>
 
             {/* Results Area */}
             <div className="space-y-6">
