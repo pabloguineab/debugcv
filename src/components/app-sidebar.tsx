@@ -76,9 +76,9 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+                        <SidebarMenuButton size="lg" asChild className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground h-auto py-3">
                             <Link href="/dashboard" className="flex items-center gap-2">
-                                <Logo className="h-8 w-auto ml-1" />
+                                <Logo className="h-10 w-auto ml-1" />
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
