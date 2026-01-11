@@ -55,7 +55,7 @@ const jobsItems = [
 
 const resumesItems = [
     { title: "My Versions", url: "/dashboard/resumes", icon: FileText },
-    { title: "ATS Score", url: "/dashboard/ats-score", icon: Target },
+    { title: "ATS Score", url: "/dashboard/resumes/ats-score", icon: Target },
     { title: "Cover Letters", url: "/dashboard/cover-letters", icon: PenTool },
 ];
 
