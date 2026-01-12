@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, Users, Activity, TrendingUp } from "lucide-react";
+import { Send, Flame, Target, TrendingUp } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { DashboardLineChart, DashboardRadarChart, DashboardRadialChart } from "./components/dashboard-charts";
@@ -20,51 +20,58 @@ export default function DashboardPage() {
         <div className="flex flex-1 flex-col gap-4">
             {/* Stats Cards */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                {/* Applications Sent */}
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-                        <DollarSign className="h-4 w-4 text-muted-foreground" />
+                        <CardTitle className="text-sm font-medium">Applications Sent</CardTitle>
+                        <Send className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">$1,250.00</div>
+                        <div className="text-2xl font-bold">42</div>
                         <p className="text-xs text-muted-foreground">
-                            <span className="text-green-500">+12.5%</span> from last month
+                            <span className="text-green-500">+5</span> this week
                         </p>
                     </CardContent>
                 </Card>
+
+                {/* Active Processes */}
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">New Customers</CardTitle>
-                        <Users className="h-4 w-4 text-muted-foreground" />
+                        <CardTitle className="text-sm font-medium">Active Processes</CardTitle>
+                        <Flame className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">1,234</div>
+                        <div className="text-2xl font-bold">8</div>
                         <p className="text-xs text-muted-foreground">
-                            <span className="text-red-500">-20%</span> this period
+                            3 waiting for reply
                         </p>
                     </CardContent>
                 </Card>
+
+                {/* Avg. ATS Score */}
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Active Accounts</CardTitle>
-                        <Activity className="h-4 w-4 text-muted-foreground" />
+                        <CardTitle className="text-sm font-medium">Avg. ATS Score</CardTitle>
+                        <Target className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">45,678</div>
+                        <div className="text-2xl font-bold">85<span className="text-lg text-muted-foreground">/100</span></div>
                         <p className="text-xs text-muted-foreground">
-                            <span className="text-green-500">+12.5%</span> engagement
+                            <span className="text-green-500">+12%</span> vs last month
                         </p>
                     </CardContent>
                 </Card>
+
+                {/* Interview Rate */}
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Growth Rate</CardTitle>
+                        <CardTitle className="text-sm font-medium">Interview Rate</CardTitle>
                         <TrendingUp className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">4.5%</div>
+                        <div className="text-2xl font-bold">14.5%</div>
                         <p className="text-xs text-muted-foreground">
-                            Steady performance increase
+                            <span className="text-green-500">Top 10%</span> market avg
                         </p>
                     </CardContent>
                 </Card>
