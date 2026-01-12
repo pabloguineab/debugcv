@@ -252,26 +252,26 @@ function SimulatorContent() {
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: 20, opacity: 0 }}
-                            className="mt-8 flex items-center gap-4 p-2 bg-white dark:bg-slate-900/90 backdrop-blur-xl border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl z-50"
+                            className="mt-4 flex items-center gap-2 p-1.5 bg-white dark:bg-slate-900/90 backdrop-blur-xl border border-gray-200 dark:border-slate-800 rounded-xl shadow-lg z-50"
                         >
                             <button
                                 onClick={toggleMic}
-                                className={`p-4 rounded-xl transition-all ${isMicOn ? 'bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700' : 'bg-red-500/20 text-red-500 hover:bg-red-500/30'}`}
+                                className={`p-2.5 rounded-lg transition-all ${isMicOn ? 'bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700' : 'bg-red-500/20 text-red-500 hover:bg-red-500/30'}`}
                             >
-                                {isMicOn ? <Mic className="w-6 h-6" /> : <MicOff className="w-6 h-6" />}
+                                {isMicOn ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}
                             </button>
 
-                            <button className="p-4 rounded-xl bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 transition-all">
-                                <Volume2 className="w-6 h-6" />
+                            <button className="p-2.5 rounded-lg bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 transition-all">
+                                <Volume2 className="w-4 h-4" />
                             </button>
 
-                            <div className="w-px h-8 bg-gray-200 dark:bg-slate-700 mx-2" />
+                            <div className="w-px h-5 bg-gray-200 dark:bg-slate-700 mx-1" />
 
                             <button
                                 onClick={endSession}
-                                className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-red-600/20"
+                                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium flex items-center gap-1.5 transition-all"
                             >
-                                <PhoneOff className="w-5 h-5" />
+                                <PhoneOff className="w-3.5 h-3.5" />
                                 End Session
                             </button>
                         </motion.div>
