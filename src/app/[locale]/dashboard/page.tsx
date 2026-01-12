@@ -158,14 +158,14 @@ export default function DashboardPage() {
                             </div>
                             <div className="flex items-center">
                                 <Link href="/dashboard/playbooks">
-                                    <Button size="sm" variant="outline" className="rounded-r-none border-r-0 gap-1.5">
-                                        <FileText className="w-3.5 h-3.5" />
+                                    <Button size="sm" variant="outline" className="rounded-r-none border-r-0 gap-1.5 h-7 text-xs border-green-300 text-green-700 hover:bg-green-50 dark:border-green-700 dark:text-green-400 dark:hover:bg-green-900/30">
+                                        <FileText className="w-3 h-3" />
                                         Playbook
                                     </Button>
                                 </Link>
                                 <Link href="/dashboard/interview-coach">
-                                    <Button size="sm" variant="outline" className="rounded-l-none gap-1.5">
-                                        <Bot className="w-3.5 h-3.5" />
+                                    <Button size="sm" variant="outline" className="rounded-l-none gap-1.5 h-7 text-xs border-purple-300 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-400 dark:hover:bg-purple-900/30">
+                                        <Bot className="w-3 h-3" />
                                         Practice
                                     </Button>
                                 </Link>
