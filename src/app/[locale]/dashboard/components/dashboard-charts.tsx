@@ -35,23 +35,22 @@ import {
 const BLUE_PRIMARY = "#2563eb"; // blue-600
 const BLUE_SECONDARY = "#60a5fa"; // blue-400
 
-// --- Radar Chart Multiple ---
+// --- 1. RADAR CHART: Interview Readiness (Skill Gap Analysis) ---
 const radarData = [
-    { month: "January", desktop: 186, mobile: 80 },
-    { month: "February", desktop: 305, mobile: 200 },
-    { month: "March", desktop: 237, mobile: 120 },
-    { month: "April", desktop: 73, mobile: 190 },
-    { month: "May", desktop: 209, mobile: 130 },
-    { month: "June", desktop: 214, mobile: 140 },
+    { skill: "Coding", current: 85, market: 60 },
+    { skill: "System Design", current: 55, market: 65 },
+    { skill: "Behavioral", current: 78, market: 55 },
+    { skill: "Communication", current: 82, market: 58 },
+    { skill: "Resume Impact", current: 90, market: 62 },
 ]
 
 const radarConfig = {
-    desktop: {
-        label: "Engagement",
+    current: {
+        label: "Current Score",
         color: BLUE_PRIMARY,
     },
-    mobile: {
-        label: "Outreach",
+    market: {
+        label: "Market Avg",
         color: BLUE_SECONDARY,
     },
 } satisfies ChartConfig
@@ -60,9 +59,9 @@ export function DashboardRadarChart() {
     return (
         <Card>
             <CardHeader className="items-center pb-2">
-                <CardTitle className="text-sm">Global Presence</CardTitle>
+                <CardTitle className="text-sm">Interview Readiness</CardTitle>
                 <CardDescription className="text-xs">
-                    Regional metrics
+                    Based on AI Simulator results
                 </CardDescription>
             </CardHeader>
             <CardContent className="pb-0">
@@ -72,20 +71,20 @@ export function DashboardRadarChart() {
                 >
                     <RadarChart data={radarData}>
                         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                        <PolarAngleAxis dataKey="month" tick={{ fontSize: 9 }} />
+                        <PolarAngleAxis dataKey="skill" tick={{ fontSize: 8 }} />
                         <PolarGrid />
                         <Radar
-                            dataKey="desktop"
-                            fill="var(--color-desktop)"
+                            dataKey="current"
+                            fill="var(--color-current)"
                             fillOpacity={0.5}
-                            stroke="var(--color-desktop)"
+                            stroke="var(--color-current)"
                             strokeWidth={2}
                         />
                         <Radar
-                            dataKey="mobile"
-                            fill="var(--color-mobile)"
-                            fillOpacity={0.5}
-                            stroke="var(--color-mobile)"
+                            dataKey="market"
+                            fill="var(--color-market)"
+                            fillOpacity={0.3}
+                            stroke="var(--color-market)"
                             strokeWidth={2}
                         />
                     </RadarChart>
@@ -93,27 +92,27 @@ export function DashboardRadarChart() {
             </CardContent>
             <CardFooter className="flex-col gap-1 text-xs pt-2 items-center justify-center text-center">
                 <div className="flex items-center gap-2 font-medium leading-none justify-center">
-                    Growing in 3 regions <TrendingUp className="h-3 w-3 text-blue-500" />
+                    Strong in Coding <TrendingUp className="h-3 w-3 text-green-500" />
                 </div>
                 <div className="flex items-center gap-2 leading-none text-muted-foreground justify-center">
-                    Jan - Jun 2025
+                    Needs focus on System Design
                 </div>
             </CardFooter>
         </Card>
     )
 }
 
-// --- Radial Chart Shape ---
+// --- 2. RADIAL CHART: Average ATS Score ---
 const radialData = [
-    { browser: "safari", visitors: 72, fill: BLUE_PRIMARY },
+    { score: "ats", value: 72, fill: BLUE_PRIMARY },
 ]
 
 const radialConfig = {
-    visitors: {
-        label: "Visitors",
+    value: {
+        label: "Score",
     },
-    safari: {
-        label: "Safari",
+    ats: {
+        label: "ATS Score",
         color: BLUE_PRIMARY,
     },
 } satisfies ChartConfig
@@ -122,8 +121,8 @@ export function DashboardRadialChart() {
     return (
         <Card className="flex flex-col">
             <CardHeader className="items-center pb-2">
-                <CardTitle className="text-sm">Completion Rate</CardTitle>
-                <CardDescription className="text-xs">Profile status</CardDescription>
+                <CardTitle className="text-sm">Average ATS Score</CardTitle>
+                <CardDescription className="text-xs">Optimization level across active resumes</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pb-0">
                 <ChartContainer
@@ -132,7 +131,7 @@ export function DashboardRadialChart() {
                 >
                     <RadialBarChart
                         data={radialData}
-                        endAngle={260}
+                        endAngle={(72 / 100) * 360}
                         innerRadius={70}
                         outerRadius={105}
                         startAngle={0}
@@ -145,7 +144,7 @@ export function DashboardRadialChart() {
                             className="first:fill-muted last:fill-background"
                             polarRadius={[76, 64]}
                         />
-                        <RadialBar dataKey="visitors" background cornerRadius={10} fill={BLUE_PRIMARY} />
+                        <RadialBar dataKey="value" background cornerRadius={10} fill={BLUE_PRIMARY} />
                         <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
                             <Label
                                 content={({ viewBox }) => {
@@ -162,14 +161,14 @@ export function DashboardRadialChart() {
                                                     y={viewBox.cy}
                                                     className="fill-foreground text-2xl font-bold"
                                                 >
-                                                    72%
+                                                    72
                                                 </tspan>
                                                 <tspan
                                                     x={viewBox.cx}
                                                     y={(viewBox.cy || 0) + 16}
                                                     className="fill-muted-foreground text-[10px]"
                                                 >
-                                                    Completed
+                                                    Match Rate
                                                 </tspan>
                                             </text>
                                         )
@@ -182,33 +181,33 @@ export function DashboardRadialChart() {
             </CardContent>
             <CardFooter className="flex-col gap-1 text-xs pt-2 items-center justify-center text-center">
                 <div className="flex items-center gap-2 font-medium leading-none justify-center">
-                    Good progress <TrendingUp className="h-3 w-3 text-blue-500" />
+                    Good progress <TrendingUp className="h-3 w-3 text-green-500" />
                 </div>
                 <div className="leading-none text-muted-foreground text-center">
-                    Finish resume to reach 100%
+                    Optimize "Backend CV" to reach 85%+
                 </div>
             </CardFooter>
         </Card>
     )
 }
 
-// --- Line Chart Multiple ---
+// --- 3. LINE CHART: Conversion Velocity ---
 const lineData = [
-    { month: "Jan", desktop: 186, mobile: 80 },
-    { month: "Feb", desktop: 305, mobile: 200 },
-    { month: "Mar", desktop: 237, mobile: 120 },
-    { month: "Apr", desktop: 73, mobile: 190 },
-    { month: "May", desktop: 209, mobile: 130 },
-    { month: "June", desktop: 214, mobile: 140 },
+    { week: "Week 1", applications: 12, interviews: 1 },
+    { week: "Week 2", applications: 18, interviews: 2 },
+    { week: "Week 3", applications: 8, interviews: 1 },
+    { week: "Week 4", applications: 22, interviews: 4 },
+    { week: "Week 5", applications: 15, interviews: 2 },
+    { week: "Week 6", applications: 10, interviews: 2 },
 ]
 
 const lineConfig = {
-    desktop: {
-        label: "Apps",
+    applications: {
+        label: "Applications Sent",
         color: BLUE_PRIMARY,
     },
-    mobile: {
-        label: "Interviews",
+    interviews: {
+        label: "Interviews Booked",
         color: BLUE_SECONDARY,
     },
 } satisfies ChartConfig
@@ -217,8 +216,8 @@ export function DashboardLineChart() {
     return (
         <Card>
             <CardHeader className="items-center pb-2">
-                <CardTitle className="text-sm">Application History</CardTitle>
-                <CardDescription className="text-xs">Apps vs Interviews</CardDescription>
+                <CardTitle className="text-sm">Conversion Velocity</CardTitle>
+                <CardDescription className="text-xs">Applications vs. Interviews</CardDescription>
             </CardHeader>
             <CardContent className="pb-0 pl-0">
                 <ChartContainer config={lineConfig} className="mx-auto h-[150px] w-full">
@@ -234,15 +233,16 @@ export function DashboardLineChart() {
                     >
                         <CartesianGrid vertical={false} strokeDasharray="3 3" />
                         <XAxis
-                            dataKey="month"
+                            dataKey="week"
                             tickLine={false}
                             axisLine={false}
                             tickMargin={8}
-                            tick={{ fontSize: 10 }}
+                            tick={{ fontSize: 9 }}
+                            tickFormatter={(value) => value.replace("Week ", "W")}
                         />
                         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
                         <Line
-                            dataKey="desktop"
+                            dataKey="applications"
                             type="monotone"
                             stroke={BLUE_PRIMARY}
                             strokeWidth={2}
@@ -250,7 +250,7 @@ export function DashboardLineChart() {
                             activeDot={{ r: 4 }}
                         />
                         <Line
-                            dataKey="mobile"
+                            dataKey="interviews"
                             type="monotone"
                             stroke={BLUE_SECONDARY}
                             strokeWidth={2}
@@ -262,10 +262,10 @@ export function DashboardLineChart() {
             </CardContent>
             <CardFooter className="flex-col gap-1 text-xs pt-4 items-center justify-center text-center">
                 <div className="flex items-center gap-2 font-medium leading-none justify-center">
-                    High conversion rate <TrendingUp className="h-3 w-3 text-blue-500" />
+                    High conversion rate <TrendingUp className="h-3 w-3 text-green-500" />
                 </div>
                 <div className="flex items-center gap-2 leading-none text-muted-foreground justify-center">
-                    Last 6 months activity
+                    15% interview rate in last 30 days
                 </div>
             </CardFooter>
         </Card>
