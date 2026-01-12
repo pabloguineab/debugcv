@@ -77,7 +77,7 @@ export function AppSidebar({ user, onOpenReferModal, ...props }: AppSidebarProps
     return (
         <Sidebar variant="inset" {...props}>
             <SidebarHeader className="p-4 flex flex-row items-center justify-between">
-                <Link href="/dashboard" className="flex items-center gap-2">
+                <Link href="/dashboard" className="flex items-center gap-2 -ml-1">
                     <Logo className="h-8 w-auto dark:hidden" />
                     <Logo variant="white" className="h-8 w-auto hidden dark:block" />
                 </Link>
