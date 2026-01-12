@@ -19,10 +19,10 @@ interface Application {
 export default function SimulatorPage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-                <div className="text-white text-center">
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
                     <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-slate-400">Loading simulator...</p>
+                    <p className="text-muted-foreground">Loading simulator...</p>
                 </div>
             </div>
         }>
@@ -105,23 +105,22 @@ function SimulatorContent() {
     // Show loading if we're fetching job data
     if (jobId && isLoading) {
         return (
-            <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-                <div className="text-white text-center">
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
                     <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-slate-400">Loading interview data...</p>
+                    <p className="text-muted-foreground">Loading interview data...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-slate-950 text-white overflow-hidden font-sans selection:bg-indigo-500/30">
+        <div className="min-h-screen overflow-hidden font-sans">
 
-            {/* Background Effects */}
-            <div className="absolute inset-0 z-0">
+            {/* Background Effects - only in dark mode */}
+            <div className="absolute inset-0 z-0 dark:block hidden">
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-[128px]" />
                 <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-[128px]" />
-                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
             </div>
 
             {/* Header */}
@@ -129,7 +128,7 @@ function SimulatorContent() {
                 <div className="flex items-center gap-3">
                     <button
                         onClick={() => router.back()}
-                        className="p-2 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+                        className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 text-muted-foreground hover:text-foreground transition-colors"
                     >
                         <ArrowLeft className="w-5 h-5" />
                     </button>
@@ -148,8 +147,8 @@ function SimulatorContent() {
                             {application ? `${application.title} - ${application.company}` : 'AI Interview Simulator'}
                         </h1>
                         <div className="flex items-center gap-2">
-                            <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-green-500 animate-pulse' : 'bg-slate-600'}`} />
-                            <span className="text-xs text-slate-400 font-mono uppercase tracking-wider">
+                            <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-green-500 animate-pulse' : 'bg-gray-400 dark:bg-slate-600'}`} />
+                            <span className="text-xs text-muted-foreground font-mono uppercase tracking-wider">
                                 {isActive ? 'Live' : 'Ready'}
                             </span>
                         </div>
@@ -157,7 +156,7 @@ function SimulatorContent() {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <div className="px-4 py-2 rounded-full bg-slate-900/50 border border-slate-800 backdrop-blur-md flex items-center gap-3 text-sm text-slate-400">
+                    <div className="px-4 py-2 rounded-full bg-gray-100 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-800 backdrop-blur-md flex items-center gap-3 text-sm text-muted-foreground">
                         <Signal className="w-4 h-4 text-green-500" />
                         <span>Secure</span>
                     </div>
@@ -171,7 +170,7 @@ function SimulatorContent() {
                 <motion.div
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="relative w-full max-w-5xl aspect-video bg-slate-900/80 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl shadow-black/50 backdrop-blur-sm"
+                    className="relative w-full max-w-5xl aspect-video bg-gray-100 dark:bg-slate-900/80 rounded-3xl overflow-hidden border border-gray-200 dark:border-slate-800 shadow-2xl backdrop-blur-sm"
                 >
                     {/* Iframe (loads when isActive = true) */}
                     {isActive && (
@@ -190,7 +189,7 @@ function SimulatorContent() {
                             <motion.div
                                 initial={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90 backdrop-blur-md z-20"
+                                className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900/90 backdrop-blur-md z-20"
                             >
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}
@@ -253,20 +252,20 @@ function SimulatorContent() {
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: 20, opacity: 0 }}
-                            className="mt-8 flex items-center gap-4 p-2 bg-slate-900/90 backdrop-blur-xl border border-slate-800 rounded-2xl shadow-2xl z-50"
+                            className="mt-8 flex items-center gap-4 p-2 bg-white dark:bg-slate-900/90 backdrop-blur-xl border border-gray-200 dark:border-slate-800 rounded-2xl shadow-2xl z-50"
                         >
                             <button
                                 onClick={toggleMic}
-                                className={`p-4 rounded-xl transition-all ${isMicOn ? 'bg-slate-800 text-white hover:bg-slate-700' : 'bg-red-500/20 text-red-500 hover:bg-red-500/30'}`}
+                                className={`p-4 rounded-xl transition-all ${isMicOn ? 'bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700' : 'bg-red-500/20 text-red-500 hover:bg-red-500/30'}`}
                             >
                                 {isMicOn ? <Mic className="w-6 h-6" /> : <MicOff className="w-6 h-6" />}
                             </button>
 
-                            <button className="p-4 rounded-xl bg-slate-800 text-white hover:bg-slate-700 transition-all">
+                            <button className="p-4 rounded-xl bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 transition-all">
                                 <Volume2 className="w-6 h-6" />
                             </button>
 
-                            <div className="w-px h-8 bg-slate-700 mx-2" />
+                            <div className="w-px h-8 bg-gray-200 dark:bg-slate-700 mx-2" />
 
                             <button
                                 onClick={endSession}
