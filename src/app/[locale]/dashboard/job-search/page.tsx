@@ -607,11 +607,10 @@ function JobCard({ job, index, query }: { job: Job; index: number; query: string
 
         // Add deterministic variance based on job_id so it doesn't look fake (all same)
         const idSum = job.job_id.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
+        const variance = (idSum % 10) - 5; // +/- 5
+
+        return Math.min(98, Math.max(65, Math.floor(score + variance)));
     }, [job, query]);
-
-    const [isVisible, setIsVisible] = useState(true);
-
-    if (!isVisible) return null;
 
     // Color code based on score
     const scoreColor = matchScore >= 90 ? "text-emerald-700 bg-emerald-50 border-emerald-200"
@@ -643,7 +642,6 @@ function JobCard({ job, index, query }: { job: Job; index: number; query: string
                                 logo={job.employer_logo || undefined}
                                 size="lg"
                                 className="bg-blue-50 dark:bg-blue-900/20 border-none shadow-none p-0"
-                                onLogoLoadError={() => setIsVisible(false)}
                             />
                         </div>
                         <div className="min-w-0 flex-1 pr-6">

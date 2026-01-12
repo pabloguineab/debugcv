@@ -10,10 +10,9 @@ interface CompanyLogoProps {
     website?: string;
     size?: "sm" | "md" | "lg";
     className?: string;
-    onLogoLoadError?: () => void;
 }
 
-export function CompanyLogo({ company, logo, website, size = "md", className = "", onLogoLoadError }: CompanyLogoProps) {
+export function CompanyLogo({ company, logo, website, size = "md", className = "" }: CompanyLogoProps) {
     const [logoSrc, setLogoSrc] = useState<string | null>(logo || null);
     const [hasError, setHasError] = useState(false);
     const [triedFallback, setTriedFallback] = useState(false);
@@ -118,7 +117,6 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
             setLogoSrc(logo);
         } else {
             setHasError(true);
-            if (onLogoLoadError) onLogoLoadError();
         }
     };
 
