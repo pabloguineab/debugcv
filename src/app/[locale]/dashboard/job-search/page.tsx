@@ -613,9 +613,13 @@ function JobCard({ job, index, query }: { job: Job; index: number; query: string
     }, [job, query]);
 
     // Color code based on score
-    const scoreColor = matchScore >= 90 ? "text-emerald-600 bg-emerald-50 border-emerald-200"
-        : matchScore >= 80 ? "text-blue-600 bg-blue-50 border-blue-200"
-            : "text-amber-600 bg-amber-50 border-amber-200";
+    const scoreColor = matchScore >= 90 ? "text-emerald-700 bg-emerald-50 border-emerald-200"
+        : matchScore >= 80 ? "text-blue-700 bg-blue-50 border-blue-200"
+            : "text-amber-700 bg-amber-50 border-amber-200";
+
+    const hoverBorderColor = matchScore >= 90 ? "group-hover:border-emerald-500/50"
+        : matchScore >= 80 ? "group-hover:border-blue-500/50"
+            : "group-hover:border-amber-500/50";
 
     return (
         <motion.div
@@ -623,54 +627,60 @@ function JobCard({ job, index, query }: { job: Job; index: number; query: string
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
         >
-            <Card className="h-full flex flex-col hover:shadow-lg transition-shadow duration-300 group relative overflow-hidden dark:bg-slate-900/50">
-                <div className="absolute top-0 right-0 p-4 z-10">
+            <Card className={cn(
+                "h-full flex flex-col transition-all duration-300 group relative overflow-hidden bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800",
+                "hover:shadow-xl hover:-translate-y-1",
+                hoverBorderColor
+            )}>
+                <div className="absolute top-4 right-4 z-10">
+                    {/* Simplified provider badge logic if needed, or keep as is but smaller */}
                     {providerInfo.badge}
                 </div>
 
-                <CardContent className="p-6 flex-grow">
-                    <div className="flex items-start gap-4 mb-4">
-                        <div className="shrink-0">
+                <CardContent className="p-5 flex-grow">
+                    <div className="flex items-start gap-4 mb-3">
+                        <div className="shrink-0 mt-1">
                             <CompanyLogo
                                 company={job.employer_name}
                                 logo={job.employer_logo || undefined}
-                                size="md" // Assuming 'md' is valid, otherwise I'll check CompanyLogo props
+                                size="md"
                             />
                         </div>
-                        <div className="min-w-0 flex-1 pr-8">
-                            <h3 className="font-semibold text-lg leading-tight line-clamp-2 mb-1 group-hover:text-blue-600 transition-colors">
+                        <div className="min-w-0 flex-1 pr-6">
+                            <h3 className="font-bold text-lg leading-tight line-clamp-2 mb-1 group-hover:text-blue-600 transition-colors tracking-tight text-slate-900 dark:text-slate-100">
                                 {job.job_title}
                             </h3>
-                            <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">
+                            <p className="text-sm text-blue-600 dark:text-blue-400 font-medium truncate">
                                 {job.employer_name}
                             </p>
                         </div>
                     </div>
 
-                    <div className="space-y-2 mt-4 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-2">
-                            <MapPin className="h-4 w-4 shrink-0" />
-                            <span className="truncate">
+                    <div className="flex flex-wrap gap-2 mt-4 text-xs font-medium">
+                        <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                            <MapPin className="h-3 w-3 mr-1.5 text-slate-400" />
+                            <span className="truncate max-w-[150px]">
                                 {job.job_city ? `${job.job_city}, ${job.job_country}` : "Location not specified"}
                             </span>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <Briefcase className="h-4 w-4 shrink-0" />
+
+                        <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                            <Briefcase className="h-3 w-3 mr-1.5 text-slate-400" />
                             <span className="capitalize">
                                 {job.job_employment_type?.toLowerCase().replace('_', ' ') || 'Full time'}
                             </span>
                         </div>
-                    </div>
 
-                    <div className="mt-4 flex flex-wrap gap-2">
                         {job.job_is_remote && (
-                            <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400">
+                            <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-100 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/50">
+                                <Globe className="h-3 w-3 mr-1.5" />
                                 Remote
-                            </Badge>
+                            </div>
                         )}
-                        <Badge variant="outline" className="text-xs">
+
+                        <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-slate-50 text-slate-500 border border-slate-100 dark:bg-slate-900 dark:border-slate-800">
                             {formatJobDate(job.job_posted_at_timestamp)}
-                        </Badge>
+                        </div>
                     </div>
                 </CardContent>
 
