@@ -48,6 +48,8 @@ export default function JobSearchPage() {
     const [nextQueryIndex, setNextQueryIndex] = useState(0);
     const [error, setError] = useState<'rate_limit' | 'general' | null>(null);
     const [loadingMore, setLoadingMore] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+
 
     useEffect(() => {
         if (status === "unauthenticated") {
@@ -129,6 +131,7 @@ export default function JobSearchPage() {
         setNextQueryIndex(1);
         setPage(1);
         setVisibleCount(18);
+        setHasMore(true);
 
         const count = await runBatchSearch(queriesToRun, locationVal, true, 1);
 
@@ -229,6 +232,7 @@ export default function JobSearchPage() {
             setNextQueryIndex(1);
             setPage(1);
             setVisibleCount(18);
+            setHasMore(true);
             await runBatchSearch([q], loc, true, 1);
         } catch (error: any) {
             console.error("Search failed", error);
@@ -284,12 +288,17 @@ export default function JobSearchPage() {
                 // Ensure we don't exceed the total number of jobs available
                 setVisibleCount(prev => prev + 18);
             } else {
-                // If no new jobs were found and we have no hidden jobs, tell the user
                 if (remainingHidden === 0) {
-                    alert("No more jobs found.");
+                    // If we found nothing and have nothing hidden, maybe we are done?
+                    // Only if we retried enough times.
+                    if (jobsFound === 0) setHasMore(false);
+                    if (jobsFound === 0) alert("No more jobs found.");
                 } else {
-                    // Just show what we have left
                     setVisibleCount(prev => prev + remainingHidden);
+                    // If we found 0 new jobs but had some hidden, we showed them.
+                    // But if jobsFound was 0, it means we MIGHT be at the end next time.
+                    // But we let the user click again to find out, unless we are sure.
+                    // For now, keep hasMore true unless 0 found AND 0 hidden.
                 }
             }
         } catch (error) {
@@ -546,7 +555,7 @@ export default function JobSearchPage() {
                             ))}
                         </div>
 
-                        {visibleCount < displayedJobs.length && (
+                        {(hasMore || visibleCount < displayedJobs.length) && (
                             <div className="flex justify-center py-8">
                                 <Button
                                     variant="outline"
