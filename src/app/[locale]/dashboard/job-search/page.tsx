@@ -684,21 +684,21 @@ function JobCard({ job, index, query }: { job: Job; index: number; query: string
                     </div>
                 </CardContent>
 
-                <CardFooter className="p-4 pt-4 mt-auto border-t bg-slate-50/50 dark:bg-slate-900/20 flex items-center justify-between gap-4">
+                <CardFooter className="p-4 pt-4 mt-auto border-t bg-slate-50/50 dark:bg-slate-900/20 flex items-center gap-3">
                     <a
                         href={job.job_apply_link}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={cn(
                             buttonVariants({ variant: providerInfo.variant as any }),
-                            `h-11 px-6 rounded-lg font-bold shadow-sm transition-all hover:shadow-md ${providerInfo.buttonClass}`
+                            `h-11 rounded-lg font-bold shadow-sm transition-all hover:shadow-md flex-[3] ${providerInfo.buttonClass}`
                         )}
                     >
                         Apply on {providerInfo.name}
                     </a>
 
                     <div className={cn(
-                        "flex flex-col items-center justify-center h-11 w-14 rounded-lg border text-center shrink-0 bg-white dark:bg-slate-800 shadow-sm",
+                        "flex flex-col items-center justify-center h-11 rounded-lg border text-center shrink-0 bg-white dark:bg-slate-800 shadow-sm flex-1",
                         scoreColor
                     )}>
                         <span className="text-sm font-bold leading-none">{matchScore}%</span>
