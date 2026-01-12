@@ -1,6 +1,7 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { Building2 } from "lucide-react";
 
 interface CompanyLogoProps {
     company: string;
@@ -73,9 +74,6 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
             'monday': 'monday.com',
             'jira': 'atlassian.com',
             'trello': 'trello.com',
-            'red hat': 'redhat.com',
-            'the red hat': 'redhat.com',
-            'axpe consulting': 'axpe.com',
         };
 
         if (overrides[lowerCompany]) return overrides[lowerCompany];
@@ -114,7 +112,7 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
             'atlassian', 'dropbox', 'github', 'gitlab', 'shopify', 'zoom', 'lyft', 'pinterest',
             'reddit', 'tiktok', 'snap', 'snapchat', 'linkedin', 'indeed', 'paypal', 'square',
             'coinbase', 'robinhood', 'cloudflare', 'mongodb', 'datadog', 'twilio', 'hubspot',
-            'asana', 'monday', 'trello', 'red hat', 'the red hat'
+            'asana', 'monday', 'trello',
         ];
 
         const isKnownCompany = knownCompanies.includes(lowerCompany);
@@ -132,9 +130,7 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
     }, [logo, company, website, domain]);
 
     const handleImageError = () => {
-        // If we were trying the provided logo and it failed, try brandfetch
-        // But if we already are on fallback (or defaulting to brandfetch), then show error (initials)
-        if (logo && logoSrc === logo && !triedFallback) {
+        if (logo && !triedFallback) {
             setLogoSrc(`https://cdn.brandfetch.io/${domain}/w/400/h/400`);
             setTriedFallback(true);
         } else {
@@ -179,16 +175,14 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
     return (
         <div className={cn(
             sizeClasses[size],
-            "rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex items-center justify-center p-1 relative",
+            "rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden flex items-center justify-center p-1 relative",
             className
         )}>
-            <Building2 className="w-1/2 h-1/2 text-slate-300 absolute opacity-50" />
             <img
                 src={logoSrc || undefined}
                 alt={company}
-                className="w-full h-full object-contain rounded-md relative z-10"
+                className="w-full h-full object-contain rounded-md"
                 onError={handleImageError}
-                loading="lazy"
             />
         </div>
     );
