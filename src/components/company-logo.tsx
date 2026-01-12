@@ -122,8 +122,16 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
         }
     };
 
-    const handleImageLoad = () => {
-        if (onLogoSuccess) onLogoSuccess();
+    const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+        const img = e.target as HTMLImageElement;
+        // Check if image has real dimensions (not a tiny placeholder)
+        if (img.naturalWidth < 10 || img.naturalHeight < 10) {
+            // Treat as failed - likely a placeholder or tracking pixel
+            setHasError(true);
+            if (onLogoFallback) onLogoFallback();
+        } else {
+            if (onLogoSuccess) onLogoSuccess();
+        }
     };
 
     const sizeClasses = {
