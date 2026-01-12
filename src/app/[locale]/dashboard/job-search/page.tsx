@@ -632,10 +632,7 @@ function JobCard({ job, index, query }: { job: Job; index: number; query: string
                 "hover:shadow-xl hover:-translate-y-1",
                 hoverBorderColor
             )}>
-                <div className="absolute top-4 right-4 z-10">
-                    {/* Simplified provider badge logic if needed, or keep as is but smaller */}
-                    {providerInfo.badge}
-                </div>
+
 
                 <CardContent className="p-5 flex-grow">
                     <div className="flex items-start gap-4 mb-3">
