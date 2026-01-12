@@ -309,11 +309,8 @@ export default function ApplicationBoardPage() {
                     <CardContent className="flex items-center justify-between p-4">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-                                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
-                                    <path d="M22 6L12 13L2 6V4L12 11L22 4V6Z" fill="#EA4335" />
-                                    <path d="M2 6L12 13L22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6Z" fill="#FBBC05" />
-                                    <path d="M22 6V18C22 19.1 21.1 20 20 20H12L12 13L22 6Z" fill="#34A853" />
-                                    <path d="M2 6V18C2 19.1 2.9 20 4 20H12V13L2 6Z" fill="#4285F4" />
+                                <svg className="w-5 h-5" viewBox="0 0 24 24">
+                                    <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" fill="#EA4335" />
                                 </svg>
                             </div>
                             <div>
