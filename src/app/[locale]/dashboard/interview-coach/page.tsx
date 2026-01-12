@@ -98,13 +98,14 @@ export default function AISimulatorPage() {
         app.company.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    if (status === "loading" || isLoading) {
+    // Only block on initial auth loading
+    if (status === "loading") {
         return (
             <div className="flex-1 p-6">
                 <div className="flex items-center justify-center min-h-[50vh]">
                     <div className="text-center">
                         <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                        <p className="text-muted-foreground">Loading interviews...</p>
+                        <p className="text-muted-foreground">Loading...</p>
                     </div>
                 </div>
             </div>
