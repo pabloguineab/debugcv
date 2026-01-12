@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { CompanyLogo } from "@/components/company-logo";
-import { Breadcrumbs, BreadcrumbItem } from "@/components/ui/breadcrumbs";
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { ModeToggle } from "@/components/mode-toggle";
 import {
     Zap,
@@ -116,22 +116,26 @@ export default function AISimulatorPage() {
         <div className="flex-1 space-y-6">
             {/* Header */}
             <div className="flex items-center justify-between">
-                <Breadcrumbs>
-                    <BreadcrumbItem>
-                        <Link href="/dashboard" className="flex items-center gap-1 text-muted-foreground hover:text-foreground">
-                            <Home className="h-4 w-4" />
-                            Home
-                        </Link>
-                    </BreadcrumbItem>
-                    <BreadcrumbItem>
-                        <Link href="/dashboard" className="text-muted-foreground hover:text-foreground">
-                            Dashboard
-                        </Link>
-                    </BreadcrumbItem>
-                    <BreadcrumbItem isCurrentPage>
-                        <span>AI Simulator</span>
-                    </BreadcrumbItem>
-                </Breadcrumbs>
+                <Breadcrumb>
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink render={<Link href="/dashboard" />}>
+                                <Home className="h-4 w-4" />
+                                Home
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink render={<Link href="/dashboard" />}>
+                                Dashboard
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbPage>AI Simulator</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
                 <ModeToggle />
             </div>
 
@@ -295,20 +299,20 @@ export default function AISimulatorPage() {
                                             <div className="flex flex-col items-center gap-3 md:border-l md:pl-6">
                                                 <div className="text-center">
                                                     <div className={`text-sm font-semibold mb-2 ${readiness.color === "red" ? "text-red-500" :
-                                                            readiness.color === "orange" ? "text-orange-500" :
-                                                                readiness.color === "yellow" ? "text-yellow-500" :
-                                                                    readiness.color === "green" ? "text-green-500" :
-                                                                        "text-gray-500"
+                                                        readiness.color === "orange" ? "text-orange-500" :
+                                                            readiness.color === "yellow" ? "text-yellow-500" :
+                                                                readiness.color === "green" ? "text-green-500" :
+                                                                    "text-gray-500"
                                                         }`}>
                                                         {readiness.level}
                                                     </div>
                                                     <div className="w-28 h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                                                         <div
                                                             className={`h-full rounded-full transition-all ${readiness.color === "red" ? "bg-red-500" :
-                                                                    readiness.color === "orange" ? "bg-orange-500" :
-                                                                        readiness.color === "yellow" ? "bg-yellow-500" :
-                                                                            readiness.color === "green" ? "bg-green-500" :
-                                                                                "bg-gray-400"
+                                                                readiness.color === "orange" ? "bg-orange-500" :
+                                                                    readiness.color === "yellow" ? "bg-yellow-500" :
+                                                                        readiness.color === "green" ? "bg-green-500" :
+                                                                            "bg-gray-400"
                                                                 }`}
                                                             style={{ width: `${readiness.percentage}%` }}
                                                         ></div>
