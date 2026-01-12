@@ -587,6 +587,7 @@ export default function JobSearchPage() {
 
 function JobCard({ job, index, query }: { job: Job; index: number; query: string }) {
     const providerInfo = getProviderInfo(job.job_publisher);
+    const [logoStatus, setLogoStatus] = useState<'loading' | 'valid' | 'invalid'>('loading');
 
     // Calculate simple match score
     const matchScore = React.useMemo(() => {
@@ -611,6 +612,11 @@ function JobCard({ job, index, query }: { job: Job; index: number; query: string
 
         return Math.min(98, Math.max(65, Math.floor(score + variance)));
     }, [job, query]);
+
+    // If logo failed, hide this card
+    if (logoStatus === 'invalid') {
+        return null;
+    }
 
     // Color code based on score
     const scoreColor = matchScore >= 90 ? "text-emerald-700 bg-emerald-50 border-emerald-200"
@@ -642,6 +648,8 @@ function JobCard({ job, index, query }: { job: Job; index: number; query: string
                                 logo={job.employer_logo || undefined}
                                 size="lg"
                                 className="bg-blue-50 dark:bg-blue-900/20 border-none shadow-none p-0"
+                                onLogoSuccess={() => setLogoStatus('valid')}
+                                onLogoFallback={() => setLogoStatus('invalid')}
                             />
                         </div>
                         <div className="min-w-0 flex-1 pr-6">

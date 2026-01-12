@@ -9,9 +9,11 @@ interface CompanyLogoProps {
     website?: string;
     size?: "sm" | "md" | "lg";
     className?: string;
+    onLogoSuccess?: () => void;
+    onLogoFallback?: () => void;
 }
 
-export function CompanyLogo({ company, logo, website, size = "md", className = "" }: CompanyLogoProps) {
+export function CompanyLogo({ company, logo, website, size = "md", className = "", onLogoSuccess, onLogoFallback }: CompanyLogoProps) {
     const [logoSrc, setLogoSrc] = useState<string | null>(logo || null);
     const [hasError, setHasError] = useState(false);
     const [triedFallback, setTriedFallback] = useState(false);
@@ -116,7 +118,12 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
             setLogoSrc(logo);
         } else {
             setHasError(true);
+            if (onLogoFallback) onLogoFallback();
         }
+    };
+
+    const handleImageLoad = () => {
+        if (onLogoSuccess) onLogoSuccess();
     };
 
     const sizeClasses = {
@@ -164,6 +171,7 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
                 alt={company}
                 className="w-full h-full object-contain rounded-md"
                 onError={handleImageError}
+                onLoad={handleImageLoad}
             />
         </div>
     );
