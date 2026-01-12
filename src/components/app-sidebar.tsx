@@ -125,17 +125,6 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                     <SidebarGroupLabel>Resumes</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton
-                                    onClick={onOpenUploadModal}
-                                    className="text-primary hover:text-primary hover:bg-primary/10 cursor-pointer"
-                                >
-                                    <div className="flex items-center gap-3 w-full my-0.5">
-                                        <Upload className="size-[18px]" />
-                                        <span className="text-sm font-medium">Upload Resume</span>
-                                    </div>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
                             {resumesItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
@@ -173,10 +162,13 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link href="#" className="flex items-center gap-3 text-blue-600 dark:text-blue-400 font-medium w-full my-0.5">
+                            <div
+                                onClick={onOpenUploadModal}
+                                className="flex items-center gap-3 text-blue-600 dark:text-blue-400 font-medium w-full my-0.5 cursor-pointer hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                            >
                                 <Gem className="size-[18px]" />
                                 <span className="text-sm">Get Expert Audit</span>
-                            </Link>
+                            </div>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
