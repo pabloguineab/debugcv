@@ -58,7 +58,8 @@ export async function searchJobs(
     } = filters;
 
     // Infer country code from query - THIS IS CRITICAL for non-US searches
-    const countryCode = inferCountry(query);
+    // const countryCode = inferCountry(query);
+    const countryCode = 'us'; // Temporarily forcing US to test if country param is causing issues
 
     const params = new URLSearchParams({
         query,
