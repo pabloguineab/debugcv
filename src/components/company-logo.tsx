@@ -74,6 +74,8 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
             'monday': 'monday.com',
             'jira': 'atlassian.com',
             'trello': 'trello.com',
+            'red hat': 'redhat.com',
+            'the red hat': 'redhat.com',
         };
 
         if (overrides[lowerCompany]) return overrides[lowerCompany];
@@ -112,7 +114,7 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
             'atlassian', 'dropbox', 'github', 'gitlab', 'shopify', 'zoom', 'lyft', 'pinterest',
             'reddit', 'tiktok', 'snap', 'snapchat', 'linkedin', 'indeed', 'paypal', 'square',
             'coinbase', 'robinhood', 'cloudflare', 'mongodb', 'datadog', 'twilio', 'hubspot',
-            'asana', 'monday', 'trello',
+            'asana', 'monday', 'trello', 'red hat', 'the red hat'
         ];
 
         const isKnownCompany = knownCompanies.includes(lowerCompany);
@@ -123,14 +125,17 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
             setHasError(false);
         } else {
             // For known companies, use Brandfetch
-            setLogoSrc(`https://cdn.brandfetch.io/${domain}/w/400/h/400`);
+            // Also use Brandfetch as default if no logo provided
+            setLogoSrc(`https://cdn.brandfetch.io/${domain}/w/400/h/400?c=1id72847284`); // Add cache buster or params if needed
             setTriedFallback(true);
             setHasError(false);
         }
     }, [logo, company, website, domain]);
 
     const handleImageError = () => {
-        if (logo && !triedFallback) {
+        // If we were trying the provided logo and it failed, try brandfetch
+        // But if we already are on fallback (or defaulting to brandfetch), then show error (initials)
+        if (logo && logoSrc === logo && !triedFallback) {
             setLogoSrc(`https://cdn.brandfetch.io/${domain}/w/400/h/400`);
             setTriedFallback(true);
         } else {
@@ -158,7 +163,7 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
         }
     };
 
-    if (hasError) {
+    if (hasError || !logoSrc) {
         return (
             <div className={cn(
                 sizeClasses[size],
