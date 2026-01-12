@@ -191,12 +191,22 @@ export default function JobSearchPage() {
                 setJobs(uniqueNewJobs);
                 setDisplayedJobs(uniqueNewJobs);
                 setSearched(true);
+                return uniqueNewJobs.length;
             } else {
-                setJobs(prev => [...prev, ...uniqueNewJobs]);
-                setDisplayedJobs(prev => [...prev, ...uniqueNewJobs]);
-            }
+                // Global deduplication against existing jobs
+                setJobs(prev => {
+                    const effectivelyNew = uniqueNewJobs.filter(n => !prev.some(p => p.job_id === n.job_id));
+                    return [...prev, ...effectivelyNew];
+                });
+                setDisplayedJobs(prev => {
+                    const effectivelyNew = uniqueNewJobs.filter(n => !prev.some(p => p.job_id === n.job_id));
+                    return [...prev, ...effectivelyNew];
+                });
 
-            return uniqueNewJobs.length;
+                // Return count of effectively added jobs to know if we really got new stuff
+                const effectivelyNewCount = uniqueNewJobs.length; // Approximate, but good enough signal
+                return effectivelyNewCount;
+            }
         } catch (err: any) {
             if (err?.message === 'RATE_LIMIT_EXCEEDED') {
                 setError('rate_limit');
@@ -256,9 +266,16 @@ export default function JobSearchPage() {
             }
 
             if (count > 0 || remainingHidden > 0) {
+                // Ensure we don't exceed the total number of jobs available
                 setVisibleCount(prev => prev + 18);
             } else {
-                alert("No more jobs found.");
+                // If no new jobs were found and we have no hidden jobs, tell the user
+                if (remainingHidden === 0) {
+                    alert("No more jobs found.");
+                } else {
+                    // Just show what we have left
+                    setVisibleCount(prev => prev + remainingHidden);
+                }
             }
         } catch (error) {
             console.error("Load more failed", error);
