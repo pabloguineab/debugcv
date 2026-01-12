@@ -256,10 +256,10 @@ export default function AISimulatorPage() {
                                     transition={{ delay: index * 0.1 }}
                                 >
                                     <Card className="group hover:shadow-lg transition-all duration-300">
-                                        <CardContent className="p-6">
-                                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                                        <CardContent className="p-4">
+                                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                                 {/* Left: Job Info */}
-                                                <div className="flex-1 space-y-3">
+                                                <div className="flex-1 space-y-2">
                                                     <div className="flex items-start gap-3">
                                                         <CompanyLogo company={app.company} logo={app.logo} size="md" />
                                                         <div>
@@ -299,7 +299,7 @@ export default function AISimulatorPage() {
                                                 </div>
 
                                                 {/* Right: CTA */}
-                                                <div className="flex flex-col items-center gap-3 md:border-l md:pl-6">
+                                                <div className="flex flex-col items-center gap-2 md:border-l md:pl-4">
                                                     <div className="text-center">
                                                         <div className={`text-sm font-semibold mb-2 ${readiness.color === "red" ? "text-red-500" :
                                                             readiness.color === "orange" ? "text-orange-500" :
