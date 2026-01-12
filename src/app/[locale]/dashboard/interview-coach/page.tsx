@@ -128,42 +128,42 @@ export default function AISimulatorPage() {
                 {/* Stats Cards */}
                 <div className="grid md:grid-cols-3 gap-4">
                     <Card>
-                        <CardContent className="p-6">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
-                                    <Calendar className="w-6 h-6 text-white" />
+                        <CardContent className="p-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
+                                    <Calendar className="w-5 h-5 text-white" />
                                 </div>
                                 <div>
-                                    <p className="text-sm text-muted-foreground">Active Interviews</p>
-                                    <p className="text-3xl font-bold">{applications.length}</p>
+                                    <p className="text-xs text-muted-foreground">Active Interviews</p>
+                                    <p className="text-2xl font-bold">{applications.length}</p>
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
                     <Card>
-                        <CardContent className="p-6">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                                    <Zap className="w-6 h-6 text-white" />
+                        <CardContent className="p-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                                    <Zap className="w-5 h-5 text-white" />
                                 </div>
                                 <div>
-                                    <p className="text-sm text-muted-foreground">Simulations Done</p>
-                                    <p className="text-3xl font-bold">0</p>
+                                    <p className="text-xs text-muted-foreground">Simulations Done</p>
+                                    <p className="text-2xl font-bold">0</p>
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
                     <Card>
-                        <CardContent className="p-6">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
-                                    <TrendingUp className="w-6 h-6 text-white" />
+                        <CardContent className="p-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+                                    <TrendingUp className="w-5 h-5 text-white" />
                                 </div>
                                 <div>
-                                    <p className="text-sm text-muted-foreground">Readiness Level</p>
-                                    <p className="text-3xl font-bold">--</p>
+                                    <p className="text-xs text-muted-foreground">Readiness Level</p>
+                                    <p className="text-2xl font-bold">--</p>
                                 </div>
                             </div>
                         </CardContent>
