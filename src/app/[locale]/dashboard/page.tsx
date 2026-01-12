@@ -136,11 +136,11 @@ export default function DashboardPage() {
             {/* Upcoming Interview Alert Banner */}
             {upcomingInterview && (
                 <Card className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/40 dark:to-blue-950/40 border-purple-200 dark:border-purple-800 overflow-hidden">
-                    <CardContent className="p-4">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                            <div className="flex items-center gap-4">
-                                <div className="p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
-                                    <Calendar className="w-6 h-6 text-purple-600" />
+                    <CardContent className="p-3">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+                                    <Calendar className="w-5 h-5 text-purple-600" />
                                 </div>
                                 <div>
                                     <div className="flex items-center gap-2">
@@ -150,14 +150,14 @@ export default function DashboardPage() {
                                             Tomorrow
                                         </Badge>
                                     </div>
-                                    <p className="font-bold text-lg">
+                                    <p className="font-bold text-base">
                                         {upcomingInterview.role} @ {upcomingInterview.company}
                                     </p>
-                                    <p className="text-sm text-muted-foreground">{upcomingInterview.lastActionDate}</p>
+                                    <p className="text-xs text-muted-foreground">{upcomingInterview.lastActionDate}</p>
                                 </div>
                             </div>
                             <Link href="/dashboard/interview-coach">
-                                <Button className="gap-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg">
+                                <Button size="sm" className="gap-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg">
                                     <Bot className="w-4 h-4" />
                                     Warm up with AI Simulator
                                     <ArrowRight className="w-4 h-4" />
@@ -169,16 +169,16 @@ export default function DashboardPage() {
             )}
 
             {/* Stats Cards */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
                 {/* Applications Sent */}
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 pb-1">
-                        <CardTitle className="text-xs font-medium">Applications Sent</CardTitle>
-                        <Send className="h-3.5 w-3.5 text-muted-foreground" />
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
+                        <CardTitle className="text-sm font-medium">Applications Sent</CardTitle>
+                        <Send className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent className="p-3 pt-0">
-                        <div className="text-xl font-bold">42</div>
-                        <p className="text-[10px] text-muted-foreground">
+                    <CardContent className="p-4 pt-0">
+                        <div className="text-2xl font-bold">42</div>
+                        <p className="text-xs text-muted-foreground">
                             <span className="text-green-500">+5</span> this week
                         </p>
                     </CardContent>
@@ -186,13 +186,13 @@ export default function DashboardPage() {
 
                 {/* Active Processes */}
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 pb-1">
-                        <CardTitle className="text-xs font-medium">Active Processes</CardTitle>
-                        <Flame className="h-3.5 w-3.5 text-muted-foreground" />
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
+                        <CardTitle className="text-sm font-medium">Active Processes</CardTitle>
+                        <Flame className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent className="p-3 pt-0">
-                        <div className="text-xl font-bold">8</div>
-                        <p className="text-[10px] text-muted-foreground">
+                    <CardContent className="p-4 pt-0">
+                        <div className="text-2xl font-bold">8</div>
+                        <p className="text-xs text-muted-foreground">
                             3 waiting for reply
                         </p>
                     </CardContent>
@@ -200,13 +200,13 @@ export default function DashboardPage() {
 
                 {/* Avg. ATS Score */}
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 pb-1">
-                        <CardTitle className="text-xs font-medium">Avg. ATS Score</CardTitle>
-                        <Target className="h-3.5 w-3.5 text-muted-foreground" />
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
+                        <CardTitle className="text-sm font-medium">Avg. ATS Score</CardTitle>
+                        <Target className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent className="p-3 pt-0">
-                        <div className="text-xl font-bold">85<span className="text-sm text-muted-foreground">/100</span></div>
-                        <p className="text-[10px] text-muted-foreground">
+                    <CardContent className="p-4 pt-0">
+                        <div className="text-2xl font-bold">85<span className="text-lg text-muted-foreground">/100</span></div>
+                        <p className="text-xs text-muted-foreground">
                             <span className="text-green-500">+12%</span> vs last month
                         </p>
                     </CardContent>
@@ -214,13 +214,13 @@ export default function DashboardPage() {
 
                 {/* Interview Rate */}
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 pb-1">
-                        <CardTitle className="text-xs font-medium">Interview Rate</CardTitle>
-                        <TrendingUp className="h-3.5 w-3.5 text-muted-foreground" />
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
+                        <CardTitle className="text-sm font-medium">Interview Rate</CardTitle>
+                        <TrendingUp className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent className="p-3 pt-0">
-                        <div className="text-xl font-bold">14.5%</div>
-                        <p className="text-[10px] text-muted-foreground">
+                    <CardContent className="p-4 pt-0">
+                        <div className="text-2xl font-bold">14.5%</div>
+                        <p className="text-xs text-muted-foreground">
                             <span className="text-green-500">Top 10%</span> market avg
                         </p>
                     </CardContent>
