@@ -7,7 +7,7 @@ interface CompanyLogoProps {
     company: string;
     logo?: string;
     website?: string;
-    size?: "sm" | "md" | "lg";
+    size?: "sm" | "md" | "lg" | "xl";
     className?: string;
     onLogoSuccess?: () => void;
     onLogoFallback?: () => void;
@@ -170,7 +170,8 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
     const sizeClasses = {
         sm: "w-8 h-8",
         md: "w-10 h-10",
-        lg: "w-12 h-12"
+        lg: "w-12 h-12",
+        xl: "w-16 h-16"
     };
 
     const getFallbackInitials = (name: string) => {
@@ -194,7 +195,7 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
                 className,
                 "rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-sm"
             )}>
-                <span className={size === "sm" ? "text-xs" : size === "md" ? "text-sm" : "text-base"}>
+                <span className={size === "sm" ? "text-xs" : size === "md" ? "text-sm" : size === "lg" ? "text-base" : "text-lg"}>
                     {getFallbackInitials(company)}
                 </span>
             </div>

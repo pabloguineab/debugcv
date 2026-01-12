@@ -135,10 +135,10 @@ function SimulatorContent() {
 
                     {/* Company Logo or Default Icon */}
                     {application?.company ? (
-                        <CompanyLogo company={application.company} size="sm" />
+                        <CompanyLogo company={application.company} size="xl" />
                     ) : (
-                        <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                            <Cpu className="w-6 h-6 text-white" />
+                        <div className="w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                            <Cpu className="w-8 h-8 text-white" />
                         </div>
                     )}
 
