@@ -21,8 +21,8 @@ export default function SimulatorPage() {
         <Suspense fallback={
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-muted-foreground">Loading simulator...</p>
+                    <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+                    <p className="text-xs text-muted-foreground font-medium">Loading simulator...</p>
                 </div>
             </div>
         }>
@@ -107,8 +107,8 @@ function SimulatorContent() {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-muted-foreground">Loading interview data...</p>
+                    <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+                    <p className="text-xs text-muted-foreground font-medium">Loading interview data...</p>
                 </div>
             </div>
         );
