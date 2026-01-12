@@ -43,7 +43,7 @@ export default function JobSearchPage() {
     const [searched, setSearched] = useState(false);
     const [analyzingCv, setAnalyzingCv] = useState(false);
     const [page, setPage] = useState(1);
-    const [visibleCount, setVisibleCount] = useState(12);
+    const [visibleCount, setVisibleCount] = useState(18);
     const [searchQueries, setSearchQueries] = useState<string[]>([]);
     const [nextQueryIndex, setNextQueryIndex] = useState(0);
     const [error, setError] = useState<'rate_limit' | 'general' | null>(null);
@@ -128,11 +128,11 @@ export default function JobSearchPage() {
         if (queriesToRun.length === 0) queriesToRun.push(mainQuery);
         setNextQueryIndex(1);
         setPage(1);
-        setVisibleCount(12);
+        setVisibleCount(18);
 
         const count = await runBatchSearch(queriesToRun, locationVal, true, 1);
 
-        if (count < 12 && queries.length > 1) {
+        if (count < 18 && queries.length > 1) {
             const nextBatch = queries.slice(1, 2);
             setNextQueryIndex(2);
             await runBatchSearch(nextBatch, locationVal, false, 1);
@@ -218,7 +218,7 @@ export default function JobSearchPage() {
             setSearchQueries([q]);
             setNextQueryIndex(1);
             setPage(1);
-            setVisibleCount(12);
+            setVisibleCount(18);
             await runBatchSearch([q], loc, true, 1);
         } catch (error: any) {
             console.error("Search failed", error);
@@ -236,8 +236,8 @@ export default function JobSearchPage() {
         if (loading || loadingMore) return;
         const remainingHidden = displayedJobs.length - visibleCount;
 
-        if (remainingHidden >= 12) {
-            setVisibleCount(prev => prev + 12);
+        if (remainingHidden >= 18) {
+            setVisibleCount(prev => prev + 18);
             return;
         }
 
@@ -256,7 +256,7 @@ export default function JobSearchPage() {
             }
 
             if (count > 0 || remainingHidden > 0) {
-                setVisibleCount(prev => prev + 12);
+                setVisibleCount(prev => prev + 18);
             } else {
                 alert("No more jobs found.");
             }
