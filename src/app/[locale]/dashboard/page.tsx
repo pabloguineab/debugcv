@@ -136,7 +136,7 @@ export default function DashboardPage() {
             {/* Upcoming Interview Alert Banner */}
             {upcomingInterview && (
                 <Card className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/40 dark:to-blue-950/40 border-purple-200 dark:border-purple-800 overflow-hidden">
-                    <CardContent className="p-3">
+                    <CardContent className="px-5 py-3">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             <div className="flex items-center gap-3">
                                 <div className="p-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
