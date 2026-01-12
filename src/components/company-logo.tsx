@@ -1,7 +1,6 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { Building2 } from "lucide-react";
 
 interface CompanyLogoProps {
     company: string;
@@ -76,6 +75,7 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
             'trello': 'trello.com',
             'red hat': 'redhat.com',
             'the red hat': 'redhat.com',
+            'axpe consulting': 'axpe.com',
         };
 
         if (overrides[lowerCompany]) return overrides[lowerCompany];
@@ -182,11 +182,13 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
             "rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex items-center justify-center p-1 relative",
             className
         )}>
+            <Building2 className="w-1/2 h-1/2 text-slate-300 absolute opacity-50" />
             <img
                 src={logoSrc || undefined}
                 alt={company}
-                className="w-full h-full object-contain rounded-md"
+                className="w-full h-full object-contain rounded-md relative z-10"
                 onError={handleImageError}
+                loading="lazy"
             />
         </div>
     );
