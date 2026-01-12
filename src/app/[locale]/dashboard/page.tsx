@@ -156,13 +156,20 @@ export default function DashboardPage() {
                                     <p className="text-xs text-muted-foreground">{upcomingInterview.lastActionDate}</p>
                                 </div>
                             </div>
-                            <Link href="/dashboard/interview-coach">
-                                <Button size="sm" className="gap-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg">
-                                    <Bot className="w-4 h-4" />
-                                    Warm up with AI Simulator
-                                    <ArrowRight className="w-4 h-4" />
-                                </Button>
-                            </Link>
+                            <div className="flex items-center gap-2">
+                                <Link href="/dashboard/playbooks">
+                                    <Button size="sm" variant="outline" className="gap-1.5 bg-white dark:bg-gray-800">
+                                        <FileText className="w-3.5 h-3.5" />
+                                        View Playbook
+                                    </Button>
+                                </Link>
+                                <Link href="/dashboard/interview-coach">
+                                    <Button size="sm" className="gap-1.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg">
+                                        <Bot className="w-3.5 h-3.5" />
+                                        Practice Now
+                                    </Button>
+                                </Link>
+                            </div>
                         </div>
                     </CardContent>
                 </Card>
