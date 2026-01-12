@@ -179,11 +179,11 @@ export default function DashboardPage() {
             <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
                 {/* Applications Sent */}
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 py-1.5 px-4">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 py-1 px-3">
                         <CardTitle className="text-sm font-medium">Applications Sent</CardTitle>
                         <Send className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent className="pb-2 px-4 pt-0">
+                    <CardContent className="pb-1.5 px-3 pt-0">
                         <div className="text-2xl font-bold">42</div>
                         <p className="text-xs text-muted-foreground">
                             <span className="text-green-500">+5</span> this week
@@ -193,11 +193,11 @@ export default function DashboardPage() {
 
                 {/* Active Processes */}
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 py-1.5 px-4">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 py-1 px-3">
                         <CardTitle className="text-sm font-medium">Active Processes</CardTitle>
                         <Flame className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent className="pb-2 px-4 pt-0">
+                    <CardContent className="pb-1.5 px-3 pt-0">
                         <div className="text-2xl font-bold">8</div>
                         <p className="text-xs text-muted-foreground">
                             3 waiting for reply
@@ -207,11 +207,11 @@ export default function DashboardPage() {
 
                 {/* Avg. ATS Score */}
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 py-1.5 px-4">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 py-1 px-3">
                         <CardTitle className="text-sm font-medium">Avg. ATS Score</CardTitle>
                         <Target className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent className="pb-2 px-4 pt-0">
+                    <CardContent className="pb-1.5 px-3 pt-0">
                         <div className="text-2xl font-bold">85<span className="text-lg text-muted-foreground">/100</span></div>
                         <p className="text-xs text-muted-foreground">
                             <span className="text-green-500">+12%</span> vs last month
@@ -221,11 +221,11 @@ export default function DashboardPage() {
 
                 {/* Interview Rate */}
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 py-1.5 px-4">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 py-1 px-3">
                         <CardTitle className="text-sm font-medium">Interview Rate</CardTitle>
                         <TrendingUp className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent className="pb-2 px-4 pt-0">
+                    <CardContent className="pb-1.5 px-3 pt-0">
                         <div className="text-2xl font-bold">14.5%</div>
                         <p className="text-xs text-muted-foreground">
                             <span className="text-green-500">Top 10%</span> market avg
