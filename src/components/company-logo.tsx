@@ -125,8 +125,7 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
             setHasError(false);
         } else {
             // For known companies, use Brandfetch
-            // Also use Brandfetch as default if no logo provided
-            setLogoSrc(`https://cdn.brandfetch.io/${domain}/w/400/h/400?c=1id72847284`); // Add cache buster or params if needed
+            setLogoSrc(`https://cdn.brandfetch.io/${domain}/w/400/h/400`);
             setTriedFallback(true);
             setHasError(false);
         }
@@ -163,7 +162,7 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
         }
     };
 
-    if (hasError || !logoSrc) {
+    if (hasError) {
         return (
             <div className={cn(
                 sizeClasses[size],
