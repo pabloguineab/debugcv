@@ -610,7 +610,7 @@ export default function JobSearchPage() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {displayedJobs.slice(0, visibleCount + 20).map((job, index) => (
+                            {displayedJobs.slice(0, visibleCount).map((job, index) => (
                                 <JobCard
                                     key={job.job_id}
                                     job={job}
@@ -688,11 +688,6 @@ function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds
         return Math.min(98, Math.max(65, Math.floor(score + variance)));
     }, [job, query]);
 
-    // Calculate position in valid jobs list
-    const validJobsArray = Array.from(validJobIds);
-    const myPositionInValidList = validJobsArray.indexOf(job.job_id);
-    const isWithinVisibleRange = myPositionInValidList >= 0 && myPositionInValidList < visibleCount;
-
     // Report validation status to parent (must be before any early returns to follow hooks rules)
     useEffect(() => {
         if (logoStatus === 'valid' && !validJobIds.has(job.job_id)) {
@@ -704,11 +699,6 @@ function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds
 
     // If logo failed, hide this card
     if (logoStatus === 'invalid') {
-        return null;
-    }
-
-    // If we're validated but not within visible range, hide
-    if (logoStatus === 'valid' && !isWithinVisibleRange && validJobIds.has(job.job_id)) {
         return null;
     }
 
