@@ -32,7 +32,7 @@ export default function SimulatorPage() {
 }
 
 function SimulatorContent() {
-    const [isActive, setIsActive] = useState(false);
+    const [isActive, setIsActive] = useState(true); // Start directly
     const [isMicOn, setIsMicOn] = useState(true);
     const [application, setApplication] = useState<Application | null>(null);
     const [isLoading, setIsLoading] = useState(false);
