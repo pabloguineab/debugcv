@@ -143,8 +143,8 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
         return (
             <div className={cn(
                 sizeClasses[size],
-                "rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-sm",
-                className
+                className,
+                "rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-sm"
             )}>
                 <span className={size === "sm" ? "text-xs" : size === "md" ? "text-sm" : "text-base"}>
                     {getFallbackInitials(company)}

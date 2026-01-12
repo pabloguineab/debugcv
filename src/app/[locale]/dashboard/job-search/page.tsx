@@ -641,7 +641,7 @@ function JobCard({ job, index, query }: { job: Job; index: number; query: string
                                 company={job.employer_name}
                                 logo={job.employer_logo || undefined}
                                 size="lg"
-                                className="bg-slate-100 dark:bg-slate-800 border-none shadow-none p-0"
+                                className="bg-blue-50 dark:bg-blue-900/20 border-none shadow-none p-0"
                             />
                         </div>
                         <div className="min-w-0 flex-1 pr-6">
