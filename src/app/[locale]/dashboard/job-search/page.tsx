@@ -167,7 +167,7 @@ export default function JobSearchPage() {
                 const jobs = await searchJobs(finalQ, {
                     remote_jobs_only: false,
                     date_posted: 'month',
-                    num_pages: 2,
+                    num_pages: 1,
                     page: pageNum
                 });
 
