@@ -89,9 +89,9 @@ export function AppSidebar({ user, onOpenReferModal, ...props }: AppSidebarProps
                         <SidebarMenu>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
-                                    <Link href="/dashboard" className="flex items-center gap-3 w-full my-1">
-                                        <LayoutDashboard className="size-5" />
-                                        <span className="text-base font-medium">Dashboard</span>
+                                    <Link href="/dashboard" className="flex items-center gap-3 w-full my-0.5">
+                                        <LayoutDashboard className="size-[18px]" />
+                                        <span className="text-sm font-medium">Dashboard</span>
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
@@ -107,9 +107,9 @@ export function AppSidebar({ user, onOpenReferModal, ...props }: AppSidebarProps
                             {jobsItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <Link href={item.url} className="flex items-center gap-3 w-full my-1">
-                                            <item.icon className="size-5" />
-                                            <span className="text-base font-medium">{item.title}</span>
+                                        <Link href={item.url} className="flex items-center gap-3 w-full my-0.5">
+                                            <item.icon className="size-[18px]" />
+                                            <span className="text-sm font-medium">{item.title}</span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
@@ -126,9 +126,9 @@ export function AppSidebar({ user, onOpenReferModal, ...props }: AppSidebarProps
                             {resumesItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <Link href={item.url} className="flex items-center gap-3 w-full my-1">
-                                            <item.icon className="size-5" />
-                                            <span className="text-base font-medium">{item.title}</span>
+                                        <Link href={item.url} className="flex items-center gap-3 w-full my-0.5">
+                                            <item.icon className="size-[18px]" />
+                                            <span className="text-sm font-medium">{item.title}</span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
@@ -145,9 +145,9 @@ export function AppSidebar({ user, onOpenReferModal, ...props }: AppSidebarProps
                             {interviewItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <Link href={item.url} className="flex items-center gap-3 w-full my-1">
-                                            <item.icon className="size-5" />
-                                            <span className="text-base font-medium">{item.title}</span>
+                                        <Link href={item.url} className="flex items-center gap-3 w-full my-0.5">
+                                            <item.icon className="size-[18px]" />
+                                            <span className="text-sm font-medium">{item.title}</span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
@@ -160,9 +160,9 @@ export function AppSidebar({ user, onOpenReferModal, ...props }: AppSidebarProps
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link href="#" className="flex items-center gap-3 text-blue-600 dark:text-blue-400 font-medium w-full my-1">
-                                <Gem className="size-5" />
-                                <span className="text-base">Get Expert Audit</span>
+                            <Link href="#" className="flex items-center gap-3 text-blue-600 dark:text-blue-400 font-medium w-full my-0.5">
+                                <Gem className="size-[18px]" />
+                                <span className="text-sm">Get Expert Audit</span>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -170,10 +170,10 @@ export function AppSidebar({ user, onOpenReferModal, ...props }: AppSidebarProps
                         <SidebarMenuButton asChild>
                             <div
                                 onClick={onOpenReferModal}
-                                className="flex items-center gap-3 text-green-600 dark:text-green-500 font-medium group w-full cursor-pointer my-1"
+                                className="flex items-center gap-3 text-green-600 dark:text-green-500 font-medium group w-full cursor-pointer my-0.5"
                             >
-                                <Gift className="size-5" />
-                                <span className="flex-1 text-base">Refer a Friend</span>
+                                <Gift className="size-[18px]" />
+                                <span className="flex-1 text-sm">Refer a Friend</span>
                                 <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-bold dark:bg-green-900/40 dark:text-green-400 group-data-[collapsible=icon]:hidden">
                                     -30%
                                 </span>
@@ -182,9 +182,9 @@ export function AppSidebar({ user, onOpenReferModal, ...props }: AppSidebarProps
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link href="#" className="flex items-center gap-3 w-full my-1">
-                                <Settings className="size-5" />
-                                <span className="text-base font-medium">Settings</span>
+                            <Link href="#" className="flex items-center gap-3 w-full my-0.5">
+                                <Settings className="size-[18px]" />
+                                <span className="text-sm font-medium">Settings</span>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
