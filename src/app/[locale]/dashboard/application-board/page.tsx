@@ -7,6 +7,7 @@ import type { Application, ApplicationStatus } from "@/types/application";
 import { KanbanBoard } from "@/components/application-board/kanban-board";
 import { ListView } from "@/components/application-board/list-view";
 import { AddApplicationModal } from "@/components/application-board/add-application-modal";
+import { GmailSync } from "@/components/gmail-sync";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -16,7 +17,6 @@ import {
     LayoutGrid,
     List,
     Briefcase,
-    Mail,
     ArrowRight,
 } from "lucide-react";
 
@@ -318,10 +318,22 @@ export default function ApplicationBoardPage() {
                                 </p>
                             </div>
                         </div>
-                        <Button variant="outline" size="sm" className="gap-1 border-red-200 hover:bg-red-100 dark:border-red-800 dark:hover:bg-red-900/30">
-                            <Mail className="w-3 h-3" />
-                            Connect Now
-                        </Button>
+                        <GmailSync
+                            onApplicationsImported={(apps) => {
+                                const newApplications = apps.map(app => ({
+                                    id: app.id,
+                                    userEmail: session?.user?.email || "demo@example.com",
+                                    title: app.title,
+                                    company: app.company,
+                                    location: app.location || undefined,
+                                    priority: "medium" as const,
+                                    status: "applied" as ApplicationStatus,
+                                    date: app.appliedDate,
+                                    jobUrl: app.jobUrl || undefined,
+                                }));
+                                setApplications(prev => [...prev, ...newApplications]);
+                            }}
+                        />
                     </CardContent>
                 </Card>
             </motion.div>
