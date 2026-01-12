@@ -9,8 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { CompanyLogo } from "@/components/company-logo";
-import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { ModeToggle } from "@/components/mode-toggle";
 import {
     Zap,
     Calendar,
@@ -24,7 +22,6 @@ import {
     Brain,
     MessageSquare,
     Bot,
-    Home,
 } from "lucide-react";
 import { Link } from "@/i18n/routing";
 
@@ -114,43 +111,17 @@ export default function AISimulatorPage() {
 
     return (
         <div className="flex-1 space-y-6">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <Breadcrumb>
-                    <BreadcrumbList>
-                        <BreadcrumbItem>
-                            <BreadcrumbLink render={<Link href="/dashboard" />}>
-                                <Home className="h-4 w-4" />
-                                Home
-                            </BreadcrumbLink>
-                        </BreadcrumbItem>
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem>
-                            <BreadcrumbLink render={<Link href="/dashboard" />}>
-                                Dashboard
-                            </BreadcrumbLink>
-                        </BreadcrumbItem>
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem>
-                            <BreadcrumbPage>AI Simulator</BreadcrumbPage>
-                        </BreadcrumbItem>
-                    </BreadcrumbList>
-                </Breadcrumb>
-                <ModeToggle />
-            </div>
 
             {/* Title Section */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl">
-                            <Bot className="h-6 w-6 text-white" />
-                        </div>
-                        <div>
-                            <h1 className="text-2xl font-bold tracking-tight">AI Interview Simulator</h1>
-                            <p className="text-muted-foreground">Practice with AI-powered interview simulations</p>
-                        </div>
-                    </div>
+                    <h1 className="text-2xl font-bold flex items-center gap-2">
+                        <Bot className="w-6 h-6 text-purple-600" />
+                        AI Simulator
+                    </h1>
+                    <p className="text-sm text-muted-foreground mt-1">
+                        Practice with AI-powered interview simulations
+                    </p>
                 </div>
             </div>
 
