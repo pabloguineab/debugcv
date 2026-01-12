@@ -127,22 +127,22 @@ export function DashboardRadialChart() {
             <CardContent className="flex-1 pb-0">
                 <ChartContainer
                     config={radialConfig}
-                    className="mx-auto h-[150px]"
+                    className="mx-auto h-[130px]"
                 >
                     <RadialBarChart
                         data={radialData}
                         endAngle={(72 / 100) * 360}
-                        innerRadius={70}
-                        outerRadius={105}
+                        innerRadius={55}
+                        outerRadius={85}
                         startAngle={0}
-                        barSize={12}
+                        barSize={10}
                     >
                         <PolarGrid
                             gridType="circle"
                             radialLines={false}
                             stroke="none"
                             className="first:fill-muted last:fill-background"
-                            polarRadius={[76, 64]}
+                            polarRadius={[62, 52]}
                         />
                         <RadialBar dataKey="value" background cornerRadius={10} fill={BLUE_PRIMARY} />
                         <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
