@@ -688,7 +688,7 @@ function JobCard({ job, index, query }: { job: Job; index: number; query: string
                         rel="noopener noreferrer"
                         className={cn(
                             buttonVariants({ variant: providerInfo.variant as any }),
-                            `h-11 rounded-lg font-bold shadow-sm transition-all hover:shadow-md flex-[3] ${providerInfo.buttonClass}`
+                            `h-11 rounded-lg font-bold shadow-sm transition-all hover:shadow-md flex-[2] ${providerInfo.buttonClass}`
                         )}
                     >
                         Apply on {providerInfo.name}
