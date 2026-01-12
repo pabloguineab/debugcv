@@ -107,23 +107,34 @@ export default function ApplicationBoardPage() {
     const [selectedApp, setSelectedApp] = useState<Application | null>(null);
 
     useEffect(() => {
-        // For now, use demo data
-        // In production, fetch from API
         const loadApplications = async () => {
             setIsLoading(true);
             try {
-                // Simulating API call
-                await new Promise(resolve => setTimeout(resolve, 500));
-                setApplications(DEMO_APPLICATIONS);
+                const response = await fetch('/api/applications');
+                if (response.ok) {
+                    const data = await response.json();
+                    setApplications(data);
+                } else {
+                    console.error("Failed to load applications");
+                    // Fallback to demo data if not logged in or API fails
+                    setApplications(DEMO_APPLICATIONS);
+                }
             } catch (error) {
                 console.error("Error loading applications:", error);
+                setApplications(DEMO_APPLICATIONS);
             } finally {
                 setIsLoading(false);
             }
         };
 
-        loadApplications();
-    }, []);
+        if (authStatus === 'authenticated') {
+            loadApplications();
+        } else if (authStatus === 'unauthenticated') {
+            // Show demo data for non-logged in users
+            setApplications(DEMO_APPLICATIONS);
+            setIsLoading(false);
+        }
+    }, [authStatus]);
 
     const handleEdit = (app: Application) => {
         setSelectedApp(app);
@@ -131,37 +142,98 @@ export default function ApplicationBoardPage() {
     };
 
     const handleAddApplication = async (newApp: Partial<Application>) => {
-        const app: Application = {
-            id: crypto.randomUUID(),
-            userEmail: session?.user?.email || "demo@example.com",
-            title: newApp.title || "",
-            company: newApp.company || "",
-            priority: newApp.priority || "medium",
-            status: newApp.status || "wishlist",
-            date: new Date().toISOString(),
-            ...newApp,
-        };
+        try {
+            const response = await fetch('/api/applications', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newApp),
+            });
 
-        setApplications(prev => [...prev, app]);
+            if (response.ok) {
+                const savedApp = await response.json();
+                setApplications(prev => [savedApp, ...prev]);
+            } else {
+                // Fallback to local state for demo
+                const app: Application = {
+                    id: crypto.randomUUID(),
+                    userEmail: session?.user?.email || "demo@example.com",
+                    title: newApp.title || "",
+                    company: newApp.company || "",
+                    priority: newApp.priority || "medium",
+                    status: newApp.status || "wishlist",
+                    date: new Date().toISOString(),
+                    ...newApp,
+                };
+                setApplications(prev => [app, ...prev]);
+            }
+        } catch (error) {
+            console.error("Error adding application:", error);
+        }
         setIsModalOpen(false);
     };
 
     const handleUpdateApplication = async (id: string, updates: Partial<Application>) => {
-        setApplications(prev =>
-            prev.map(app => app.id === id ? { ...app, ...updates } : app)
-        );
+        try {
+            const response = await fetch(`/api/applications/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updates),
+            });
+
+            if (response.ok) {
+                const updatedApp = await response.json();
+                setApplications(prev =>
+                    prev.map(app => app.id === id ? updatedApp : app)
+                );
+            } else {
+                // Fallback to local state
+                setApplications(prev =>
+                    prev.map(app => app.id === id ? { ...app, ...updates } : app)
+                );
+            }
+        } catch (error) {
+            console.error("Error updating application:", error);
+            setApplications(prev =>
+                prev.map(app => app.id === id ? { ...app, ...updates } : app)
+            );
+        }
         setIsModalOpen(false);
     };
 
     const handleDeleteApplication = async (id: string) => {
-        setApplications(prev => prev.filter(app => app.id !== id));
+        try {
+            const response = await fetch(`/api/applications/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                setApplications(prev => prev.filter(app => app.id !== id));
+            } else {
+                // Fallback to local state
+                setApplications(prev => prev.filter(app => app.id !== id));
+            }
+        } catch (error) {
+            console.error("Error deleting application:", error);
+            setApplications(prev => prev.filter(app => app.id !== id));
+        }
         setIsModalOpen(false);
     };
 
-    const handleStatusChange = (id: string, newStatus: ApplicationStatus) => {
+    const handleStatusChange = async (id: string, newStatus: ApplicationStatus) => {
+        // Optimistic update
         setApplications(prev =>
             prev.map(app => app.id === id ? { ...app, status: newStatus } : app)
         );
+
+        try {
+            await fetch(`/api/applications/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus }),
+            });
+        } catch (error) {
+            console.error("Error updating application status:", error);
+        }
     };
 
     if (isLoading) {

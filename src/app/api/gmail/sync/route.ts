@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { addApplication, getApplications } from "@/lib/supabase";
 
 interface ParsedApplication {
     id: string;
@@ -50,7 +51,10 @@ export async function POST() {
 
         console.log(`[Gmail Sync] Found ${messages.length} emails matching query`);
 
+        // Get existing applications to check for duplicates
+        const existingApplications = await getApplications(userEmail!);
         const importedApplications: ParsedApplication[] = [];
+        let savedCount = 0;
 
         for (const message of messages) {
             try {
@@ -106,23 +110,45 @@ export async function POST() {
 
                 console.log(`[Gmail Sync] ✅ Parsed - Role: "${parsedData.role}", Company: "${parsedData.company}"`);
 
-                // Check for duplicates in memory
-                const isDuplicate = importedApplications.some(app =>
-                    app.company === parsedData.company &&
-                    app.title === parsedData.role
+                // Check for duplicates in existing DB records
+                const isDuplicateInDB = existingApplications.some(app =>
+                    app.company.toLowerCase() === parsedData.company.toLowerCase() &&
+                    app.title.toLowerCase() === parsedData.role.toLowerCase()
                 );
 
-                if (!isDuplicate) {
-                    importedApplications.push({
-                        id: message.id,
+                // Check for duplicates in current batch
+                const isDuplicateInBatch = importedApplications.some(app =>
+                    app.company.toLowerCase() === parsedData.company.toLowerCase() &&
+                    app.title.toLowerCase() === parsedData.role.toLowerCase()
+                );
+
+                if (!isDuplicateInDB && !isDuplicateInBatch) {
+                    // Save to database
+                    const savedApp = await addApplication({
+                        userEmail: userEmail!,
                         title: parsedData.role,
                         company: parsedData.company,
-                        location: parsedData.location,
-                        jobUrl: parsedData.jobUrl,
+                        location: parsedData.location || undefined,
+                        jobUrl: parsedData.jobUrl || undefined,
+                        priority: 'medium',
+                        status: 'applied',
                         appliedDate: new Date(Number(internalDate)).toISOString(),
-                        status: "applied"
+                        notes: "Auto-imported from Gmail",
                     });
-                    console.log(`[Gmail Sync] ➕ Imported: ${parsedData.role} at ${parsedData.company}`);
+
+                    if (savedApp) {
+                        importedApplications.push({
+                            id: savedApp.id,
+                            title: parsedData.role,
+                            company: parsedData.company,
+                            location: parsedData.location,
+                            jobUrl: parsedData.jobUrl,
+                            appliedDate: new Date(Number(internalDate)).toISOString(),
+                            status: "applied"
+                        });
+                        savedCount++;
+                        console.log(`[Gmail Sync] ➕ Saved to DB: ${parsedData.role} at ${parsedData.company}`);
+                    }
                 } else {
                     console.log(`[Gmail Sync] ⏭️ Duplicate, skipping`);
                 }
@@ -134,10 +160,10 @@ export async function POST() {
 
         return NextResponse.json({
             success: true,
-            imported: importedApplications.length,
+            imported: savedCount,
             applications: importedApplications,
             userEmail,
-            message: `Sincronizado: ${importedApplications.length} nuevas aplicaciones encontradas.`
+            message: `Sincronizado: ${savedCount} nuevas aplicaciones importadas.`
         });
 
     } catch (error) {
