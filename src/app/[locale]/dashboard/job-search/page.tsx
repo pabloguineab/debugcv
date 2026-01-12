@@ -396,25 +396,25 @@ export default function JobSearchPage() {
                     <Button
                         variant="outline"
                         onClick={handleImportClick}
-                        className="h-11 px-6 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium"
+                        className="h-10 px-4 font-medium"
                     >
-                        <Upload className="w-4 h-4 mr-2 text-slate-500" />
+                        <Upload className="w-4 h-4 mr-2" />
                         Import CV
                     </Button>
 
                     <Button
                         onClick={handleAnalyzeCV}
                         disabled={loading || analyzingCv}
-                        className="h-11 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md shadow-blue-500/20 border-0 font-medium"
+                        className="h-10 px-4 font-medium nav-button-gradient text-white border-0"
                     >
                         {analyzingCv ? (
                             <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                                <Spinner className="h-4 w-4 text-white" />
                                 Analyzing...
                             </div>
                         ) : (
                             <div className="flex items-center gap-2">
-                                <Sparkles className="w-4 h-4 text-yellow-200" />
+                                <Sparkles className="w-4 h-4" />
                                 Auto-Match with AI
                             </div>
                         )}
@@ -422,75 +422,78 @@ export default function JobSearchPage() {
                 </div>
             </div>
 
-            {/* Aesthetic Search Bar */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl shadow-slate-200/40 dark:shadow-slate-950/40 border border-slate-100 dark:border-slate-800 p-2 flex flex-col md:flex-row md:items-center gap-2 transition-all focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900/30">
-
-                {/* Query Input */}
-                <div className="flex-1 flex items-center px-4 h-12 md:h-14 bg-transparent">
-                    <Search className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
+            {/* Standardized Search Group */}
+            <div className="flex w-full items-center">
+                {/* Job Title Input */}
+                <div className="relative flex-1 z-0">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10 pointer-events-none">
+                        <Search className="w-4 h-4" />
+                    </div>
                     <Input
                         placeholder="Job title, keywords, or company"
-                        className="border-0 shadow-none focus-visible:ring-0 px-0 h-full text-base bg-transparent placeholder:text-slate-400"
+                        className="pl-9 h-11 rounded-r-none border-r-0 focus-visible:ring-1 focus-visible:ring-ring focus-visible:z-10"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                     />
                     {query && (
-                        <button onClick={() => setQuery('')} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-400">
-                            <X className="w-4 h-4" />
+                        <button
+                            onClick={() => setQuery('')}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-muted rounded-full text-muted-foreground z-20"
+                        >
+                            <X className="w-3 h-3" />
                         </button>
                     )}
                 </div>
 
-                {/* Divider (Desktop) */}
-                <div className="hidden md:block w-px h-8 bg-slate-200 dark:bg-slate-700 mx-1" />
-                {/* Divider (Mobile) */}
-                <div className="md:hidden h-px w-full bg-slate-100 dark:bg-slate-800" />
-
                 {/* Location Input */}
-                <div className="flex-1 flex items-center px-4 h-12 md:h-14 bg-transparent">
-                    <MapPin className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
+                <div className="relative flex-1 z-0 -ml-px">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10 pointer-events-none">
+                        <MapPin className="w-4 h-4" />
+                    </div>
                     <Input
-                        placeholder="Location (City, Country)"
-                        className="border-0 shadow-none focus-visible:ring-0 px-0 h-full text-base bg-transparent placeholder:text-slate-400"
+                        placeholder="Location"
+                        className="pl-9 h-11 rounded-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:z-10"
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                     />
                     {location && (
-                        <button onClick={() => setLocation('')} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-400">
-                            <X className="w-4 h-4" />
+                        <button
+                            onClick={() => setLocation('')}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-muted rounded-full text-muted-foreground z-20"
+                        >
+                            <X className="w-3 h-3" />
                         </button>
                     )}
                 </div>
 
-                <div className="flex items-center gap-2 p-1">
-                    {/* Remote Toggle */}
-                    <Button
-                        variant="ghost"
-                        onClick={() => setIsRemote(!isRemote)}
-                        className={`h-12 px-4 rounded-xl font-medium transition-colors ${isRemote
-                            ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-400'
-                            : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 dark:text-slate-400'
-                            }`}
-                    >
-                        <Globe className={`w-4 h-4 mr-2 ${isRemote ? 'text-emerald-500' : 'text-slate-400'}`} />
-                        Remote
-                    </Button>
+                {/* Remote Button (Optional, integrated?) Or Keep separate? User asked for Dual. 
+                I'll keep remote as a separate toggle outside or integrated?
+                User said: "QUE TENGA PARA LA LOCATION Y PARA JOB TITLE".
+                I'll put Remote toggle as a small button inside the group or next to it?
+                Let's put it inside as a toggle button.
+            */}
+                <Button
+                    variant="outline"
+                    onClick={() => setIsRemote(!isRemote)}
+                    className={cn(
+                        "h-11 rounded-none border-l-0 -ml-px px-4 font-medium z-0 focus-visible:z-10 focus-visible:ring-1 focus-visible:ring-ring",
+                        isRemote && "bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-950/30"
+                    )}
+                >
+                    <Globe className={cn("w-4 h-4 mr-2", isRemote ? "text-emerald-500" : "text-muted-foreground")} />
+                    <span className="hidden sm:inline">Remote</span>
+                </Button>
 
-                    {/* Search Button */}
-                    <Button
-                        onClick={() => handleSearch()}
-                        disabled={loading}
-                        className="h-12 px-8 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold shadow-lg shadow-slate-900/20 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 min-w-[120px]"
-                    >
-                        {loading ? (
-                            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white dark:border-slate-900/30 dark:border-t-slate-900" />
-                        ) : (
-                            "Search"
-                        )}
-                    </Button>
-                </div>
+                {/* Search Button */}
+                <Button
+                    onClick={() => handleSearch()}
+                    disabled={loading}
+                    className="h-11 rounded-l-none px-8 font-medium z-0 -ml-px"
+                >
+                    {loading ? <Spinner className="w-4 h-4 text-white" /> : "Search"}
+                </Button>
             </div>
 
             {/* Results Area */}
