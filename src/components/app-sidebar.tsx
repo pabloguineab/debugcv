@@ -188,14 +188,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                             </div>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                            <Link href="#" className="flex items-center gap-3 w-full my-0.5">
-                                <Settings className="size-[18px]" />
-                                <span className="text-sm font-medium">Settings</span>
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
+
                     <SidebarMenuItem className="mt-4">
                         <DropdownMenu>
                             <DropdownMenuTrigger
