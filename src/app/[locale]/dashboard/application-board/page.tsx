@@ -309,14 +309,7 @@ export default function ApplicationBoardPage() {
                     <CardContent className="flex items-center justify-between p-4">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-                                <svg className="w-6 h-6" viewBox="0 0 24 24">
-                                    <path d="M22 6V18C22 19.1 21.1 20 20 20H18V9.24L12 13.5L6 9.24V20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4H4.5L12 9.5L19.5 4L20 4C21.1 4 22 4.9 22 6Z" fill="#EA4335" />
-                                    <path d="M6 20V9.24L2 6V18C2 19.1 2.9 20 4 20H6Z" fill="#4285F4" />
-                                    <path d="M18 20V9.24L22 6V18C22 19.1 21.1 20 20 20H18Z" fill="#34A853" />
-                                    <path d="M18 9.24V5.47L22 6V9.24L18 9.24Z" fill="#FBBC04" />
-                                    <path d="M6 9.24V5.47L2 6V9.24L6 9.24Z" fill="#C5221F" />
-                                    <path d="M12 13.5L6 9.24V5.47L12 9.5L18 5.47V9.24L12 13.5Z" fill="#EA4335" />
-                                </svg>
+                                <img src="/gmail.svg" alt="Gmail" className="w-6 h-6" />
                             </div>
                             <div>
                                 <p className="font-medium text-sm">Sync with Gmail</p>
