@@ -25,11 +25,11 @@ export function DashboardLayoutClient({ children, user }: DashboardLayoutClientP
                 <DashboardHeader />
                 <div className="flex flex-1 flex-col gap-4 p-4 relative min-h-[calc(100vh-4rem)]">
                     {children}
-                    <ReferFriendModal
-                        open={isReferModalOpen}
-                        onClose={() => setIsReferModalOpen(false)}
-                    />
                 </div>
+                <ReferFriendModal
+                    open={isReferModalOpen}
+                    onClose={() => setIsReferModalOpen(false)}
+                />
             </SidebarInset>
         </SidebarProvider>
     );
