@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { X, Upload, FileText, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +22,7 @@ export function UploadResumeModal({
     const [isDragging, setIsDragging] = useState(false);
     const [file, setFile] = useState<File | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [termsAccepted, setTermsAccepted] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
 
@@ -29,6 +32,7 @@ export function UploadResumeModal({
             setTimeout(() => {
                 setFile(null);
                 setError(null);
+                setTermsAccepted(false);
                 setIsUploading(false);
                 setIsSuccess(false);
             }, 300);
@@ -226,18 +230,37 @@ export function UploadResumeModal({
                                     </div>
                                 )}
 
+                                <div className="flex items-start gap-3 px-1">
+                                    <Checkbox
+                                        id="terms"
+                                        checked={termsAccepted}
+                                        onCheckedChange={(checked) => setTermsAccepted(checked as boolean)}
+                                    />
+                                    <div className="grid gap-1.5 leading-none">
+                                        <Label
+                                            htmlFor="terms"
+                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                        >
+                                            Accept terms and conditions
+                                        </Label>
+                                        <p className="text-sm text-muted-foreground">
+                                            By clicking this checkbox, you agree to the terms and conditions.
+                                        </p>
+                                    </div>
+                                </div>
+
                                 <div className="flex justify-end gap-3">
                                     <Button variant="outline" onClick={onClose} disabled={isUploading}>
                                         Cancel
                                     </Button>
-                                    <Button onClick={handleUpload} disabled={!file || isUploading}>
+                                    <Button onClick={handleUpload} disabled={!file || !termsAccepted || isUploading}>
                                         {isUploading ? (
                                             <>
                                                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                                Uploading...
+                                                Sending...
                                             </>
                                         ) : (
-                                            "Upload Resume"
+                                            "Send Resume"
                                         )}
                                     </Button>
                                 </div>
