@@ -669,21 +669,19 @@ function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds
     const myPositionInValidList = validJobsArray.indexOf(job.job_id);
     const isWithinVisibleRange = myPositionInValidList >= 0 && myPositionInValidList < visibleCount;
 
-    // If logo failed, hide this card and report to parent
-    if (logoStatus === 'invalid') {
-        // Report invalid only once
-        if (!invalidJobIds?.has?.(job.job_id)) {
-            onJobValidated(job.job_id, false);
-        }
-        return null;
-    }
-
-    // If logo is valid, report to parent
+    // Report validation status to parent (must be before any early returns to follow hooks rules)
     useEffect(() => {
         if (logoStatus === 'valid' && !validJobIds.has(job.job_id)) {
             onJobValidated(job.job_id, true);
+        } else if (logoStatus === 'invalid' && !invalidJobIds.has(job.job_id)) {
+            onJobValidated(job.job_id, false);
         }
-    }, [logoStatus, job.job_id, validJobIds, onJobValidated]);
+    }, [logoStatus, job.job_id, validJobIds, invalidJobIds, onJobValidated]);
+
+    // If logo failed, hide this card
+    if (logoStatus === 'invalid') {
+        return null;
+    }
 
     // If we're validated but not within visible range, hide
     if (logoStatus === 'valid' && !isWithinVisibleRange && validJobIds.has(job.job_id)) {
