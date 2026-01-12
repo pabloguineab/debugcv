@@ -61,7 +61,9 @@ export default function AISimulatorPage() {
             if (response.ok) {
                 const data = await response.json();
                 // Filter only applications with status "interview"
-                const interviews = (data.applications || []).filter(
+                // The API returns an array directly
+                const apps = Array.isArray(data) ? data : (data.applications || []);
+                const interviews = apps.filter(
                     (app: Application) => app.status === "interview"
                 );
                 setApplications(interviews);
@@ -290,7 +292,7 @@ export default function AISimulatorPage() {
                                                         </div>
                                                     </div>
 
-                                                    <Link href={`/dashboard/playbooks?jobId=${app.id}`}>
+                                                    <Link href={`/dashboard/interview-coach/simulator?jobId=${app.id}`}>
                                                         <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-md hover:shadow-lg transition-all">
                                                             <Sparkles className="w-4 h-4 mr-2" />
                                                             Start Simulation
