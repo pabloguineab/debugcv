@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { Building2 } from "lucide-react";
 
 interface CompanyLogoProps {
     company: string;
@@ -159,11 +160,13 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
             "rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden flex items-center justify-center p-1 relative",
             className
         )}>
+            <Building2 className="absolute w-1/2 h-1/2 text-slate-300 dark:text-slate-600 opacity-50" />
             <img
                 src={logoSrc || undefined}
                 alt={company}
-                className="w-full h-full object-contain rounded-md"
+                className="w-full h-full object-contain rounded-md relative z-10"
                 onError={handleImageError}
+                loading="lazy"
             />
         </div>
     );
