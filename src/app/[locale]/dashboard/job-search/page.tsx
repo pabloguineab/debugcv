@@ -258,9 +258,10 @@ export default function JobSearchPage() {
             let attempts = 0;
             let localNextQueryIndex = nextQueryIndex;
             let localPage = page;
-            const MAX_ATTEMPTS = 3;
+            const MAX_ATTEMPTS = 5;
+            const targetNewFetchedJobs = Math.max(1, 18 - remainingHidden);
 
-            while (jobsFound === 0 && attempts < MAX_ATTEMPTS) {
+            while (jobsFound < targetNewFetchedJobs && attempts < MAX_ATTEMPTS) {
                 attempts++;
                 let count = 0;
 
