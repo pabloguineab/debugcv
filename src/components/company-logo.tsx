@@ -103,18 +103,34 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
 
     const domain = getDomain();
 
+    const [currentProviderIndex, setCurrentProviderIndex] = useState(0);
+
     useEffect(() => {
-        // Try Brandfetch first for high quality logos (same as Playbook)
-        setLogoSrc(`https://cdn.brandfetch.io/${domain}/w/400/h/400`);
-        setTriedFallback(true);
+        // Reset state when company changes
+        setCurrentProviderIndex(0);
         setHasError(false);
+        // Start with Brandfetch
+        setLogoSrc(`https://cdn.brandfetch.io/${domain}/w/400/h/400`);
     }, [logo, company, website, domain]);
 
     const handleImageError = () => {
-        // If Brandfetch failed, try the provided logo from API
-        if (logo && logoSrc !== logo) {
+        // Waterfall strategy: Brandfetch -> Clearbit -> Google -> API Logo -> Initials
+        const nextIndex = currentProviderIndex + 1;
+
+        if (nextIndex === 1) {
+            // Try Clearbit
+            setCurrentProviderIndex(1);
+            setLogoSrc(`https://logo.clearbit.com/${domain}`);
+        } else if (nextIndex === 2) {
+            // Try Google Favicon
+            setCurrentProviderIndex(2);
+            setLogoSrc(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`);
+        } else if (nextIndex === 3 && logo && logo !== logoSrc) {
+            // Try original API logo if available
+            setCurrentProviderIndex(3);
             setLogoSrc(logo);
         } else {
+            // All failed
             setHasError(true);
         }
     };
