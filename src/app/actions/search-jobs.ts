@@ -82,7 +82,7 @@ export async function searchJobs(
                 'X-RapidAPI-Key': RAPIDAPI_KEY,
                 'X-RapidAPI-Host': RAPIDAPI_HOST
             },
-            next: { revalidate: 0 }
+            cache: 'no-store'
         });
 
         if (!response.ok) {
