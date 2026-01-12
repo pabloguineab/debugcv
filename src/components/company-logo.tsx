@@ -179,7 +179,7 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
     return (
         <div className={cn(
             sizeClasses[size],
-            "rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden flex items-center justify-center p-1 relative",
+            "rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex items-center justify-center p-1 relative",
             className
         )}>
             <img
