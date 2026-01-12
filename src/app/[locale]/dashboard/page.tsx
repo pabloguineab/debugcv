@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DashboardLineChart, DashboardRadarChart, DashboardRadialChart } from "./components/dashboard-charts";
 import { Link } from "@/i18n/routing";
+import { CompanyLogo } from "@/components/company-logo";
 
 // Mock data for recent applications
 const recentApplications = [
@@ -268,14 +269,7 @@ export default function DashboardPage() {
                                     <TableRow key={app.id} className={app.isUrgent ? "bg-purple-50/50 dark:bg-purple-950/20" : ""}>
                                         <TableCell>
                                             <div className="flex items-center gap-3">
-                                                <img
-                                                    src={app.logo}
-                                                    alt={app.company}
-                                                    className="w-8 h-8 rounded-lg object-contain bg-white border"
-                                                    onError={(e) => {
-                                                        e.currentTarget.src = `https://ui-avatars.com/api/?name=${app.company}&background=3b82f6&color=fff&size=32`;
-                                                    }}
-                                                />
+                                                <CompanyLogo company={app.company} logo={app.logo} size="sm" />
                                                 <div>
                                                     <p className="font-medium">{app.role}</p>
                                                     <p className="text-xs text-muted-foreground">@ {app.company}</p>
