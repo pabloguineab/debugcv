@@ -684,27 +684,25 @@ function JobCard({ job, index, query }: { job: Job; index: number; query: string
                     </div>
                 </CardContent>
 
-                <CardFooter className="p-4 pt-0 mt-auto border-t bg-muted/20 dark:bg-muted/10">
-                    <div className="flex items-center gap-3 w-full mt-4">
-                        <a
-                            href={job.job_apply_link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={cn(
-                                buttonVariants({ variant: providerInfo.variant as any }),
-                                `flex-1 ${providerInfo.buttonClass}`
-                            )}
-                        >
-                            Apply on {providerInfo.name}
-                        </a>
+                <CardFooter className="p-4 pt-4 mt-auto border-t bg-slate-50/50 dark:bg-slate-900/20 flex items-center justify-between gap-4">
+                    <a
+                        href={job.job_apply_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cn(
+                            buttonVariants({ variant: providerInfo.variant as any }),
+                            `h-11 px-6 rounded-lg font-bold shadow-sm transition-all hover:shadow-md ${providerInfo.buttonClass}`
+                        )}
+                    >
+                        Apply on {providerInfo.name}
+                    </a>
 
-                        <div className={cn(
-                            "flex flex-col items-center justify-center h-10 w-14 rounded-md border text-center shrink-0",
-                            scoreColor
-                        )}>
-                            <span className="text-sm font-bold leading-none">{matchScore}%</span>
-                            <span className="text-[9px] uppercase font-bold opacity-80 leading-none mt-0.5">Match</span>
-                        </div>
+                    <div className={cn(
+                        "flex flex-col items-center justify-center h-11 w-14 rounded-lg border text-center shrink-0 bg-white dark:bg-slate-800 shadow-sm",
+                        scoreColor
+                    )}>
+                        <span className="text-sm font-bold leading-none">{matchScore}%</span>
+                        <span className="text-[9px] uppercase font-bold opacity-80 leading-none mt-0.5">Match</span>
                     </div>
                 </CardFooter>
             </Card>
