@@ -172,13 +172,13 @@ export default function DashboardPage() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 {/* Applications Sent */}
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Applications Sent</CardTitle>
-                        <Send className="h-4 w-4 text-muted-foreground" />
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 pb-1">
+                        <CardTitle className="text-xs font-medium">Applications Sent</CardTitle>
+                        <Send className="h-3.5 w-3.5 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">42</div>
-                        <p className="text-xs text-muted-foreground">
+                    <CardContent className="p-3 pt-0">
+                        <div className="text-xl font-bold">42</div>
+                        <p className="text-[10px] text-muted-foreground">
                             <span className="text-green-500">+5</span> this week
                         </p>
                     </CardContent>
@@ -186,13 +186,13 @@ export default function DashboardPage() {
 
                 {/* Active Processes */}
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Active Processes</CardTitle>
-                        <Flame className="h-4 w-4 text-muted-foreground" />
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 pb-1">
+                        <CardTitle className="text-xs font-medium">Active Processes</CardTitle>
+                        <Flame className="h-3.5 w-3.5 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">8</div>
-                        <p className="text-xs text-muted-foreground">
+                    <CardContent className="p-3 pt-0">
+                        <div className="text-xl font-bold">8</div>
+                        <p className="text-[10px] text-muted-foreground">
                             3 waiting for reply
                         </p>
                     </CardContent>
@@ -200,13 +200,13 @@ export default function DashboardPage() {
 
                 {/* Avg. ATS Score */}
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Avg. ATS Score</CardTitle>
-                        <Target className="h-4 w-4 text-muted-foreground" />
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 pb-1">
+                        <CardTitle className="text-xs font-medium">Avg. ATS Score</CardTitle>
+                        <Target className="h-3.5 w-3.5 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">85<span className="text-lg text-muted-foreground">/100</span></div>
-                        <p className="text-xs text-muted-foreground">
+                    <CardContent className="p-3 pt-0">
+                        <div className="text-xl font-bold">85<span className="text-sm text-muted-foreground">/100</span></div>
+                        <p className="text-[10px] text-muted-foreground">
                             <span className="text-green-500">+12%</span> vs last month
                         </p>
                     </CardContent>
@@ -214,13 +214,13 @@ export default function DashboardPage() {
 
                 {/* Interview Rate */}
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Interview Rate</CardTitle>
-                        <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 pb-1">
+                        <CardTitle className="text-xs font-medium">Interview Rate</CardTitle>
+                        <TrendingUp className="h-3.5 w-3.5 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">14.5%</div>
-                        <p className="text-xs text-muted-foreground">
+                    <CardContent className="p-3 pt-0">
+                        <div className="text-xl font-bold">14.5%</div>
+                        <p className="text-[10px] text-muted-foreground">
                             <span className="text-green-500">Top 10%</span> market avg
                         </p>
                     </CardContent>
