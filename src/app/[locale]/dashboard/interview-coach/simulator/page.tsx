@@ -164,13 +164,13 @@ function SimulatorContent() {
             </header>
 
             {/* Main Content */}
-            <main className="relative z-10 h-screen flex flex-col items-center justify-center p-6 pt-36 md:pt-24 pb-32">
+            <main className="relative z-10 min-h-screen flex flex-col items-center justify-center p-4 pt-20 pb-24">
 
                 {/* Avatar Container */}
                 <motion.div
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="relative w-full max-w-5xl aspect-video bg-gray-100 dark:bg-slate-900/80 rounded-3xl overflow-hidden border border-gray-200 dark:border-slate-800 shadow-2xl backdrop-blur-sm"
+                    className="relative w-full max-w-4xl aspect-video bg-gray-100 dark:bg-slate-900/80 rounded-2xl overflow-hidden border border-gray-200 dark:border-slate-800 shadow-2xl backdrop-blur-sm"
                 >
                     {/* Iframe (loads when isActive = true) */}
                     {isActive && (
