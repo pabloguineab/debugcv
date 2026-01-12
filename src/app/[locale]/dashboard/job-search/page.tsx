@@ -167,7 +167,7 @@ export default function JobSearchPage() {
                 const jobs = await searchJobs(finalQ, {
                     remote_jobs_only: false,
                     date_posted: 'month',
-                    num_pages: 1,
+                    num_pages: 2,
                     page: pageNum
                 });
 
@@ -354,7 +354,7 @@ export default function JobSearchPage() {
                     <Button
                         variant="outline"
                         onClick={handleImportClick}
-                        className="h-10 px-4 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
+                        className="h-11 px-6 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium"
                     >
                         <Upload className="w-4 h-4 mr-2 text-slate-500" />
                         Import CV
@@ -363,7 +363,7 @@ export default function JobSearchPage() {
                     <Button
                         onClick={handleAnalyzeCV}
                         disabled={loading || analyzingCv}
-                        className="h-10 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md shadow-blue-500/20 border-0"
+                        className="h-11 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md shadow-blue-500/20 border-0 font-medium"
                     >
                         {analyzingCv ? (
                             <div className="flex items-center gap-2">
