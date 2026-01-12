@@ -104,35 +104,16 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
     const domain = getDomain();
 
     useEffect(() => {
-        const lowerCompany = company.toLowerCase().trim();
-        const knownCompanies = [
-            'vercel', 'stripe', 'figma', 'linear', 'notion', 'google', 'amazon', 'microsoft',
-            'meta', 'facebook', 'apple', 'netflix', 'uber', 'airbnb', 'twitter', 'x', 'tesla',
-            'ibm', 'oracle', 'salesforce', 'adobe', 'intel', 'nvidia', 'spotify', 'slack',
-            'atlassian', 'dropbox', 'github', 'gitlab', 'shopify', 'zoom', 'lyft', 'pinterest',
-            'reddit', 'tiktok', 'snap', 'snapchat', 'linkedin', 'indeed', 'paypal', 'square',
-            'coinbase', 'robinhood', 'cloudflare', 'mongodb', 'datadog', 'twilio', 'hubspot',
-            'asana', 'monday', 'trello',
-        ];
-
-        const isKnownCompany = knownCompanies.includes(lowerCompany);
-
-        if (logo && !isKnownCompany) {
-            setLogoSrc(logo);
-            setTriedFallback(false);
-            setHasError(false);
-        } else {
-            // For known companies, use Brandfetch
-            setLogoSrc(`https://cdn.brandfetch.io/${domain}/w/400/h/400`);
-            setTriedFallback(true);
-            setHasError(false);
-        }
+        // Try Clearbit first for high quality logos
+        setLogoSrc(`https://logo.clearbit.com/${domain}`);
+        setTriedFallback(true);
+        setHasError(false);
     }, [logo, company, website, domain]);
 
     const handleImageError = () => {
-        if (logo && !triedFallback) {
-            setLogoSrc(`https://cdn.brandfetch.io/${domain}/w/400/h/400`);
-            setTriedFallback(true);
+        // If Clearbit failed, try the provided logo from API
+        if (logo && logoSrc !== logo) {
+            setLogoSrc(logo);
         } else {
             setHasError(true);
         }
