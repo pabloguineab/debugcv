@@ -76,25 +76,49 @@ export default function JobSearchPage() {
         }
     }, [jobs, isRemote]);
 
-    // Auto-fetch more jobs if we don't have enough valid ones
-    useEffect(() => {
-        const pendingValidation = displayedJobs.filter(
-            j => !validJobIds.has(j.job_id) && !invalidJobIds.has(j.job_id)
-        ).length;
+    // Auto-search on page load using user's CV criteria
+    const hasAutoSearched = React.useRef(false);
 
-        // If we need more jobs and all current ones are validated
-        if (
-            searched &&
-            !loading &&
-            !loadingMore &&
-            hasMore &&
-            pendingValidation === 0 &&
-            validJobIds.size < visibleCount &&
-            displayedJobs.length > 0
-        ) {
-            handleLoadMore();
-        }
-    }, [validJobIds.size, invalidJobIds.size, visibleCount, searched, loading, loadingMore, hasMore, displayedJobs.length]);
+    useEffect(() => {
+        const autoSearchFromCV = async () => {
+            if (status !== 'authenticated' || hasAutoSearched.current) return;
+            hasAutoSearched.current = true;
+
+            try {
+                setLoading(true);
+                const criteria = await getUserCvCriteria();
+
+                if (criteria && (criteria.search_queries?.length || criteria.role)) {
+                    const queries = criteria.search_queries || [];
+                    const mainQuery = queries[0] || criteria.role;
+                    const newLocation = criteria.location || '';
+
+                    let displayQuery = mainQuery;
+                    if (newLocation) {
+                        const fullSuffix = ` in ${newLocation}`;
+                        const city = newLocation.split(',')[0].trim();
+                        const citySuffix = ` in ${city}`;
+
+                        if (displayQuery.toLowerCase().endsWith(fullSuffix.toLowerCase())) {
+                            displayQuery = displayQuery.slice(0, -fullSuffix.length).trim();
+                        } else if (city && displayQuery.toLowerCase().endsWith(citySuffix.toLowerCase())) {
+                            displayQuery = displayQuery.slice(0, -citySuffix.length).trim();
+                        }
+                    }
+
+                    setQuery(displayQuery);
+                    setLocation(newLocation);
+                    await setAllQueriesAndRunFirstBatch(queries, mainQuery, newLocation);
+                }
+            } catch (error) {
+                console.error('Auto-search failed:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        autoSearchFromCV();
+    }, [status]);
 
     // Common logic to process criteria and start search
     const processCriteriaAndSearch = async (criteria: CVCriteria) => {
