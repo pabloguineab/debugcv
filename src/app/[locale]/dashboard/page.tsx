@@ -94,7 +94,7 @@ function getActionButton(app: typeof recentApplications[0]) {
     if (app.stage === "interview") {
         return (
             <Link href="/dashboard/interview-coach">
-                <Button size="sm" className="gap-1.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-xs h-7">
+                <Button size="sm" variant="outline" className="gap-1.5 text-xs h-7 border-purple-300 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-400 dark:hover:bg-purple-900/30">
                     <Bot className="w-3 h-3" />
                     Prep with AI
                 </Button>
