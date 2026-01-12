@@ -124,14 +124,47 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
 
     const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
         const img = e.target as HTMLImageElement;
-        // Check if image has real dimensions (not a tiny placeholder)
+
+        // Check dimensions first
         if (img.naturalWidth < 10 || img.naturalHeight < 10) {
-            // Treat as failed - likely a placeholder or tracking pixel
             setHasError(true);
             if (onLogoFallback) onLogoFallback();
-        } else {
-            if (onLogoSuccess) onLogoSuccess();
+            return;
         }
+
+        // Try to detect if image is transparent/empty using Canvas
+        try {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                canvas.width = 20;
+                canvas.height = 20;
+                ctx.drawImage(img, 0, 0, 20, 20);
+                const imageData = ctx.getImageData(0, 0, 20, 20);
+                const data = imageData.data;
+
+                // Check if any pixel has significant opacity
+                let hasVisiblePixels = false;
+                for (let i = 3; i < data.length; i += 4) { // Check alpha channel every 4th byte
+                    if (data[i] > 50) { // Alpha > 50 means somewhat visible
+                        hasVisiblePixels = true;
+                        break;
+                    }
+                }
+
+                if (!hasVisiblePixels) {
+                    // Image is mostly transparent - treat as failed
+                    setHasError(true);
+                    if (onLogoFallback) onLogoFallback();
+                    return;
+                }
+            }
+        } catch (err) {
+            // CORS error or other issue - can't analyze, assume valid
+            console.log('Cannot analyze image pixels, assuming valid');
+        }
+
+        if (onLogoSuccess) onLogoSuccess();
     };
 
     const sizeClasses = {
@@ -175,6 +208,7 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
             className
         )}>
             <img
+                crossOrigin="anonymous"
                 src={logoSrc || undefined}
                 alt={company}
                 className="w-full h-full object-contain rounded-md"
