@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from 'framer-motion';
@@ -49,6 +49,16 @@ export default function JobSearchPage() {
     const [error, setError] = useState<'rate_limit' | 'general' | null>(null);
     const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+    const [validJobIds, setValidJobIds] = useState<Set<string>>(new Set());
+    const [invalidJobIds, setInvalidJobIds] = useState<Set<string>>(new Set());
+
+    const handleJobValidated = useCallback((jobId: string, isValid: boolean) => {
+        if (isValid) {
+            setValidJobIds(prev => new Set([...prev, jobId]));
+        } else {
+            setInvalidJobIds(prev => new Set([...prev, jobId]));
+        }
+    }, []);
 
 
     useEffect(() => {
@@ -65,6 +75,26 @@ export default function JobSearchPage() {
             setDisplayedJobs(jobs);
         }
     }, [jobs, isRemote]);
+
+    // Auto-fetch more jobs if we don't have enough valid ones
+    useEffect(() => {
+        const pendingValidation = displayedJobs.filter(
+            j => !validJobIds.has(j.job_id) && !invalidJobIds.has(j.job_id)
+        ).length;
+
+        // If we need more jobs and all current ones are validated
+        if (
+            searched &&
+            !loading &&
+            !loadingMore &&
+            hasMore &&
+            pendingValidation === 0 &&
+            validJobIds.size < visibleCount &&
+            displayedJobs.length > 0
+        ) {
+            handleLoadMore();
+        }
+    }, [validJobIds.size, invalidJobIds.size, visibleCount, searched, loading, loadingMore, hasMore, displayedJobs.length]);
 
     // Common logic to process criteria and start search
     const processCriteriaAndSearch = async (criteria: CVCriteria) => {
@@ -233,6 +263,8 @@ export default function JobSearchPage() {
             setPage(1);
             setVisibleCount(18);
             setHasMore(true);
+            setValidJobIds(new Set());
+            setInvalidJobIds(new Set());
             await runBatchSearch([q], loc, true, 1);
         } catch (error: any) {
             console.error("Search failed", error);
@@ -554,8 +586,17 @@ export default function JobSearchPage() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {displayedJobs.slice(0, visibleCount).map((job, index) => (
-                                <JobCard key={job.job_id} job={job} index={index} query={query} />
+                            {displayedJobs.slice(0, visibleCount + 20).map((job, index) => (
+                                <JobCard
+                                    key={job.job_id}
+                                    job={job}
+                                    index={index}
+                                    query={query}
+                                    onJobValidated={handleJobValidated}
+                                    validJobIds={validJobIds}
+                                    invalidJobIds={invalidJobIds}
+                                    visibleCount={visibleCount}
+                                />
                             ))}
                         </div>
 
@@ -585,7 +626,17 @@ export default function JobSearchPage() {
     );
 }
 
-function JobCard({ job, index, query }: { job: Job; index: number; query: string }) {
+interface JobCardProps {
+    job: Job;
+    index: number;
+    query: string;
+    onJobValidated: (jobId: string, isValid: boolean) => void;
+    validJobIds: Set<string>;
+    invalidJobIds: Set<string>;
+    visibleCount: number;
+}
+
+function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds, visibleCount }: JobCardProps) {
     const providerInfo = getProviderInfo(job.job_publisher);
     const [logoStatus, setLogoStatus] = useState<'loading' | 'valid' | 'invalid'>('loading');
 
@@ -613,8 +664,29 @@ function JobCard({ job, index, query }: { job: Job; index: number; query: string
         return Math.min(98, Math.max(65, Math.floor(score + variance)));
     }, [job, query]);
 
-    // If logo failed, hide this card
+    // Calculate position in valid jobs list
+    const validJobsArray = Array.from(validJobIds);
+    const myPositionInValidList = validJobsArray.indexOf(job.job_id);
+    const isWithinVisibleRange = myPositionInValidList >= 0 && myPositionInValidList < visibleCount;
+
+    // If logo failed, hide this card and report to parent
     if (logoStatus === 'invalid') {
+        // Report invalid only once
+        if (!invalidJobIds?.has?.(job.job_id)) {
+            onJobValidated(job.job_id, false);
+        }
+        return null;
+    }
+
+    // If logo is valid, report to parent
+    useEffect(() => {
+        if (logoStatus === 'valid' && !validJobIds.has(job.job_id)) {
+            onJobValidated(job.job_id, true);
+        }
+    }, [logoStatus, job.job_id, validJobIds, onJobValidated]);
+
+    // If we're validated but not within visible range, hide
+    if (logoStatus === 'valid' && !isWithinVisibleRange && validJobIds.has(job.job_id)) {
         return null;
     }
 
