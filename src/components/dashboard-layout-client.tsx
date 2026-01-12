@@ -23,7 +23,7 @@ export function DashboardLayoutClient({ children, user }: DashboardLayoutClientP
             <AppSidebar user={user} onOpenReferModal={() => setIsReferModalOpen(true)} />
             <SidebarInset>
                 <DashboardHeader />
-                <div className="flex flex-1 flex-col gap-4 p-4 relative min-h-[calc(100vh-4rem)]">
+                <div className="flex flex-1 flex-col gap-4 p-4 min-h-[calc(100vh-4rem)]">
                     {children}
                 </div>
                 <ReferFriendModal
