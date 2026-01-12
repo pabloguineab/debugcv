@@ -396,10 +396,11 @@ export default function JobSearchPage() {
                     <Button
                         variant="outline"
                         onClick={handleImportClick}
-                        className="h-10 px-4 font-medium"
+                        className="h-10 w-10 p-0"
+                        title="Import CV"
                     >
-                        <Upload className="w-4 h-4 mr-2" />
-                        Import CV
+                        <Upload className="h-4 w-4" />
+                        <span className="sr-only">Import CV</span>
                     </Button>
 
                     <Button
