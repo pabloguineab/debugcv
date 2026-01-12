@@ -16,7 +16,7 @@ import {
     LayoutGrid,
     List,
     Briefcase,
-    Sparkles,
+    Mail,
     ArrowRight,
 } from "lucide-react";
 
@@ -304,23 +304,28 @@ export default function ApplicationBoardPage() {
                     </AnimatePresence>
                 )}
 
-                {/* Pro Feature Hint */}
-                <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border-blue-200 dark:border-blue-800">
+                {/* Gmail Sync Feature */}
+                <Card className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/30 border-red-200 dark:border-red-800">
                     <CardContent className="flex items-center justify-between p-4">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg">
-                                <Sparkles className="w-5 h-5 text-blue-600" />
+                            <div className="p-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+                                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                                    <path d="M22 6L12 13L2 6V4L12 11L22 4V6Z" fill="#EA4335" />
+                                    <path d="M2 6L12 13L22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6Z" fill="#FBBC05" />
+                                    <path d="M22 6V18C22 19.1 21.1 20 20 20H12L12 13L22 6Z" fill="#34A853" />
+                                    <path d="M2 6V18C2 19.1 2.9 20 4 20H12V13L2 6Z" fill="#4285F4" />
+                                </svg>
                             </div>
                             <div>
-                                <p className="font-medium text-sm">AI-Powered Match Analysis</p>
+                                <p className="font-medium text-sm">Sync with Gmail</p>
                                 <p className="text-xs text-muted-foreground">
-                                    Get instant match scores between your resume and job descriptions
+                                    Automatically import your job applications from the last 60 days
                                 </p>
                             </div>
                         </div>
-                        <Button variant="outline" size="sm" className="gap-1">
-                            Learn More
-                            <ArrowRight className="w-3 h-3" />
+                        <Button variant="outline" size="sm" className="gap-1 border-red-200 hover:bg-red-100 dark:border-red-800 dark:hover:bg-red-900/30">
+                            <Mail className="w-3 h-3" />
+                            Connect Now
                         </Button>
                     </CardContent>
                 </Card>
