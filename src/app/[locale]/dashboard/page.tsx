@@ -156,17 +156,17 @@ export default function DashboardPage() {
                                     <p className="text-xs text-muted-foreground">{upcomingInterview.lastActionDate}</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center">
                                 <Link href="/dashboard/playbooks">
-                                    <Button size="sm" variant="outline" className="gap-1.5 bg-white dark:bg-gray-800">
+                                    <Button size="sm" variant="outline" className="rounded-r-none border-r-0 gap-1.5">
                                         <FileText className="w-3.5 h-3.5" />
-                                        View Playbook
+                                        Playbook
                                     </Button>
                                 </Link>
                                 <Link href="/dashboard/interview-coach">
-                                    <Button size="sm" className="gap-1.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg">
+                                    <Button size="sm" variant="outline" className="rounded-l-none gap-1.5">
                                         <Bot className="w-3.5 h-3.5" />
-                                        Practice Now
+                                        Practice
                                     </Button>
                                 </Link>
                             </div>
