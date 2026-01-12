@@ -181,7 +181,7 @@ export default function JobSearchPage() {
                     await new Promise(resolve => setTimeout(resolve, 2000));
                 }
             }
-            const allNewJobs = resultsArray.flat();
+            const allNewJobs = resultsArray.flat().filter(job => job.employer_logo);
 
             // Deduplicate by job_id
             const uniqueNewJobs = allNewJobs.filter((job, index, self) =>
