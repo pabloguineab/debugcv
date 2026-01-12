@@ -254,18 +254,32 @@ export default function JobSearchPage() {
         setLoadingMore(true);
 
         try {
-            let count = 0;
-            if (nextQueryIndex < searchQueries.length) {
-                const nextBatch = searchQueries.slice(nextQueryIndex, nextQueryIndex + 2);
-                setNextQueryIndex(prev => prev + 2);
-                count = await runBatchSearch(nextBatch, location, false, 1);
-            } else {
-                const nextPage = page + 1;
-                setPage(nextPage);
-                count = await runBatchSearch([query], location, false, nextPage);
+            let jobsFound = 0;
+            let attempts = 0;
+            let localNextQueryIndex = nextQueryIndex;
+            let localPage = page;
+            const MAX_ATTEMPTS = 3;
+
+            while (jobsFound === 0 && attempts < MAX_ATTEMPTS) {
+                attempts++;
+                let count = 0;
+
+                if (localNextQueryIndex < searchQueries.length) {
+                    const nextBatch = searchQueries.slice(localNextQueryIndex, localNextQueryIndex + 1);
+                    localNextQueryIndex += 1;
+                    setNextQueryIndex(localNextQueryIndex);
+
+                    count = await runBatchSearch(nextBatch, location, false, 1);
+                } else {
+                    localPage++;
+                    setPage(localPage);
+                    count = await runBatchSearch([query], location, false, localPage);
+                }
+
+                jobsFound += count;
             }
 
-            if (count > 0 || remainingHidden > 0) {
+            if (jobsFound > 0 || remainingHidden > 0) {
                 // Ensure we don't exceed the total number of jobs available
                 setVisibleCount(prev => prev + 18);
             } else {
@@ -283,6 +297,7 @@ export default function JobSearchPage() {
             setLoadingMore(false);
         }
     };
+
 
     // Auto-search on mount if params exist
     const initRef = React.useRef(false);
