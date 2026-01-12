@@ -19,6 +19,7 @@ import {
     CreditCard,
     Bell,
     Gift,
+    Upload,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
@@ -71,9 +72,10 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
         image?: string | null;
     };
     onOpenReferModal: () => void;
+    onOpenUploadModal?: () => void;
 }
 
-export function AppSidebar({ user, onOpenReferModal, ...props }: AppSidebarProps) {
+export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props }: AppSidebarProps) {
     return (
         <Sidebar variant="inset" {...props}>
             <SidebarHeader className="p-4 flex flex-row items-center justify-between">
@@ -123,6 +125,17 @@ export function AppSidebar({ user, onOpenReferModal, ...props }: AppSidebarProps
                     <SidebarGroupLabel>Resumes</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    onClick={onOpenUploadModal}
+                                    className="text-primary hover:text-primary hover:bg-primary/10 cursor-pointer"
+                                >
+                                    <div className="flex items-center gap-3 w-full my-0.5">
+                                        <Upload className="size-[18px]" />
+                                        <span className="text-sm font-medium">Upload Resume</span>
+                                    </div>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
                             {resumesItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
