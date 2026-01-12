@@ -164,10 +164,13 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                         <SidebarMenuButton asChild>
                             <div
                                 onClick={onOpenUploadModal}
-                                className="flex items-center gap-3 text-blue-600 dark:text-blue-400 font-medium w-full my-0.5 cursor-pointer hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                                className="flex items-center gap-3 text-blue-600 dark:text-blue-400 font-medium w-full my-0.5 cursor-pointer hover:bg-sidebar-accent hover:text-sidebar-accent-foreground group"
                             >
                                 <Gem className="size-[18px]" />
-                                <span className="text-sm">Get Expert Audit</span>
+                                <span className="flex-1 text-sm">Get Expert Review</span>
+                                <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full font-bold dark:bg-blue-900/40 dark:text-blue-400 group-data-[collapsible=icon]:hidden">
+                                    FREE
+                                </span>
                             </div>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
