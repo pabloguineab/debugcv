@@ -42,31 +42,31 @@ export default function ProfilePage() {
                     <TabsList className="flex items-center justify-start bg-transparent border-b h-auto p-0 mb-8 rounded-none w-auto gap-6">
                         <TabsTrigger
                             value="overview"
-                            className="flex-none rounded-none border-b-2 border-transparent data-[selected]:border-blue-600 data-[selected]:text-blue-600 data-[selected]:font-bold data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold bg-transparent shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            className="relative flex-none rounded-none border-b-2 border-transparent bg-transparent px-0 py-3 text-base font-medium text-muted-foreground shadow-none transition-none hover:text-foreground [&[data-selected]]:!border-blue-600 [&[data-selected]]:!text-blue-600 [&[data-selected]]:!font-bold [&[data-state=active]]:!border-blue-600 [&[data-state=active]]:!text-blue-600 [&[data-state=active]]:!font-bold -mb-[2px]"
                         >
                             Overview
                         </TabsTrigger>
                         <TabsTrigger
                             value="preferences"
-                            className="flex-none rounded-none border-b-2 border-transparent data-[selected]:border-blue-600 data-[selected]:text-blue-600 data-[selected]:font-bold data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold bg-transparent shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            className="relative flex-none rounded-none border-b-2 border-transparent bg-transparent px-0 py-3 text-base font-medium text-muted-foreground shadow-none transition-none hover:text-foreground [&[data-selected]]:!border-blue-600 [&[data-selected]]:!text-blue-600 [&[data-selected]]:!font-bold [&[data-state=active]]:!border-blue-600 [&[data-state=active]]:!text-blue-600 [&[data-state=active]]:!font-bold -mb-[2px]"
                         >
                             Preferences
                         </TabsTrigger>
                         <TabsTrigger
                             value="tech-stack"
-                            className="flex-none rounded-none border-b-2 border-transparent data-[selected]:border-blue-600 data-[selected]:text-blue-600 data-[selected]:font-bold data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold bg-transparent shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            className="relative flex-none rounded-none border-b-2 border-transparent bg-transparent px-0 py-3 text-base font-medium text-muted-foreground shadow-none transition-none hover:text-foreground [&[data-selected]]:!border-blue-600 [&[data-selected]]:!text-blue-600 [&[data-selected]]:!font-bold [&[data-state=active]]:!border-blue-600 [&[data-state=active]]:!text-blue-600 [&[data-state=active]]:!font-bold -mb-[2px]"
                         >
                             Tech Stack
                         </TabsTrigger>
                         <TabsTrigger
                             value="experience"
-                            className="flex-none rounded-none border-b-2 border-transparent data-[selected]:border-blue-600 data-[selected]:text-blue-600 data-[selected]:font-bold data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold bg-transparent shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            className="relative flex-none rounded-none border-b-2 border-transparent bg-transparent px-0 py-3 text-base font-medium text-muted-foreground shadow-none transition-none hover:text-foreground [&[data-selected]]:!border-blue-600 [&[data-selected]]:!text-blue-600 [&[data-selected]]:!font-bold [&[data-state=active]]:!border-blue-600 [&[data-state=active]]:!text-blue-600 [&[data-state=active]]:!font-bold -mb-[2px]"
                         >
                             Experience
                         </TabsTrigger>
                         <TabsTrigger
                             value="education"
-                            className="flex-none rounded-none border-b-2 border-transparent data-[selected]:border-blue-600 data-[selected]:text-blue-600 data-[selected]:font-bold data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold bg-transparent shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            className="relative flex-none rounded-none border-b-2 border-transparent bg-transparent px-0 py-3 text-base font-medium text-muted-foreground shadow-none transition-none hover:text-foreground [&[data-selected]]:!border-blue-600 [&[data-selected]]:!text-blue-600 [&[data-selected]]:!font-bold [&[data-state=active]]:!border-blue-600 [&[data-state=active]]:!text-blue-600 [&[data-state=active]]:!font-bold -mb-[2px]"
                         >
                             Education
                         </TabsTrigger>
