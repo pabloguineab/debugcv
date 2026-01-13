@@ -189,13 +189,15 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                             <SidebarMenuItem>
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="profile" className="border-none">
-                                        <AccordionTrigger className="flex items-center gap-3 w-full my-0.5 py-0 px-0 hover:no-underline hover:bg-transparent">
-                                            <LordIcon
-                                                src="/animated/wired-outline-44-avatar-user-in-circle-hover-looking-around.json"
-                                                size={24}
-                                                trigger="hover"
-                                            />
-                                            <span className="text-sm font-medium flex-1 text-left">Profile</span>
+                                        <AccordionTrigger className="[&[data-state=open]>svg]:hidden p-0 hover:bg-transparent hover:no-underline data-[state=closed]:hover:bg-sidebar-accent data-[state=closed]:hover:text-sidebar-accent-foreground rounded-md">
+                                            <div className="flex items-center gap-3 w-full px-2 py-2">
+                                                <LordIcon
+                                                    src="/animated/wired-outline-44-avatar-user-in-circle-hover-looking-around.json"
+                                                    size={24}
+                                                    trigger="hover"
+                                                />
+                                                <span className="text-sm font-medium flex-1 text-left">Profile</span>
+                                            </div>
                                         </AccordionTrigger>
                                         <AccordionContent className="pb-2">
                                             {/* Profile Card */}
