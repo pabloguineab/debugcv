@@ -112,7 +112,7 @@ export function UserAuthForm({ className, buttonText = "Sign In", isSignup = fal
                                 <Label htmlFor="password">Password</Label>
                                 <Link
                                     href="/auth/forgot-password"
-                                    className="text-xs text-gray-400 hover:text-gray-600 hover:underline underline-offset-4"
+                                    className="text-[11px] text-gray-400 hover:text-gray-500 hover:underline underline-offset-4"
                                 >
                                     Forgot password?
                                 </Link>
