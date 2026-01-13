@@ -14,7 +14,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus } from "lucide-react";
+import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus, Linkedin, Github } from "lucide-react";
 import Image from "next/image";
 import Cropper from "react-easy-crop";
 import {
@@ -39,6 +39,8 @@ export default function ProfilePage() {
     const [selectedCountry, setSelectedCountry] = useState<string>("ES");
     const [selectedRegion, setSelectedRegion] = useState<string>("");
     const [selectedCity, setSelectedCity] = useState<string>("");
+    const [linkedinUrl, setLinkedinUrl] = useState<string>("");
+    const [githubUrl, setGithubUrl] = useState<string>("");
 
     // Get all countries
     const countries = useMemo(() => Country.getAllCountries(), []);
@@ -227,6 +229,48 @@ export default function ProfilePage() {
                                         onChange={(e) => setUsername(e.target.value)}
                                     />
                                     <p className="text-sm text-muted-foreground transition-all">linkedin.com/in/{username}</p>
+                                </div>
+                            </div>
+
+                            {/* Social Links */}
+                            <div className="grid grid-cols-[200px_1fr] gap-8 items-start py-6 border-b">
+                                <div>
+                                    <h3 className="text-sm font-medium">Social links</h3>
+                                    <p className="text-sm text-muted-foreground mt-1">
+                                        Add your social profiles to help recruiters find you.
+                                    </p>
+                                </div>
+                                <div className="space-y-4">
+                                    {/* LinkedIn */}
+                                    <div>
+                                        <label className="text-sm font-medium text-gray-700 mb-1.5 block">LinkedIn</label>
+                                        <div className="relative">
+                                            <div className="absolute left-0 top-0 h-full w-12 flex items-center justify-center border-r bg-gray-50 rounded-l-lg">
+                                                <Linkedin className="size-5 text-[#0A66C2]" />
+                                            </div>
+                                            <Input
+                                                value={linkedinUrl}
+                                                onChange={(e) => setLinkedinUrl(e.target.value)}
+                                                placeholder="e.g. linkedin.com/in/richard-hendricks-pied"
+                                                className="pl-14 h-11 text-sm rounded-lg border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                                            />
+                                        </div>
+                                    </div>
+                                    {/* GitHub */}
+                                    <div>
+                                        <label className="text-sm font-medium text-gray-700 mb-1.5 block">GitHub</label>
+                                        <div className="relative">
+                                            <div className="absolute left-0 top-0 h-full w-12 flex items-center justify-center border-r bg-gray-50 rounded-l-lg">
+                                                <Github className="size-5 text-gray-900" />
+                                            </div>
+                                            <Input
+                                                value={githubUrl}
+                                                onChange={(e) => setGithubUrl(e.target.value)}
+                                                placeholder="e.g. github.com/piedpiper"
+                                                className="pl-14 h-11 text-sm rounded-lg border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
