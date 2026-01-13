@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,24 @@ import Image from "next/image";
 
 export default function ProfilePage() {
     const [username, setUsername] = useState("lourdesbuendia");
+    const [profileImage, setProfileImage] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleFile = (file: File) => {
+        if (file && file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setProfileImage(e.target?.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const onDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files[0];
+        handleFile(file);
+    };
 
     return (
         <div className="flex flex-col h-full w-full bg-background">
@@ -90,11 +108,35 @@ export default function ProfilePage() {
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-6">
-                                    <div className="size-20 rounded-full bg-gray-100 flex items-center justify-center border">
-                                        {/* Placeholder for avatar */}
+                                    <div className="size-20 rounded-full bg-gray-100 flex items-center justify-center border overflow-hidden">
+                                        {profileImage ? (
+                                            <Image
+                                                src={profileImage}
+                                                alt="Profile"
+                                                width={80}
+                                                height={80}
+                                                className="size-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="size-full bg-gray-50 flex items-center justify-center">
+                                                <Upload className="size-6 text-gray-300" />
+                                            </div>
+                                        )}
                                     </div>
-                                    <div className="flex-1 p-8 border-2 border-dashed rounded-lg flex flex-col items-center justify-center text-center hover:bg-gray-50/50 transition-colors cursor-pointer">
-                                        <div className="p-2 bg-gray-100 rounded-full mb-2">
+                                    <div
+                                        onClick={() => fileInputRef.current?.click()}
+                                        onDragOver={(e) => e.preventDefault()}
+                                        onDrop={onDrop}
+                                        className="flex-1 p-8 border-2 border-dashed rounded-lg flex flex-col items-center justify-center text-center hover:bg-gray-50/50 transition-colors cursor-pointer group"
+                                    >
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
+                                            accept="image/*"
+                                            className="hidden"
+                                        />
+                                        <div className="p-2 bg-gray-100 rounded-full mb-2 group-hover:bg-gray-200 transition-colors">
                                             <Upload className="size-4 text-gray-600" />
                                         </div>
                                         <div>
