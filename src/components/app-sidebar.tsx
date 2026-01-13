@@ -12,6 +12,12 @@ import {
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { LordIcon } from "@/components/icons/lord-icon";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
 
 import {
     Sidebar,
@@ -181,23 +187,22 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                         <SidebarMenu>
                             {/* Profile Collapsible */}
                             <SidebarMenuItem>
-                                <SidebarMenuButton asChild>
-                                    <div className="w-full">
-                                        <details className="group/profile w-full">
-                                            <summary className="flex items-center gap-3 w-full my-0.5 cursor-pointer list-none group/profile-hover">
-                                                <LordIcon
-                                                    src="/animated/wired-outline-44-avatar-user-in-circle-hover-looking-around.json"
-                                                    size={24}
-                                                    trigger="hover"
-                                                />
-                                                <span className="text-sm font-medium flex-1">Profile</span>
-                                                <svg className="size-4 transition-transform group-open/profile:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                </svg>
-                                            </summary>
-
+                                <Accordion type="single" collapsible className="w-full">
+                                    <AccordionItem value="profile" className="border-none">
+                                        <AccordionTrigger className="flex items-center gap-3 w-full my-0.5 py-2 hover:no-underline [&[data-state=open]>svg]:rotate-90">
+                                            <LordIcon
+                                                src="/animated/wired-outline-44-avatar-user-in-circle-hover-looking-around.json"
+                                                size={24}
+                                                trigger="hover"
+                                            />
+                                            <span className="text-sm font-medium flex-1 text-left">Profile</span>
+                                            <svg className="size-4 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </AccordionTrigger>
+                                        <AccordionContent className="pb-2">
                                             {/* Profile Card */}
-                                            <div className="mt-2 ml-7 mb-3 p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
+                                            <div className="ml-7 p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
                                                 <h3 className="text-sm font-semibold mb-2">Complete your profile</h3>
                                                 <p className="text-xs text-muted-foreground mb-3">
                                                     A complete profile helps us match you with relevant jobs and personalize our AI tools to you.
@@ -232,9 +237,9 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                                     </div>
                                                 </div>
                                             </div>
-                                        </details>
-                                    </div>
-                                </SidebarMenuButton>
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                </Accordion>
                             </SidebarMenuItem>
 
                             {resumesItems.map((item) => (
