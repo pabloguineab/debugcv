@@ -74,13 +74,7 @@ export default function ProfilePage() {
 
                     <TabsContent value="overview" className="space-y-8 max-w-4xl">
 
-                        {/* Overview Section */}
-                        <div className="space-y-1">
-                            <h2 className="text-lg font-semibold">Overview</h2>
-                            <p className="text-sm text-muted-foreground">
-                                This information will be displayed publicly so please be careful with what you share.
-                            </p>
-                        </div>
+
 
                         <div className="space-y-6">
 
