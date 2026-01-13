@@ -518,7 +518,11 @@ export default function ProfilePage() {
                                         <div className="flex-1">
                                             <Select value={newLevel} onValueChange={setNewLevel}>
                                                 <SelectTrigger className="w-full">
-                                                    {newLevel ? <SelectValue /> : <span className="text-muted-foreground">Select level</span>}
+                                                    {newLevel ? (
+                                                        <span>{proficiencyLevels.find(l => l.value === newLevel)?.label}</span>
+                                                    ) : (
+                                                        <span className="text-muted-foreground">Select level</span>
+                                                    )}
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     {proficiencyLevels.map((level) => (
