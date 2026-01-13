@@ -41,7 +41,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/components/Logo";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 
 // Menu item wrapper with hover state
 function AnimatedMenuItem({ href, icon, title }: { href: string; icon: string; title: string }) {
@@ -124,6 +124,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props }: AppSidebarProps) {
+    const router = useRouter();
     const [dashboardHovered, setDashboardHovered] = useState(false);
     const [profileHovered, setProfileHovered] = useState(false);
     const [expertHovered, setExpertHovered] = useState(false);
@@ -197,6 +198,9 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                                 className="flex items-center gap-3 w-full px-2 py-2 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer transition-colors"
                                                 onMouseEnter={() => setProfileHovered(true)}
                                                 onMouseLeave={() => setProfileHovered(false)}
+                                                onClick={(e) => {
+                                                    router.push('/dashboard/profile');
+                                                }}
                                             >
                                                 <LordIcon
                                                     src="/animated/wired-outline-44-avatar-user-in-circle-hover-looking-around.json"
