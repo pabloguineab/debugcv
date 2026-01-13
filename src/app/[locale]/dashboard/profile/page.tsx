@@ -14,7 +14,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus, Linkedin, Github } from "lucide-react";
+import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus, Linkedin, Github, User, Settings, Code, Briefcase, GraduationCap } from "lucide-react";
 import Image from "next/image";
 import Cropper from "react-easy-crop";
 import {
@@ -43,6 +43,34 @@ export default function ProfilePage() {
     const [githubUrl, setGithubUrl] = useState<string>("");
     const [introduction, setIntroduction] = useState<string>("");
     const [userName, setUserName] = useState<string>("Lourdes Buendia"); // TODO: Get from user session
+    const [activeTab, setActiveTab] = useState<string>("overview");
+
+    // Tab titles mapping
+    const tabTitles: Record<string, string> = {
+        overview: "Overview",
+        preferences: "Your Preferences",
+        "tech-stack": "Your Tech Stack",
+        experience: "Your Experience",
+        education: "Education"
+    };
+
+    // Tab subtitles mapping
+    const tabSubtitles: Record<string, string> = {
+        overview: "Complete your profile to get matched with relevant jobs",
+        preferences: "Set your job preferences and work style",
+        "tech-stack": "Add your technical skills and expertise",
+        experience: "Showcase your professional experience",
+        education: "Add your educational background"
+    };
+
+    // Tab icons mapping
+    const tabIcons: Record<string, React.ComponentType<{ className?: string }>> = {
+        overview: User,
+        preferences: Settings,
+        "tech-stack": Code,
+        experience: Briefcase,
+        education: GraduationCap
+    };
 
     // Get user initial
     const userInitial = userName ? userName.charAt(0).toUpperCase() : "U";
@@ -114,7 +142,16 @@ export default function ProfilePage() {
             {/* Header */}
             <div className="flex items-center justify-between px-8 py-6 border-b">
                 <div>
-                    <h1 className="text-2xl font-bold text-foreground">Overview</h1>
+                    <h1 className="text-2xl font-bold flex items-center gap-2 dark:text-white">
+                        {(() => {
+                            const IconComponent = tabIcons[activeTab];
+                            return <IconComponent className="w-6 h-6 text-blue-600" />;
+                        })()}
+                        {tabTitles[activeTab]}
+                    </h1>
+                    <p className="text-sm text-muted-foreground mt-1">
+                        {tabSubtitles[activeTab]}
+                    </p>
                 </div>
                 <div className="flex items-center gap-2">
                     <Button variant="outline" size="icon">
@@ -128,7 +165,7 @@ export default function ProfilePage() {
 
             {/* Content using Tabs */}
             <div className="flex-1 overflow-auto p-8">
-                <Tabs defaultValue="overview" className="w-full">
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList variant="line" className="flex items-center justify-start bg-transparent border-b h-auto p-0 mb-8 rounded-none w-fit gap-8">
                         <TabsTrigger
                             value="overview"
@@ -459,6 +496,6 @@ export default function ProfilePage() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-        </div>
+        </div >
     );
 }
