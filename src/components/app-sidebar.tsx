@@ -52,7 +52,7 @@ function AnimatedMenuItem({ href, icon, title }: { href: string; icon: string; t
                 >
                     <LordIcon
                         src={icon}
-                        size={20}
+                        size={24}
                         onTrigger={isHovered}
                     />
                     <span className="text-sm font-medium">{title}</span>
@@ -145,7 +145,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                     >
                                         <LordIcon
                                             src="/animated/wired-lineal-153-bar-chart-hover-pinch.json"
-                                            size={20}
+                                            size={24}
                                             onTrigger={dashboardHovered}
                                         />
                                         <span className="text-sm font-medium">Dashboard</span>
@@ -219,7 +219,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                             >
                                 <LordIcon
                                     src="/animated/wired-lineal-724-diamond-luxury-precious-hover-pinch.json"
-                                    size={20}
+                                    size={24}
                                     onTrigger={expertHovered}
                                 />
                                 <span className="flex-1 text-sm">Get Expert Review</span>
@@ -239,7 +239,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                             >
                                 <LordIcon
                                     src="/animated/wired-lineal-412-gift-hover-squeeze.json"
-                                    size={20}
+                                    size={24}
                                     onTrigger={referHovered}
                                 />
                                 <span className="flex-1 text-sm">Refer a Friend</span>
