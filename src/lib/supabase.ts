@@ -2,9 +2,10 @@ import { createClient } from '@supabase/supabase-js';
 import type { Application, ApplicationStatus, ApplicationPriority, WorkMode } from '@/types/application';
 
 const supabaseUrl = process.env.SUPABASE_URL || "https://placeholder.supabase.co";
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder-key";
+// Use service_role key for server-side operations (bypasses RLS)
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder-key";
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Type for user identity
 export type UserIdentity = {
