@@ -199,7 +199,7 @@ export default function ProfilePage() {
                                         onClick={() => fileInputRef.current?.click()}
                                         onDragOver={(e) => e.preventDefault()}
                                         onDrop={onDrop}
-                                        className="flex-1 p-8 border-2 border-dashed rounded-lg flex flex-col items-center justify-center text-center hover:bg-gray-50/50 transition-colors cursor-pointer group"
+                                        className="flex-1 p-8 border-2 border-dashed border-gray-200 rounded-lg flex flex-col items-center justify-center text-center hover:bg-blue-50 hover:border-blue-600 transition-colors cursor-pointer group"
                                     >
                                         <input
                                             type="file"
@@ -208,8 +208,8 @@ export default function ProfilePage() {
                                             accept="image/*"
                                             className="hidden"
                                         />
-                                        <div className="p-2 bg-gray-100 rounded-full mb-2 group-hover:bg-gray-200 transition-colors">
-                                            <Upload className="size-4 text-gray-600" />
+                                        <div className="p-2 bg-gray-100 rounded-full mb-2 group-hover:bg-blue-100 transition-colors">
+                                            <Upload className="size-4 text-gray-600 group-hover:text-blue-600" />
                                         </div>
                                         <div>
                                             <span className="text-sm font-medium text-blue-600">Click to upload</span>
