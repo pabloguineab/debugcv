@@ -1,0 +1,89 @@
+"use client"
+
+import { useState } from "react"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Loader2 } from "lucide-react"
+import { useRouter } from "next/navigation"
+
+interface OnboardingModalProps {
+    open: boolean
+    onOpenChange: (open: boolean) => void
+    onComplete: (name: string) => void
+}
+
+export function OnboardingModal({ open, onOpenChange, onComplete }: OnboardingModalProps) {
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
+    const router = useRouter()
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!firstName || !lastName) return
+
+        setIsLoading(true)
+
+        // Simulate API call delay
+        await new Promise(resolve => setTimeout(resolve, 1000))
+
+        const fullName = `${firstName} ${lastName}`
+
+        // Call the callback to update parent state
+        onComplete(fullName)
+
+        setIsLoading(false)
+        onOpenChange(false)
+
+        // In a real app, you would call an API here to update the user in DB
+        // await fetch('/api/user/profile', { method: 'POST', body: JSON.stringify({ name: fullName }) })
+
+        // Refresh router to update server components if needed
+        router.refresh()
+    }
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Welcome to DebugCV!</DialogTitle>
+                    <DialogDescription>
+                        Please enter your details to complete your profile setup.
+                    </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmit}>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                            <Label htmlFor="firstName">First name</Label>
+                            <Input
+                                id="firstName"
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
+                                placeholder="John"
+                                required
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="lastName">Last name</Label>
+                            <Input
+                                id="lastName"
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
+                                placeholder="Doe"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button type="submit" disabled={isLoading || !firstName || !lastName}>
+                            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Get Started
+                        </Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    )
+}
