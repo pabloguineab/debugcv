@@ -504,41 +504,47 @@ export default function ProfilePage() {
                                     )}
 
                                     {/* Add new language form */}
-                                    <div className="flex items-center gap-3 max-w-md">
-                                        <Select value={newLanguage} onValueChange={setNewLanguage}>
-                                            <SelectTrigger className="w-[180px]">
-                                                {newLanguage ? <SelectValue /> : <span className="text-muted-foreground">Select language</span>}
-                                            </SelectTrigger>
-                                            <SelectContent className="max-h-[300px]">
-                                                {commonLanguages
-                                                    .filter(lang => !languages.some(l => l.language === lang))
-                                                    .map((lang) => (
-                                                        <SelectItem key={lang} value={lang}>
-                                                            {lang}
+                                    {/* Add new language form */}
+                                    <div className="flex items-center gap-2 max-w-md">
+                                        <div className="flex-1">
+                                            <Select value={newLanguage} onValueChange={setNewLanguage}>
+                                                <SelectTrigger className="w-full">
+                                                    {newLanguage ? <SelectValue /> : <span className="text-muted-foreground">Select language</span>}
+                                                </SelectTrigger>
+                                                <SelectContent className="max-h-[300px]">
+                                                    {commonLanguages
+                                                        .filter(lang => !languages.some(l => l.language === lang))
+                                                        .map((lang) => (
+                                                            <SelectItem key={lang} value={lang}>
+                                                                {lang}
+                                                            </SelectItem>
+                                                        ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+
+                                        <div className="flex-1">
+                                            <Select value={newLevel} onValueChange={setNewLevel}>
+                                                <SelectTrigger className="w-full">
+                                                    {newLevel ? <SelectValue /> : <span className="text-muted-foreground">Select level</span>}
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {proficiencyLevels.map((level) => (
+                                                        <SelectItem key={level.value} value={level.value}>
+                                                            {level.label}
                                                         </SelectItem>
                                                     ))}
-                                            </SelectContent>
-                                        </Select>
-
-                                        <Select value={newLevel} onValueChange={setNewLevel}>
-                                            <SelectTrigger className="w-[180px]">
-                                                {newLevel ? <SelectValue /> : <span className="text-muted-foreground">Select level</span>}
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {proficiencyLevels.map((level) => (
-                                                    <SelectItem key={level.value} value={level.value}>
-                                                        {level.label}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
 
                                         <Button
                                             onClick={addLanguage}
                                             disabled={!newLanguage || !newLevel}
-                                            className="bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
+                                            variant="outline"
+                                            className="h-10 px-3 bg-white dark:bg-transparent dark:hover:bg-accent border-dashed border-gray-300 dark:border-gray-700 text-blue-600 dark:text-blue-400 hover:text-blue-700 hover:border-blue-400 disabled:opacity-50 transition-all font-medium"
                                         >
-                                            <Plus className="size-4 mr-1" />
+                                            <Plus className="size-4 mr-1.5" />
                                             Add
                                         </Button>
                                     </div>
