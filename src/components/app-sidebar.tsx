@@ -144,7 +144,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                         onMouseLeave={() => setDashboardHovered(false)}
                                     >
                                         <LordIcon
-                                            src="/animated/wired-gradient-163-graph-line-chart-hover-slide.json"
+                                            src="/animated/wired-lineal-153-bar-chart-hover-pinch.json"
                                             size={18}
                                             onTrigger={dashboardHovered}
                                         />
