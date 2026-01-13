@@ -84,7 +84,7 @@ const jobsItems = [
 
 const resumesItems = [
     {
-        title: "My Versions",
+        title: "CV Builder",
         url: "/dashboard/resumes",
         icon: "/animated/wired-outline-982-cv-curriculum-vitae-resume-hover-swipe.json"
     },
