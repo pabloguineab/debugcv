@@ -184,11 +184,16 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                 <SidebarMenuButton asChild>
                                     <div className="w-full">
                                         <details className="group/profile w-full">
-                                            <summary className="flex items-center gap-3 w-full my-0.5 cursor-pointer list-none">
+                                            <summary className="flex items-center gap-3 w-full my-0.5 cursor-pointer list-none group/profile-hover">
+                                                <LordIcon
+                                                    src="/animated/wired-outline-44-avatar-user-in-circle-hover-looking-around.json"
+                                                    size={24}
+                                                    trigger="hover"
+                                                />
+                                                <span className="text-sm font-medium flex-1">Profile</span>
                                                 <svg className="size-4 transition-transform group-open/profile:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                                 </svg>
-                                                <span className="text-sm font-medium flex-1">Profile</span>
                                             </summary>
 
                                             {/* Profile Card */}
