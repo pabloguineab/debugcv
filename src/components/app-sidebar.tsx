@@ -3,22 +3,11 @@
 
 import * as React from "react";
 import {
-    ClipboardList,
-    Globe,
-    FileText,
-    Target,
-    PenTool,
-    Bot,
-    BookOpen,
-    Gem,
-    Settings,
     MoreVertical,
     LogOut,
     User,
     CreditCard,
     Bell,
-    Gift,
-    Upload,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { LordIcon } from "@/components/icons/lord-icon";
@@ -46,19 +35,18 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/components/Logo";
 import { Link } from "@/i18n/routing";
-import { ModeToggle } from "@/components/mode-toggle";
 
-// Menu Groups with Lordicon URLs
+// Menu Groups with Lordicon URLs (JSON)
 const jobsItems = [
     {
         title: "Job Search",
         url: "/dashboard/job-search",
-        lordicon: "https://cdn.lordicon.com/fkdzyfle.json" // globe/search
+        icon: "https://cdn.lordicon.com/fkdzyfle.json" // globe/search
     },
     {
         title: "Application Board",
         url: "/dashboard/application-board",
-        lordicon: "https://cdn.lordicon.com/nocovwne.json" // clipboard/list
+        icon: "https://cdn.lordicon.com/nocovwne.json" // clipboard/list
     },
 ];
 
@@ -66,17 +54,17 @@ const resumesItems = [
     {
         title: "My Versions",
         url: "/dashboard/resumes",
-        lordicon: "https://cdn.lordicon.com/jxzkkoed.json" // document
+        icon: "https://cdn.lordicon.com/jxzkkoed.json" // document
     },
     {
         title: "ATS Score",
         url: "/dashboard/resumes/ats-score",
-        lordicon: "https://cdn.lordicon.com/xzksbhzh.json" // target/bullseye
+        icon: "https://cdn.lordicon.com/xzksbhzh.json" // target/bullseye
     },
     {
         title: "Cover Letters",
         url: "/dashboard/cover-letters",
-        lordicon: "https://cdn.lordicon.com/wzrwaorf.json" // pen/edit
+        icon: "https://cdn.lordicon.com/wzrwaorf.json" // pen/edit
     },
 ];
 
@@ -84,12 +72,12 @@ const interviewItems = [
     {
         title: "AI Simulator",
         url: "/dashboard/interview-coach",
-        lordicon: "https://cdn.lordicon.com/kbtmbyzy.json" // robot/ai
+        icon: "https://cdn.lordicon.com/kbtmbyzy.json" // robot/ai
     },
     {
         title: "Playbooks",
         url: "/dashboard/playbooks",
-        lordicon: "https://cdn.lordicon.com/wyqtxzeh.json" // book
+        icon: "https://cdn.lordicon.com/wyqtxzeh.json" // book
     },
 ];
 
@@ -142,7 +130,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                     <SidebarMenuButton asChild>
                                         <Link href={item.url} className="flex items-center gap-3 w-full my-0.5">
                                             <LordIcon
-                                                src={item.lordicon}
+                                                src={item.icon}
                                                 size={18}
                                             />
                                             <span className="text-sm font-medium">{item.title}</span>
@@ -164,7 +152,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                     <SidebarMenuButton asChild>
                                         <Link href={item.url} className="flex items-center gap-3 w-full my-0.5">
                                             <LordIcon
-                                                src={item.lordicon}
+                                                src={item.icon}
                                                 size={18}
                                             />
                                             <span className="text-sm font-medium">{item.title}</span>
@@ -186,7 +174,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                     <SidebarMenuButton asChild>
                                         <Link href={item.url} className="flex items-center gap-3 w-full my-0.5">
                                             <LordIcon
-                                                src={item.lordicon}
+                                                src={item.icon}
                                                 size={18}
                                             />
                                             <span className="text-sm font-medium">{item.title}</span>

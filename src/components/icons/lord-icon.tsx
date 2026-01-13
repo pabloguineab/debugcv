@@ -1,59 +1,46 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
-
-// Declare lord-icon custom element
-declare global {
-    namespace JSX {
-        interface IntrinsicElements {
-            'lord-icon': any;
-        }
-    }
-}
+import { Player } from '@lordicon/react';
+import { useRef } from 'react';
 
 interface LordIconProps {
     src: string;
+    size?: number;
     trigger?: 'hover' | 'click' | 'loop' | 'morph';
     colors?: string;
-    size?: number;
-    className?: string;
 }
 
 export function LordIcon({
     src,
-    trigger = 'hover',
-    colors,
     size = 18,
-    className = ''
+    trigger = 'hover',
+    colors
 }: LordIconProps) {
-    const iconRef = useRef<HTMLDivElement>(null);
+    const playerRef = useRef<Player>(null);
 
-    useEffect(() => {
-        // Load Lordicon script
-        const script = document.createElement('script');
-        script.src = 'https://cdn.lordicon.com/lordicon.js';
-        script.async = true;
-        document.body.appendChild(script);
+    const handleMouseEnter = () => {
+        if (trigger === 'hover') {
+            playerRef.current?.playFromBeginning();
+        }
+    };
 
-        return () => {
-            if (document.body.contains(script)) {
-                document.body.removeChild(script);
-            }
-        };
-    }, []);
-
-    const style = {
-        width: `${size}px`,
-        height: `${size}px`,
+    const handleClick = () => {
+        if (trigger === 'click') {
+            playerRef.current?.playFromBeginning();
+        }
     };
 
     return (
-        <div ref={iconRef} style={style} className={className}>
-            <lord-icon
-                src={src}
-                trigger={trigger}
+        <div
+            onMouseEnter={handleMouseEnter}
+            onClick={handleClick}
+            style={{ width: size, height: size, display: 'inline-block' }}
+        >
+            <Player
+                ref={playerRef}
+                icon={src}
+                size={size}
                 colors={colors}
-                style={style}
             />
         </div>
     );
