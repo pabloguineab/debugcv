@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -14,16 +15,32 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export function UserAuthForm({ className, buttonText = "Sign In with Email", ...props }: UserAuthFormProps) {
+    const router = useRouter()
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault()
         setIsLoading(true)
 
-        // Simulación de delay o llamada real
-        setTimeout(() => {
-            setIsLoading(false)
-        }, 3000)
+        const target = event.target as typeof event.target & {
+            email: { value: string };
+        };
+        const email = target.email.value;
+
+        try {
+            // Trigger OTP send
+            await fetch("/api/auth/send-otp", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+            });
+
+            // Redirect to verify page
+            router.push(`/auth/verify?email=${encodeURIComponent(email)}`);
+        } catch (error) {
+            console.error(error);
+            setIsLoading(false);
+        }
     }
 
     return (
