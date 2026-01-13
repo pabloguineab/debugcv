@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -15,14 +17,16 @@ import { Upload, MoreHorizontal, ExternalLink } from "lucide-react";
 import Image from "next/image";
 
 export default function ProfilePage() {
+    const [username, setUsername] = useState("lourdesbuendia");
+
     return (
         <div className="flex flex-col h-full w-full bg-background">
             {/* Header */}
             <div className="flex items-center justify-between px-8 py-6 border-b">
                 <div>
                     <h1 className="text-2xl font-bold text-foreground">Overview</h1>
-                    <a href="#" className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1 mt-1">
-                        himalayas.app/@lourdesbuendia <ExternalLink className="size-3" />
+                    <a href={`https://linkedin.com/in/${username}`} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1 mt-1">
+                        linkedin.com/in/{username} <ExternalLink className="size-3" />
                     </a>
                 </div>
                 <div className="flex items-center gap-2">
@@ -105,14 +109,17 @@ export default function ProfilePage() {
                             {/* Username */}
                             <div className="grid grid-cols-[200px_1fr] gap-8 items-start py-6 border-b">
                                 <div>
-                                    <h3 className="text-sm font-medium">Username*</h3>
+                                    <h3 className="text-sm font-medium">LinkedIn Username*</h3>
                                     <p className="text-sm text-muted-foreground mt-1">
-                                        This will also act as your profile URL slug (himalayas.app/@username).
+                                        This will link your profile to your LinkedIn account.
                                     </p>
                                 </div>
                                 <div className="space-y-2">
-                                    <Input defaultValue="lourdesbuendia" />
-                                    <p className="text-sm text-muted-foreground">himalayas.app/@lourdesbuendia</p>
+                                    <Input
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                    />
+                                    <p className="text-sm text-muted-foreground transition-all">linkedin.com/in/{username}</p>
                                 </div>
                             </div>
 
