@@ -13,25 +13,39 @@ interface LordIconProps {
 export function LordIcon({
     src,
     trigger = 'hover',
-    colors = 'primary:#121331',
+    colors,
     size = 18,
     className = ''
 }: LordIconProps) {
-    const iconRef = useRef<any>(null);
+    const iconRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // Dynamically import lordicon element
-        import('@lordicon/element');
+        // Load Lordicon script
+        const script = document.createElement('script');
+        script.src = 'https://cdn.lordicon.com/lordicon.js';
+        script.async = true;
+        document.body.appendChild(script);
+
+        return () => {
+            if (document.body.contains(script)) {
+                document.body.removeChild(script);
+            }
+        };
     }, []);
 
+    const style = {
+        width: `${size}px`,
+        height: `${size}px`,
+    };
+
     return (
-        <lord-icon
-            ref={iconRef}
-            src={src}
-            trigger={trigger}
-            colors={colors}
-            style={{ width: `${size}px`, height: `${size}px` }}
-            className={className}
-        />
+        <div ref={iconRef} style={style} className={className}>
+            <lord-icon
+                src={src}
+                trigger={trigger}
+                colors={colors}
+                style={style}
+            />
+        </div>
     );
 }
