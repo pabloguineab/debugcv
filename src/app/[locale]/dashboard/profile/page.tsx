@@ -237,7 +237,7 @@ export default function ProfilePage() {
             {/* Crop Dialog */}
             <Dialog open={isCropDialogOpen} onOpenChange={setIsCropDialogOpen}>
                 <DialogContent
-                    className="sm:max-w-[500px] p-0 overflow-hidden bg-white shadow-2xl border-none md:left-[calc(50%+8rem)]"
+                    className="sm:max-w-[500px] p-0 overflow-hidden bg-white shadow-2xl border-none md:left-[calc(50%_+_8rem)]"
                     overlayClassName="bg-black/40 backdrop-blur-sm left-0 md:left-[16rem] transition-[left] duration-300"
                 >
                     <DialogHeader className="p-5 border-b">
