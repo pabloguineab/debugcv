@@ -189,16 +189,13 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                             <SidebarMenuItem>
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="profile" className="border-none">
-                                        <AccordionTrigger className="flex items-center gap-3 w-full my-0.5 py-2 hover:no-underline [&[data-state=open]>svg]:rotate-90">
+                                        <AccordionTrigger className="flex items-center gap-3 w-full my-0.5 py-0 px-0 hover:no-underline hover:bg-transparent">
                                             <LordIcon
                                                 src="/animated/wired-outline-44-avatar-user-in-circle-hover-looking-around.json"
                                                 size={24}
                                                 trigger="hover"
                                             />
                                             <span className="text-sm font-medium flex-1 text-left">Profile</span>
-                                            <svg className="size-4 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                            </svg>
                                         </AccordionTrigger>
                                         <AccordionContent className="pb-2">
                                             {/* Profile Card */}
@@ -210,7 +207,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
 
                                                 {/* Progress Bar */}
                                                 <div className="mb-3 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                                    <div className="h-full bg-gradient-to-r from-purple-500 to-purple-600 w-1/4 transition-all" />
+                                                    <div className="h-full bg-gradient-to-r from-blue-500 to-blue-600 w-1/4 transition-all" />
                                                 </div>
 
                                                 {/* Profile Sections */}
