@@ -39,19 +39,57 @@ export const authOptions: AuthOptions = {
                 if (!credentials?.email || !credentials?.code) return null;
 
                 // Emulate validation logic (replace with real DB check in production)
-                // In a real app, you would check if the code matches what was sent to the email
-                // and if it hasn't expired.
                 const isValid = true;
 
                 if (isValid) {
                     return {
                         id: credentials.email,
-                        name: credentials.email, // Use email as name initially, until Onboarding updates it
+                        name: credentials.email,
                         email: credentials.email,
                         image: null,
                     };
                 }
                 return null;
+            }
+        }),
+        CredentialsProvider({
+            id: "email-password",
+            name: "Email & Password",
+            credentials: {
+                email: { label: "Email", type: "email" },
+                password: { label: "Password", type: "password" }
+            },
+            async authorize(credentials) {
+                if (!credentials?.email || !credentials?.password) return null;
+
+                try {
+                    const { getUserIdentity } = await import('@/lib/supabase');
+                    const bcrypt = await import('bcryptjs');
+
+                    const user = await getUserIdentity(credentials.email);
+
+                    if (!user || !user.password_hash) {
+                        console.log('[email-password] User not found or no password set');
+                        return null;
+                    }
+
+                    const isValid = await bcrypt.compare(credentials.password, user.password_hash);
+
+                    if (!isValid) {
+                        console.log('[email-password] Invalid password');
+                        return null;
+                    }
+
+                    return {
+                        id: credentials.email,
+                        name: user.name || credentials.email,
+                        email: credentials.email,
+                        image: user.image || null,
+                    };
+                } catch (error) {
+                    console.error('[email-password] Auth error:', error);
+                    return null;
+                }
             }
         }),
         GoogleProvider({

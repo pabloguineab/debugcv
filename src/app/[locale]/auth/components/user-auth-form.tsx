@@ -9,17 +9,18 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Github, Linkedin, Mail } from "lucide-react"
+import { Github, Linkedin, Eye, EyeOff } from "lucide-react"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
     buttonText?: string
     isSignup?: boolean
 }
 
-export function UserAuthForm({ className, buttonText = "Sign In with Email", isSignup = false, ...props }: UserAuthFormProps) {
+export function UserAuthForm({ className, buttonText = "Sign In", isSignup = false, ...props }: UserAuthFormProps) {
     const router = useRouter()
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
     const [error, setError] = React.useState<string | null>(null)
+    const [showPassword, setShowPassword] = React.useState(false)
 
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault()
@@ -28,30 +29,57 @@ export function UserAuthForm({ className, buttonText = "Sign In with Email", isS
 
         const target = event.target as typeof event.target & {
             email: { value: string };
+            password?: { value: string };
         };
         const email = target.email.value;
+        const password = target.password?.value;
 
         try {
-            const res = await fetch("/api/auth/send-otp", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, isSignup }),
-            });
+            if (isSignup) {
+                // SIGNUP: Send OTP and redirect to verify page
+                const res = await fetch("/api/auth/send-otp", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, isSignup: true }),
+                });
 
-            const data = await res.json();
+                const data = await res.json();
 
-            if (!res.ok) {
-                if (data.error === "USER_EXISTS") {
-                    setError("USER_EXISTS");
-                } else {
-                    setError(data.message || "Failed to send verification code");
+                if (!res.ok) {
+                    if (data.error === "USER_EXISTS") {
+                        setError("USER_EXISTS");
+                    } else {
+                        setError(data.message || "Failed to send verification code");
+                    }
+                    setIsLoading(false);
+                    return;
                 }
-                setIsLoading(false);
-                return;
-            }
 
-            // Redirect to verify page
-            router.push(`/auth/verify?email=${encodeURIComponent(email)}`);
+                router.push(`/auth/verify?email=${encodeURIComponent(email)}`);
+            } else {
+                // SIGNIN: Use email + password
+                if (!password) {
+                    setError("Please enter your password");
+                    setIsLoading(false);
+                    return;
+                }
+
+                const result = await signIn("email-password", {
+                    email,
+                    password,
+                    redirect: false,
+                });
+
+                if (result?.error) {
+                    setError("Invalid email or password");
+                    setIsLoading(false);
+                    return;
+                }
+
+                if (result?.ok) {
+                    window.location.href = "/dashboard";
+                }
+            }
         } catch (err) {
             console.error(err);
             setError("An error occurred. Please try again.");
@@ -62,11 +90,9 @@ export function UserAuthForm({ className, buttonText = "Sign In with Email", isS
     return (
         <div className={cn("grid gap-6", className)} {...props}>
             <form onSubmit={onSubmit}>
-                <div className="grid gap-2">
-                    <div className="grid gap-1">
-                        <Label className="sr-only" htmlFor="email">
-                            Email
-                        </Label>
+                <div className="grid gap-4">
+                    <div className="grid gap-2">
+                        <Label htmlFor="email">Email</Label>
                         <Input
                             id="email"
                             name="email"
@@ -79,6 +105,39 @@ export function UserAuthForm({ className, buttonText = "Sign In with Email", isS
                             required
                         />
                     </div>
+
+                    {!isSignup && (
+                        <div className="grid gap-2">
+                            <div className="flex items-center justify-between">
+                                <Label htmlFor="password">Password</Label>
+                                <Link
+                                    href="/auth/forgot-password"
+                                    className="text-sm text-muted-foreground underline-offset-4 hover:underline"
+                                >
+                                    Forgot password?
+                                </Link>
+                            </div>
+                            <div className="relative">
+                                <Input
+                                    id="password"
+                                    name="password"
+                                    placeholder="Enter your password"
+                                    type={showPassword ? "text" : "password"}
+                                    autoComplete="current-password"
+                                    disabled={isLoading}
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
                     <Button disabled={isLoading} type="submit" className="bg-blue-600 hover:bg-blue-700 text-white w-full">
                         {isLoading && (
                             <svg

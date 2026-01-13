@@ -13,6 +13,7 @@ export type UserIdentity = {
     name: string | null;
     email: string | null;
     image: string | null;
+    password_hash?: string | null;
     created_at?: string;
     updated_at?: string;
 };
