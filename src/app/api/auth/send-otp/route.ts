@@ -66,7 +66,7 @@ export async function POST(req: Request) {
 
         if (process.env.RESEND_API_KEY) {
             await resend.emails.send({
-                from: 'DebugCV <onboarding@resend.dev>', // Update this with your verified domain
+                from: 'DebugCV <info@debugcv.com>',
                 to: email,
                 subject: `${code} is your verification code`,
                 html: htmlContent,
