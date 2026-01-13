@@ -3,7 +3,6 @@
 
 import * as React from "react";
 import {
-    LayoutDashboard,
     ClipboardList,
     Globe,
     FileText,
@@ -21,6 +20,7 @@ import {
     Gift,
     Upload,
 } from "lucide-react";
+import { DashboardChartIcon } from "@/components/icons/dashboard-chart-icon";
 import { signOut } from "next-auth/react";
 
 import {
@@ -92,7 +92,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
                                     <Link href="/dashboard" className="group/icon-hover flex items-center gap-3 w-full my-0.5">
-                                        <LayoutDashboard className="size-[18px] group-hover/icon-hover:animate-[icon-pulse_0.5s_ease-in-out]" />
+                                        <DashboardChartIcon className="size-[18px]" />
                                         <span className="text-sm font-medium">Dashboard</span>
                                     </Link>
                                 </SidebarMenuButton>
