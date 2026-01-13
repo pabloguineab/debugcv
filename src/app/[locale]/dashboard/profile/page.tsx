@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
+import { Country, City, ICountry, ICity } from "country-state-city";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,6 +36,28 @@ export default function ProfilePage() {
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [selectedCountry, setSelectedCountry] = useState<string>("ES");
+    const [selectedCity, setSelectedCity] = useState<string>("");
+
+    // Get all countries
+    const countries = useMemo(() => Country.getAllCountries(), []);
+
+    // Get cities for selected country
+    const cities = useMemo(() => {
+        if (selectedCountry) {
+            return City.getCitiesOfCountry(selectedCountry) || [];
+        }
+        return [];
+    }, [selectedCountry]);
+
+    // Get country flag emoji
+    const getCountryFlag = (countryCode: string) => {
+        const codePoints = countryCode
+            .toUpperCase()
+            .split('')
+            .map(char => 127397 + char.charCodeAt(0));
+        return String.fromCodePoint(...codePoints);
+    };
 
     const handleFile = (file: File) => {
         if (file && file.type.startsWith("image/")) {
@@ -199,7 +222,7 @@ export default function ProfilePage() {
                             </div>
 
                             {/* Country */}
-                            <div className="grid grid-cols-[200px_1fr] gap-8 items-start py-6">
+                            <div className="grid grid-cols-[200px_1fr] gap-8 items-start py-6 border-b">
                                 <div>
                                     <h3 className="text-sm font-medium">What country do you currently reside in?*</h3>
                                     <p className="text-sm text-muted-foreground mt-1">
@@ -207,27 +230,55 @@ export default function ProfilePage() {
                                     </p>
                                 </div>
                                 <div>
-                                    <Select defaultValue="spain">
+                                    <Select value={selectedCountry} onValueChange={(value) => {
+                                        setSelectedCountry(value);
+                                        setSelectedCity(""); // Reset city when country changes
+                                    }}>
                                         <SelectTrigger className="w-full">
                                             <div className="flex items-center gap-2">
-                                                <span className="text-lg">🇪🇸</span>
+                                                <span className="text-lg">{getCountryFlag(selectedCountry)}</span>
                                                 <SelectValue />
                                             </div>
                                         </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="spain">
-                                                <div className="flex items-center gap-2">
-                                                    <span>Spain</span>
-                                                </div>
-                                            </SelectItem>
-                                            <SelectItem value="usa">United States</SelectItem>
-                                            <SelectItem value="uk">United Kingdom</SelectItem>
-                                            <SelectItem value="germany">Germany</SelectItem>
-                                            <SelectItem value="france">France</SelectItem>
+                                        <SelectContent className="max-h-[300px]">
+                                            {countries.map((country) => (
+                                                <SelectItem key={country.isoCode} value={country.isoCode}>
+                                                    <div className="flex items-center gap-2">
+                                                        <span>{getCountryFlag(country.isoCode)}</span>
+                                                        <span>{country.name}</span>
+                                                    </div>
+                                                </SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </Select>
                                 </div>
                             </div>
+
+                            {/* City */}
+                            {selectedCountry && cities.length > 0 && (
+                                <div className="grid grid-cols-[200px_1fr] gap-8 items-start py-6">
+                                    <div>
+                                        <h3 className="text-sm font-medium">What city do you live in?</h3>
+                                        <p className="text-sm text-muted-foreground mt-1">
+                                            This information is optional but helps provide more relevant job matches.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <Select value={selectedCity} onValueChange={setSelectedCity}>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent className="max-h-[300px]">
+                                                {cities.map((city) => (
+                                                    <SelectItem key={city.name} value={city.name}>
+                                                        {city.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                            )}
 
                         </div>
                     </TabsContent>
