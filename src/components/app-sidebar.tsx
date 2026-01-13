@@ -60,9 +60,10 @@ const resumesItems = [
     { title: "Cover Letters", url: "/dashboard/cover-letters", icon: PenTool, animation: "group-hover/icon-hover:animate-[icon-pen-write_0.5s_ease-in-out]" },
 ];
 
+
 const interviewItems = [
     { title: "AI Simulator", url: "/dashboard/interview-coach", icon: Bot, animation: "group-hover/icon-hover:animate-[icon-shake_0.5s_ease-in-out]" },
-    { title: "Playbooks", url: "/dashboard/playbooks", icon: BookOpen, animation: "group-hover/icon-hover:animate-[icon-bounce_0.5s_ease-in-out]" },
+    { title: "Playbooks", url: "/dashboard/playbooks", icon: BookOpen, animation: "group-hover/icon-hover:animate-[icon-page-turn_0.6s_ease-in-out]" },
 ];
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {

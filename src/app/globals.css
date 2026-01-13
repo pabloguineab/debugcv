@@ -251,3 +251,22 @@
     transform: scaleY(1.4);
   }
 }
+
+/* Page Turn Animation for Playbooks */
+@keyframes icon-page-turn {
+  0% {
+    transform: perspective(400px) rotateY(0deg);
+  }
+
+  40% {
+    transform: perspective(400px) rotateY(-30deg);
+  }
+
+  60% {
+    transform: perspective(400px) rotateY(-30deg);
+  }
+
+  100% {
+    transform: perspective(400px) rotateY(0deg);
+  }
+}
