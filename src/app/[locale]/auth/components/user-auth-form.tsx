@@ -167,18 +167,16 @@ export function UserAuthForm({ className, buttonText = "Sign In", isSignup = fal
             </form>
 
             {error === "USER_EXISTS" && (
-                <div className="text-sm text-center p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-                    <p className="text-amber-800 dark:text-amber-200">
-                        This email is already registered.{" "}
-                        <Link href="/auth/signin" className="font-medium underline hover:text-amber-900">
-                            Sign in instead
-                        </Link>
-                    </p>
+                <div className="text-[11px] text-center text-red-500 -mt-1">
+                    This email is already registered.{" "}
+                    <Link href="/auth/signin" className="underline hover:text-red-600">
+                        Sign in instead
+                    </Link>
                 </div>
             )}
 
             {error && error !== "USER_EXISTS" && (
-                <div className="text-[11px] text-center text-gray-400 -mt-1">{error}</div>
+                <div className="text-[11px] text-center text-red-500 -mt-1">{error}</div>
             )}
 
             <div className="relative">
