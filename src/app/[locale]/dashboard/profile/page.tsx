@@ -41,6 +41,7 @@ export default function ProfilePage() {
                 <Tabs defaultValue="overview" className="w-full">
                     <TabsList className="flex items-center justify-start bg-transparent border-b h-auto p-0 mb-8 rounded-none w-auto gap-6">
                         <TabsTrigger
+                            value="overview"
                             className="group relative flex-none rounded-none border-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground shadow-none transition-none hover:text-foreground data-[state=active]:!text-blue-600 data-[selected]:!text-blue-600 data-[state=active]:!font-bold data-[selected]:!font-bold"
                         >
                             <span className="relative z-10">Overview</span>
