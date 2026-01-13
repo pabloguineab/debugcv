@@ -48,21 +48,21 @@ import { Logo } from "@/components/Logo";
 import { Link } from "@/i18n/routing";
 import { ModeToggle } from "@/components/mode-toggle";
 
-// Menu Groups
+// Menu Groups with custom animations
 const jobsItems = [
-    { title: "Job Search", url: "/dashboard/job-search", icon: Globe },
-    { title: "Application Board", url: "/dashboard/application-board", icon: ClipboardList },
+    { title: "Job Search", url: "/dashboard/job-search", icon: Globe, animation: "group-hover:animate-[icon-globe-rotate_0.6s_ease-in-out]" },
+    { title: "Application Board", url: "/dashboard/application-board", icon: ClipboardList, animation: "group-hover:animate-[icon-bounce_0.5s_ease-in-out]" },
 ];
 
 const resumesItems = [
-    { title: "My Versions", url: "/dashboard/resumes", icon: FileText },
-    { title: "ATS Score", url: "/dashboard/resumes/ats-score", icon: Target },
-    { title: "Cover Letters", url: "/dashboard/cover-letters", icon: PenTool },
+    { title: "My Versions", url: "/dashboard/resumes", icon: FileText, animation: "group-hover:animate-[icon-bounce_0.5s_ease-in-out]" },
+    { title: "ATS Score", url: "/dashboard/resumes/ats-score", icon: Target, animation: "group-hover:animate-[icon-pulse_0.5s_ease-in-out]" },
+    { title: "Cover Letters", url: "/dashboard/cover-letters", icon: PenTool, animation: "group-hover:animate-[icon-pen-write_0.5s_ease-in-out]" },
 ];
 
 const interviewItems = [
-    { title: "AI Simulator", url: "/dashboard/interview-coach", icon: Bot },
-    { title: "Playbooks", url: "/dashboard/playbooks", icon: BookOpen },
+    { title: "AI Simulator", url: "/dashboard/interview-coach", icon: Bot, animation: "group-hover:animate-[icon-shake_0.5s_ease-in-out]" },
+    { title: "Playbooks", url: "/dashboard/playbooks", icon: BookOpen, animation: "group-hover:animate-[icon-bounce_0.5s_ease-in-out]" },
 ];
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -91,8 +91,8 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                         <SidebarMenu>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
-                                    <Link href="/dashboard" className="flex items-center gap-3 w-full my-0.5">
-                                        <LayoutDashboard className="size-[18px]" />
+                                    <Link href="/dashboard" className="group flex items-center gap-3 w-full my-0.5">
+                                        <LayoutDashboard className="size-[18px] group-hover:animate-[icon-pulse_0.5s_ease-in-out]" />
                                         <span className="text-sm font-medium">Dashboard</span>
                                     </Link>
                                 </SidebarMenuButton>
@@ -109,8 +109,8 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                             {jobsItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <Link href={item.url} className="flex items-center gap-3 w-full my-0.5">
-                                            <item.icon className="size-[18px]" />
+                                        <Link href={item.url} className="group flex items-center gap-3 w-full my-0.5">
+                                            <item.icon className={`size-[18px] ${item.animation}`} />
                                             <span className="text-sm font-medium">{item.title}</span>
                                         </Link>
                                     </SidebarMenuButton>
@@ -128,8 +128,8 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                             {resumesItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <Link href={item.url} className="flex items-center gap-3 w-full my-0.5">
-                                            <item.icon className="size-[18px]" />
+                                        <Link href={item.url} className="group flex items-center gap-3 w-full my-0.5">
+                                            <item.icon className={`size-[18px] ${item.animation}`} />
                                             <span className="text-sm font-medium">{item.title}</span>
                                         </Link>
                                     </SidebarMenuButton>
@@ -147,8 +147,8 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                             {interviewItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <Link href={item.url} className="flex items-center gap-3 w-full my-0.5">
-                                            <item.icon className="size-[18px]" />
+                                        <Link href={item.url} className="group flex items-center gap-3 w-full my-0.5">
+                                            <item.icon className={`size-[18px] ${item.animation}`} />
                                             <span className="text-sm font-medium">{item.title}</span>
                                         </Link>
                                     </SidebarMenuButton>
@@ -166,7 +166,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                 onClick={onOpenUploadModal}
                                 className="flex items-center gap-3 text-blue-600 dark:text-blue-400 font-medium w-full my-0.5 cursor-pointer hover:bg-sidebar-accent hover:text-sidebar-accent-foreground group"
                             >
-                                <Gem className="size-[18px]" />
+                                <Gem className="size-[18px] group-hover:animate-[icon-sparkle_0.5s_ease-in-out]" />
                                 <span className="flex-1 text-sm">Get Expert Review</span>
                                 <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full font-bold dark:bg-blue-900/40 dark:text-blue-400 group-data-[collapsible=icon]:hidden">
                                     FREE
@@ -180,7 +180,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                 onClick={onOpenReferModal}
                                 className="flex items-center gap-3 text-green-600 dark:text-green-500 font-medium group w-full cursor-pointer my-0.5"
                             >
-                                <Gift className="size-[18px]" />
+                                <Gift className="size-[18px] group-hover:animate-[icon-shake_0.5s_ease-in-out]" />
                                 <span className="flex-1 text-sm">Refer a Friend</span>
                                 <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-bold dark:bg-green-900/40 dark:text-green-400 group-data-[collapsible=icon]:hidden">
                                     -30%
