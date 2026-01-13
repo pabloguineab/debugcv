@@ -66,7 +66,10 @@ export const authOptions: AuthOptions = {
                     const { getUserIdentity } = await import('@/lib/supabase');
                     const bcrypt = await import('bcryptjs');
 
+                    console.log('[email-password] Attempting login for:', credentials.email);
                     const user = await getUserIdentity(credentials.email);
+                    console.log('[email-password] User found:', user ? 'yes' : 'no');
+                    console.log('[email-password] Has password_hash:', user?.password_hash ? 'yes' : 'no');
 
                     if (!user || !user.password_hash) {
                         console.log('[email-password] User not found or no password set');
@@ -74,6 +77,7 @@ export const authOptions: AuthOptions = {
                     }
 
                     const isValid = await bcrypt.compare(credentials.password, user.password_hash);
+                    console.log('[email-password] Password valid:', isValid);
 
                     if (!isValid) {
                         console.log('[email-password] Invalid password');
