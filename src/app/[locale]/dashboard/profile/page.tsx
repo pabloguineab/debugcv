@@ -236,7 +236,10 @@ export default function ProfilePage() {
 
             {/* Crop Dialog */}
             <Dialog open={isCropDialogOpen} onOpenChange={setIsCropDialogOpen}>
-                <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden bg-white">
+                <DialogContent
+                    className="sm:max-w-[500px] p-0 overflow-hidden bg-white shadow-2xl border-none"
+                    overlayClassName="md:left-[var(--sidebar-width)] transition-[left] duration-200"
+                >
                     <DialogHeader className="p-4 border-b">
                         <DialogTitle className="text-xl">Edit photo</DialogTitle>
                     </DialogHeader>
@@ -259,16 +262,26 @@ export default function ProfilePage() {
 
                     <div className="p-6 space-y-6">
                         <div className="flex items-center gap-4">
-                            <Minus className="size-4 text-muted-foreground" />
+                            <button
+                                onClick={() => setZoom(Math.max(zoom - 0.1, 1))}
+                                className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                            >
+                                <Minus className="size-4 text-muted-foreground" />
+                            </button>
                             <Slider
                                 value={[zoom]}
                                 min={1}
                                 max={3}
                                 step={0.1}
                                 onValueChange={(value) => setZoom(value[0])}
-                                className="flex-1"
+                                className="flex-1 cursor-pointer"
                             />
-                            <Plus className="size-4 text-muted-foreground" />
+                            <button
+                                onClick={() => setZoom(Math.min(zoom + 0.1, 3))}
+                                className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                            >
+                                <Plus className="size-4 text-muted-foreground" />
+                            </button>
                         </div>
                     </div>
 
