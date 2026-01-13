@@ -212,7 +212,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                         </AccordionTrigger>
                                         <AccordionContent className="pb-2 px-0">
                                             {/* Profile Card */}
-                                            <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
+                                            <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
                                                 <h3 className="text-sm font-semibold mb-2">Complete your profile</h3>
                                                 <p className="text-xs text-muted-foreground mb-3">
                                                     A complete profile helps us match you with relevant jobs and personalize our AI tools to you.
