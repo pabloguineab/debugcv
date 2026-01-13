@@ -3,6 +3,7 @@
 import * as React from "react"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -12,15 +13,18 @@ import { Github, Linkedin, Mail } from "lucide-react"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
     buttonText?: string
+    isSignup?: boolean
 }
 
-export function UserAuthForm({ className, buttonText = "Sign In with Email", ...props }: UserAuthFormProps) {
+export function UserAuthForm({ className, buttonText = "Sign In with Email", isSignup = false, ...props }: UserAuthFormProps) {
     const router = useRouter()
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
+    const [error, setError] = React.useState<string | null>(null)
 
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault()
         setIsLoading(true)
+        setError(null)
 
         const target = event.target as typeof event.target & {
             email: { value: string };
@@ -28,17 +32,29 @@ export function UserAuthForm({ className, buttonText = "Sign In with Email", ...
         const email = target.email.value;
 
         try {
-            // Trigger OTP send
-            await fetch("/api/auth/send-otp", {
+            const res = await fetch("/api/auth/send-otp", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email }),
+                body: JSON.stringify({ email, isSignup }),
             });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                if (data.error === "USER_EXISTS") {
+                    setError("USER_EXISTS");
+                } else {
+                    setError(data.message || "Failed to send verification code");
+                }
+                setIsLoading(false);
+                return;
+            }
 
             // Redirect to verify page
             router.push(`/auth/verify?email=${encodeURIComponent(email)}`);
-        } catch (error) {
-            console.error(error);
+        } catch (err) {
+            console.error(err);
+            setError("An error occurred. Please try again.");
             setIsLoading(false);
         }
     }
@@ -90,6 +106,22 @@ export function UserAuthForm({ className, buttonText = "Sign In with Email", ...
                     </Button>
                 </div>
             </form>
+
+            {error === "USER_EXISTS" && (
+                <div className="text-sm text-center p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+                    <p className="text-amber-800 dark:text-amber-200">
+                        This email is already registered.{" "}
+                        <Link href="/auth/signin" className="font-medium underline hover:text-amber-900">
+                            Sign in instead
+                        </Link>
+                    </p>
+                </div>
+            )}
+
+            {error && error !== "USER_EXISTS" && (
+                <div className="text-sm text-center text-red-500">{error}</div>
+            )}
+
             <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t" />

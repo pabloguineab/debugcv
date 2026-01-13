@@ -40,7 +40,7 @@ export default function SignUpPage() {
                             Enter your email below to create your account
                         </p>
                     </div>
-                    <UserAuthForm buttonText="Sign Up with Email" />
+                    <UserAuthForm buttonText="Sign Up with Email" isSignup={true} />
                     <p className="px-8 text-center text-sm text-muted-foreground">
                         By clicking continue, you agree to our{" "}
                         <Link

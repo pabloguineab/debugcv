@@ -1,19 +1,35 @@
 
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { getUserIdentity } from '@/lib/supabase';
 
 // Initialize Resend with API Key from env
 const resend = new Resend(process.env.RESEND_API_KEY || 're_123456789');
 
 export async function POST(req: Request) {
     try {
-        const { email } = await req.json();
+        const { email, isSignup } = await req.json();
+
+        // If this is a signup request, check if user already exists
+        if (isSignup) {
+            try {
+                const existingUser = await getUserIdentity(email);
+                if (existingUser) {
+                    return NextResponse.json(
+                        { error: "USER_EXISTS", message: "This email is already registered" },
+                        { status: 409 }
+                    );
+                }
+            } catch (error) {
+                // If error is not "not found", log it but continue
+                console.error("[send-otp] Error checking existing user:", error);
+            }
+        }
 
         // Generate a random 6-digit code
         const code = Math.floor(100000 + Math.random() * 900000).toString();
 
         // In a real app, you would save this code to your database with an expiration time
-        // await db.saveOtp(email, code);
         console.log(`[OTP DEBUG] Generated code for ${email}: ${code}`);
 
         // Email HTML Template matching the user's request
