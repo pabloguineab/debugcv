@@ -14,7 +14,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus, Linkedin, Github, IdCard, Settings, Code, Briefcase, GraduationCap } from "lucide-react";
+import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus, Linkedin, Github, IdCard, Settings, Code, Briefcase, GraduationCap, CloudUpload } from "lucide-react";
 import Image from "next/image";
 import Cropper from "react-easy-crop";
 import {
@@ -157,8 +157,9 @@ export default function ProfilePage() {
                     <Button variant="outline" size="icon">
                         <MoreHorizontal className="size-4" />
                     </Button>
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                        Import Resume
+                    <Button className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 hover:border-blue-600 transition-colors">
+                        <CloudUpload className="size-4 mr-2" />
+                        Import resume
                     </Button>
                 </div>
             </div>
