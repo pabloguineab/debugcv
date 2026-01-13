@@ -41,18 +41,18 @@ export default function SignInPage() {
                         </p>
                     </div>
                     <UserAuthForm buttonText="Sign In with Email" />
-                    <p className="px-8 text-center text-sm text-muted-foreground">
+                    <p className="px-8 text-center text-[11px] text-gray-400">
                         By clicking continue, you agree to our{" "}
                         <Link
                             href="/terms"
-                            className="underline underline-offset-4 hover:text-primary"
+                            className="underline underline-offset-4 hover:text-gray-500"
                         >
                             Terms of Service
                         </Link>{" "}
                         and{" "}
                         <Link
                             href="/privacy"
-                            className="underline underline-offset-4 hover:text-primary"
+                            className="underline underline-offset-4 hover:text-gray-500"
                         >
                             Privacy Policy
                         </Link>
