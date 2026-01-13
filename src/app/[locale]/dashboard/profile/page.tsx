@@ -14,7 +14,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus, Linkedin, Github, IdCard, Settings, Code, Briefcase, GraduationCap, CloudUpload, FolderKanban, Award } from "lucide-react";
+import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus, Linkedin, Github, IdCard, Settings, Code, Briefcase, GraduationCap, CloudUpload, FolderKanban, Award, Languages, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Cropper from "react-easy-crop";
 import {
@@ -44,6 +44,39 @@ export default function ProfilePage() {
     const [introduction, setIntroduction] = useState<string>("");
     const [userName, setUserName] = useState<string>("Lourdes Buendia"); // TODO: Get from user session
     const [activeTab, setActiveTab] = useState<string>("overview");
+
+    // Languages state
+    const [languages, setLanguages] = useState<{ language: string; level: string }[]>([]);
+    const [newLanguage, setNewLanguage] = useState<string>("");
+    const [newLevel, setNewLevel] = useState<string>("");
+
+    // Common languages list
+    const commonLanguages = [
+        "English", "Spanish", "French", "German", "Italian", "Portuguese", "Chinese", "Japanese",
+        "Korean", "Arabic", "Russian", "Hindi", "Dutch", "Swedish", "Norwegian", "Danish",
+        "Finnish", "Polish", "Turkish", "Greek", "Hebrew", "Thai", "Vietnamese", "Indonesian"
+    ];
+
+    // Language proficiency levels
+    const proficiencyLevels = [
+        { value: "native", label: "Native / Bilingual" },
+        { value: "fluent", label: "Fluent" },
+        { value: "advanced", label: "Advanced" },
+        { value: "intermediate", label: "Intermediate" },
+        { value: "basic", label: "Basic" }
+    ];
+
+    const addLanguage = () => {
+        if (newLanguage && newLevel) {
+            setLanguages([...languages, { language: newLanguage, level: newLevel }]);
+            setNewLanguage("");
+            setNewLevel("");
+        }
+    };
+
+    const removeLanguage = (index: number) => {
+        setLanguages(languages.filter((_, i) => i !== index));
+    };
 
     // Tab titles mapping
     const tabTitles: Record<string, string> = {
@@ -438,6 +471,79 @@ export default function ProfilePage() {
                                     </div>
                                 </div>
                             )}
+
+                            {/* Languages */}
+                            <div className="grid grid-cols-[200px_1fr] gap-8 items-start py-6 border-b">
+                                <div>
+                                    <h3 className="text-sm font-medium">Languages</h3>
+                                    <p className="text-sm text-muted-foreground mt-1">
+                                        Add the languages you speak and your proficiency level.
+                                    </p>
+                                </div>
+                                <div className="space-y-4">
+                                    {/* Added languages list */}
+                                    {languages.length > 0 && (
+                                        <div className="space-y-2">
+                                            {languages.map((lang, index) => (
+                                                <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg max-w-md">
+                                                    <Languages className="size-4 text-blue-600" />
+                                                    <span className="font-medium text-sm">{lang.language}</span>
+                                                    <span className="text-sm text-muted-foreground">•</span>
+                                                    <span className="text-sm text-muted-foreground">
+                                                        {proficiencyLevels.find(l => l.value === lang.level)?.label}
+                                                    </span>
+                                                    <button
+                                                        onClick={() => removeLanguage(index)}
+                                                        className="ml-auto p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded transition-colors"
+                                                    >
+                                                        <Trash2 className="size-4 text-red-500" />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* Add new language form */}
+                                    <div className="flex items-center gap-3 max-w-md">
+                                        <Select value={newLanguage} onValueChange={setNewLanguage}>
+                                            <SelectTrigger className="w-[180px]">
+                                                {newLanguage ? <SelectValue /> : <span className="text-muted-foreground">Select language</span>}
+                                            </SelectTrigger>
+                                            <SelectContent className="max-h-[300px]">
+                                                {commonLanguages
+                                                    .filter(lang => !languages.some(l => l.language === lang))
+                                                    .map((lang) => (
+                                                        <SelectItem key={lang} value={lang}>
+                                                            {lang}
+                                                        </SelectItem>
+                                                    ))}
+                                            </SelectContent>
+                                        </Select>
+
+                                        <Select value={newLevel} onValueChange={setNewLevel}>
+                                            <SelectTrigger className="w-[180px]">
+                                                {newLevel ? <SelectValue /> : <span className="text-muted-foreground">Select level</span>}
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {proficiencyLevels.map((level) => (
+                                                    <SelectItem key={level.value} value={level.value}>
+                                                        {level.label}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+
+                                        <Button
+                                            onClick={addLanguage}
+                                            disabled={!newLanguage || !newLevel}
+                                            className="bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
+                                        >
+                                            <Plus className="size-4 mr-1" />
+                                            Add
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
                     </TabsContent>
