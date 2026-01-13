@@ -41,6 +41,7 @@ export default function ProfilePage() {
     const [selectedCity, setSelectedCity] = useState<string>("");
     const [linkedinUrl, setLinkedinUrl] = useState<string>("");
     const [githubUrl, setGithubUrl] = useState<string>("");
+    const [introduction, setIntroduction] = useState<string>("");
 
     // Get all countries
     const countries = useMemo(() => Country.getAllCountries(), []);
@@ -271,6 +272,25 @@ export default function ProfilePage() {
                                             />
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+
+                            {/* Introduction */}
+                            <div className="grid grid-cols-[200px_1fr] gap-8 items-start py-6 border-b">
+                                <div>
+                                    <h3 className="text-sm font-medium">Introduction*</h3>
+                                    <p className="text-sm text-muted-foreground mt-1">
+                                        Write a brief introduction. This will be shown on recruiters on our talent search pages.
+                                    </p>
+                                </div>
+                                <div>
+                                    <textarea
+                                        value={introduction}
+                                        onChange={(e) => setIntroduction(e.target.value)}
+                                        placeholder="e.g. We're spread all over the world..."
+                                        rows={3}
+                                        className="w-full bg-white border border-gray-200 rounded-lg px-3 py-3 text-sm placeholder:text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-[3px] focus:ring-blue-500/20 transition-colors resize-none"
+                                    />
                                 </div>
                             </div>
 
