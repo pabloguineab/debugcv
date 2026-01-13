@@ -14,7 +14,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus, Linkedin, Github, IdCard, Settings, Code, Briefcase, GraduationCap, CloudUpload } from "lucide-react";
+import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus, Linkedin, Github, IdCard, Settings, Code, Briefcase, GraduationCap, CloudUpload, FolderKanban, Award } from "lucide-react";
 import Image from "next/image";
 import Cropper from "react-easy-crop";
 import {
@@ -51,7 +51,9 @@ export default function ProfilePage() {
         preferences: "Your Preferences",
         "tech-stack": "Your Tech Stack",
         experience: "Your Experience",
-        education: "Education"
+        projects: "Your Projects",
+        education: "Education",
+        certifications: "Certifications"
     };
 
     // Tab subtitles mapping
@@ -60,7 +62,9 @@ export default function ProfilePage() {
         preferences: "Set your job preferences and work style",
         "tech-stack": "Add your technical skills and expertise",
         experience: "Showcase your professional experience",
-        education: "Add your educational background"
+        projects: "Highlight your personal and professional projects",
+        education: "Add your educational background",
+        certifications: "Add your professional certifications"
     };
 
     // Tab icons mapping
@@ -69,7 +73,9 @@ export default function ProfilePage() {
         preferences: Settings,
         "tech-stack": Code,
         experience: Briefcase,
-        education: GraduationCap
+        projects: FolderKanban,
+        education: GraduationCap,
+        certifications: Award
     };
 
     // Get user initial
@@ -193,10 +199,22 @@ export default function ProfilePage() {
                             Experience
                         </TabsTrigger>
                         <TabsTrigger
+                            value="projects"
+                            className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
+                        >
+                            Projects
+                        </TabsTrigger>
+                        <TabsTrigger
                             value="education"
                             className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
                         >
                             Education
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="certifications"
+                            className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
+                        >
+                            Certifications
                         </TabsTrigger>
                     </TabsList>
 
@@ -421,6 +439,42 @@ export default function ProfilePage() {
                                 </div>
                             )}
 
+                        </div>
+                    </TabsContent>
+
+                    <TabsContent value="preferences" className="space-y-8 max-w-3xl">
+                        <div className="text-center py-12 text-muted-foreground">
+                            Preferences content coming soon...
+                        </div>
+                    </TabsContent>
+
+                    <TabsContent value="tech-stack" className="space-y-8 max-w-3xl">
+                        <div className="text-center py-12 text-muted-foreground">
+                            Tech Stack content coming soon...
+                        </div>
+                    </TabsContent>
+
+                    <TabsContent value="experience" className="space-y-8 max-w-3xl">
+                        <div className="text-center py-12 text-muted-foreground">
+                            Experience content coming soon...
+                        </div>
+                    </TabsContent>
+
+                    <TabsContent value="projects" className="space-y-8 max-w-3xl">
+                        <div className="text-center py-12 text-muted-foreground">
+                            Projects content coming soon...
+                        </div>
+                    </TabsContent>
+
+                    <TabsContent value="education" className="space-y-8 max-w-3xl">
+                        <div className="text-center py-12 text-muted-foreground">
+                            Education content coming soon...
+                        </div>
+                    </TabsContent>
+
+                    <TabsContent value="certifications" className="space-y-8 max-w-3xl">
+                        <div className="text-center py-12 text-muted-foreground">
+                            Certifications content coming soon...
                         </div>
                     </TabsContent>
                 </Tabs>
