@@ -24,8 +24,14 @@ export function DashboardLayoutClient({ children, user }: DashboardLayoutClientP
         <SidebarProvider>
             <AppSidebar
                 user={user}
-                onOpenReferModal={() => setIsReferModalOpen(true)}
-                onOpenUploadModal={() => setIsUploadModalOpen(true)}
+                onOpenReferModal={() => {
+                    setIsReferModalOpen(true);
+                    setIsUploadModalOpen(false);
+                }}
+                onOpenUploadModal={() => {
+                    setIsUploadModalOpen(true);
+                    setIsReferModalOpen(false);
+                }}
             />
             <SidebarInset>
                 <DashboardHeader />
