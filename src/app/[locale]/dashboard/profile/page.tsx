@@ -39,41 +39,41 @@ export default function ProfilePage() {
             {/* Content using Tabs */}
             <div className="flex-1 overflow-auto p-8">
                 <Tabs defaultValue="overview" className="w-full">
-                    <TabsList className="flex items-center justify-start bg-transparent border-b h-auto p-0 mb-8 rounded-none w-auto gap-6">
+                    <TabsList className="flex items-center justify-start bg-transparent border-b h-auto p-0 mb-8 rounded-none w-fit gap-6">
                         <TabsTrigger
                             value="overview"
-                            className="group relative flex-none rounded-none border-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground shadow-none transition-none hover:text-foreground data-[state=active]:!text-blue-600 data-[selected]:!text-blue-600 data-[state=active]:!font-bold data-[selected]:!font-bold"
+                            className="relative flex-none rounded-none border-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground shadow-none transition-none hover:text-foreground [&[data-state=active]]:!text-blue-600 [&[data-selected]]:!text-blue-600 [&[data-state=active]]:!font-bold [&[data-selected]]:!font-bold [&[data-state=active]>.active-bar]:block [&[data-selected]>.active-bar]:block"
                         >
                             <span className="relative z-10">Overview</span>
-                            <span className="absolute bottom-0 left-0 h-[2px] w-full bg-blue-600 hidden group-data-[state=active]:block group-data-[selected]:block z-20" />
+                            <span className="active-bar absolute bottom-0 left-0 h-[3px] w-full bg-blue-600 hidden z-20 translate-y-[1.5px] rounded-t-sm" />
                         </TabsTrigger>
                         <TabsTrigger
                             value="preferences"
-                            className="group relative flex-none rounded-none border-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground shadow-none transition-none hover:text-foreground data-[state=active]:!text-blue-600 data-[selected]:!text-blue-600 data-[state=active]:!font-bold data-[selected]:!font-bold"
+                            className="relative flex-none rounded-none border-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground shadow-none transition-none hover:text-foreground [&[data-state=active]]:!text-blue-600 [&[data-selected]]:!text-blue-600 [&[data-state=active]]:!font-bold [&[data-selected]]:!font-bold [&[data-state=active]>.active-bar]:block [&[data-selected]>.active-bar]:block"
                         >
                             <span className="relative z-10">Preferences</span>
-                            <span className="absolute bottom-0 left-0 h-[2px] w-full bg-blue-600 hidden group-data-[state=active]:block group-data-[selected]:block z-20" />
+                            <span className="active-bar absolute bottom-0 left-0 h-[3px] w-full bg-blue-600 hidden z-20 translate-y-[1.5px] rounded-t-sm" />
                         </TabsTrigger>
                         <TabsTrigger
                             value="tech-stack"
-                            className="group relative flex-none rounded-none border-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground shadow-none transition-none hover:text-foreground data-[state=active]:!text-blue-600 data-[selected]:!text-blue-600 data-[state=active]:!font-bold data-[selected]:!font-bold"
+                            className="relative flex-none rounded-none border-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground shadow-none transition-none hover:text-foreground [&[data-state=active]]:!text-blue-600 [&[data-selected]]:!text-blue-600 [&[data-state=active]]:!font-bold [&[data-selected]]:!font-bold [&[data-state=active]>.active-bar]:block [&[data-selected]>.active-bar]:block"
                         >
                             <span className="relative z-10">Tech Stack</span>
-                            <span className="absolute bottom-0 left-0 h-[2px] w-full bg-blue-600 hidden group-data-[state=active]:block group-data-[selected]:block z-20" />
+                            <span className="active-bar absolute bottom-0 left-0 h-[3px] w-full bg-blue-600 hidden z-20 translate-y-[1.5px] rounded-t-sm" />
                         </TabsTrigger>
                         <TabsTrigger
                             value="experience"
-                            className="group relative flex-none rounded-none border-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground shadow-none transition-none hover:text-foreground data-[state=active]:!text-blue-600 data-[selected]:!text-blue-600 data-[state=active]:!font-bold data-[selected]:!font-bold"
+                            className="relative flex-none rounded-none border-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground shadow-none transition-none hover:text-foreground [&[data-state=active]]:!text-blue-600 [&[data-selected]]:!text-blue-600 [&[data-state=active]]:!font-bold [&[data-selected]]:!font-bold [&[data-state=active]>.active-bar]:block [&[data-selected]>.active-bar]:block"
                         >
                             <span className="relative z-10">Experience</span>
-                            <span className="absolute bottom-0 left-0 h-[2px] w-full bg-blue-600 hidden group-data-[state=active]:block group-data-[selected]:block z-20" />
+                            <span className="active-bar absolute bottom-0 left-0 h-[3px] w-full bg-blue-600 hidden z-20 translate-y-[1.5px] rounded-t-sm" />
                         </TabsTrigger>
                         <TabsTrigger
                             value="education"
-                            className="group relative flex-none rounded-none border-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground shadow-none transition-none hover:text-foreground data-[state=active]:!text-blue-600 data-[selected]:!text-blue-600 data-[state=active]:!font-bold data-[selected]:!font-bold"
+                            className="relative flex-none rounded-none border-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground shadow-none transition-none hover:text-foreground [&[data-state=active]]:!text-blue-600 [&[data-selected]]:!text-blue-600 [&[data-state=active]]:!font-bold [&[data-selected]]:!font-bold [&[data-state=active]>.active-bar]:block [&[data-selected]>.active-bar]:block"
                         >
                             <span className="relative z-10">Education</span>
-                            <span className="absolute bottom-0 left-0 h-[2px] w-full bg-blue-600 hidden group-data-[state=active]:block group-data-[selected]:block z-20" />
+                            <span className="active-bar absolute bottom-0 left-0 h-[3px] w-full bg-blue-600 hidden z-20 translate-y-[1.5px] rounded-t-sm" />
                         </TabsTrigger>
                     </TabsList>
 
