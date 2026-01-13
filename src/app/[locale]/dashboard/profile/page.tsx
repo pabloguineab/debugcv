@@ -115,9 +115,6 @@ export default function ProfilePage() {
             <div className="flex items-center justify-between px-8 py-6 border-b">
                 <div>
                     <h1 className="text-2xl font-bold text-foreground">Overview</h1>
-                    <a href={`https://linkedin.com/in/${username}`} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1 mt-1">
-                        linkedin.com/in/{username} <ExternalLink className="size-3" />
-                    </a>
                 </div>
                 <div className="flex items-center gap-2">
                     <Button variant="outline" size="icon">
