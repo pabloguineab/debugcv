@@ -178,7 +178,7 @@ export function UserAuthForm({ className, buttonText = "Sign In", isSignup = fal
             )}
 
             {error && error !== "USER_EXISTS" && (
-                <div className="text-sm text-center text-red-500">{error}</div>
+                <div className="text-[11px] text-center text-gray-400 -mt-1">{error}</div>
             )}
 
             <div className="relative">
