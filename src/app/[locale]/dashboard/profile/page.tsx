@@ -42,6 +42,10 @@ export default function ProfilePage() {
     const [linkedinUrl, setLinkedinUrl] = useState<string>("");
     const [githubUrl, setGithubUrl] = useState<string>("");
     const [introduction, setIntroduction] = useState<string>("");
+    const [userName, setUserName] = useState<string>("Lourdes Buendia"); // TODO: Get from user session
+
+    // Get user initial
+    const userInitial = userName ? userName.charAt(0).toUpperCase() : "U";
 
     // Get all countries
     const countries = useMemo(() => Country.getAllCountries(), []);
@@ -186,8 +190,8 @@ export default function ProfilePage() {
                                                 className="size-full object-cover"
                                             />
                                         ) : (
-                                            <div className="size-full bg-gray-50 flex items-center justify-center">
-                                                <Upload className="size-6 text-gray-300" />
+                                            <div className="size-full bg-blue-600 flex items-center justify-center">
+                                                <span className="text-2xl font-semibold text-blue-200">{userInitial}</span>
                                             </div>
                                         )}
                                     </div>
