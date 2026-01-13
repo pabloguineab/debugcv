@@ -7,40 +7,172 @@ export type TechItem = {
 
 export const allTechs: TechItem[] = [
     {
-        "id": ".net-core",
-        "name": ".NET core",
-        "category": "Other Tools",
-        "iconPath": "/svg/.NET-core.svg"
+        "id": "jupyter",
+        "name": "Jupyter",
+        "category": "AI & Machine Learning",
+        "iconPath": "/svg/Jupyter.svg"
     },
     {
-        "id": ".net",
-        "name": ".NET",
-        "category": "Other Tools",
-        "iconPath": "/svg/.NET.svg"
+        "id": "keras",
+        "name": "Keras",
+        "category": "AI & Machine Learning",
+        "iconPath": "/svg/Keras.svg"
     },
     {
-        "id": "aarch64",
-        "name": "AArch64",
-        "category": "Other Tools",
-        "iconPath": "/svg/AArch64.svg"
+        "id": "numpy",
+        "name": "NumPy",
+        "category": "AI & Machine Learning",
+        "iconPath": "/svg/NumPy.svg"
     },
     {
-        "id": "apl",
-        "name": "APL",
-        "category": "Other Tools",
-        "iconPath": "/svg/APL.svg"
+        "id": "opencv",
+        "name": "OpenCV",
+        "category": "AI & Machine Learning",
+        "iconPath": "/svg/OpenCV.svg"
+    },
+    {
+        "id": "pandas",
+        "name": "Pandas",
+        "category": "AI & Machine Learning",
+        "iconPath": "/svg/Pandas.svg"
+    },
+    {
+        "id": "pytorch",
+        "name": "PyTorch",
+        "category": "AI & Machine Learning",
+        "iconPath": "/svg/PyTorch.svg"
+    },
+    {
+        "id": "tensorflow",
+        "name": "TensorFlow",
+        "category": "AI & Machine Learning",
+        "iconPath": "/svg/TensorFlow.svg"
     },
     {
         "id": "aws",
         "name": "AWS",
-        "category": "Application Hosting & DevOps",
+        "category": "Application Hosting",
         "iconPath": "/svg/AWS.svg"
     },
     {
-        "id": "adobe-commerce-(magneto)",
-        "name": "Adobe Commerce (Magneto)",
-        "category": "Other Tools",
-        "iconPath": "/svg/Adobe-Commerce-(Magneto).svg"
+        "id": "azure",
+        "name": "Azure",
+        "category": "Application Hosting",
+        "iconPath": "/svg/Azure.svg"
+    },
+    {
+        "id": "azure-devops",
+        "name": "Azure Devops",
+        "category": "Application Hosting",
+        "iconPath": "/svg/Azure-Devops.svg"
+    },
+    {
+        "id": "azure-sql-database",
+        "name": "Azure SQL Database",
+        "category": "Application Hosting",
+        "iconPath": "/svg/Azure-SQL-Database.svg"
+    },
+    {
+        "id": "cloudflare",
+        "name": "Cloudflare",
+        "category": "Application Hosting",
+        "iconPath": "/svg/Cloudflare.svg"
+    },
+    {
+        "id": "cloudflare-workers",
+        "name": "Cloudflare Workers",
+        "category": "Application Hosting",
+        "iconPath": "/svg/Cloudflare-Workers.svg"
+    },
+    {
+        "id": "digital-ocean",
+        "name": "Digital Ocean",
+        "category": "Application Hosting",
+        "iconPath": "/svg/Digital-Ocean.svg"
+    },
+    {
+        "id": "firebase",
+        "name": "Firebase",
+        "category": "Application Hosting",
+        "iconPath": "/svg/Firebase.svg"
+    },
+    {
+        "id": "heroku",
+        "name": "Heroku",
+        "category": "Application Hosting",
+        "iconPath": "/svg/Heroku.svg"
+    },
+    {
+        "id": "vercel",
+        "name": "Vercel",
+        "category": "Application Hosting",
+        "iconPath": "/svg/Vercel.svg"
+    },
+    {
+        "id": "confluence",
+        "name": "Confluence",
+        "category": "Collaboration",
+        "iconPath": "/svg/Confluence.svg"
+    },
+    {
+        "id": "jira",
+        "name": "Jira",
+        "category": "Collaboration",
+        "iconPath": "/svg/Jira.svg"
+    },
+    {
+        "id": "jira-align",
+        "name": "Jira Align",
+        "category": "Collaboration",
+        "iconPath": "/svg/Jira-Align.svg"
+    },
+    {
+        "id": "slack",
+        "name": "Slack",
+        "category": "Collaboration",
+        "iconPath": "/svg/Slack.svg"
+    },
+    {
+        "id": "trello",
+        "name": "Trello",
+        "category": "Collaboration",
+        "iconPath": "/svg/Trello.svg"
+    },
+    {
+        "id": "couchdb",
+        "name": "CouchDB",
+        "category": "Data Stores",
+        "iconPath": "/svg/CouchDB.svg"
+    },
+    {
+        "id": "mysql",
+        "name": "MySQL",
+        "category": "Data Stores",
+        "iconPath": "/svg/MySQL.svg"
+    },
+    {
+        "id": "oracle",
+        "name": "Oracle",
+        "category": "Data Stores",
+        "iconPath": "/svg/Oracle.svg"
+    },
+    {
+        "id": "postgressql",
+        "name": "PostgresSQL",
+        "category": "Data Stores",
+        "iconPath": "/svg/PostgresSQL.svg"
+    },
+    {
+        "id": "redis",
+        "name": "Redis",
+        "category": "Data Stores",
+        "iconPath": "/svg/Redis.svg"
+    },
+    {
+        "id": "sqlite",
+        "name": "SQLite",
+        "category": "Data Stores",
+        "iconPath": "/svg/SQLite.svg"
     },
     {
         "id": "adobe-illustrator",
@@ -55,28 +187,790 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Adobe-Photoshop.svg"
     },
     {
-        "id": "adobe-premiere-pro",
-        "name": "Adobe Premiere Pro",
-        "category": "Other Tools",
-        "iconPath": "/svg/Adobe-Premiere-Pro.svg"
-    },
-    {
         "id": "adobe-xd",
         "name": "Adobe XD",
         "category": "Design & Collaboration",
         "iconPath": "/svg/Adobe-XD.svg"
     },
     {
-        "id": "adonisjs",
-        "name": "AdonisJS",
-        "category": "Languages",
-        "iconPath": "/svg/AdonisJS.svg"
+        "id": "figma",
+        "name": "Figma",
+        "category": "Design & Collaboration",
+        "iconPath": "/svg/Figma.svg"
+    },
+    {
+        "id": "sketch",
+        "name": "Sketch",
+        "category": "Design & Collaboration",
+        "iconPath": "/svg/Sketch.svg"
+    },
+    {
+        "id": "ansible",
+        "name": "Ansible",
+        "category": "Development",
+        "iconPath": "/svg/Ansible.svg"
+    },
+    {
+        "id": "apache",
+        "name": "Apache",
+        "category": "Development",
+        "iconPath": "/svg/Apache.svg"
+    },
+    {
+        "id": "apache-airflow",
+        "name": "Apache Airflow",
+        "category": "Development",
+        "iconPath": "/svg/Apache-Airflow.svg"
+    },
+    {
+        "id": "apache-cassandra",
+        "name": "Apache Cassandra",
+        "category": "Development",
+        "iconPath": "/svg/Apache-Cassandra.svg"
+    },
+    {
+        "id": "apache-groovy",
+        "name": "Apache Groovy",
+        "category": "Development",
+        "iconPath": "/svg/Apache-Groovy.svg"
+    },
+    {
+        "id": "apache-hadoop",
+        "name": "Apache Hadoop",
+        "category": "Development",
+        "iconPath": "/svg/Apache-Hadoop.svg"
+    },
+    {
+        "id": "apache-kafka",
+        "name": "Apache Kafka",
+        "category": "Development",
+        "iconPath": "/svg/Apache-Kafka.svg"
+    },
+    {
+        "id": "apache-maven",
+        "name": "Apache Maven",
+        "category": "Development",
+        "iconPath": "/svg/Apache-Maven.svg"
+    },
+    {
+        "id": "apache-spark",
+        "name": "Apache Spark",
+        "category": "Development",
+        "iconPath": "/svg/Apache-Spark.svg"
+    },
+    {
+        "id": "apache-subversion",
+        "name": "Apache Subversion",
+        "category": "Development",
+        "iconPath": "/svg/Apache-Subversion.svg"
+    },
+    {
+        "id": "apache-tomcat",
+        "name": "Apache Tomcat",
+        "category": "Development",
+        "iconPath": "/svg/Apache-Tomcat.svg"
+    },
+    {
+        "id": "circleci",
+        "name": "CircleCI",
+        "category": "Development",
+        "iconPath": "/svg/CircleCI.svg"
+    },
+    {
+        "id": "docker",
+        "name": "Docker",
+        "category": "Development",
+        "iconPath": "/svg/Docker.svg"
+    },
+    {
+        "id": "github-actions",
+        "name": "GitHub Actions",
+        "category": "Development",
+        "iconPath": "/svg/GitHub-Actions.svg"
+    },
+    {
+        "id": "grafana",
+        "name": "Grafana",
+        "category": "Development",
+        "iconPath": "/svg/Grafana.svg"
+    },
+    {
+        "id": "hashicorp-terraform",
+        "name": "HashiCorp Terraform",
+        "category": "Development",
+        "iconPath": "/svg/HashiCorp-Terraform.svg"
+    },
+    {
+        "id": "jenkins",
+        "name": "Jenkins",
+        "category": "Development",
+        "iconPath": "/svg/Jenkins.svg"
+    },
+    {
+        "id": "kubernetes",
+        "name": "Kubernetes",
+        "category": "Development",
+        "iconPath": "/svg/Kubernetes.svg"
+    },
+    {
+        "id": "nginx",
+        "name": "NGINX",
+        "category": "Development",
+        "iconPath": "/svg/NGINX.svg"
+    },
+    {
+        "id": "podman",
+        "name": "Podman",
+        "category": "Development",
+        "iconPath": "/svg/Podman.svg"
+    },
+    {
+        "id": "prometheus",
+        "name": "Prometheus",
+        "category": "Development",
+        "iconPath": "/svg/Prometheus.svg"
+    },
+    {
+        "id": "rancher",
+        "name": "Rancher",
+        "category": "Development",
+        "iconPath": "/svg/Rancher.svg"
+    },
+    {
+        "id": "traefik-mesh",
+        "name": "Traefik Mesh",
+        "category": "Development",
+        "iconPath": "/svg/Traefik-Mesh.svg"
+    },
+    {
+        "id": "traefik-proxy",
+        "name": "Traefik Proxy",
+        "category": "Development",
+        "iconPath": "/svg/Traefik-Proxy.svg"
+    },
+    {
+        "id": "android-studio",
+        "name": "Android Studio",
+        "category": "IDE & Editors",
+        "iconPath": "/svg/Android-Studio.svg"
+    },
+    {
+        "id": "atom",
+        "name": "Atom",
+        "category": "IDE & Editors",
+        "iconPath": "/svg/Atom.svg"
+    },
+    {
+        "id": "intellij-idea",
+        "name": "IntelliJ IDEA",
+        "category": "IDE & Editors",
+        "iconPath": "/svg/IntelliJ-IDEA.svg"
+    },
+    {
+        "id": "pycharm",
+        "name": "PyCharm",
+        "category": "IDE & Editors",
+        "iconPath": "/svg/PyCharm.svg"
+    },
+    {
+        "id": "vim",
+        "name": "Vim",
+        "category": "IDE & Editors",
+        "iconPath": "/svg/Vim.svg"
+    },
+    {
+        "id": "visual-studio",
+        "name": "Visual Studio",
+        "category": "IDE & Editors",
+        "iconPath": "/svg/Visual-Studio.svg"
+    },
+    {
+        "id": "visual-studio-code--vs-code-",
+        "name": "Visual Studio Code",
+        "category": "IDE & Editors",
+        "iconPath": "/svg/Visual-Studio-Code-(VS-Code).svg"
+    },
+    {
+        "id": "webstorm",
+        "name": "WebStorm",
+        "category": "IDE & Editors",
+        "iconPath": "/svg/WebStorm.svg"
+    },
+    {
+        "id": "xcode",
+        "name": "Xcode",
+        "category": "IDE & Editors",
+        "iconPath": "/svg/Xcode.svg"
     },
     {
         "id": "after-effects",
         "name": "After Effects",
-        "category": "Languages",
+        "category": "Languages & Frameworks",
         "iconPath": "/svg/After-Effects.svg"
+    },
+    {
+        "id": "algolia",
+        "name": "Algolia",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Algolia.svg"
+    },
+    {
+        "id": "argo-cd",
+        "name": "Argo CD",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Argo-CD.svg"
+    },
+    {
+        "id": "c",
+        "name": "C",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/C.svg"
+    },
+    {
+        "id": "c---csharp-",
+        "name": "C#",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/C#-(CSharp).svg"
+    },
+    {
+        "id": "c----cplusplus-",
+        "name": "C++",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/C++-(CPlusPlus).svg"
+    },
+    {
+        "id": "cakephp",
+        "name": "CakePHP",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/CakePHP.svg"
+    },
+    {
+        "id": "codeac",
+        "name": "Codeac",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Codeac.svg"
+    },
+    {
+        "id": "css3",
+        "name": "CSS3",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/CSS3.svg"
+    },
+    {
+        "id": "dart",
+        "name": "Dart",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Dart.svg"
+    },
+    {
+        "id": "django",
+        "name": "Django",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Django.svg"
+    },
+    {
+        "id": "django-rest",
+        "name": "Django REST",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Django-REST.svg"
+    },
+    {
+        "id": "elixir",
+        "name": "Elixir",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Elixir.svg"
+    },
+    {
+        "id": "embedded-c",
+        "name": "Embedded C",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Embedded-C.svg"
+    },
+    {
+        "id": "fortran",
+        "name": "Fortran",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Fortran.svg"
+    },
+    {
+        "id": "gcc",
+        "name": "GCC",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/GCC.svg"
+    },
+    {
+        "id": "go",
+        "name": "Go",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Go.svg"
+    },
+    {
+        "id": "godot-engine",
+        "name": "Godot Engine",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Godot-Engine.svg"
+    },
+    {
+        "id": "goland",
+        "name": "GoLand",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/GoLand.svg"
+    },
+    {
+        "id": "google",
+        "name": "Google",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Google.svg"
+    },
+    {
+        "id": "google-cloud",
+        "name": "Google Cloud",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Google-Cloud.svg"
+    },
+    {
+        "id": "haskell",
+        "name": "Haskell",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Haskell.svg"
+    },
+    {
+        "id": "html5",
+        "name": "HTML5",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/HTML5.svg"
+    },
+    {
+        "id": "hugo",
+        "name": "Hugo",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Hugo.svg"
+    },
+    {
+        "id": "internet-explorer-10--ie10-",
+        "name": "Internet Explorer 10",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Internet-Explorer-10-(ie10).svg"
+    },
+    {
+        "id": "ionic",
+        "name": "Ionic",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Ionic.svg"
+    },
+    {
+        "id": "jaeger-tracing",
+        "name": "Jaeger Tracing",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Jaeger-Tracing.svg"
+    },
+    {
+        "id": "java",
+        "name": "Java",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Java.svg"
+    },
+    {
+        "id": "javascript",
+        "name": "JavaScript",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/JavaScript.svg"
+    },
+    {
+        "id": "kotlin",
+        "name": "Kotlin",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Kotlin.svg"
+    },
+    {
+        "id": "less-js",
+        "name": "Less.js",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Less.js.svg"
+    },
+    {
+        "id": "lua",
+        "name": "Lua",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Lua.svg"
+    },
+    {
+        "id": "matlab",
+        "name": "MATLAB",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/MATLAB.svg"
+    },
+    {
+        "id": "mongodb",
+        "name": "MongoDB",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/MongoDB.svg"
+    },
+    {
+        "id": "mongoose-js",
+        "name": "Mongoose.js",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Mongoose.js.svg"
+    },
+    {
+        "id": "objective-c",
+        "name": "Objective C",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Objective-C.svg"
+    },
+    {
+        "id": "perl",
+        "name": "Perl",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Perl.svg"
+    },
+    {
+        "id": "php",
+        "name": "PHP",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/PHP.svg"
+    },
+    {
+        "id": "phpstorm",
+        "name": "PhpStorm",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/PhpStorm.svg"
+    },
+    {
+        "id": "polygon",
+        "name": "Polygon",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Polygon.svg"
+    },
+    {
+        "id": "protractor-test",
+        "name": "Protractor Test",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Protractor-Test.svg"
+    },
+    {
+        "id": "python",
+        "name": "Python",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Python.svg"
+    },
+    {
+        "id": "python-poetry",
+        "name": "Python Poetry",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Python-Poetry.svg"
+    },
+    {
+        "id": "r-",
+        "name": "R",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/R-.svg"
+    },
+    {
+        "id": "redcube-s-epic-compiler-thingy-programming--rect-",
+        "name": "RedCube's epic Compiler Thingy programming",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/RedCube's-epic-Compiler-Thingy-programming-(ReCT).svg"
+    },
+    {
+        "id": "rspec",
+        "name": "RSpec",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/RSpec.svg"
+    },
+    {
+        "id": "ruby",
+        "name": "Ruby",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Ruby.svg"
+    },
+    {
+        "id": "ruby-on-rails",
+        "name": "Ruby on Rails",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Ruby-on-Rails.svg"
+    },
+    {
+        "id": "rubymine",
+        "name": "RubyMine",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/RubyMine.svg"
+    },
+    {
+        "id": "rust",
+        "name": "Rust",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Rust.svg"
+    },
+    {
+        "id": "sass",
+        "name": "Sass",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Sass.svg"
+    },
+    {
+        "id": "scala",
+        "name": "Scala",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Scala.svg"
+    },
+    {
+        "id": "scalingo",
+        "name": "Scalingo",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Scalingo.svg"
+    },
+    {
+        "id": "simple-directmedia-layer--sdl-",
+        "name": "Simple DirectMedia Layer",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Simple-DirectMedia-Layer-(SDL).svg"
+    },
+    {
+        "id": "swift",
+        "name": "Swift",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/Swift.svg"
+    },
+    {
+        "id": "the-algorithms",
+        "name": "The Algorithms",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/The-Algorithms.svg"
+    },
+    {
+        "id": "typescript",
+        "name": "TypeScript",
+        "category": "Languages & Frameworks",
+        "iconPath": "/svg/TypeScript.svg"
+    },
+    {
+        "id": "angular",
+        "name": "Angular",
+        "category": "Libraries",
+        "iconPath": "/svg/Angular.svg"
+    },
+    {
+        "id": "angularjs",
+        "name": "AngularJS",
+        "category": "Libraries",
+        "iconPath": "/svg/AngularJS.svg"
+    },
+    {
+        "id": "backbone-js",
+        "name": "Backbone.js",
+        "category": "Libraries",
+        "iconPath": "/svg/Backbone.js.svg"
+    },
+    {
+        "id": "bootstrap",
+        "name": "Bootstrap",
+        "category": "Libraries",
+        "iconPath": "/svg/Bootstrap.svg"
+    },
+    {
+        "id": "electron",
+        "name": "Electron",
+        "category": "Libraries",
+        "iconPath": "/svg/Electron.svg"
+    },
+    {
+        "id": "ember-js",
+        "name": "Ember.js",
+        "category": "Libraries",
+        "iconPath": "/svg/Ember.js.svg"
+    },
+    {
+        "id": "express",
+        "name": "Express",
+        "category": "Libraries",
+        "iconPath": "/svg/Express.svg"
+    },
+    {
+        "id": "fastapi",
+        "name": "FastAPI",
+        "category": "Libraries",
+        "iconPath": "/svg/FastAPI.svg"
+    },
+    {
+        "id": "fastify",
+        "name": "Fastify",
+        "category": "Libraries",
+        "iconPath": "/svg/Fastify.svg"
+    },
+    {
+        "id": "flask",
+        "name": "Flask",
+        "category": "Libraries",
+        "iconPath": "/svg/Flask.svg"
+    },
+    {
+        "id": "flutter",
+        "name": "Flutter",
+        "category": "Libraries",
+        "iconPath": "/svg/Flutter.svg"
+    },
+    {
+        "id": "gatsby",
+        "name": "Gatsby",
+        "category": "Libraries",
+        "iconPath": "/svg/Gatsby.svg"
+    },
+    {
+        "id": "grails",
+        "name": "Grails",
+        "category": "Libraries",
+        "iconPath": "/svg/Grails.svg"
+    },
+    {
+        "id": "jquery",
+        "name": "jQuery",
+        "category": "Libraries",
+        "iconPath": "/svg/jQuery.svg"
+    },
+    {
+        "id": "laravel",
+        "name": "Laravel",
+        "category": "Libraries",
+        "iconPath": "/svg/Laravel.svg"
+    },
+    {
+        "id": "material-ui",
+        "name": "Material UI",
+        "category": "Libraries",
+        "iconPath": "/svg/Material-UI.svg"
+    },
+    {
+        "id": "materialize",
+        "name": "Materialize",
+        "category": "Libraries",
+        "iconPath": "/svg/Materialize.svg"
+    },
+    {
+        "id": "mobx",
+        "name": "MobX",
+        "category": "Libraries",
+        "iconPath": "/svg/MobX.svg"
+    },
+    {
+        "id": "nest-js",
+        "name": "Nest.js",
+        "category": "Libraries",
+        "iconPath": "/svg/Nest.js.svg"
+    },
+    {
+        "id": "next-js",
+        "name": "Next.js",
+        "category": "Libraries",
+        "iconPath": "/svg/Next.js.svg"
+    },
+    {
+        "id": "nuxt-js",
+        "name": "Nuxt JS",
+        "category": "Libraries",
+        "iconPath": "/svg/Nuxt-JS.svg"
+    },
+    {
+        "id": "react",
+        "name": "React",
+        "category": "Libraries",
+        "iconPath": "/svg/React.svg"
+    },
+    {
+        "id": "react-bootstrap",
+        "name": "React Bootstrap",
+        "category": "Libraries",
+        "iconPath": "/svg/React-Bootstrap.svg"
+    },
+    {
+        "id": "redux",
+        "name": "Redux",
+        "category": "Libraries",
+        "iconPath": "/svg/Redux.svg"
+    },
+    {
+        "id": "spring",
+        "name": "Spring",
+        "category": "Libraries",
+        "iconPath": "/svg/Spring.svg"
+    },
+    {
+        "id": "svelte",
+        "name": "Svelte",
+        "category": "Libraries",
+        "iconPath": "/svg/Svelte.svg"
+    },
+    {
+        "id": "symfony",
+        "name": "Symfony",
+        "category": "Libraries",
+        "iconPath": "/svg/Symfony.svg"
+    },
+    {
+        "id": "tailwind-css",
+        "name": "Tailwind CSS",
+        "category": "Libraries",
+        "iconPath": "/svg/Tailwind-CSS.svg"
+    },
+    {
+        "id": "tauri",
+        "name": "Tauri",
+        "category": "Libraries",
+        "iconPath": "/svg/Tauri.svg"
+    },
+    {
+        "id": "vue-storefront",
+        "name": "Vue Storefront",
+        "category": "Libraries",
+        "iconPath": "/svg/Vue-Storefront.svg"
+    },
+    {
+        "id": "vue-js",
+        "name": "Vue.js",
+        "category": "Libraries",
+        "iconPath": "/svg/Vue.js.svg"
+    },
+    {
+        "id": "salesforce",
+        "name": "Salesforce",
+        "category": "Marketing and Sales Tools",
+        "iconPath": "/svg/Salesforce.svg"
+    },
+    {
+        "id": "-net",
+        "name": ".NET",
+        "category": "Other Tools",
+        "iconPath": "/svg/.NET.svg"
+    },
+    {
+        "id": "-net-core",
+        "name": ".NET core",
+        "category": "Other Tools",
+        "iconPath": "/svg/.NET-core.svg"
+    },
+    {
+        "id": "aarch64",
+        "name": "AArch64",
+        "category": "Other Tools",
+        "iconPath": "/svg/AArch64.svg"
+    },
+    {
+        "id": "adobe-commerce--magneto-",
+        "name": "Adobe Commerce",
+        "category": "Other Tools",
+        "iconPath": "/svg/Adobe-Commerce-(Magneto).svg"
+    },
+    {
+        "id": "adobe-premiere-pro",
+        "name": "Adobe Premiere Pro",
+        "category": "Other Tools",
+        "iconPath": "/svg/Adobe-Premiere-Pro.svg"
+    },
+    {
+        "id": "adonisjs",
+        "name": "AdonisJS",
+        "category": "Other Tools",
+        "iconPath": "/svg/AdonisJS.svg"
     },
     {
         "id": "akka",
@@ -85,15 +979,9 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Akka.svg"
     },
     {
-        "id": "algolia",
-        "name": "Algolia",
-        "category": "Languages",
-        "iconPath": "/svg/Algolia.svg"
-    },
-    {
-        "id": "alpine.js",
+        "id": "alpine-js",
         "name": "Alpine.js",
-        "category": "Languages",
+        "category": "Other Tools",
         "iconPath": "/svg/Alpine.js.svg"
     },
     {
@@ -103,34 +991,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Anaconda.svg"
     },
     {
-        "id": "android-studio",
-        "name": "Android Studio",
-        "category": "Other Tools",
-        "iconPath": "/svg/Android-Studio.svg"
-    },
-    {
         "id": "android",
         "name": "Android",
         "category": "Other Tools",
         "iconPath": "/svg/Android.svg"
-    },
-    {
-        "id": "angular",
-        "name": "Angular",
-        "category": "Frameworks & Libraries",
-        "iconPath": "/svg/Angular.svg"
-    },
-    {
-        "id": "angularjs",
-        "name": "AngularJS",
-        "category": "Frameworks & Libraries",
-        "iconPath": "/svg/AngularJS.svg"
-    },
-    {
-        "id": "ansible",
-        "name": "Ansible",
-        "category": "Other Tools",
-        "iconPath": "/svg/Ansible.svg"
     },
     {
         "id": "ant-design",
@@ -139,64 +1003,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Ant-Design.svg"
     },
     {
-        "id": "apache-airflow",
-        "name": "Apache Airflow",
+        "id": "apl",
+        "name": "APL",
         "category": "Other Tools",
-        "iconPath": "/svg/Apache-Airflow.svg"
-    },
-    {
-        "id": "apache-cassandra",
-        "name": "Apache Cassandra",
-        "category": "Data Stores",
-        "iconPath": "/svg/Apache-Cassandra.svg"
-    },
-    {
-        "id": "apache-groovy",
-        "name": "Apache Groovy",
-        "category": "Other Tools",
-        "iconPath": "/svg/Apache-Groovy.svg"
-    },
-    {
-        "id": "apache-hadoop",
-        "name": "Apache Hadoop",
-        "category": "Other Tools",
-        "iconPath": "/svg/Apache-Hadoop.svg"
-    },
-    {
-        "id": "apache-kafka",
-        "name": "Apache Kafka",
-        "category": "Other Tools",
-        "iconPath": "/svg/Apache-Kafka.svg"
-    },
-    {
-        "id": "apache-maven",
-        "name": "Apache Maven",
-        "category": "Other Tools",
-        "iconPath": "/svg/Apache-Maven.svg"
-    },
-    {
-        "id": "apache-spark",
-        "name": "Apache Spark",
-        "category": "Other Tools",
-        "iconPath": "/svg/Apache-Spark.svg"
-    },
-    {
-        "id": "apache-subversion",
-        "name": "Apache Subversion",
-        "category": "Other Tools",
-        "iconPath": "/svg/Apache-Subversion.svg"
-    },
-    {
-        "id": "apache-tomcat",
-        "name": "Apache Tomcat",
-        "category": "Other Tools",
-        "iconPath": "/svg/Apache-Tomcat.svg"
-    },
-    {
-        "id": "apache",
-        "name": "Apache",
-        "category": "Other Tools",
-        "iconPath": "/svg/Apache.svg"
+        "iconPath": "/svg/APL.svg"
     },
     {
         "id": "appcelerator",
@@ -205,16 +1015,16 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Appcelerator.svg"
     },
     {
-        "id": "apple-safari",
-        "name": "Apple Safari",
-        "category": "Other Tools",
-        "iconPath": "/svg/Apple-Safari.svg"
-    },
-    {
         "id": "apple",
         "name": "Apple",
         "category": "Other Tools",
         "iconPath": "/svg/Apple.svg"
+    },
+    {
+        "id": "apple-safari",
+        "name": "Apple Safari",
+        "category": "Other Tools",
+        "iconPath": "/svg/Apple-Safari.svg"
     },
     {
         "id": "appwrite",
@@ -235,22 +1045,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Arduino.svg"
     },
     {
-        "id": "argo-cd",
-        "name": "Argo CD",
-        "category": "Languages",
-        "iconPath": "/svg/Argo-CD.svg"
-    },
-    {
         "id": "astro",
         "name": "Astro",
         "category": "Other Tools",
         "iconPath": "/svg/Astro.svg"
-    },
-    {
-        "id": "atom",
-        "name": "Atom",
-        "category": "Other Tools",
-        "iconPath": "/svg/Atom.svg"
     },
     {
         "id": "autodesk-maya",
@@ -277,34 +1075,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Azios.svg"
     },
     {
-        "id": "azure-devops",
-        "name": "Azure Devops",
-        "category": "Application Hosting & DevOps",
-        "iconPath": "/svg/Azure-Devops.svg"
-    },
-    {
-        "id": "azure-sql-database",
-        "name": "Azure SQL Database",
-        "category": "Application Hosting & DevOps",
-        "iconPath": "/svg/Azure-SQL-Database.svg"
-    },
-    {
-        "id": "azure",
-        "name": "Azure",
-        "category": "Application Hosting & DevOps",
-        "iconPath": "/svg/Azure.svg"
-    },
-    {
         "id": "babel",
         "name": "Babel",
         "category": "Other Tools",
         "iconPath": "/svg/Babel.svg"
-    },
-    {
-        "id": "backbone.js",
-        "name": "Backbone.js",
-        "category": "Languages",
-        "iconPath": "/svg/Backbone.js.svg"
     },
     {
         "id": "ballerina",
@@ -331,22 +1105,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Behance.svg"
     },
     {
-        "id": "bitbucket",
-        "name": "BitBucket",
-        "category": "Other Tools",
-        "iconPath": "/svg/BitBucket.svg"
-    },
-    {
         "id": "blender",
         "name": "Blender",
         "category": "Other Tools",
         "iconPath": "/svg/Blender.svg"
-    },
-    {
-        "id": "bootstrap",
-        "name": "Bootstrap",
-        "category": "Languages",
-        "iconPath": "/svg/Bootstrap.svg"
     },
     {
         "id": "bower",
@@ -373,52 +1135,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Bun.svg"
     },
     {
-        "id": "c#-(csharp)",
-        "name": "C# (CSharp)",
-        "category": "Languages",
-        "iconPath": "/svg/C#-(CSharp).svg"
-    },
-    {
-        "id": "c++-(cplusplus)",
-        "name": "C++ (CPlusPlus)",
-        "category": "Languages",
-        "iconPath": "/svg/C++-(CPlusPlus).svg"
-    },
-    {
-        "id": "c",
-        "name": "C",
-        "category": "Other Tools",
-        "iconPath": "/svg/C.svg"
-    },
-    {
-        "id": "clion",
-        "name": "CLion",
-        "category": "Other Tools",
-        "iconPath": "/svg/CLion.svg"
-    },
-    {
-        "id": "cmake",
-        "name": "CMake",
-        "category": "Other Tools",
-        "iconPath": "/svg/CMake.svg"
-    },
-    {
-        "id": "css3",
-        "name": "CSS3",
-        "category": "Other Tools",
-        "iconPath": "/svg/CSS3.svg"
-    },
-    {
         "id": "cairo-graphics",
         "name": "Cairo Graphics",
         "category": "Other Tools",
         "iconPath": "/svg/Cairo-Graphics.svg"
-    },
-    {
-        "id": "cakephp",
-        "name": "CakePHP",
-        "category": "Languages",
-        "iconPath": "/svg/CakePHP.svg"
     },
     {
         "id": "canva",
@@ -445,16 +1165,16 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Chrome.svg"
     },
     {
-        "id": "circleci",
-        "name": "CircleCI",
-        "category": "Other Tools",
-        "iconPath": "/svg/CircleCI.svg"
-    },
-    {
         "id": "clarity",
         "name": "Clarity",
         "category": "Other Tools",
         "iconPath": "/svg/Clarity.svg"
+    },
+    {
+        "id": "clion",
+        "name": "CLion",
+        "category": "Other Tools",
+        "iconPath": "/svg/CLion.svg"
     },
     {
         "id": "clojure",
@@ -465,20 +1185,20 @@ export const allTechs: TechItem[] = [
     {
         "id": "clojurescript",
         "name": "ClojureScript",
-        "category": "Languages",
+        "category": "Other Tools",
         "iconPath": "/svg/ClojureScript.svg"
     },
     {
-        "id": "cloudflare-workers",
-        "name": "Cloudflare Workers",
+        "id": "cmake",
+        "name": "CMake",
         "category": "Other Tools",
-        "iconPath": "/svg/Cloudflare-Workers.svg"
+        "iconPath": "/svg/CMake.svg"
     },
     {
-        "id": "cloudflare",
-        "name": "Cloudflare",
+        "id": "codecov",
+        "name": "Codecov",
         "category": "Other Tools",
-        "iconPath": "/svg/Cloudflare.svg"
+        "iconPath": "/svg/Codecov.svg"
     },
     {
         "id": "codeigniter",
@@ -493,21 +1213,9 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/CodePen.svg"
     },
     {
-        "id": "codeac",
-        "name": "Codeac",
-        "category": "Other Tools",
-        "iconPath": "/svg/Codeac.svg"
-    },
-    {
-        "id": "codecov",
-        "name": "Codecov",
-        "category": "Other Tools",
-        "iconPath": "/svg/Codecov.svg"
-    },
-    {
         "id": "coffeescript",
         "name": "CoffeeScript",
-        "category": "Languages",
+        "category": "Other Tools",
         "iconPath": "/svg/CoffeeScript.svg"
     },
     {
@@ -515,12 +1223,6 @@ export const allTechs: TechItem[] = [
         "name": "Composer",
         "category": "Other Tools",
         "iconPath": "/svg/Composer.svg"
-    },
-    {
-        "id": "confluence",
-        "name": "Confluence",
-        "category": "Other Tools",
-        "iconPath": "/svg/Confluence.svg"
     },
     {
         "id": "consul",
@@ -537,7 +1239,7 @@ export const allTechs: TechItem[] = [
     {
         "id": "core-js",
         "name": "Core js",
-        "category": "Languages",
+        "category": "Other Tools",
         "iconPath": "/svg/Core-js.svg"
     },
     {
@@ -545,12 +1247,6 @@ export const allTechs: TechItem[] = [
         "name": "Cosmos BD",
         "category": "Other Tools",
         "iconPath": "/svg/Cosmos-BD.svg"
-    },
-    {
-        "id": "couchdb",
-        "name": "CouchDB",
-        "category": "Other Tools",
-        "iconPath": "/svg/CouchDB.svg"
     },
     {
         "id": "crystal",
@@ -565,28 +1261,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Cucumber.svg"
     },
     {
-        "id": "cypress",
-        "name": "Cypress",
-        "category": "Other Tools",
-        "iconPath": "/svg/Cypress.svg"
-    },
-    {
-        "id": "d3.js",
+        "id": "d3-js",
         "name": "D3.js",
-        "category": "Languages",
+        "category": "Other Tools",
         "iconPath": "/svg/D3.js.svg"
-    },
-    {
-        "id": "dbeaver",
-        "name": "DBeaver",
-        "category": "Other Tools",
-        "iconPath": "/svg/DBeaver.svg"
-    },
-    {
-        "id": "dart",
-        "name": "Dart",
-        "category": "Other Tools",
-        "iconPath": "/svg/Dart.svg"
     },
     {
         "id": "datagrip",
@@ -599,6 +1277,12 @@ export const allTechs: TechItem[] = [
         "name": "DataSpell",
         "category": "Other Tools",
         "iconPath": "/svg/DataSpell.svg"
+    },
+    {
+        "id": "dbeaver",
+        "name": "DBeaver",
+        "category": "Other Tools",
+        "iconPath": "/svg/DBeaver.svg"
     },
     {
         "id": "debian",
@@ -619,34 +1303,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Devicon.svg"
     },
     {
-        "id": "digital-ocean",
-        "name": "Digital Ocean",
-        "category": "Other Tools",
-        "iconPath": "/svg/Digital-Ocean.svg"
-    },
-    {
-        "id": "discord.js",
+        "id": "discord-js",
         "name": "Discord.js",
-        "category": "Languages",
+        "category": "Other Tools",
         "iconPath": "/svg/Discord.js.svg"
-    },
-    {
-        "id": "django-rest",
-        "name": "Django REST",
-        "category": "Frameworks & Libraries",
-        "iconPath": "/svg/Django-REST.svg"
-    },
-    {
-        "id": "django",
-        "name": "Django",
-        "category": "Frameworks & Libraries",
-        "iconPath": "/svg/Django.svg"
-    },
-    {
-        "id": "docker",
-        "name": "Docker",
-        "category": "Application Hosting & DevOps",
-        "iconPath": "/svg/Docker.svg"
     },
     {
         "id": "doctrine",
@@ -667,12 +1327,6 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Drupal.svg"
     },
     {
-        "id": "eslint",
-        "name": "ESLint",
-        "category": "Other Tools",
-        "iconPath": "/svg/ESLint.svg"
-    },
-    {
         "id": "eclipse-ceylon",
         "name": "Eclipse Ceylon",
         "category": "Other Tools",
@@ -685,7 +1339,7 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Eclipse-IDE.svg"
     },
     {
-        "id": "eclipse-vert.x",
+        "id": "eclipse-vert-x",
         "name": "Eclipse Vert.x",
         "category": "Other Tools",
         "iconPath": "/svg/Eclipse-Vert.x.svg"
@@ -693,7 +1347,7 @@ export const allTechs: TechItem[] = [
     {
         "id": "elastic-beats",
         "name": "Elastic Beats",
-        "category": "Languages",
+        "category": "Other Tools",
         "iconPath": "/svg/Elastic-Beats.svg"
     },
     {
@@ -703,40 +1357,16 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Elastic-Search.svg"
     },
     {
-        "id": "electron",
-        "name": "Electron",
-        "category": "Other Tools",
-        "iconPath": "/svg/Electron.svg"
-    },
-    {
-        "id": "eleventy-(11ty)",
-        "name": "Eleventy (11ty)",
+        "id": "eleventy--11ty-",
+        "name": "Eleventy",
         "category": "Other Tools",
         "iconPath": "/svg/Eleventy-(11ty).svg"
-    },
-    {
-        "id": "elixir",
-        "name": "Elixir",
-        "category": "Other Tools",
-        "iconPath": "/svg/Elixir.svg"
     },
     {
         "id": "elm",
         "name": "Elm",
         "category": "Other Tools",
         "iconPath": "/svg/Elm.svg"
-    },
-    {
-        "id": "embedded-c",
-        "name": "Embedded C",
-        "category": "Other Tools",
-        "iconPath": "/svg/Embedded-C.svg"
-    },
-    {
-        "id": "ember.js",
-        "name": "Ember.js",
-        "category": "Languages",
-        "iconPath": "/svg/Ember.js.svg"
     },
     {
         "id": "envoy",
@@ -751,34 +1381,16 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Erlang.svg"
     },
     {
-        "id": "express",
-        "name": "Express",
-        "category": "Frameworks & Libraries",
-        "iconPath": "/svg/Express.svg"
-    },
-    {
-        "id": "fsharp-(f#)",
-        "name": "FSharp (F#)",
+        "id": "eslint",
+        "name": "ESLint",
         "category": "Other Tools",
-        "iconPath": "/svg/FSharp-(F#).svg"
+        "iconPath": "/svg/ESLint.svg"
     },
     {
         "id": "facebook",
         "name": "Facebook",
         "category": "Other Tools",
         "iconPath": "/svg/Facebook.svg"
-    },
-    {
-        "id": "fastapi",
-        "name": "FastAPI",
-        "category": "Other Tools",
-        "iconPath": "/svg/FastAPI.svg"
-    },
-    {
-        "id": "fastify",
-        "name": "Fastify",
-        "category": "Other Tools",
-        "iconPath": "/svg/Fastify.svg"
     },
     {
         "id": "fauna",
@@ -799,22 +1411,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Fedora.svg"
     },
     {
-        "id": "figma",
-        "name": "Figma",
-        "category": "Design & Collaboration",
-        "iconPath": "/svg/Figma.svg"
-    },
-    {
         "id": "filezilla",
         "name": "FileZilla",
         "category": "Other Tools",
         "iconPath": "/svg/FileZilla.svg"
-    },
-    {
-        "id": "firebase",
-        "name": "Firebase",
-        "category": "Data Stores",
-        "iconPath": "/svg/Firebase.svg"
     },
     {
         "id": "firefox",
@@ -823,58 +1423,22 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Firefox.svg"
     },
     {
-        "id": "flask",
-        "name": "Flask",
-        "category": "Frameworks & Libraries",
-        "iconPath": "/svg/Flask.svg"
-    },
-    {
-        "id": "flutter",
-        "name": "Flutter",
-        "category": "Other Tools",
-        "iconPath": "/svg/Flutter.svg"
-    },
-    {
-        "id": "fortran",
-        "name": "Fortran",
-        "category": "Other Tools",
-        "iconPath": "/svg/Fortran.svg"
-    },
-    {
         "id": "foundation",
         "name": "Foundation",
         "category": "Other Tools",
         "iconPath": "/svg/Foundation.svg"
     },
     {
-        "id": "gcc",
-        "name": "GCC",
+        "id": "fsharp--f--",
+        "name": "FSharp",
         "category": "Other Tools",
-        "iconPath": "/svg/GCC.svg"
-    },
-    {
-        "id": "gimp",
-        "name": "GIMP",
-        "category": "Other Tools",
-        "iconPath": "/svg/GIMP.svg"
-    },
-    {
-        "id": "gnu-emacs",
-        "name": "GNU Emacs",
-        "category": "Other Tools",
-        "iconPath": "/svg/GNU-Emacs.svg"
+        "iconPath": "/svg/FSharp-(F#).svg"
     },
     {
         "id": "gatling",
         "name": "Gatling",
         "category": "Other Tools",
         "iconPath": "/svg/Gatling.svg"
-    },
-    {
-        "id": "gatsby",
-        "name": "Gatsby",
-        "category": "Languages",
-        "iconPath": "/svg/Gatsby.svg"
     },
     {
         "id": "gazebo",
@@ -895,82 +1459,16 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Ghost.svg"
     },
     {
-        "id": "git",
-        "name": "Git",
+        "id": "gimp",
+        "name": "GIMP",
         "category": "Other Tools",
-        "iconPath": "/svg/Git.svg"
+        "iconPath": "/svg/GIMP.svg"
     },
     {
-        "id": "gitbook",
-        "name": "GitBook",
+        "id": "gnu-emacs",
+        "name": "GNU Emacs",
         "category": "Other Tools",
-        "iconPath": "/svg/GitBook.svg"
-    },
-    {
-        "id": "github-actions",
-        "name": "GitHub Actions",
-        "category": "Other Tools",
-        "iconPath": "/svg/GitHub-Actions.svg"
-    },
-    {
-        "id": "github-codespaces",
-        "name": "GitHub Codespaces",
-        "category": "Other Tools",
-        "iconPath": "/svg/GitHub-Codespaces.svg"
-    },
-    {
-        "id": "github",
-        "name": "GitHub",
-        "category": "Other Tools",
-        "iconPath": "/svg/GitHub.svg"
-    },
-    {
-        "id": "gitlab",
-        "name": "GitLab",
-        "category": "Other Tools",
-        "iconPath": "/svg/GitLab.svg"
-    },
-    {
-        "id": "gitpod",
-        "name": "Gitpod",
-        "category": "Other Tools",
-        "iconPath": "/svg/Gitpod.svg"
-    },
-    {
-        "id": "gitter",
-        "name": "Gitter",
-        "category": "Other Tools",
-        "iconPath": "/svg/Gitter.svg"
-    },
-    {
-        "id": "go",
-        "name": "Go",
-        "category": "Languages",
-        "iconPath": "/svg/Go.svg"
-    },
-    {
-        "id": "goland",
-        "name": "GoLand",
-        "category": "Languages",
-        "iconPath": "/svg/GoLand.svg"
-    },
-    {
-        "id": "godot-engine",
-        "name": "Godot Engine",
-        "category": "Languages",
-        "iconPath": "/svg/Godot-Engine.svg"
-    },
-    {
-        "id": "google-cloud",
-        "name": "Google Cloud",
-        "category": "Languages",
-        "iconPath": "/svg/Google-Cloud.svg"
-    },
-    {
-        "id": "google",
-        "name": "Google",
-        "category": "Languages",
-        "iconPath": "/svg/Google.svg"
+        "iconPath": "/svg/GNU-Emacs.svg"
     },
     {
         "id": "gradle",
@@ -979,40 +1477,22 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Gradle.svg"
     },
     {
-        "id": "grafana",
-        "name": "Grafana",
-        "category": "Other Tools",
-        "iconPath": "/svg/Grafana.svg"
-    },
-    {
-        "id": "grails",
-        "name": "Grails",
-        "category": "Other Tools",
-        "iconPath": "/svg/Grails.svg"
-    },
-    {
         "id": "graphql",
         "name": "GraphQL",
         "category": "Other Tools",
         "iconPath": "/svg/GraphQL.svg"
     },
     {
-        "id": "grunt.js",
+        "id": "grunt-js",
         "name": "Grunt.js",
-        "category": "Languages",
+        "category": "Other Tools",
         "iconPath": "/svg/Grunt.js.svg"
     },
     {
-        "id": "gulp.js",
+        "id": "gulp-js",
         "name": "Gulp.js",
-        "category": "Languages",
-        "iconPath": "/svg/Gulp.js.svg"
-    },
-    {
-        "id": "html5",
-        "name": "HTML5",
         "category": "Other Tools",
-        "iconPath": "/svg/HTML5.svg"
+        "iconPath": "/svg/Gulp.js.svg"
     },
     {
         "id": "handlebars",
@@ -1033,12 +1513,6 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Harvester.svg"
     },
     {
-        "id": "hashicorp-terraform",
-        "name": "HashiCorp Terraform",
-        "category": "Other Tools",
-        "iconPath": "/svg/HashiCorp-Terraform.svg"
-    },
-    {
         "id": "hashicorp-vagrant",
         "name": "HashiCorp Vagrant",
         "category": "Other Tools",
@@ -1049,12 +1523,6 @@ export const allTechs: TechItem[] = [
         "name": "HashiCorp Vault",
         "category": "Other Tools",
         "iconPath": "/svg/HashiCorp-Vault.svg"
-    },
-    {
-        "id": "haskell",
-        "name": "Haskell",
-        "category": "Other Tools",
-        "iconPath": "/svg/Haskell.svg"
     },
     {
         "id": "haxe",
@@ -1069,12 +1537,6 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Helm.svg"
     },
     {
-        "id": "heroku",
-        "name": "Heroku",
-        "category": "Application Hosting & DevOps",
-        "iconPath": "/svg/Heroku.svg"
-    },
-    {
         "id": "hibernate",
         "name": "Hibernate",
         "category": "Other Tools",
@@ -1085,12 +1547,6 @@ export const allTechs: TechItem[] = [
         "name": "Homebrew",
         "category": "Other Tools",
         "iconPath": "/svg/Homebrew.svg"
-    },
-    {
-        "id": "hugo",
-        "name": "Hugo",
-        "category": "Languages",
-        "iconPath": "/svg/Hugo.svg"
     },
     {
         "id": "ibm-spss-statistics",
@@ -1107,12 +1563,12 @@ export const allTechs: TechItem[] = [
     {
         "id": "influxdb",
         "name": "InfluxDB",
-        "category": "Design & Collaboration",
+        "category": "Other Tools",
         "iconPath": "/svg/InfluxDB.svg"
     },
     {
         "id": "inkscape-",
-        "name": "Inkscape ",
+        "name": "Inkscape",
         "category": "Other Tools",
         "iconPath": "/svg/Inkscape-.svg"
     },
@@ -1121,42 +1577,6 @@ export const allTechs: TechItem[] = [
         "name": "Insomnia",
         "category": "Other Tools",
         "iconPath": "/svg/Insomnia.svg"
-    },
-    {
-        "id": "intellij-idea",
-        "name": "IntelliJ IDEA",
-        "category": "Other Tools",
-        "iconPath": "/svg/IntelliJ-IDEA.svg"
-    },
-    {
-        "id": "internet-explorer-10-(ie10)",
-        "name": "Internet Explorer 10 (ie10)",
-        "category": "Other Tools",
-        "iconPath": "/svg/Internet-Explorer-10-(ie10).svg"
-    },
-    {
-        "id": "ionic",
-        "name": "Ionic",
-        "category": "Other Tools",
-        "iconPath": "/svg/Ionic.svg"
-    },
-    {
-        "id": "json",
-        "name": "JSON",
-        "category": "Languages",
-        "iconPath": "/svg/JSON.svg"
-    },
-    {
-        "id": "junit",
-        "name": "JUnit",
-        "category": "Other Tools",
-        "iconPath": "/svg/JUnit.svg"
-    },
-    {
-        "id": "jaeger-tracing",
-        "name": "Jaeger Tracing",
-        "category": "Other Tools",
-        "iconPath": "/svg/Jaeger-Tracing.svg"
     },
     {
         "id": "jamstack",
@@ -1171,18 +1591,6 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Jasmine.svg"
     },
     {
-        "id": "java",
-        "name": "Java",
-        "category": "Languages",
-        "iconPath": "/svg/Java.svg"
-    },
-    {
-        "id": "javascript",
-        "name": "JavaScript",
-        "category": "Languages",
-        "iconPath": "/svg/JavaScript.svg"
-    },
-    {
         "id": "jeet",
         "name": "Jeet",
         "category": "Other Tools",
@@ -1195,34 +1603,16 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Jekyll.svg"
     },
     {
-        "id": "jenkins",
-        "name": "Jenkins",
-        "category": "Other Tools",
-        "iconPath": "/svg/Jenkins.svg"
-    },
-    {
-        "id": "jest",
-        "name": "Jest",
-        "category": "Other Tools",
-        "iconPath": "/svg/Jest.svg"
-    },
-    {
         "id": "jetbrains",
         "name": "JetBrains",
         "category": "Other Tools",
         "iconPath": "/svg/JetBrains.svg"
     },
     {
-        "id": "jira-align",
-        "name": "Jira Align",
-        "category": "Design & Collaboration",
-        "iconPath": "/svg/Jira-Align.svg"
-    },
-    {
-        "id": "jira",
-        "name": "Jira",
-        "category": "Design & Collaboration",
-        "iconPath": "/svg/Jira.svg"
+        "id": "json",
+        "name": "JSON",
+        "category": "Other Tools",
+        "iconPath": "/svg/JSON.svg"
     },
     {
         "id": "jule",
@@ -1235,12 +1625,6 @@ export const allTechs: TechItem[] = [
         "name": "Julia",
         "category": "Other Tools",
         "iconPath": "/svg/Julia.svg"
-    },
-    {
-        "id": "jupyter",
-        "name": "Jupyter",
-        "category": "Other Tools",
-        "iconPath": "/svg/Jupyter.svg"
     },
     {
         "id": "k3os",
@@ -1273,21 +1657,15 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Karma.svg"
     },
     {
-        "id": "keras",
-        "name": "Keras",
-        "category": "Other Tools",
-        "iconPath": "/svg/Keras.svg"
-    },
-    {
         "id": "kibana",
         "name": "Kibana",
         "category": "Other Tools",
         "iconPath": "/svg/Kibana.svg"
     },
     {
-        "id": "knex.js",
+        "id": "knex-js",
         "name": "Knex.js",
-        "category": "Languages",
+        "category": "Other Tools",
         "iconPath": "/svg/Knex.js.svg"
     },
     {
@@ -1297,15 +1675,9 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Knockout.svg"
     },
     {
-        "id": "kotlin",
-        "name": "Kotlin",
-        "category": "Languages",
-        "iconPath": "/svg/Kotlin.svg"
-    },
-    {
         "id": "krakenjs",
         "name": "Krakenjs",
-        "category": "Languages",
+        "category": "Other Tools",
         "iconPath": "/svg/Krakenjs.svg"
     },
     {
@@ -1315,40 +1687,16 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Ktor.svg"
     },
     {
-        "id": "kubernetes",
-        "name": "Kubernetes",
-        "category": "Application Hosting & DevOps",
-        "iconPath": "/svg/Kubernetes.svg"
-    },
-    {
-        "id": "llvm",
-        "name": "LLVM",
-        "category": "Other Tools",
-        "iconPath": "/svg/LLVM.svg"
-    },
-    {
-        "id": "latex",
-        "name": "LaTeX",
-        "category": "Other Tools",
-        "iconPath": "/svg/LaTeX.svg"
-    },
-    {
         "id": "labview",
         "name": "LabVIEW",
         "category": "Other Tools",
         "iconPath": "/svg/LabVIEW.svg"
     },
     {
-        "id": "laravel",
-        "name": "Laravel",
-        "category": "Frameworks & Libraries",
-        "iconPath": "/svg/Laravel.svg"
-    },
-    {
-        "id": "less.js",
-        "name": "Less.js",
-        "category": "Languages",
-        "iconPath": "/svg/Less.js.svg"
+        "id": "latex",
+        "name": "LaTeX",
+        "category": "Other Tools",
+        "iconPath": "/svg/LaTeX.svg"
     },
     {
         "id": "linkedin",
@@ -1375,16 +1723,16 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Livewire.svg"
     },
     {
+        "id": "llvm",
+        "name": "LLVM",
+        "category": "Other Tools",
+        "iconPath": "/svg/LLVM.svg"
+    },
+    {
         "id": "logstash",
         "name": "Logstash",
         "category": "Other Tools",
         "iconPath": "/svg/Logstash.svg"
-    },
-    {
-        "id": "lua",
-        "name": "Lua",
-        "category": "Other Tools",
-        "iconPath": "/svg/Lua.svg"
     },
     {
         "id": "lumen",
@@ -1393,40 +1741,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Lumen.svg"
     },
     {
-        "id": "matlab",
-        "name": "MATLAB",
-        "category": "Other Tools",
-        "iconPath": "/svg/MATLAB.svg"
-    },
-    {
-        "id": "modx",
-        "name": "MODX",
-        "category": "Other Tools",
-        "iconPath": "/svg/MODX.svg"
-    },
-    {
-        "id": "ms-dos",
-        "name": "MS DOS",
-        "category": "Other Tools",
-        "iconPath": "/svg/MS-DOS.svg"
-    },
-    {
         "id": "markdown",
         "name": "Markdown",
         "category": "Other Tools",
         "iconPath": "/svg/Markdown.svg"
-    },
-    {
-        "id": "material-ui",
-        "name": "Material UI",
-        "category": "Other Tools",
-        "iconPath": "/svg/Material-UI.svg"
-    },
-    {
-        "id": "materialize",
-        "name": "Materialize",
-        "category": "Other Tools",
-        "iconPath": "/svg/Materialize.svg"
     },
     {
         "id": "matplotlib",
@@ -1435,15 +1753,15 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Matplotlib.svg"
     },
     {
-        "id": "meteor.js",
+        "id": "meteor-js",
         "name": "Meteor.js",
-        "category": "Languages",
+        "category": "Other Tools",
         "iconPath": "/svg/Meteor.js.svg"
     },
     {
         "id": "microsoft-sql-server",
         "name": "Microsoft SQL Server",
-        "category": "Data Stores",
+        "category": "Other Tools",
         "iconPath": "/svg/Microsoft-SQL-Server.svg"
     },
     {
@@ -1453,16 +1771,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Minitab.svg"
     },
     {
-        "id": "mobx",
-        "name": "MobX",
+        "id": "modx",
+        "name": "MODX",
         "category": "Other Tools",
-        "iconPath": "/svg/MobX.svg"
-    },
-    {
-        "id": "mocha",
-        "name": "Mocha",
-        "category": "Other Tools",
-        "iconPath": "/svg/Mocha.svg"
+        "iconPath": "/svg/MODX.svg"
     },
     {
         "id": "moleculer",
@@ -1471,52 +1783,16 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Moleculer.svg"
     },
     {
-        "id": "mongodb",
-        "name": "MongoDB",
-        "category": "Languages",
-        "iconPath": "/svg/MongoDB.svg"
-    },
-    {
-        "id": "mongoose.js",
-        "name": "Mongoose.js",
-        "category": "Languages",
-        "iconPath": "/svg/Mongoose.js.svg"
-    },
-    {
         "id": "moodle",
         "name": "Moodle",
         "category": "Other Tools",
         "iconPath": "/svg/Moodle.svg"
     },
     {
-        "id": "mysql",
-        "name": "MySQL",
-        "category": "Data Stores",
-        "iconPath": "/svg/MySQL.svg"
-    },
-    {
-        "id": "nginx",
-        "name": "NGINX",
+        "id": "ms-dos",
+        "name": "MS DOS",
         "category": "Other Tools",
-        "iconPath": "/svg/NGINX.svg"
-    },
-    {
-        "id": "nhibernate",
-        "name": "NHibernate",
-        "category": "Other Tools",
-        "iconPath": "/svg/NHibernate.svg"
-    },
-    {
-        "id": "npm",
-        "name": "NPM",
-        "category": "Other Tools",
-        "iconPath": "/svg/NPM.svg"
-    },
-    {
-        "id": "nw.js-(node-webkit)",
-        "name": "NW.js (node webkit)",
-        "category": "Languages",
-        "iconPath": "/svg/NW.js-(node-webkit).svg"
+        "iconPath": "/svg/MS-DOS.svg"
     },
     {
         "id": "nano",
@@ -1531,12 +1807,6 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Nerog.svg"
     },
     {
-        "id": "nest.js",
-        "name": "Nest.js",
-        "category": "Frameworks & Libraries",
-        "iconPath": "/svg/Nest.js.svg"
-    },
-    {
         "id": "networkx",
         "name": "NetworkX",
         "category": "Other Tools",
@@ -1549,10 +1819,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/New4j.svg"
     },
     {
-        "id": "next.js",
-        "name": "Next.js",
-        "category": "Frameworks & Libraries",
-        "iconPath": "/svg/Next.js.svg"
+        "id": "nhibernate",
+        "name": "NHibernate",
+        "category": "Other Tools",
+        "iconPath": "/svg/NHibernate.svg"
     },
     {
         "id": "nim",
@@ -1573,9 +1843,9 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/NixOS.svg"
     },
     {
-        "id": "node.js",
+        "id": "node-js",
         "name": "Node.js",
-        "category": "Languages",
+        "category": "Other Tools",
         "iconPath": "/svg/Node.js.svg"
     },
     {
@@ -1585,34 +1855,28 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Nodemon.svg"
     },
     {
+        "id": "npm",
+        "name": "NPM",
+        "category": "Other Tools",
+        "iconPath": "/svg/NPM.svg"
+    },
+    {
         "id": "nuget",
         "name": "NuGet",
         "category": "Other Tools",
         "iconPath": "/svg/NuGet.svg"
     },
     {
-        "id": "numpy",
-        "name": "NumPy",
+        "id": "nw-js--node-webkit-",
+        "name": "NW.js",
         "category": "Other Tools",
-        "iconPath": "/svg/NumPy.svg"
-    },
-    {
-        "id": "nuxt-js",
-        "name": "Nuxt JS",
-        "category": "Frameworks & Libraries",
-        "iconPath": "/svg/Nuxt-JS.svg"
+        "iconPath": "/svg/NW.js-(node-webkit).svg"
     },
     {
         "id": "ocaml",
         "name": "OCaml",
         "category": "Other Tools",
         "iconPath": "/svg/OCaml.svg"
-    },
-    {
-        "id": "objective-c",
-        "name": "Objective C",
-        "category": "Other Tools",
-        "iconPath": "/svg/Objective-C.svg"
     },
     {
         "id": "oh-my-zsh",
@@ -1645,12 +1909,6 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/OpenCL.svg"
     },
     {
-        "id": "opencv",
-        "name": "OpenCV",
-        "category": "Other Tools",
-        "iconPath": "/svg/OpenCV.svg"
-    },
-    {
         "id": "opengl",
         "name": "OpenGL",
         "category": "Other Tools",
@@ -1661,6 +1919,12 @@ export const allTechs: TechItem[] = [
         "name": "OpenStack",
         "category": "Other Tools",
         "iconPath": "/svg/OpenStack.svg"
+    },
+    {
+        "id": "opensuse",
+        "name": "openSUSE",
+        "category": "Other Tools",
+        "iconPath": "/svg/openSUSE.svg"
     },
     {
         "id": "opentelemetry",
@@ -1675,16 +1939,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Opera.svg"
     },
     {
-        "id": "oracle",
-        "name": "Oracle",
+        "id": "p5-js",
+        "name": "p5 JS",
         "category": "Other Tools",
-        "iconPath": "/svg/Oracle.svg"
-    },
-    {
-        "id": "php",
-        "name": "PHP",
-        "category": "Languages",
-        "iconPath": "/svg/PHP.svg"
+        "iconPath": "/svg/p5-JS.svg"
     },
     {
         "id": "packer",
@@ -1693,16 +1951,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Packer.svg"
     },
     {
-        "id": "pandas",
-        "name": "Pandas",
+        "id": "pfsense",
+        "name": "pfSense",
         "category": "Other Tools",
-        "iconPath": "/svg/Pandas.svg"
-    },
-    {
-        "id": "perl",
-        "name": "Perl",
-        "category": "Other Tools",
-        "iconPath": "/svg/Perl.svg"
+        "iconPath": "/svg/pfSense.svg"
     },
     {
         "id": "phalcon",
@@ -1718,15 +1970,9 @@ export const allTechs: TechItem[] = [
     },
     {
         "id": "photon-engine-",
-        "name": "Photon Engine ",
+        "name": "Photon Engine",
         "category": "Other Tools",
         "iconPath": "/svg/Photon-Engine-.svg"
-    },
-    {
-        "id": "phpstorm",
-        "name": "PhpStorm",
-        "category": "Languages",
-        "iconPath": "/svg/PhpStorm.svg"
     },
     {
         "id": "playwrite",
@@ -1741,18 +1987,6 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Ploty.svg"
     },
     {
-        "id": "podman",
-        "name": "Podman",
-        "category": "Other Tools",
-        "iconPath": "/svg/Podman.svg"
-    },
-    {
-        "id": "polygon",
-        "name": "Polygon",
-        "category": "Languages",
-        "iconPath": "/svg/Polygon.svg"
-    },
-    {
         "id": "portainer",
         "name": "Portainer",
         "category": "Other Tools",
@@ -1763,12 +1997,6 @@ export const allTechs: TechItem[] = [
         "name": "PostCSS",
         "category": "Other Tools",
         "iconPath": "/svg/PostCSS.svg"
-    },
-    {
-        "id": "postgressql",
-        "name": "PostgresSQL",
-        "category": "Data Stores",
-        "iconPath": "/svg/PostgresSQL.svg"
     },
     {
         "id": "postman",
@@ -1789,16 +2017,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Processing.svg"
     },
     {
-        "id": "prometheus",
-        "name": "Prometheus",
+        "id": "purescript",
+        "name": "PureScript",
         "category": "Other Tools",
-        "iconPath": "/svg/Prometheus.svg"
-    },
-    {
-        "id": "protractor-test",
-        "name": "Protractor Test",
-        "category": "Other Tools",
-        "iconPath": "/svg/Protractor-Test.svg"
+        "iconPath": "/svg/PureScript.svg"
     },
     {
         "id": "putty",
@@ -1807,40 +2029,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/PuTTY.svg"
     },
     {
-        "id": "purescript",
-        "name": "PureScript",
-        "category": "Languages",
-        "iconPath": "/svg/PureScript.svg"
-    },
-    {
-        "id": "pycharm",
-        "name": "PyCharm",
-        "category": "Other Tools",
-        "iconPath": "/svg/PyCharm.svg"
-    },
-    {
         "id": "pyscript",
         "name": "PyScript",
-        "category": "Languages",
-        "iconPath": "/svg/PyScript.svg"
-    },
-    {
-        "id": "pytorch",
-        "name": "PyTorch",
         "category": "Other Tools",
-        "iconPath": "/svg/PyTorch.svg"
-    },
-    {
-        "id": "python-poetry",
-        "name": "Python Poetry",
-        "category": "Languages",
-        "iconPath": "/svg/Python-Poetry.svg"
-    },
-    {
-        "id": "python",
-        "name": "Python",
-        "category": "Languages",
-        "iconPath": "/svg/Python.svg"
+        "iconPath": "/svg/PyScript.svg"
     },
     {
         "id": "qodana",
@@ -1873,34 +2065,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Qwik.svg"
     },
     {
-        "id": "r-",
-        "name": "R ",
-        "category": "Other Tools",
-        "iconPath": "/svg/R-.svg"
-    },
-    {
-        "id": "rspec",
-        "name": "RSpec",
-        "category": "Other Tools",
-        "iconPath": "/svg/RSpec.svg"
-    },
-    {
-        "id": "rstudio",
-        "name": "RStudio",
-        "category": "Other Tools",
-        "iconPath": "/svg/RStudio.svg"
-    },
-    {
         "id": "rabbitmq",
         "name": "RabbitMQ",
         "category": "Other Tools",
         "iconPath": "/svg/RabbitMQ.svg"
-    },
-    {
-        "id": "rancher",
-        "name": "Rancher",
-        "category": "Other Tools",
-        "iconPath": "/svg/Rancher.svg"
     },
     {
         "id": "raspberry-pi",
@@ -1915,18 +2083,6 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Reach.svg"
     },
     {
-        "id": "react-bootstrap",
-        "name": "React Bootstrap",
-        "category": "Frameworks & Libraries",
-        "iconPath": "/svg/React-Bootstrap.svg"
-    },
-    {
-        "id": "react",
-        "name": "React",
-        "category": "Frameworks & Libraries",
-        "iconPath": "/svg/React.svg"
-    },
-    {
         "id": "realm",
         "name": "Realm",
         "category": "Other Tools",
@@ -1939,25 +2095,7 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Red-Hat.svg"
     },
     {
-        "id": "redcube's-epic-compiler-thingy-programming-(rect)",
-        "name": "RedCube's epic Compiler Thingy programming (ReCT)",
-        "category": "Other Tools",
-        "iconPath": "/svg/RedCube's-epic-Compiler-Thingy-programming-(ReCT).svg"
-    },
-    {
-        "id": "redis",
-        "name": "Redis",
-        "category": "Data Stores",
-        "iconPath": "/svg/Redis.svg"
-    },
-    {
-        "id": "redux",
-        "name": "Redux",
-        "category": "Other Tools",
-        "iconPath": "/svg/Redux.svg"
-    },
-    {
-        "id": "ren'py",
+        "id": "ren-py",
         "name": "Ren'Py",
         "category": "Other Tools",
         "iconPath": "/svg/Ren'Py.svg"
@@ -1969,8 +2107,8 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Rider.svg"
     },
     {
-        "id": "robot-operating-system-(ros)",
-        "name": "Robot Operating System (ROS)",
+        "id": "robot-operating-system--ros-",
+        "name": "Robot Operating System",
         "category": "Other Tools",
         "iconPath": "/svg/Robot-Operating-System-(ROS).svg"
     },
@@ -1981,94 +2119,22 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/RocksDB.svg"
     },
     {
-        "id": "rollup.js",
+        "id": "rollup-js",
         "name": "Rollup.js",
-        "category": "Languages",
+        "category": "Other Tools",
         "iconPath": "/svg/Rollup.js.svg"
     },
     {
-        "id": "ruby-on-rails",
-        "name": "Ruby on Rails",
-        "category": "Languages",
-        "iconPath": "/svg/Ruby-on-Rails.svg"
-    },
-    {
-        "id": "ruby",
-        "name": "Ruby",
-        "category": "Languages",
-        "iconPath": "/svg/Ruby.svg"
-    },
-    {
-        "id": "rubymine",
-        "name": "RubyMine",
-        "category": "Languages",
-        "iconPath": "/svg/RubyMine.svg"
-    },
-    {
-        "id": "rust",
-        "name": "Rust",
-        "category": "Languages",
-        "iconPath": "/svg/Rust.svg"
-    },
-    {
-        "id": "sql-developer",
-        "name": "SQL Developer",
-        "category": "Data Stores",
-        "iconPath": "/svg/SQL-Developer.svg"
-    },
-    {
-        "id": "sqlalchemy",
-        "name": "SQLAlchemy",
-        "category": "Data Stores",
-        "iconPath": "/svg/SQLAlchemy.svg"
-    },
-    {
-        "id": "sqlite",
-        "name": "SQLite",
-        "category": "Data Stores",
-        "iconPath": "/svg/SQLite.svg"
-    },
-    {
-        "id": "ssh",
-        "name": "SSH",
+        "id": "rstudio",
+        "name": "RStudio",
         "category": "Other Tools",
-        "iconPath": "/svg/SSH.svg"
-    },
-    {
-        "id": "salesforce",
-        "name": "Salesforce",
-        "category": "Other Tools",
-        "iconPath": "/svg/Salesforce.svg"
+        "iconPath": "/svg/RStudio.svg"
     },
     {
         "id": "sanity",
         "name": "Sanity",
         "category": "Other Tools",
         "iconPath": "/svg/Sanity.svg"
-    },
-    {
-        "id": "sass",
-        "name": "Sass",
-        "category": "Other Tools",
-        "iconPath": "/svg/Sass.svg"
-    },
-    {
-        "id": "scala",
-        "name": "Scala",
-        "category": "Other Tools",
-        "iconPath": "/svg/Scala.svg"
-    },
-    {
-        "id": "scalingo",
-        "name": "Scalingo",
-        "category": "Languages",
-        "iconPath": "/svg/Scalingo.svg"
-    },
-    {
-        "id": "selenium",
-        "name": "Selenium",
-        "category": "Other Tools",
-        "iconPath": "/svg/Selenium.svg"
     },
     {
         "id": "sema-software",
@@ -2089,33 +2155,15 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Shopware.svg"
     },
     {
-        "id": "simple-directmedia-layer-(sdl)",
-        "name": "Simple DirectMedia Layer (SDL)",
-        "category": "Other Tools",
-        "iconPath": "/svg/Simple-DirectMedia-Layer-(SDL).svg"
-    },
-    {
-        "id": "sketch",
-        "name": "Sketch",
-        "category": "Design & Collaboration",
-        "iconPath": "/svg/Sketch.svg"
-    },
-    {
-        "id": "slack",
-        "name": "Slack",
-        "category": "Design & Collaboration",
-        "iconPath": "/svg/Slack.svg"
-    },
-    {
-        "id": "socket.io",
+        "id": "socket-io",
         "name": "Socket.io",
         "category": "Other Tools",
         "iconPath": "/svg/Socket.io.svg"
     },
     {
-        "id": "solid.js",
+        "id": "solid-js",
         "name": "Solid.js",
-        "category": "Languages",
+        "category": "Other Tools",
         "iconPath": "/svg/Solid.js.svg"
     },
     {
@@ -2143,10 +2191,22 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Splunk.svg"
     },
     {
-        "id": "spring",
-        "name": "Spring",
-        "category": "Frameworks & Libraries",
-        "iconPath": "/svg/Spring.svg"
+        "id": "sql-developer",
+        "name": "SQL Developer",
+        "category": "Other Tools",
+        "iconPath": "/svg/SQL-Developer.svg"
+    },
+    {
+        "id": "sqlalchemy",
+        "name": "SQLAlchemy",
+        "category": "Other Tools",
+        "iconPath": "/svg/SQLAlchemy.svg"
+    },
+    {
+        "id": "ssh",
+        "name": "SSH",
+        "category": "Other Tools",
+        "iconPath": "/svg/SSH.svg"
     },
     {
         "id": "stack-overflow",
@@ -2179,46 +2239,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Stylus.svg"
     },
     {
-        "id": "svelte",
-        "name": "Svelte",
-        "category": "Frameworks & Libraries",
-        "iconPath": "/svg/Svelte.svg"
-    },
-    {
         "id": "swagger",
         "name": "Swagger",
         "category": "Other Tools",
         "iconPath": "/svg/Swagger.svg"
-    },
-    {
-        "id": "swift",
-        "name": "Swift",
-        "category": "Languages",
-        "iconPath": "/svg/Swift.svg"
-    },
-    {
-        "id": "symfony",
-        "name": "Symfony",
-        "category": "Other Tools",
-        "iconPath": "/svg/Symfony.svg"
-    },
-    {
-        "id": "typo3",
-        "name": "TYPO3",
-        "category": "Other Tools",
-        "iconPath": "/svg/TYPO3.svg"
-    },
-    {
-        "id": "tailwind-css",
-        "name": "Tailwind CSS",
-        "category": "Other Tools",
-        "iconPath": "/svg/Tailwind-CSS.svg"
-    },
-    {
-        "id": "tauri",
-        "name": "Tauri",
-        "category": "Other Tools",
-        "iconPath": "/svg/Tauri.svg"
     },
     {
         "id": "tex",
@@ -2227,21 +2251,9 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/TeX.svg"
     },
     {
-        "id": "tensorflow",
-        "name": "TensorFlow",
-        "category": "Other Tools",
-        "iconPath": "/svg/TensorFlow.svg"
-    },
-    {
-        "id": "the-algorithms",
-        "name": "The Algorithms",
-        "category": "Languages",
-        "iconPath": "/svg/The-Algorithms.svg"
-    },
-    {
-        "id": "three.js",
+        "id": "three-js",
         "name": "Three.js",
-        "category": "Languages",
+        "category": "Other Tools",
         "iconPath": "/svg/Three.js.svg"
     },
     {
@@ -2251,28 +2263,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Titanium-SDK.svg"
     },
     {
-        "id": "tortoisegit",
-        "name": "TortoiseGit",
-        "category": "Other Tools",
-        "iconPath": "/svg/TortoiseGit.svg"
-    },
-    {
         "id": "tower",
         "name": "Tower",
         "category": "Other Tools",
         "iconPath": "/svg/Tower.svg"
-    },
-    {
-        "id": "traefik-mesh",
-        "name": "Traefik Mesh",
-        "category": "Other Tools",
-        "iconPath": "/svg/Traefik-Mesh.svg"
-    },
-    {
-        "id": "traefik-proxy",
-        "name": "Traefik Proxy",
-        "category": "Other Tools",
-        "iconPath": "/svg/Traefik-Proxy.svg"
     },
     {
         "id": "travis-ci",
@@ -2281,28 +2275,16 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Travis-CI.svg"
     },
     {
-        "id": "trello",
-        "name": "Trello",
-        "category": "Design & Collaboration",
-        "iconPath": "/svg/Trello.svg"
-    },
-    {
         "id": "twitter",
         "name": "Twitter",
         "category": "Other Tools",
         "iconPath": "/svg/Twitter.svg"
     },
     {
-        "id": "typescript",
-        "name": "TypeScript",
-        "category": "Languages",
-        "iconPath": "/svg/TypeScript.svg"
-    },
-    {
-        "id": "unix",
-        "name": "UNIX",
+        "id": "typo3",
+        "name": "TYPO3",
         "category": "Other Tools",
-        "iconPath": "/svg/UNIX.svg"
+        "iconPath": "/svg/TYPO3.svg"
     },
     {
         "id": "ubuntu",
@@ -2311,8 +2293,8 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Ubuntu.svg"
     },
     {
-        "id": "unified-modelling-language-(uml)",
-        "name": "Unified Modelling Language (UML)",
+        "id": "unified-modelling-language--uml-",
+        "name": "Unified Modelling Language",
         "category": "Other Tools",
         "iconPath": "/svg/Unified-Modelling-Language-(UML).svg"
     },
@@ -2323,10 +2305,22 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Unity.svg"
     },
     {
+        "id": "unix",
+        "name": "UNIX",
+        "category": "Other Tools",
+        "iconPath": "/svg/UNIX.svg"
+    },
+    {
         "id": "unreal-engine",
         "name": "Unreal Engine",
         "category": "Other Tools",
         "iconPath": "/svg/Unreal-Engine.svg"
+    },
+    {
+        "id": "uwsgi",
+        "name": "uWSGI",
+        "category": "Other Tools",
+        "iconPath": "/svg/uWSGI.svg"
     },
     {
         "id": "v8",
@@ -2341,40 +2335,10 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Vala.svg"
     },
     {
-        "id": "vercel",
-        "name": "Vercel",
-        "category": "Application Hosting & DevOps",
-        "iconPath": "/svg/Vercel.svg"
-    },
-    {
         "id": "veutify",
         "name": "Veutify",
         "category": "Other Tools",
         "iconPath": "/svg/Veutify.svg"
-    },
-    {
-        "id": "vim",
-        "name": "Vim",
-        "category": "Other Tools",
-        "iconPath": "/svg/Vim.svg"
-    },
-    {
-        "id": "visual-studio-code-(vs-code)",
-        "name": "Visual Studio Code (VS Code)",
-        "category": "Other Tools",
-        "iconPath": "/svg/Visual-Studio-Code-(VS-Code).svg"
-    },
-    {
-        "id": "visual-studio",
-        "name": "Visual Studio",
-        "category": "Other Tools",
-        "iconPath": "/svg/Visual-Studio.svg"
-    },
-    {
-        "id": "vite.js",
-        "name": "Vite.js",
-        "category": "Languages",
-        "iconPath": "/svg/Vite.js.svg"
     },
     {
         "id": "vite",
@@ -2383,16 +2347,16 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Vite.svg"
     },
     {
-        "id": "vue-storefront",
-        "name": "Vue Storefront",
-        "category": "Frameworks & Libraries",
-        "iconPath": "/svg/Vue-Storefront.svg"
+        "id": "vite-js",
+        "name": "Vite.js",
+        "category": "Other Tools",
+        "iconPath": "/svg/Vite.js.svg"
     },
     {
-        "id": "vue.js",
-        "name": "Vue.js",
-        "category": "Frameworks & Libraries",
-        "iconPath": "/svg/Vue.js.svg"
+        "id": "vsphere",
+        "name": "vSphere",
+        "category": "Other Tools",
+        "iconPath": "/svg/vSphere.svg"
     },
     {
         "id": "vyper",
@@ -2405,12 +2369,6 @@ export const allTechs: TechItem[] = [
         "name": "WebAssembly",
         "category": "Other Tools",
         "iconPath": "/svg/WebAssembly.svg"
-    },
-    {
-        "id": "webstorm",
-        "name": "WebStorm",
-        "category": "Other Tools",
-        "iconPath": "/svg/WebStorm.svg"
     },
     {
         "id": "webflow",
@@ -2455,22 +2413,16 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/WordPress.svg"
     },
     {
-        "id": "xml",
-        "name": "XML",
-        "category": "Other Tools",
-        "iconPath": "/svg/XML.svg"
-    },
-    {
         "id": "xamarin",
         "name": "Xamarin",
         "category": "Other Tools",
         "iconPath": "/svg/Xamarin.svg"
     },
     {
-        "id": "xcode",
-        "name": "Xcode",
+        "id": "xml",
+        "name": "XML",
         "category": "Other Tools",
-        "iconPath": "/svg/Xcode.svg"
+        "iconPath": "/svg/XML.svg"
     },
     {
         "id": "yaml",
@@ -2509,45 +2461,109 @@ export const allTechs: TechItem[] = [
         "iconPath": "/svg/Zig.svg"
     },
     {
-        "id": "jquery",
-        "name": "jQuery",
-        "category": "Other Tools",
-        "iconPath": "/svg/jQuery.svg"
+        "id": "cypress",
+        "name": "Cypress",
+        "category": "Testing",
+        "iconPath": "/svg/Cypress.svg"
     },
     {
-        "id": "opensuse",
-        "name": "openSUSE",
-        "category": "Other Tools",
-        "iconPath": "/svg/openSUSE.svg"
+        "id": "jest",
+        "name": "Jest",
+        "category": "Testing",
+        "iconPath": "/svg/Jest.svg"
     },
     {
-        "id": "p5-js",
-        "name": "p5 JS",
-        "category": "Languages",
-        "iconPath": "/svg/p5-JS.svg"
+        "id": "junit",
+        "name": "JUnit",
+        "category": "Testing",
+        "iconPath": "/svg/JUnit.svg"
     },
     {
-        "id": "pfsense",
-        "name": "pfSense",
-        "category": "Other Tools",
-        "iconPath": "/svg/pfSense.svg"
+        "id": "mocha",
+        "name": "Mocha",
+        "category": "Testing",
+        "iconPath": "/svg/Mocha.svg"
     },
     {
         "id": "pytest",
         "name": "pytest",
-        "category": "Other Tools",
+        "category": "Testing",
         "iconPath": "/svg/pytest.svg"
     },
     {
-        "id": "uwsgi",
-        "name": "uWSGI",
-        "category": "Other Tools",
-        "iconPath": "/svg/uWSGI.svg"
+        "id": "selenium",
+        "name": "Selenium",
+        "category": "Testing",
+        "iconPath": "/svg/Selenium.svg"
     },
     {
-        "id": "vsphere",
-        "name": "vSphere",
-        "category": "Other Tools",
-        "iconPath": "/svg/vSphere.svg"
+        "id": "bitbucket",
+        "name": "BitBucket",
+        "category": "Version Control",
+        "iconPath": "/svg/BitBucket.svg"
+    },
+    {
+        "id": "git",
+        "name": "Git",
+        "category": "Version Control",
+        "iconPath": "/svg/Git.svg"
+    },
+    {
+        "id": "gitbook",
+        "name": "GitBook",
+        "category": "Version Control",
+        "iconPath": "/svg/GitBook.svg"
+    },
+    {
+        "id": "github",
+        "name": "GitHub",
+        "category": "Version Control",
+        "iconPath": "/svg/GitHub.svg"
+    },
+    {
+        "id": "github-codespaces",
+        "name": "GitHub Codespaces",
+        "category": "Version Control",
+        "iconPath": "/svg/GitHub-Codespaces.svg"
+    },
+    {
+        "id": "gitlab",
+        "name": "GitLab",
+        "category": "Version Control",
+        "iconPath": "/svg/GitLab.svg"
+    },
+    {
+        "id": "gitpod",
+        "name": "Gitpod",
+        "category": "Version Control",
+        "iconPath": "/svg/Gitpod.svg"
+    },
+    {
+        "id": "gitter",
+        "name": "Gitter",
+        "category": "Version Control",
+        "iconPath": "/svg/Gitter.svg"
+    },
+    {
+        "id": "tortoisegit",
+        "name": "TortoiseGit",
+        "category": "Version Control",
+        "iconPath": "/svg/TortoiseGit.svg"
     }
+];
+
+export const techCategories = [
+    "AI & Machine Learning",
+    "Application Hosting",
+    "Collaboration",
+    "Data Stores",
+    "Design & Collaboration",
+    "Development",
+    "IDE & Editors",
+    "Languages & Frameworks",
+    "Libraries",
+    "Marketing and Sales Tools",
+    "Other Tools",
+    "Testing",
+    "Version Control"
 ];

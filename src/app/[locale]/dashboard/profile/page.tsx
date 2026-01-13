@@ -585,105 +585,96 @@ export default function ProfilePage() {
                         </div>
                     </TabsContent>
 
-                    <TabsContent value="tech-stack" className="space-y-8 max-w-4xl">
+                    <TabsContent value="tech-stack" className="space-y-8">
                         <div className="space-y-8">
-                            <div>
-                                <h3 className="text-lg font-medium mb-1">Tech stack</h3>
-                                <p className="text-sm text-muted-foreground mb-6">
-                                    Adding the tools & services you have experienced with helps us match you with the right companies.
-                                </p>
-
-                                {/* Search Bar */}
-                                <div className="relative">
-                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                                    <Input
-                                        value={techSearch}
-                                        onChange={(e) => setTechSearch(e.target.value)}
-                                        placeholder="e.g. React, AWS, Python..."
-                                        className="pl-10 h-12 text-base"
-                                    />
+                            {/* Search Section - Himalayas style with left label */}
+                            <div className="grid grid-cols-[200px_1fr] gap-8 items-start">
+                                <div>
+                                    <h3 className="text-sm font-medium">Search</h3>
+                                    <p className="text-sm text-muted-foreground mt-1">
+                                        Search for the tools & services you have experience with.
+                                    </p>
                                 </div>
-                            </div>
+                                <div className="space-y-4">
+                                    <div className="relative max-w-md">
+                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                                        <Input
+                                            value={techSearch}
+                                            onChange={(e) => setTechSearch(e.target.value)}
+                                            placeholder="e.g. Next.js"
+                                            spellCheck={false}
+                                            className="pl-10 h-11 text-sm bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800"
+                                        />
+                                    </div>
 
-                            {/* Search Results */}
-                            {techSearch && (
-                                <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
-                                    <h4 className="text-sm font-medium text-muted-foreground">Search Results</h4>
-                                    {filteredTechs.length > 0 ? (
-                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                            {filteredTechs.map(tech => (
-                                                <div
-                                                    key={tech.id}
-                                                    onClick={() => toggleTech(tech.id)}
-                                                    className={cn(
-                                                        "flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all hover:bg-gray-50 dark:hover:bg-gray-800 relative group select-none",
-                                                        selectedTechs.includes(tech.id)
-                                                            ? "border-purple-600 bg-purple-50/50 dark:bg-purple-900/20"
-                                                            : "border-transparent bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 shadow-sm"
-                                                    )}
-                                                >
-                                                    <div className="size-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0 p-2">
-                                                        <Image src={tech.iconPath} alt={tech.name} width={24} height={24} className="w-full h-full object-contain" />
-                                                    </div>
-                                                    <span className="font-medium text-sm truncate">{tech.name}</span>
-                                                    {selectedTechs.includes(tech.id) && (
-                                                        <div className="absolute -top-2 -right-2 bg-purple-600 text-white p-0.5 rounded-full shadow-sm">
-                                                            <Check className="size-3" />
+                                    {/* Search Results Grid */}
+                                    {techSearch && (
+                                        <div className="grid grid-cols-3 gap-3 animate-in fade-in slide-in-from-top-2">
+                                            {filteredTechs.length > 0 ? (
+                                                filteredTechs.slice(0, 12).map(tech => (
+                                                    <div
+                                                        key={tech.id}
+                                                        onClick={() => toggleTech(tech.id)}
+                                                        className={cn(
+                                                            "flex items-center gap-2.5 px-3 py-2.5 rounded-lg border cursor-pointer transition-all select-none relative",
+                                                            selectedTechs.includes(tech.id)
+                                                                ? "border-purple-600 bg-purple-50/80 dark:bg-purple-900/30"
+                                                                : "border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-700"
+                                                        )}
+                                                    >
+                                                        <div className="size-8 rounded-md bg-gray-50 dark:bg-gray-800 flex items-center justify-center shrink-0 p-1.5">
+                                                            <Image src={tech.iconPath} alt={tech.name} width={20} height={20} className="w-full h-full object-contain" />
                                                         </div>
-                                                    )}
+                                                        <span className="text-sm font-medium truncate">{tech.name}</span>
+                                                        {selectedTechs.includes(tech.id) && (
+                                                            <div className="absolute -top-1.5 -right-1.5 bg-purple-600 text-white p-0.5 rounded-full">
+                                                                <Check className="size-2.5" />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div className="col-span-3 text-center py-8 border border-dashed rounded-lg">
+                                                    <Search className="size-6 text-muted-foreground mx-auto mb-2 opacity-50" />
+                                                    <p className="text-sm text-muted-foreground">No technology matches your search</p>
                                                 </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <div className="text-center py-8 border-2 border-dashed rounded-xl">
-                                            <p className="text-sm text-muted-foreground">No technology matches your search</p>
+                                            )}
                                         </div>
                                     )}
                                 </div>
-                            )}
+                            </div>
 
-                            {/* Your Tech Stack (Categorized) */}
-                            {Object.keys(groupedSelectedTechs).length > 0 && !techSearch && (
-                                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
+                            {/* Selected Technologies - Grouped by Category */}
+                            {Object.keys(groupedSelectedTechs).length > 0 && (
+                                <div className="space-y-6 pt-4">
                                     {Object.entries(groupedSelectedTechs).map(([category, techs]) => (
                                         <div key={category} className="space-y-3">
-                                            <div className="flex items-center gap-2">
+                                            {/* Category Header with lines */}
+                                            <div className="flex items-center gap-4">
                                                 <div className="h-px bg-gray-200 dark:bg-gray-800 flex-1" />
-                                                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{category}</span>
+                                                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{category}</span>
                                                 <div className="h-px bg-gray-200 dark:bg-gray-800 flex-1" />
                                             </div>
-                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                            {/* Tech Cards Grid */}
+                                            <div className="grid grid-cols-3 gap-3 pl-[232px]">
                                                 {techs.map(tech => (
                                                     <div
                                                         key={tech.id}
                                                         onClick={() => toggleTech(tech.id)}
-                                                        className="flex items-center gap-3 p-3 rounded-xl border-2 border-purple-600 bg-purple-50/50 dark:bg-purple-900/20 cursor-pointer transition-all relative group select-none"
+                                                        className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border-2 border-purple-600 bg-purple-50/80 dark:bg-purple-900/30 cursor-pointer transition-all select-none relative"
                                                     >
-                                                        <div className="size-10 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center shrink-0 shadow-sm p-2">
-                                                            <Image src={tech.iconPath} alt={tech.name} width={24} height={24} className="w-full h-full object-contain" />
+                                                        <div className="size-8 rounded-md bg-white dark:bg-gray-800 flex items-center justify-center shrink-0 p-1.5 shadow-sm">
+                                                            <Image src={tech.iconPath} alt={tech.name} width={20} height={20} className="w-full h-full object-contain" />
                                                         </div>
-                                                        <span className="font-medium text-sm truncate">{tech.name}</span>
-                                                        <div className="absolute -top-2 -right-2 bg-purple-600 text-white p-0.5 rounded-full shadow-sm">
-                                                            <Check className="size-3" />
+                                                        <span className="text-sm font-medium truncate">{tech.name}</span>
+                                                        <div className="absolute -top-1.5 -right-1.5 bg-purple-600 text-white p-0.5 rounded-full">
+                                                            <Check className="size-2.5" />
                                                         </div>
                                                     </div>
                                                 ))}
                                             </div>
                                         </div>
                                     ))}
-                                </div>
-                            )}
-
-                            {/* Empty State Hint */}
-                            {selectedTechs.length === 0 && !techSearch && (
-                                <div className="text-center py-12">
-                                    <div className="inline-flex items-center justify-center size-16 rounded-full bg-gray-100 dark:bg-gray-800 mb-4">
-                                        <Search className="size-8 text-muted-foreground opacity-50" />
-                                    </div>
-                                    <h4 className="text-base font-medium mb-1">Search to add technologies</h4>
-                                    <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                                        Search for the tools and languages you use above to build your stack.
-                                    </p>
                                 </div>
                             )}
                         </div>
