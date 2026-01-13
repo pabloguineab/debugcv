@@ -327,6 +327,7 @@ export default function ProfilePage() {
                                                 value={linkedinUrl}
                                                 onChange={(e) => setLinkedinUrl(e.target.value)}
                                                 placeholder="richard-hendricks-pied"
+                                                spellCheck={false}
                                                 className="pl-14 h-11 text-sm rounded-lg border-gray-200 focus:border-blue-500 focus:ring-blue-500"
                                             />
                                         </div>
@@ -345,6 +346,7 @@ export default function ProfilePage() {
                                                 value={githubUrl}
                                                 onChange={(e) => setGithubUrl(e.target.value)}
                                                 placeholder="piedpiper"
+                                                spellCheck={false}
                                                 className="pl-14 h-11 text-sm rounded-lg border-gray-200 focus:border-blue-500 focus:ring-blue-500"
                                             />
                                         </div>
