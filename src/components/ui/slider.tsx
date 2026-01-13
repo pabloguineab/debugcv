@@ -39,7 +39,7 @@ function Slider({
       <SliderPrimitive.Control className="relative flex w-full items-center h-full">
         <SliderPrimitive.Track
           data-slot="slider-track"
-          className="bg-gray-200 rounded-full h-[3px] w-full relative grow"
+          className="bg-neutral-200 rounded-full h-1 w-full relative grow overflow-hidden"
         >
           <SliderPrimitive.Indicator
             data-slot="slider-range"
@@ -50,7 +50,7 @@ function Slider({
           <SliderPrimitive.Thumb
             data-slot="slider-thumb"
             key={index}
-            className="size-5 rounded-full border-2 border-blue-600 bg-white shadow-md transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-600/20 block shrink-0 cursor-grab active:cursor-grabbing"
+            className="size-5 rounded-full border-2 border-blue-600 bg-white shadow-sm hover:scale-110 focus:outline-none focus:ring-4 focus:ring-blue-600/10 block shrink-0 cursor-grab active:cursor-grabbing absolute top-1/2 -translate-y-1/2"
           />
         ))}
       </SliderPrimitive.Control>

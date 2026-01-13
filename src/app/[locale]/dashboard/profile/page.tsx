@@ -237,11 +237,11 @@ export default function ProfilePage() {
             {/* Crop Dialog */}
             <Dialog open={isCropDialogOpen} onOpenChange={setIsCropDialogOpen}>
                 <DialogContent
-                    className="sm:max-w-[500px] p-0 overflow-hidden bg-white shadow-2xl border-none"
-                    overlayClassName="bg-black/40 backdrop-blur-sm md:left-[16rem] transition-[left] duration-300"
+                    className="sm:max-w-[500px] p-0 overflow-hidden bg-white shadow-2xl border-none md:left-[calc(50%+8rem)]"
+                    overlayClassName="bg-black/40 backdrop-blur-sm left-0 md:left-[16rem] transition-[left] duration-300"
                 >
-                    <DialogHeader className="p-5 border-b flex flex-row items-center justify-between">
-                        <DialogTitle className="text-lg font-semibold">Edit photo</DialogTitle>
+                    <DialogHeader className="p-5 border-b">
+                        <DialogTitle className="text-xl font-normal text-gray-800">Edit photo</DialogTitle>
                     </DialogHeader>
 
                     <div className="relative h-[400px] w-full bg-[#111]">
@@ -260,14 +260,14 @@ export default function ProfilePage() {
                         )}
                     </div>
 
-                    <div className="p-6 space-y-6">
+                    <div className="px-6 py-8 space-y-6">
                         <div className="flex items-center gap-4">
                             <button
                                 type="button"
                                 onClick={() => setZoom(Math.max(zoom - 0.1, 1))}
-                                className="p-2 hover:bg-gray-100 rounded-full transition-colors group/btn"
+                                className="p-1 hover:bg-gray-100 rounded-full transition-colors group/btn shrink-0"
                             >
-                                <Minus className="size-4 text-muted-foreground group-hover/btn:text-blue-600" />
+                                <Minus className="size-5 text-gray-500 group-hover/btn:text-gray-900" />
                             </button>
                             <Slider
                                 value={[zoom]}
@@ -280,24 +280,24 @@ export default function ProfilePage() {
                             <button
                                 type="button"
                                 onClick={() => setZoom(Math.min(zoom + 0.1, 3))}
-                                className="p-2 hover:bg-gray-100 rounded-full transition-colors group/btn"
+                                className="p-1 hover:bg-gray-100 rounded-full transition-colors group/btn shrink-0"
                             >
-                                <Plus className="size-4 text-muted-foreground group-hover/btn:text-blue-600" />
+                                <Plus className="size-5 text-gray-500 group-hover/btn:text-gray-900" />
                             </button>
                         </div>
                     </div>
 
-                    <DialogFooter className="p-4 border-t flex justify-between sm:justify-between items-center bg-gray-50/50">
+                    <DialogFooter className="p-4 border-t flex justify-end items-center bg-white gap-3">
                         <Button
                             variant="ghost"
                             onClick={() => setIsCropDialogOpen(false)}
-                            className="text-gray-600 font-medium"
+                            className="text-blue-600 hover:text-blue-700 font-semibold hover:bg-blue-50/50"
                         >
                             Cancel
                         </Button>
                         <Button
                             onClick={handleSaveCrop}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-8 rounded-full font-bold"
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-full font-semibold shadow-sm"
                         >
                             Save photo
                         </Button>
