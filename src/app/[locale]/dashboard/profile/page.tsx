@@ -52,8 +52,8 @@ export default function ProfilePage() {
         "tech-stack": "Your Tech Stack",
         experience: "Your Experience",
         projects: "Your Projects",
-        education: "Education",
-        certifications: "Certifications"
+        education: "Your Education",
+        certifications: "Your Certifications"
     };
 
     // Tab subtitles mapping
