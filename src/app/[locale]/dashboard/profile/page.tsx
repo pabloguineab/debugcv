@@ -13,21 +13,54 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, MoreHorizontal, ExternalLink } from "lucide-react";
+import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus } from "lucide-react";
 import Image from "next/image";
+import Cropper from "react-easy-crop";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog";
+import { Slider } from "@/components/ui/slider";
+import getCroppedImg from "@/lib/crop-image";
 
 export default function ProfilePage() {
     const [username, setUsername] = useState("lourdesbuendia");
     const [profileImage, setProfileImage] = useState<string | null>(null);
+    const [imageToCrop, setImageToCrop] = useState<string | null>(null);
+    const [isCropDialogOpen, setIsCropDialogOpen] = useState(false);
+    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(1);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFile = (file: File) => {
         if (file && file.type.startsWith("image/")) {
             const reader = new FileReader();
             reader.onload = (e) => {
-                setProfileImage(e.target?.result as string);
+                setImageToCrop(e.target?.result as string);
+                setIsCropDialogOpen(true);
             };
             reader.readAsDataURL(file);
+        }
+    };
+
+    const onCropComplete = (croppedArea: any, croppedAreaPixels: any) => {
+        setCroppedAreaPixels(croppedAreaPixels);
+    };
+
+    const handleSaveCrop = async () => {
+        if (imageToCrop && croppedAreaPixels) {
+            try {
+                const croppedImage = await getCroppedImg(imageToCrop, croppedAreaPixels);
+                setProfileImage(croppedImage);
+                setIsCropDialogOpen(false);
+                setImageToCrop(null);
+            } catch (e) {
+                console.error(e);
+            }
         }
     };
 
@@ -200,6 +233,62 @@ export default function ProfilePage() {
                     </TabsContent>
                 </Tabs>
             </div>
+
+            {/* Crop Dialog */}
+            <Dialog open={isCropDialogOpen} onOpenChange={setIsCropDialogOpen}>
+                <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden bg-white">
+                    <DialogHeader className="p-4 border-b">
+                        <DialogTitle className="text-xl">Edit photo</DialogTitle>
+                    </DialogHeader>
+
+                    <div className="relative h-[400px] w-full bg-[#111]">
+                        {imageToCrop && (
+                            <Cropper
+                                image={imageToCrop}
+                                crop={crop}
+                                zoom={zoom}
+                                aspect={1}
+                                cropShape="round"
+                                showGrid={false}
+                                onCropChange={setCrop}
+                                onCropComplete={onCropComplete}
+                                onZoomChange={setZoom}
+                            />
+                        )}
+                    </div>
+
+                    <div className="p-6 space-y-6">
+                        <div className="flex items-center gap-4">
+                            <Minus className="size-4 text-muted-foreground" />
+                            <Slider
+                                value={[zoom]}
+                                min={1}
+                                max={3}
+                                step={0.1}
+                                onValueChange={(value) => setZoom(value[0])}
+                                className="flex-1"
+                            />
+                            <Plus className="size-4 text-muted-foreground" />
+                        </div>
+                    </div>
+
+                    <DialogFooter className="p-4 border-t flex justify-between sm:justify-between items-center bg-gray-50">
+                        <Button
+                            variant="ghost"
+                            onClick={() => setIsCropDialogOpen(false)}
+                            className="text-gray-600 font-medium"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleSaveCrop}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-8 rounded-full font-bold"
+                        >
+                            Save photo
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
