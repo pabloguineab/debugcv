@@ -13,11 +13,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { allTechs } from "@/data/tech-stack";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus, Linkedin, Github, IdCard, Settings, Code, Briefcase, GraduationCap, CloudUpload, FolderKanban, Award, Languages, Trash2, Search, Check } from "lucide-react";
 import Image from "next/image";
 import Cropper from "react-easy-crop";
-import StackIcon from "tech-stack-icons";
 import {
     Dialog,
     DialogContent,
@@ -180,36 +180,6 @@ export default function ProfilePage() {
     // Tech Stack State
     const [techSearch, setTechSearch] = useState("");
     const [selectedTechs, setSelectedTechs] = useState<string[]>([]);
-
-    // Tech Stack Data
-    type TechItem = { id: string; name: string; category: string; icon: any };
-    const allTechs: TechItem[] = [
-        // Languages & Frameworks
-        { id: "js", name: "JavaScript", category: "Languages & Frameworks", icon: <StackIcon name="js" className="w-8 h-8" /> },
-        { id: "ts", name: "TypeScript", category: "Languages & Frameworks", icon: <StackIcon name="typescript" className="w-8 h-8" /> },
-        { id: "react", name: "React", category: "Libraries", icon: <StackIcon name="reactjs" className="w-8 h-8" /> },
-        { id: "next", name: "Next.js", category: "Languages & Frameworks", icon: <StackIcon name="nextjs2" className="w-8 h-8" /> },
-        { id: "python", name: "Python", category: "Languages & Frameworks", icon: <StackIcon name="python" className="w-8 h-8" /> },
-        { id: "java", name: "Java", category: "Languages & Frameworks", icon: <StackIcon name="java" className="w-8 h-8" /> },
-        { id: "html", name: "HTML5", category: "Languages & Frameworks", icon: <StackIcon name="html5" className="w-8 h-8" /> },
-        { id: "css", name: "CSS 3", category: "Languages & Frameworks", icon: <StackIcon name="css3" className="w-8 h-8" /> },
-        { id: "node", name: "Node.js", category: "Languages & Frameworks", icon: <StackIcon name="nodejs" className="w-8 h-8" /> },
-        // Application Hosting
-        { id: "aws", name: "Amazon Web Services", category: "Application Hosting", icon: <StackIcon name="aws" className="w-8 h-8" /> },
-        { id: "vercel", name: "Vercel", category: "Application Hosting", icon: <StackIcon name="vercel" className="w-8 h-8 dark:invert" /> },
-        { id: "gcp", name: "Google Cloud", category: "Application Hosting", icon: <StackIcon name="gcloud" className="w-8 h-8" /> },
-        { id: "azure", name: "Azure", category: "Application Hosting", icon: <StackIcon name="azure" className="w-8 h-8" /> },
-        { id: "docker", name: "Docker", category: "Development", icon: <StackIcon name="docker" className="w-8 h-8" /> },
-        { id: "k8s", name: "Kubernetes", category: "Development", icon: <StackIcon name="kubernetes" className="w-8 h-8" /> },
-        // Data Stores
-        { id: "postgres", name: "PostgreSQL", category: "Data Stores", icon: <StackIcon name="postgresql" className="w-8 h-8" /> },
-        { id: "mongo", name: "MongoDB", category: "Data Stores", icon: <StackIcon name="mongodb" className="w-8 h-8" /> },
-        { id: "redis", name: "Redis", category: "Data Stores", icon: <StackIcon name="redis" className="w-8 h-8" /> },
-        // Collaboration
-        { id: "figma", name: "Figma", category: "Collaboration", icon: <StackIcon name="figma" className="w-8 h-8" /> },
-        { id: "notion", name: "Notion", category: "Collaboration", icon: <StackIcon name="notion" className="w-8 h-8" /> },
-        { id: "slack", name: "Slack", category: "Collaboration", icon: <StackIcon name="slack" className="w-8 h-8" /> },
-    ];
 
     const toggleTech = (techId: string) => {
         setSelectedTechs(prev =>
@@ -652,10 +622,10 @@ export default function ProfilePage() {
                                                             : "border-transparent bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 shadow-sm"
                                                     )}
                                                 >
-                                                    <div className="size-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
-                                                        {tech.icon}
+                                                    <div className="size-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0 p-2">
+                                                        <Image src={tech.iconPath} alt={tech.name} width={24} height={24} className="w-full h-full object-contain" />
                                                     </div>
-                                                    <span className="font-medium text-sm">{tech.name}</span>
+                                                    <span className="font-medium text-sm truncate">{tech.name}</span>
                                                     {selectedTechs.includes(tech.id) && (
                                                         <div className="absolute -top-2 -right-2 bg-purple-600 text-white p-0.5 rounded-full shadow-sm">
                                                             <Check className="size-3" />
@@ -689,10 +659,10 @@ export default function ProfilePage() {
                                                         onClick={() => toggleTech(tech.id)}
                                                         className="flex items-center gap-3 p-3 rounded-xl border-2 border-purple-600 bg-purple-50/50 dark:bg-purple-900/20 cursor-pointer transition-all relative group select-none"
                                                     >
-                                                        <div className="size-10 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center shrink-0 shadow-sm">
-                                                            {tech.icon}
+                                                        <div className="size-10 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center shrink-0 shadow-sm p-2">
+                                                            <Image src={tech.iconPath} alt={tech.name} width={24} height={24} className="w-full h-full object-contain" />
                                                         </div>
-                                                        <span className="font-medium text-sm">{tech.name}</span>
+                                                        <span className="font-medium text-sm truncate">{tech.name}</span>
                                                         <div className="absolute -top-2 -right-2 bg-purple-600 text-white p-0.5 rounded-full shadow-sm">
                                                             <Check className="size-3" />
                                                         </div>
