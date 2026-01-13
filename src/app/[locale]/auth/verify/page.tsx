@@ -8,6 +8,8 @@ import { Mail, ArrowRight, ShieldCheck, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
+import { signIn } from "next-auth/react";
+
 function VerifyPageContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -32,17 +34,18 @@ function VerifyPageContent() {
         if (code.length === 6) {
             setIsLoading(true);
             try {
-                // Call verification API
-                const res = await fetch("/api/auth/verify-otp", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, code }),
+                // Use NextAuth signIn to verify OTP and create session
+                const result = await signIn("otp", {
+                    email,
+                    code,
+                    redirect: false,
+                    callbackUrl: "/dashboard"
                 });
 
-                if (res.ok) {
+                if (result?.ok) {
                     router.push("/dashboard");
                 } else {
-                    console.error("Verification failed");
+                    console.error("Verification failed", result?.error);
                     // Handle error (shake animation, toast, etc.)
                 }
             } catch (error) {

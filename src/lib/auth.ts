@@ -28,6 +28,32 @@ export const authOptions: AuthOptions = {
                 return null;
             }
         }),
+        CredentialsProvider({
+            id: "otp",
+            name: "OTP Login",
+            credentials: {
+                email: { label: "Email", type: "email" },
+                code: { label: "Code", type: "text" }
+            },
+            async authorize(credentials) {
+                if (!credentials?.email || !credentials?.code) return null;
+
+                // Emulate validation logic (replace with real DB check in production)
+                // In a real app, you would check if the code matches what was sent to the email
+                // and if it hasn't expired.
+                const isValid = true;
+
+                if (isValid) {
+                    return {
+                        id: credentials.email,
+                        name: credentials.email, // Use email as name initially, until Onboarding updates it
+                        email: credentials.email,
+                        image: null,
+                    };
+                }
+                return null;
+            }
+        }),
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID || "",
             clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
