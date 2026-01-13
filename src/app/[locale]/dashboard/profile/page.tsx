@@ -181,6 +181,14 @@ export default function ProfilePage() {
     const [techSearch, setTechSearch] = useState("");
     const [selectedTechs, setSelectedTechs] = useState<string[]>([]);
 
+    // Default popular technologies (always visible in grid)
+    const defaultTechIds = [
+        "javascript", "react", "google-analytics",
+        "python", "html5", "css3",
+        "google-tag-manager", "typescript", "node.js",
+        "java", "cloudflare", "docker"
+    ];
+
     const toggleTech = (techId: string) => {
         setSelectedTechs(prev =>
             prev.includes(techId)
@@ -201,9 +209,46 @@ export default function ProfilePage() {
         return grouped;
     }, [selectedTechs]);
 
-    const filteredTechs = techSearch
-        ? allTechs.filter(t => t.name.toLowerCase().includes(techSearch.toLowerCase()))
-        : [];
+    // Always show 12 items: search matches first, then fill with defaults
+    const displayedTechs = useMemo(() => {
+        const searchMatches = techSearch
+            ? allTechs.filter(t => t.name.toLowerCase().includes(techSearch.toLowerCase()))
+            : [];
+
+        // Get default techs
+        const defaultTechs = defaultTechIds
+            .map(id => allTechs.find(t => t.id === id))
+            .filter((t): t is TechItem => t !== undefined);
+
+        if (!techSearch) {
+            // No search: show defaults
+            return defaultTechs.slice(0, 12);
+        }
+
+        // With search: matches first, then fill with defaults (avoiding duplicates)
+        const matchIds = new Set(searchMatches.map(t => t.id));
+        const result = [...searchMatches];
+
+        for (const tech of defaultTechs) {
+            if (result.length >= 12) break;
+            if (!matchIds.has(tech.id)) {
+                result.push(tech);
+            }
+        }
+
+        // If still not 12, add more from allTechs
+        if (result.length < 12) {
+            const usedIds = new Set(result.map(t => t.id));
+            for (const tech of allTechs) {
+                if (result.length >= 12) break;
+                if (!usedIds.has(tech.id)) {
+                    result.push(tech);
+                }
+            }
+        }
+
+        return result.slice(0, 12);
+    }, [techSearch]);
 
     return (
         <div className="flex flex-col h-full w-full bg-background">
@@ -607,40 +652,31 @@ export default function ProfilePage() {
                                         />
                                     </div>
 
-                                    {/* Search Results Grid */}
-                                    {techSearch && (
-                                        <div className="grid grid-cols-3 gap-3 animate-in fade-in slide-in-from-top-2">
-                                            {filteredTechs.length > 0 ? (
-                                                filteredTechs.slice(0, 12).map(tech => (
-                                                    <div
-                                                        key={tech.id}
-                                                        onClick={() => toggleTech(tech.id)}
-                                                        className={cn(
-                                                            "flex items-center gap-2.5 px-3 py-2.5 rounded-lg border cursor-pointer transition-all select-none relative",
-                                                            selectedTechs.includes(tech.id)
-                                                                ? "border-purple-600 bg-purple-50/80 dark:bg-purple-900/30"
-                                                                : "border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-700"
-                                                        )}
-                                                    >
-                                                        <div className="size-8 rounded-md bg-gray-50 dark:bg-gray-800 flex items-center justify-center shrink-0 p-1.5">
-                                                            <Image src={tech.iconPath} alt={tech.name} width={20} height={20} className="w-full h-full object-contain" />
-                                                        </div>
-                                                        <span className="text-sm font-medium truncate">{tech.name}</span>
-                                                        {selectedTechs.includes(tech.id) && (
-                                                            <div className="absolute -top-1.5 -right-1.5 bg-purple-600 text-white p-0.5 rounded-full">
-                                                                <Check className="size-2.5" />
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                ))
-                                            ) : (
-                                                <div className="col-span-3 text-center py-8 border border-dashed rounded-lg">
-                                                    <Search className="size-6 text-muted-foreground mx-auto mb-2 opacity-50" />
-                                                    <p className="text-sm text-muted-foreground">No technology matches your search</p>
+                                    {/* Always visible 4x3 Grid (12 items) */}
+                                    <div className="grid grid-cols-3 gap-3">
+                                        {displayedTechs.map(tech => (
+                                            <div
+                                                key={tech.id}
+                                                onClick={() => toggleTech(tech.id)}
+                                                className={cn(
+                                                    "flex items-center gap-2.5 px-3 py-2.5 rounded-lg border cursor-pointer transition-all select-none relative",
+                                                    selectedTechs.includes(tech.id)
+                                                        ? "border-purple-600 bg-purple-50/80 dark:bg-purple-900/30"
+                                                        : "border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-700"
+                                                )}
+                                            >
+                                                <div className="size-8 rounded-md bg-gray-50 dark:bg-gray-800 flex items-center justify-center shrink-0 p-1.5">
+                                                    <Image src={tech.iconPath} alt={tech.name} width={20} height={20} className="w-full h-full object-contain" />
                                                 </div>
-                                            )}
-                                        </div>
-                                    )}
+                                                <span className="text-sm font-medium truncate">{tech.name}</span>
+                                                {selectedTechs.includes(tech.id) && (
+                                                    <div className="absolute -top-1.5 -right-1.5 bg-purple-600 text-white p-0.5 rounded-full">
+                                                        <Check className="size-2.5" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
 
