@@ -14,7 +14,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus, Linkedin, Github, User, Settings, Code, Briefcase, GraduationCap } from "lucide-react";
+import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus, Linkedin, Github, IdCard, Settings, Code, Briefcase, GraduationCap } from "lucide-react";
 import Image from "next/image";
 import Cropper from "react-easy-crop";
 import {
@@ -65,7 +65,7 @@ export default function ProfilePage() {
 
     // Tab icons mapping
     const tabIcons: Record<string, React.ComponentType<{ className?: string }>> = {
-        overview: User,
+        overview: IdCard,
         preferences: Settings,
         "tech-stack": Code,
         experience: Briefcase,
@@ -199,7 +199,7 @@ export default function ProfilePage() {
                         </TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="overview" className="space-y-8 max-w-4xl">
+                    <TabsContent value="overview" className="space-y-8 max-w-3xl">
 
 
 
@@ -262,7 +262,7 @@ export default function ProfilePage() {
                                         This will link your profile to your LinkedIn account.
                                     </p>
                                 </div>
-                                <div className="space-y-2">
+                                <div className="space-y-2 max-w-xs">
                                     <Input
                                         value={username}
                                         onChange={(e) => setUsername(e.target.value)}
@@ -279,7 +279,7 @@ export default function ProfilePage() {
                                         Add your social profiles to help recruiters find you.
                                     </p>
                                 </div>
-                                <div className="space-y-4">
+                                <div className="space-y-4 max-w-md">
                                     {/* LinkedIn */}
                                     <div>
                                         <label className="text-sm font-medium text-gray-700 mb-1.5 block">LinkedIn</label>
@@ -340,7 +340,7 @@ export default function ProfilePage() {
                                         This helps us match you with companies that are open to hiring talent in your country.
                                     </p>
                                 </div>
-                                <div>
+                                <div className="max-w-xs">
                                     <Select value={selectedCountry} onValueChange={(value) => {
                                         setSelectedCountry(value);
                                         setSelectedRegion(""); // Reset region when country changes
@@ -374,7 +374,7 @@ export default function ProfilePage() {
                                             Select your province or state.
                                         </p>
                                     </div>
-                                    <div>
+                                    <div className="max-w-xs">
                                         <Select value={selectedRegion} onValueChange={(value) => {
                                             setSelectedRegion(value);
                                             setSelectedCity(""); // Reset city when region changes
@@ -403,7 +403,7 @@ export default function ProfilePage() {
                                             This is optional but helps with local job matching.
                                         </p>
                                     </div>
-                                    <div>
+                                    <div className="max-w-xs">
                                         <Select value={selectedCity} onValueChange={setSelectedCity}>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue />
