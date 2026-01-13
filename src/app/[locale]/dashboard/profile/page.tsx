@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useMemo } from "react";
-import { Country, State, ICountry, IState } from "country-state-city";
+import { Country, State, City, ICountry, IState, ICity } from "country-state-city";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,6 +38,7 @@ export default function ProfilePage() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [selectedCountry, setSelectedCountry] = useState<string>("ES");
     const [selectedRegion, setSelectedRegion] = useState<string>("");
+    const [selectedCity, setSelectedCity] = useState<string>("");
 
     // Get all countries
     const countries = useMemo(() => Country.getAllCountries(), []);
@@ -49,6 +50,14 @@ export default function ProfilePage() {
         }
         return [];
     }, [selectedCountry]);
+
+    // Get cities for selected region
+    const cities = useMemo(() => {
+        if (selectedCountry && selectedRegion) {
+            return City.getCitiesOfState(selectedCountry, selectedRegion) || [];
+        }
+        return [];
+    }, [selectedCountry, selectedRegion]);
 
     // Get country flag emoji
     const getCountryFlag = (countryCode: string) => {
@@ -256,15 +265,18 @@ export default function ProfilePage() {
 
                             {/* Region/Province */}
                             {selectedCountry && regions.length > 0 && (
-                                <div className="grid grid-cols-[200px_1fr] gap-8 items-start py-6">
+                                <div className="grid grid-cols-[200px_1fr] gap-8 items-start py-6 border-b">
                                     <div>
                                         <h3 className="text-sm font-medium">What region do you live in?</h3>
                                         <p className="text-sm text-muted-foreground mt-1">
-                                            This information is optional but helps provide more relevant job matches.
+                                            Select your province or state.
                                         </p>
                                     </div>
                                     <div>
-                                        <Select value={selectedRegion} onValueChange={setSelectedRegion}>
+                                        <Select value={selectedRegion} onValueChange={(value) => {
+                                            setSelectedRegion(value);
+                                            setSelectedCity(""); // Reset city when region changes
+                                        }}>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue />
                                             </SelectTrigger>
@@ -272,6 +284,32 @@ export default function ProfilePage() {
                                                 {regions.map((region) => (
                                                     <SelectItem key={region.isoCode} value={region.isoCode}>
                                                         {region.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* City */}
+                            {selectedRegion && cities.length > 0 && (
+                                <div className="grid grid-cols-[200px_1fr] gap-8 items-start py-6">
+                                    <div>
+                                        <h3 className="text-sm font-medium">What city do you live in?</h3>
+                                        <p className="text-sm text-muted-foreground mt-1">
+                                            This is optional but helps with local job matching.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <Select value={selectedCity} onValueChange={setSelectedCity}>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent className="max-h-[300px]">
+                                                {cities.map((city) => (
+                                                    <SelectItem key={city.name} value={city.name}>
+                                                        {city.name}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
