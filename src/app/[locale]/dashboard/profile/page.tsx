@@ -283,9 +283,9 @@ export default function ProfilePage() {
                                 <div className="space-y-4 max-w-md">
                                     {/* LinkedIn */}
                                     <div>
-                                        <label className="text-sm font-medium text-gray-700 mb-1.5 block">LinkedIn</label>
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 block">LinkedIn</label>
                                         <div className="relative">
-                                            <div className="absolute left-0 top-0 h-full w-12 flex items-center justify-center border-r bg-gray-50 rounded-l-lg">
+                                            <div className="absolute left-0 top-0 h-full w-12 flex items-center justify-center border-r bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded-l-lg">
                                                 <Linkedin className="size-5 text-[#0A66C2]" />
                                             </div>
                                             <Input
@@ -298,10 +298,10 @@ export default function ProfilePage() {
                                     </div>
                                     {/* GitHub */}
                                     <div>
-                                        <label className="text-sm font-medium text-gray-700 mb-1.5 block">GitHub</label>
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 block">GitHub</label>
                                         <div className="relative">
-                                            <div className="absolute left-0 top-0 h-full w-12 flex items-center justify-center border-r bg-gray-50 rounded-l-lg">
-                                                <Github className="size-5 text-gray-900" />
+                                            <div className="absolute left-0 top-0 h-full w-12 flex items-center justify-center border-r bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded-l-lg">
+                                                <Github className="size-5 text-gray-900 dark:text-white" />
                                             </div>
                                             <Input
                                                 value={githubUrl}
@@ -328,7 +328,7 @@ export default function ProfilePage() {
                                         onChange={(e) => setIntroduction(e.target.value)}
                                         placeholder="e.g. We're spread all over the world..."
                                         rows={3}
-                                        className="w-full bg-white border border-gray-200 rounded-lg px-3 py-3 text-sm placeholder:text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-[3px] focus:ring-blue-500/20 transition-colors resize-none"
+                                        className="w-full bg-white dark:bg-input/30 border border-gray-200 dark:border-input rounded-lg px-3 py-3 text-sm placeholder:text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-[3px] focus:ring-blue-500/20 transition-colors resize-none"
                                     />
                                 </div>
                             </div>
