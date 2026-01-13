@@ -63,6 +63,7 @@ export function DashboardLayoutClient({ children, user }: DashboardLayoutClientP
                     open={isOnboardingOpen}
                     onOpenChange={setIsOnboardingOpen}
                     onComplete={handleOnboardingComplete}
+                    userEmail={currentUser?.email || undefined}
                 />
             </SidebarInset>
         </SidebarProvider>

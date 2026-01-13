@@ -20,9 +20,10 @@ interface OnboardingModalProps {
     open: boolean
     onOpenChange: (open: boolean) => void
     onComplete: (name: string) => void
+    userEmail?: string
 }
 
-export function OnboardingModal({ open, onOpenChange, onComplete }: OnboardingModalProps) {
+export function OnboardingModal({ open, onOpenChange, onComplete, userEmail }: OnboardingModalProps) {
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
     const [password, setPassword] = useState("")
@@ -59,7 +60,7 @@ export function OnboardingModal({ open, onOpenChange, onComplete }: OnboardingMo
             const res = await fetch('/api/user/update-profile', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: fullName, password })
+                body: JSON.stringify({ name: fullName, password, email: userEmail })
             });
 
             if (!res.ok) {
