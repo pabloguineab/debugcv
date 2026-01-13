@@ -30,7 +30,7 @@ export default function ProfilePage() {
                     <Button variant="outline" size="icon">
                         <MoreHorizontal className="size-4" />
                     </Button>
-                    <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                         Import Resume
                     </Button>
                 </div>
@@ -39,34 +39,34 @@ export default function ProfilePage() {
             {/* Content using Tabs */}
             <div className="flex-1 overflow-auto p-8">
                 <Tabs defaultValue="overview" className="w-full">
-                    <TabsList className="w-full justify-start bg-transparent border-b h-auto p-0 mb-8 rounded-none">
+                    <TabsList className="flex items-center justify-start bg-transparent border-b h-auto p-0 mb-8 rounded-none w-full gap-8">
                         <TabsTrigger
                             value="overview"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-purple-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 py-2"
+                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                         >
                             Overview
                         </TabsTrigger>
                         <TabsTrigger
                             value="preferences"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-purple-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 py-2"
+                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                         >
                             Preferences
                         </TabsTrigger>
                         <TabsTrigger
                             value="tech-stack"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-purple-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 py-2"
+                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                         >
                             Tech Stack
                         </TabsTrigger>
                         <TabsTrigger
                             value="experience"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-purple-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 py-2"
+                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                         >
                             Experience
                         </TabsTrigger>
                         <TabsTrigger
                             value="education"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-purple-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 py-2"
+                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                         >
                             Education
                         </TabsTrigger>
@@ -83,7 +83,7 @@ export default function ProfilePage() {
                                 <div>
                                     <h3 className="text-sm font-medium">Profile picture</h3>
                                     <p className="text-sm text-muted-foreground mt-1">
-                                        This will be displayed on your profile. Need a professional headshot? Generate one in minutes with our <a href="#" className="text-purple-600 hover:underline">AI headshot generator</a>.
+                                        This will be displayed on your profile. Need a professional headshot? Generate one in minutes with our <a href="#" className="text-blue-600 hover:underline">AI headshot generator</a>.
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-6">
@@ -95,7 +95,7 @@ export default function ProfilePage() {
                                             <Upload className="size-4 text-gray-600" />
                                         </div>
                                         <div>
-                                            <span className="text-sm font-medium text-purple-600">Click to upload</span>
+                                            <span className="text-sm font-medium text-blue-600">Click to upload</span>
                                             <span className="text-sm text-muted-foreground"> or drag and drop</span>
                                         </div>
                                         <p className="text-xs text-muted-foreground mt-1">Use a square image for best results</p>
@@ -113,7 +113,7 @@ export default function ProfilePage() {
                                 </div>
                                 <RadioGroup defaultValue="public" className="space-y-4">
                                     <div className="flex items-start space-x-3">
-                                        <RadioGroupItem value="public" id="public" className="mt-1 text-purple-600 border-purple-600" />
+                                        <RadioGroupItem value="public" id="public" className="mt-1 text-blue-600 border-blue-600" />
                                         <div className="space-y-1">
                                             <Label htmlFor="public" className="font-medium">Public profile</Label>
                                             <p className="text-sm text-muted-foreground">Your profile will be public, and shown in search results and in Google.</p>
