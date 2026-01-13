@@ -269,13 +269,14 @@ export default function ProfilePage() {
                             >
                                 <Minus className="size-5 text-gray-500 group-hover/btn:text-gray-900" />
                             </button>
-                            <Slider
-                                value={[zoom]}
+                            <input
+                                type="range"
+                                value={zoom}
                                 min={1}
                                 max={3}
                                 step={0.01}
-                                onValueChange={(value) => setZoom(value[0])}
-                                className="flex-1"
+                                onChange={(e) => setZoom(parseFloat(e.target.value))}
+                                className="flex-1 h-1 bg-neutral-200 rounded-full appearance-none cursor-pointer accent-blue-600 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-blue-600 [&::-webkit-slider-thumb]:shadow-sm [&::-webkit-slider-thumb]:cursor-grab [&::-webkit-slider-thumb]:active:cursor-grabbing [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-blue-600 [&::-moz-range-thumb]:shadow-sm [&::-moz-range-thumb]:cursor-grab"
                             />
                             <button
                                 type="button"
