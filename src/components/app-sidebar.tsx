@@ -128,7 +128,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                             {resumesItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <Link href={item.url} className="group flex items-center gap-3 w-full my-0.5">
+                                        <Link href={item.url} className="group/icon-hover flex items-center gap-3 w-full my-0.5">
                                             <item.icon className={`size-[18px] ${item.animation}`} />
                                             <span className="text-sm font-medium">{item.title}</span>
                                         </Link>
@@ -147,7 +147,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                             {interviewItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <Link href={item.url} className="group flex items-center gap-3 w-full my-0.5">
+                                        <Link href={item.url} className="group/icon-hover flex items-center gap-3 w-full my-0.5">
                                             <item.icon className={`size-[18px] ${item.animation}`} />
                                             <span className="text-sm font-medium">{item.title}</span>
                                         </Link>
