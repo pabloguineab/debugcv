@@ -238,10 +238,10 @@ export default function ProfilePage() {
             <Dialog open={isCropDialogOpen} onOpenChange={setIsCropDialogOpen}>
                 <DialogContent
                     className="sm:max-w-[500px] p-0 overflow-hidden bg-white shadow-2xl border-none"
-                    overlayClassName="md:left-[var(--sidebar-width)] transition-[left] duration-200"
+                    overlayClassName="bg-black/40 backdrop-blur-sm md:left-[16rem] transition-[left] duration-300"
                 >
-                    <DialogHeader className="p-4 border-b">
-                        <DialogTitle className="text-xl">Edit photo</DialogTitle>
+                    <DialogHeader className="p-5 border-b flex flex-row items-center justify-between">
+                        <DialogTitle className="text-lg font-semibold">Edit photo</DialogTitle>
                     </DialogHeader>
 
                     <div className="relative h-[400px] w-full bg-[#111]">
@@ -263,29 +263,31 @@ export default function ProfilePage() {
                     <div className="p-6 space-y-6">
                         <div className="flex items-center gap-4">
                             <button
+                                type="button"
                                 onClick={() => setZoom(Math.max(zoom - 0.1, 1))}
-                                className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                                className="p-2 hover:bg-gray-100 rounded-full transition-colors group/btn"
                             >
-                                <Minus className="size-4 text-muted-foreground" />
+                                <Minus className="size-4 text-muted-foreground group-hover/btn:text-blue-600" />
                             </button>
                             <Slider
                                 value={[zoom]}
                                 min={1}
                                 max={3}
-                                step={0.1}
+                                step={0.01}
                                 onValueChange={(value) => setZoom(value[0])}
-                                className="flex-1 cursor-pointer"
+                                className="flex-1"
                             />
                             <button
+                                type="button"
                                 onClick={() => setZoom(Math.min(zoom + 0.1, 3))}
-                                className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                                className="p-2 hover:bg-gray-100 rounded-full transition-colors group/btn"
                             >
-                                <Plus className="size-4 text-muted-foreground" />
+                                <Plus className="size-4 text-muted-foreground group-hover/btn:text-blue-600" />
                             </button>
                         </div>
                     </div>
 
-                    <DialogFooter className="p-4 border-t flex justify-between sm:justify-between items-center bg-gray-50">
+                    <DialogFooter className="p-4 border-t flex justify-between sm:justify-between items-center bg-gray-50/50">
                         <Button
                             variant="ghost"
                             onClick={() => setIsCropDialogOpen(false)}

@@ -11,48 +11,46 @@ function Slider({
   value,
   min = 0,
   max = 100,
+  step = 1,
+  onValueChange,
   ...props
 }: SliderPrimitive.Root.Props) {
-  const _values = React.useMemo(
-    () =>
-      Array.isArray(value)
-        ? value
-        : Array.isArray(defaultValue)
-          ? defaultValue
-          : [min, max],
-    [value, defaultValue, min, max]
-  )
+  // Ensure we always have an array of values for the thumbs
+  const _values = React.useMemo(() => {
+    if (Array.isArray(value)) return value;
+    if (Array.isArray(defaultValue)) return defaultValue;
+    if (typeof value === 'number') return [value];
+    if (typeof defaultValue === 'number') return [defaultValue];
+    return [min];
+  }, [value, defaultValue, min]);
 
   return (
     <SliderPrimitive.Root
-      className="w-full"
       data-slot="slider"
-      defaultValue={defaultValue}
       value={value}
+      defaultValue={defaultValue}
+      onValueChange={onValueChange}
       min={min}
       max={max}
+      step={step}
+      className={cn("relative flex w-full touch-none select-none items-center h-5 group/slider", className)}
       {...props}
     >
-      <SliderPrimitive.Control
-        className={cn(
-          "relative flex w-full touch-none items-center select-none h-5",
-          className
-        )}
-      >
+      <SliderPrimitive.Control className="relative flex w-full items-center h-full">
         <SliderPrimitive.Track
           data-slot="slider-track"
-          className="bg-gray-200 rounded-full h-2 w-full relative overflow-hidden"
+          className="bg-gray-200 rounded-full h-[3px] w-full relative grow"
         >
           <SliderPrimitive.Indicator
             data-slot="slider-range"
-            className="bg-primary h-full absolute"
+            className="bg-blue-600 h-full absolute rounded-full"
           />
         </SliderPrimitive.Track>
-        {Array.from({ length: _values.length }, (_, index) => (
+        {_values.map((_, index) => (
           <SliderPrimitive.Thumb
             data-slot="slider-thumb"
             key={index}
-            className="border-primary ring-ring/30 size-5 rounded-full border-2 bg-white shadow-md transition-all hover:ring-4 hover:scale-110 focus-visible:ring-4 focus-visible:outline-hidden block shrink-0 select-none disabled:pointer-events-none disabled:opacity-50 absolute"
+            className="size-5 rounded-full border-2 border-blue-600 bg-white shadow-md transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-600/20 block shrink-0 cursor-grab active:cursor-grabbing"
           />
         ))}
       </SliderPrimitive.Control>
