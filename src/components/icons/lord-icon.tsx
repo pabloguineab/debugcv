@@ -2,6 +2,15 @@
 
 import { useEffect, useRef } from 'react';
 
+// Declare lord-icon custom element
+declare global {
+    namespace JSX {
+        interface IntrinsicElements {
+            'lord-icon': any;
+        }
+    }
+}
+
 interface LordIconProps {
     src: string;
     trigger?: 'hover' | 'click' | 'loop' | 'morph';
