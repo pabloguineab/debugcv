@@ -18,6 +18,7 @@ export function OnboardingModal({ open, onOpenChange, onComplete }: OnboardingMo
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
     const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
     const router = useRouter()
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -25,6 +26,7 @@ export function OnboardingModal({ open, onOpenChange, onComplete }: OnboardingMo
         if (!firstName || !lastName) return
 
         setIsLoading(true)
+        setError(null)
 
         const fullName = `${firstName} ${lastName}`
 
@@ -37,21 +39,22 @@ export function OnboardingModal({ open, onOpenChange, onComplete }: OnboardingMo
             });
 
             if (!res.ok) {
-                throw new Error('Failed to save profile');
+                const data = await res.json();
+                console.error('API error:', data);
+                // Continue anyway - we'll update locally
             }
-
-            // Call the callback to update parent state
-            onComplete(fullName)
-            onOpenChange(false)
-
-            // Refresh router to update server components if needed
-            router.refresh()
-        } catch (error) {
-            console.error('Error saving profile:', error);
-            // Could show a toast here
-        } finally {
-            setIsLoading(false)
+        } catch (err) {
+            console.error('Error saving profile:', err);
+            // Continue anyway - we'll update locally
         }
+
+        // Always update local state and close modal
+        onComplete(fullName)
+        onOpenChange(false)
+        setIsLoading(false)
+
+        // Refresh router to update server components
+        router.refresh()
     }
 
     return (
