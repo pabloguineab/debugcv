@@ -2,8 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
 import {
     Select,
     SelectContent,
@@ -101,39 +100,6 @@ export default function ProfilePage() {
                                         <p className="text-xs text-muted-foreground mt-1">Use a square image for best results</p>
                                     </div>
                                 </div>
-                            </div>
-
-                            {/* Visibility */}
-                            <div className="grid grid-cols-[200px_1fr] gap-8 items-start py-6 border-b">
-                                <div>
-                                    <h3 className="text-sm font-medium">Visibility*</h3>
-                                    <p className="text-sm text-muted-foreground mt-1">
-                                        Choose whether your profile will be public, and whether it will be listed on Himalayas and other search engines like Google.
-                                    </p>
-                                </div>
-                                <RadioGroup defaultValue="public" className="space-y-4">
-                                    <div className="flex items-start space-x-3">
-                                        <RadioGroupItem value="public" id="public" className="mt-1 text-blue-600 border-blue-600" />
-                                        <div className="space-y-1">
-                                            <Label htmlFor="public" className="font-medium">Public profile</Label>
-                                            <p className="text-sm text-muted-foreground">Your profile will be public, and shown in search results and in Google.</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start space-x-3">
-                                        <RadioGroupItem value="public-not-searchable" id="public-not-searchable" className="mt-1" />
-                                        <div className="space-y-1">
-                                            <Label htmlFor="public-not-searchable" className="font-medium">Public but not searchable</Label>
-                                            <p className="text-sm text-muted-foreground">Your profile will be public, but not searchable by companies or in Google.</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start space-x-3">
-                                        <RadioGroupItem value="private" id="private" className="mt-1" />
-                                        <div className="space-y-1">
-                                            <Label htmlFor="private" className="font-medium">Private profile</Label>
-                                            <p className="text-sm text-muted-foreground">Your profile will not be visible. You will continue to receive matches.</p>
-                                        </div>
-                                    </div>
-                                </RadioGroup>
                             </div>
 
                             {/* Username */}
