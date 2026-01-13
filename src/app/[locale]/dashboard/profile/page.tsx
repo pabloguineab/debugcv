@@ -39,34 +39,34 @@ export default function ProfilePage() {
             {/* Content using Tabs */}
             <div className="flex-1 overflow-auto p-8">
                 <Tabs defaultValue="overview" className="w-full">
-                    <TabsList className="flex items-center justify-start bg-transparent border-b h-auto p-0 mb-8 rounded-none w-full gap-8">
+                    <TabsList className="flex items-center justify-start bg-transparent border-b h-auto p-0 mb-8 rounded-none w-auto gap-6">
                         <TabsTrigger
                             value="overview"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            className="flex-none rounded-none border-b-2 border-transparent data-[selected]:border-blue-600 data-[selected]:text-blue-600 data-[selected]:font-bold data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold bg-transparent shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                         >
                             Overview
                         </TabsTrigger>
                         <TabsTrigger
                             value="preferences"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            className="flex-none rounded-none border-b-2 border-transparent data-[selected]:border-blue-600 data-[selected]:text-blue-600 data-[selected]:font-bold data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold bg-transparent shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                         >
                             Preferences
                         </TabsTrigger>
                         <TabsTrigger
                             value="tech-stack"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            className="flex-none rounded-none border-b-2 border-transparent data-[selected]:border-blue-600 data-[selected]:text-blue-600 data-[selected]:font-bold data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold bg-transparent shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                         >
                             Tech Stack
                         </TabsTrigger>
                         <TabsTrigger
                             value="experience"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            className="flex-none rounded-none border-b-2 border-transparent data-[selected]:border-blue-600 data-[selected]:text-blue-600 data-[selected]:font-bold data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold bg-transparent shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                         >
                             Experience
                         </TabsTrigger>
                         <TabsTrigger
                             value="education"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            className="flex-none rounded-none border-b-2 border-transparent data-[selected]:border-blue-600 data-[selected]:text-blue-600 data-[selected]:font-bold data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold bg-transparent shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                         >
                             Education
                         </TabsTrigger>
