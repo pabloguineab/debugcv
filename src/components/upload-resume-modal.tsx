@@ -159,10 +159,10 @@ export function UploadResumeModal({
 
                         <div className="flex flex-col space-y-1.5 text-center sm:text-left">
                             <h3 className="font-semibold leading-none tracking-tight flex items-center gap-2 text-xl">
-                                Upload Resume
+                                Get Expert Review
                             </h3>
                             <p className="text-sm text-muted-foreground">
-                                Upload your CV to get AI-powered insights and create tailored versions.
+                                Upload your CV to get professional feedback and actionable insights from an expert recruiter.
                             </p>
                         </div>
 
