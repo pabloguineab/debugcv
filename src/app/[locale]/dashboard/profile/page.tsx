@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useMemo } from "react";
-import { Country, City, ICountry, ICity } from "country-state-city";
+import { Country, State, ICountry, IState } from "country-state-city";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,15 +37,15 @@ export default function ProfilePage() {
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [selectedCountry, setSelectedCountry] = useState<string>("ES");
-    const [selectedCity, setSelectedCity] = useState<string>("");
+    const [selectedRegion, setSelectedRegion] = useState<string>("");
 
     // Get all countries
     const countries = useMemo(() => Country.getAllCountries(), []);
 
-    // Get cities for selected country
-    const cities = useMemo(() => {
+    // Get regions/states for selected country
+    const regions = useMemo(() => {
         if (selectedCountry) {
-            return City.getCitiesOfCountry(selectedCountry) || [];
+            return State.getStatesOfCountry(selectedCountry) || [];
         }
         return [];
     }, [selectedCountry]);
@@ -232,7 +232,7 @@ export default function ProfilePage() {
                                 <div>
                                     <Select value={selectedCountry} onValueChange={(value) => {
                                         setSelectedCountry(value);
-                                        setSelectedCity(""); // Reset city when country changes
+                                        setSelectedRegion(""); // Reset region when country changes
                                     }}>
                                         <SelectTrigger className="w-full">
                                             <div className="flex items-center gap-2">
@@ -254,24 +254,24 @@ export default function ProfilePage() {
                                 </div>
                             </div>
 
-                            {/* City */}
-                            {selectedCountry && cities.length > 0 && (
+                            {/* Region/Province */}
+                            {selectedCountry && regions.length > 0 && (
                                 <div className="grid grid-cols-[200px_1fr] gap-8 items-start py-6">
                                     <div>
-                                        <h3 className="text-sm font-medium">What city do you live in?</h3>
+                                        <h3 className="text-sm font-medium">What region do you live in?</h3>
                                         <p className="text-sm text-muted-foreground mt-1">
                                             This information is optional but helps provide more relevant job matches.
                                         </p>
                                     </div>
                                     <div>
-                                        <Select value={selectedCity} onValueChange={setSelectedCity}>
+                                        <Select value={selectedRegion} onValueChange={setSelectedRegion}>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent className="max-h-[300px]">
-                                                {cities.map((city) => (
-                                                    <SelectItem key={city.name} value={city.name}>
-                                                        {city.name}
+                                                {regions.map((region) => (
+                                                    <SelectItem key={region.isoCode} value={region.isoCode}>
+                                                        {region.name}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
