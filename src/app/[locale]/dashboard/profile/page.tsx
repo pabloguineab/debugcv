@@ -42,31 +42,31 @@ export default function ProfilePage() {
                     <TabsList className="flex items-center justify-start bg-transparent border-b h-auto p-0 mb-8 rounded-none w-full gap-8">
                         <TabsTrigger
                             value="overview"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                         >
                             Overview
                         </TabsTrigger>
                         <TabsTrigger
                             value="preferences"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                         >
                             Preferences
                         </TabsTrigger>
                         <TabsTrigger
                             value="tech-stack"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                         >
                             Tech Stack
                         </TabsTrigger>
                         <TabsTrigger
                             value="experience"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                         >
                             Experience
                         </TabsTrigger>
                         <TabsTrigger
                             value="education"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:font-bold data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 py-3 text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                         >
                             Education
                         </TabsTrigger>
