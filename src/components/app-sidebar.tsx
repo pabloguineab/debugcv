@@ -125,6 +125,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props }: AppSidebarProps) {
     const [dashboardHovered, setDashboardHovered] = useState(false);
+    const [profileHovered, setProfileHovered] = useState(false);
     const [expertHovered, setExpertHovered] = useState(false);
     const [referHovered, setReferHovered] = useState(false);
 
@@ -187,19 +188,25 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                         <SidebarMenu>
                             {/* Profile Collapsible */}
                             <SidebarMenuItem>
-                                <Accordion type="single" collapsible className="w-full">
-                                    <AccordionItem value="profile" className="border-none">
-                                        <AccordionTrigger className="[&[data-state=open]>svg]:hidden p-0 hover:bg-transparent hover:no-underline data-[state=closed]:hover:bg-sidebar-accent data-[state=closed]:hover:text-sidebar-accent-foreground rounded-md">
-                                            <div className="flex items-center gap-3 w-full px-2 py-2">
+                                <Accordion type="single" collapsible className="w-full border-none rounded-none shadow-none">
+                                    <AccordionItem value="profile" className="border-none data-[state=open]:bg-transparent shadow-none">
+                                        <AccordionTrigger
+                                            className="p-0 hover:underline-none hover:no-underline border-none data-[state=open]:bg-transparent [&>svg]:hidden shadow-none"
+                                        >
+                                            <div
+                                                className="flex items-center gap-3 w-full px-2 py-2 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer transition-colors"
+                                                onMouseEnter={() => setProfileHovered(true)}
+                                                onMouseLeave={() => setProfileHovered(false)}
+                                            >
                                                 <LordIcon
                                                     src="/animated/wired-outline-44-avatar-user-in-circle-hover-looking-around.json"
                                                     size={24}
-                                                    trigger="hover"
+                                                    onTrigger={profileHovered}
                                                 />
                                                 <span className="text-sm font-medium flex-1 text-left">Profile</span>
                                             </div>
                                         </AccordionTrigger>
-                                        <AccordionContent className="pb-2">
+                                        <AccordionContent className="pb-2 px-0">
                                             {/* Profile Card */}
                                             <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
                                                 <h3 className="text-sm font-semibold mb-2">Complete your profile</h3>
