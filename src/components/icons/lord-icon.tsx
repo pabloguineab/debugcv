@@ -8,13 +8,15 @@ interface LordIconProps {
     size?: number;
     trigger?: 'hover' | 'click' | 'loop' | 'morph';
     colors?: string;
+    onTrigger?: boolean; // External trigger for animation
 }
 
 export function LordIcon({
     src,
     size = 18,
     trigger = 'hover',
-    colors
+    colors,
+    onTrigger = false
 }: LordIconProps) {
     const playerRef = useRef<Player>(null);
     const [iconData, setIconData] = useState<any>(null);
@@ -27,17 +29,12 @@ export function LordIcon({
             .catch(err => console.error('Failed to load icon:', err));
     }, [src]);
 
-    const handleMouseEnter = () => {
-        if (trigger === 'hover' && playerRef.current) {
+    // Play animation when external trigger changes
+    useEffect(() => {
+        if (onTrigger && playerRef.current) {
             playerRef.current.playFromBeginning();
         }
-    };
-
-    const handleClick = () => {
-        if (trigger === 'click' && playerRef.current) {
-            playerRef.current.playFromBeginning();
-        }
-    };
+    }, [onTrigger]);
 
     if (!iconData) {
         return <div style={{ width: size, height: size }} />;
@@ -45,8 +42,6 @@ export function LordIcon({
 
     return (
         <div
-            onMouseEnter={handleMouseEnter}
-            onClick={handleClick}
             style={{ width: size, height: size, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
         >
             <Player
