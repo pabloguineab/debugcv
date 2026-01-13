@@ -6,7 +6,6 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { ReferFriendModal } from "@/components/refer-friend-modal";
 import { UploadResumeModal } from "@/components/upload-resume-modal";
-import { OnboardingModal } from "@/components/onboarding-modal";
 
 interface DashboardLayoutClientProps {
     children: React.ReactNode;
@@ -21,22 +20,10 @@ export function DashboardLayoutClient({ children, user }: DashboardLayoutClientP
     const [isReferModalOpen, setIsReferModalOpen] = useState(false);
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
-    // Local state for user to reflect updates immediately
-    const [currentUser, setCurrentUser] = useState(user);
-
-    // Initialize onboarding modal state directly - no flash!
-    const needsOnboarding = Boolean(currentUser && (!currentUser.name || currentUser.name === currentUser.email));
-    const [isOnboardingOpen, setIsOnboardingOpen] = useState(needsOnboarding);
-
-    const handleOnboardingComplete = (fullName: string) => {
-        setCurrentUser(prev => prev ? { ...prev, name: fullName } : prev);
-        // Here you would also likely trigger a session update
-    };
-
     return (
         <SidebarProvider>
             <AppSidebar
-                user={currentUser}
+                user={user}
                 onOpenReferModal={() => {
                     setIsReferModalOpen(true);
                     setIsUploadModalOpen(false);
@@ -58,12 +45,6 @@ export function DashboardLayoutClient({ children, user }: DashboardLayoutClientP
                 <UploadResumeModal
                     open={isUploadModalOpen}
                     onClose={() => setIsUploadModalOpen(false)}
-                />
-                <OnboardingModal
-                    open={isOnboardingOpen}
-                    onOpenChange={setIsOnboardingOpen}
-                    onComplete={handleOnboardingComplete}
-                    userEmail={currentUser?.email || undefined}
                 />
             </SidebarInset>
         </SidebarProvider>

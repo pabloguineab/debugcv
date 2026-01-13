@@ -49,8 +49,8 @@ function VerifyPageContent() {
                     setError("Invalid code. Please try again.");
                     setOtp("");
                 } else if (result?.ok) {
-                    // Hard redirect to ensure session cookies are applied
-                    window.location.href = "/dashboard";
+                    // Redirect to onboarding page to complete profile setup
+                    window.location.href = `/auth/onboarding?email=${encodeURIComponent(email)}`;
                 }
             } catch (err) {
                 console.error(err);
