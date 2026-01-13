@@ -26,22 +26,32 @@ export function OnboardingModal({ open, onOpenChange, onComplete }: OnboardingMo
 
         setIsLoading(true)
 
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 1000))
-
         const fullName = `${firstName} ${lastName}`
 
-        // Call the callback to update parent state
-        onComplete(fullName)
+        try {
+            // Save to database
+            const res = await fetch('/api/user/update-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: fullName })
+            });
 
-        setIsLoading(false)
-        onOpenChange(false)
+            if (!res.ok) {
+                throw new Error('Failed to save profile');
+            }
 
-        // In a real app, you would call an API here to update the user in DB
-        // await fetch('/api/user/profile', { method: 'POST', body: JSON.stringify({ name: fullName }) })
+            // Call the callback to update parent state
+            onComplete(fullName)
+            onOpenChange(false)
 
-        // Refresh router to update server components if needed
-        router.refresh()
+            // Refresh router to update server components if needed
+            router.refresh()
+        } catch (error) {
+            console.error('Error saving profile:', error);
+            // Could show a toast here
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (
