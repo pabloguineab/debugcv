@@ -191,7 +191,7 @@ export default function ProfilePage() {
                                             />
                                         ) : (
                                             <div className="size-full bg-blue-600 flex items-center justify-center">
-                                                <span className="text-2xl font-semibold text-blue-200">{userInitial}</span>
+                                                <span className="text-4xl font-semibold text-blue-200">{userInitial}</span>
                                             </div>
                                         )}
                                     </div>
