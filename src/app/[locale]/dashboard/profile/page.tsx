@@ -181,12 +181,13 @@ export default function ProfilePage() {
     const [techSearch, setTechSearch] = useState("");
     const [selectedTechs, setSelectedTechs] = useState<string[]>([]);
 
-    // Default popular technologies (always visible in grid)
+    // Default popular technologies (always visible in grid - 4x4 = 16)
     const defaultTechIds = [
         "javascript", "react", "google-analytics",
         "python", "html5", "css3",
         "google-tag-manager", "typescript", "node.js",
-        "java", "cloudflare", "docker"
+        "java", "cloudflare", "docker",
+        "aws", "mongodb", "postgresql", "git"
     ];
 
     const toggleTech = (techId: string) => {
@@ -209,8 +210,9 @@ export default function ProfilePage() {
         return grouped;
     }, [selectedTechs]);
 
-    // Always show 12 items: search matches first, then fill with defaults
+    // Always show 16 items (4x4 grid): search matches first, then fill with defaults
     const displayedTechs = useMemo(() => {
+        const GRID_SIZE = 16;
         const searchMatches = techSearch
             ? allTechs.filter(t => t.name.toLowerCase().includes(techSearch.toLowerCase()))
             : [];
@@ -222,7 +224,7 @@ export default function ProfilePage() {
 
         if (!techSearch) {
             // No search: show defaults
-            return defaultTechs.slice(0, 12);
+            return defaultTechs.slice(0, GRID_SIZE);
         }
 
         // With search: matches first, then fill with defaults (avoiding duplicates)
@@ -230,24 +232,24 @@ export default function ProfilePage() {
         const result = [...searchMatches];
 
         for (const tech of defaultTechs) {
-            if (result.length >= 12) break;
+            if (result.length >= GRID_SIZE) break;
             if (!matchIds.has(tech.id)) {
                 result.push(tech);
             }
         }
 
-        // If still not 12, add more from allTechs
-        if (result.length < 12) {
+        // If still not 16, add more from allTechs
+        if (result.length < GRID_SIZE) {
             const usedIds = new Set(result.map(t => t.id));
             for (const tech of allTechs) {
-                if (result.length >= 12) break;
+                if (result.length >= GRID_SIZE) break;
                 if (!usedIds.has(tech.id)) {
                     result.push(tech);
                 }
             }
         }
 
-        return result.slice(0, 12);
+        return result.slice(0, GRID_SIZE);
     }, [techSearch]);
 
     return (
@@ -652,21 +654,21 @@ export default function ProfilePage() {
                                         />
                                     </div>
 
-                                    {/* Always visible 4x3 Grid (12 items) */}
-                                    <div className="grid grid-cols-3 gap-3">
+                                    {/* Always visible 4x4 Grid (16 items) */}
+                                    <div className="grid grid-cols-3 lg:grid-cols-4 gap-2.5">
                                         {displayedTechs.map(tech => (
                                             <div
                                                 key={tech.id}
                                                 onClick={() => toggleTech(tech.id)}
                                                 className={cn(
-                                                    "flex items-center gap-2.5 px-3 py-2.5 rounded-lg border cursor-pointer transition-all select-none relative",
+                                                    "flex items-center gap-3 px-4 py-2 rounded-lg border cursor-pointer transition-all select-none relative min-w-0",
                                                     selectedTechs.includes(tech.id)
                                                         ? "border-purple-600 bg-purple-50/80 dark:bg-purple-900/30"
                                                         : "border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-700"
                                                 )}
                                             >
-                                                <div className="size-8 rounded-md bg-gray-50 dark:bg-gray-800 flex items-center justify-center shrink-0 p-1.5">
-                                                    <Image src={tech.iconPath} alt={tech.name} width={20} height={20} className="w-full h-full object-contain" />
+                                                <div className="size-10 rounded-md flex items-center justify-center shrink-0">
+                                                    <Image src={tech.iconPath} alt={tech.name} width={32} height={32} className="w-full h-full object-contain" />
                                                 </div>
                                                 <span className="text-sm font-medium truncate">{tech.name}</span>
                                                 {selectedTechs.includes(tech.id) && (
@@ -692,15 +694,15 @@ export default function ProfilePage() {
                                                 <div className="h-px bg-gray-200 dark:bg-gray-800 flex-1" />
                                             </div>
                                             {/* Tech Cards Grid */}
-                                            <div className="grid grid-cols-3 gap-3 pl-[232px]">
+                                            <div className="grid grid-cols-3 lg:grid-cols-4 gap-2.5 pl-[232px]">
                                                 {techs.map(tech => (
                                                     <div
                                                         key={tech.id}
                                                         onClick={() => toggleTech(tech.id)}
-                                                        className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border-2 border-purple-600 bg-purple-50/80 dark:bg-purple-900/30 cursor-pointer transition-all select-none relative"
+                                                        className="flex items-center gap-3 px-4 py-2 rounded-lg border-2 border-purple-600 bg-purple-50/80 dark:bg-purple-900/30 cursor-pointer transition-all select-none relative min-w-0"
                                                     >
-                                                        <div className="size-8 rounded-md bg-white dark:bg-gray-800 flex items-center justify-center shrink-0 p-1.5 shadow-sm">
-                                                            <Image src={tech.iconPath} alt={tech.name} width={20} height={20} className="w-full h-full object-contain" />
+                                                        <div className="size-10 rounded-md flex items-center justify-center shrink-0">
+                                                            <Image src={tech.iconPath} alt={tech.name} width={32} height={32} className="w-full h-full object-contain" />
                                                         </div>
                                                         <span className="text-sm font-medium truncate">{tech.name}</span>
                                                         <div className="absolute -top-1.5 -right-1.5 bg-purple-600 text-white p-0.5 rounded-full">
