@@ -67,12 +67,12 @@ const jobsItems = [
     {
         title: "Job Search",
         url: "/dashboard/job-search",
-        icon: "https://cdn.lordicon.com/fkdzyfle.json" // globe/search
+        icon: "/animated/wired-outline-2514-hiring-hover-pinch.json"
     },
     {
         title: "Application Board",
         url: "/dashboard/application-board",
-        icon: "https://cdn.lordicon.com/nocovwne.json" // clipboard/list
+        icon: "/animated/wired-outline-1660-noticeboard-hover-pinch.json"
     },
 ];
 
@@ -80,17 +80,17 @@ const resumesItems = [
     {
         title: "My Versions",
         url: "/dashboard/resumes",
-        icon: "https://cdn.lordicon.com/jxzkkoed.json" // document
+        icon: "/animated/wired-outline-982-cv-curriculum-vitae-resume-hover-swipe.json"
     },
     {
         title: "ATS Score",
         url: "/dashboard/resumes/ats-score",
-        icon: "https://cdn.lordicon.com/xzksbhzh.json" // target/bullseye
+        icon: "/animated/wired-outline-458-goal-target-hover-hit.json"
     },
     {
         title: "Cover Letters",
         url: "/dashboard/cover-letters",
-        icon: "https://cdn.lordicon.com/wzrwaorf.json" // pen/edit
+        icon: "/animated/wired-outline-2344-poetry-hover-pinch.json"
     },
 ];
 
@@ -98,12 +98,12 @@ const interviewItems = [
     {
         title: "AI Simulator",
         url: "/dashboard/interview-coach",
-        icon: "https://cdn.lordicon.com/kbtmbyzy.json" // robot/ai
+        icon: "/animated/wired-outline-188-microphone-recording-hover-recording.json"
     },
     {
         title: "Playbooks",
         url: "/dashboard/playbooks",
-        icon: "https://cdn.lordicon.com/wyqtxzeh.json" // book
+        icon: "/animated/wired-outline-1142-form-sheet-questionnaire-hover-pinch.json"
     },
 ];
 
@@ -218,7 +218,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                 onMouseLeave={() => setExpertHovered(false)}
                             >
                                 <LordIcon
-                                    src="https://cdn.lordicon.com/iltqorsz.json"
+                                    src="/animated/wired-lineal-724-diamond-luxury-precious-hover-pinch.json"
                                     size={18}
                                     onTrigger={expertHovered}
                                 />
@@ -238,7 +238,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                 onMouseLeave={() => setReferHovered(false)}
                             >
                                 <LordIcon
-                                    src="https://cdn.lordicon.com/hbwqfgcf.json"
+                                    src="/animated/wired-lineal-412-gift-hover-squeeze.json"
                                     size={18}
                                     onTrigger={referHovered}
                                 />
