@@ -183,11 +183,10 @@ export default function ProfilePage() {
 
     // Default popular technologies (always visible in grid - 4x4 = 16)
     const defaultTechIds = [
-        "javascript", "react", "google-analytics",
-        "python", "html5", "css3",
-        "google-tag-manager", "typescript", "node.js",
-        "java", "cloudflare", "docker",
-        "aws", "mongodb", "postgresql", "git"
+        "javascript", "react", "python", "html5",
+        "css3", "typescript", "node-js", "java",
+        "cloudflare", "docker", "aws", "mongodb",
+        "postgressql", "git", "firebase", "vercel"
     ];
 
     const toggleTech = (techId: string) => {
@@ -667,8 +666,8 @@ export default function ProfilePage() {
                                                         : "border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-700"
                                                 )}
                                             >
-                                                <div className="size-10 rounded-md flex items-center justify-center shrink-0">
-                                                    <Image src={tech.iconPath} alt={tech.name} width={32} height={32} className="w-full h-full object-contain" />
+                                                <div className="size-12 rounded-md flex items-center justify-center shrink-0">
+                                                    <Image src={tech.iconPath} alt={tech.name} width={40} height={40} className="w-full h-full object-contain" />
                                                 </div>
                                                 <span className="text-sm font-medium truncate">{tech.name}</span>
                                                 {selectedTechs.includes(tech.id) && (
@@ -701,8 +700,8 @@ export default function ProfilePage() {
                                                         onClick={() => toggleTech(tech.id)}
                                                         className="flex items-center gap-3 px-4 py-2 rounded-lg border-2 border-purple-600 bg-purple-50/80 dark:bg-purple-900/30 cursor-pointer transition-all select-none relative min-w-0"
                                                     >
-                                                        <div className="size-10 rounded-md flex items-center justify-center shrink-0">
-                                                            <Image src={tech.iconPath} alt={tech.name} width={32} height={32} className="w-full h-full object-contain" />
+                                                        <div className="size-12 rounded-md flex items-center justify-center shrink-0">
+                                                            <Image src={tech.iconPath} alt={tech.name} width={40} height={40} className="w-full h-full object-contain" />
                                                         </div>
                                                         <span className="text-sm font-medium truncate">{tech.name}</span>
                                                         <div className="absolute -top-1.5 -right-1.5 bg-purple-600 text-white p-0.5 rounded-full">
