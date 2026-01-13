@@ -67,8 +67,8 @@ export default function OnboardingPage() {
                 return;
             }
 
-            // Success - redirect to dashboard
-            window.location.href = "/dashboard";
+            // Success - redirect to upload resume page
+            window.location.href = `/auth/upload-resume?email=${encodeURIComponent(email)}`;
         } catch (err) {
             console.error('Error saving profile:', err);
             setError("An error occurred. Please try again.");
