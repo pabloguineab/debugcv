@@ -17,6 +17,7 @@ function VerifyPageContent() {
 
     const [otp, setOtp] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [timer, setTimer] = useState(60);
     const [canResend, setCanResend] = useState(false);
 
@@ -31,6 +32,7 @@ function VerifyPageContent() {
 
     const handleVerify = async (code: string) => {
         setOtp(code);
+        setError(null);
         if (code.length === 6) {
             setIsLoading(true);
             try {
@@ -39,17 +41,20 @@ function VerifyPageContent() {
                     email,
                     code,
                     redirect: false,
-                    callbackUrl: "/dashboard"
                 });
 
-                if (result?.ok) {
-                    router.push("/dashboard");
-                } else {
-                    console.error("Verification failed", result?.error);
-                    // Handle error (shake animation, toast, etc.)
+                console.log("SignIn result:", result);
+
+                if (result?.error) {
+                    setError("Invalid code. Please try again.");
+                    setOtp("");
+                } else if (result?.ok) {
+                    // Hard redirect to ensure session cookies are applied
+                    window.location.href = "/dashboard";
                 }
-            } catch (error) {
-                console.error(error);
+            } catch (err) {
+                console.error(err);
+                setError("An error occurred. Please try again.");
             } finally {
                 setIsLoading(false);
             }
@@ -126,6 +131,10 @@ function VerifyPageContent() {
                         </InputOTPGroup>
                     </InputOTP>
                 </div>
+
+                {error && (
+                    <div className="text-red-500 text-sm font-medium">{error}</div>
+                )}
 
                 <div className="text-sm text-slate-500">
                     Didn't receive OTP?{" "}
