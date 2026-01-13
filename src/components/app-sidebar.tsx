@@ -4,23 +4,14 @@
 import * as React from "react";
 import { useState } from "react";
 import {
-    ClipboardList,
-    Globe,
-    FileText,
-    Target,
-    PenTool,
-    Bot,
-    BookOpen,
-    Gem,
     MoreVertical,
     LogOut,
     User,
     CreditCard,
     Bell,
-    Gift,
 } from "lucide-react";
-import { DashboardChartIcon } from "@/components/icons/dashboard-chart-icon";
 import { signOut } from "next-auth/react";
+import { LordIcon } from "@/components/icons/lord-icon";
 
 import {
     Sidebar,
@@ -46,21 +37,74 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/components/Logo";
 import { Link } from "@/i18n/routing";
 
-// Menu Groups with custom animations
+// Menu item wrapper with hover state
+function AnimatedMenuItem({ href, icon, title }: { href: string; icon: string; title: string }) {
+    const [isHovered, setIsHovered] = useState(false);
+
+    return (
+        <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+                <Link
+                    href={href}
+                    className="flex items-center gap-3 w-full my-0.5"
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                >
+                    <LordIcon
+                        src={icon}
+                        size={18}
+                        onTrigger={isHovered}
+                    />
+                    <span className="text-sm font-medium">{title}</span>
+                </Link>
+            </SidebarMenuButton>
+        </SidebarMenuItem>
+    );
+}
+
+// Menu Groups with Lordicon URLs (JSON)
 const jobsItems = [
-    { title: "Job Search", url: "/dashboard/job-search", icon: Globe, animation: "group-hover/icon-hover:animate-[icon-globe-rotate_0.6s_ease-in-out]" },
-    { title: "Application Board", url: "/dashboard/application-board", icon: ClipboardList, animation: "group-hover/icon-hover:animate-[icon-bounce_0.5s_ease-in-out]" },
+    {
+        title: "Job Search",
+        url: "/dashboard/job-search",
+        icon: "https://cdn.lordicon.com/fkdzyfle.json" // globe/search
+    },
+    {
+        title: "Application Board",
+        url: "/dashboard/application-board",
+        icon: "https://cdn.lordicon.com/nocovwne.json" // clipboard/list
+    },
 ];
 
 const resumesItems = [
-    { title: "My Versions", url: "/dashboard/resumes", icon: FileText, animation: "group-hover/icon-hover:animate-[icon-bounce_0.5s_ease-in-out]" },
-    { title: "ATS Score", url: "/dashboard/resumes/ats-score", icon: Target, animation: "group-hover/icon-hover:animate-[icon-pulse_0.5s_ease-in-out]" },
-    { title: "Cover Letters", url: "/dashboard/cover-letters", icon: PenTool, animation: "group-hover/icon-hover:animate-[icon-pen-write_0.5s_ease-in-out]" },
+    {
+        title: "My Versions",
+        url: "/dashboard/resumes",
+        icon: "https://cdn.lordicon.com/jxzkkoed.json" // document
+    },
+    {
+        title: "ATS Score",
+        url: "/dashboard/resumes/ats-score",
+        icon: "https://cdn.lordicon.com/xzksbhzh.json" // target/bullseye
+    },
+    {
+        title: "Cover Letters",
+        url: "/dashboard/cover-letters",
+        icon: "https://cdn.lordicon.com/wzrwaorf.json" // pen/edit
+    },
 ];
 
 const interviewItems = [
-    { title: "AI Simulator", url: "/dashboard/interview-coach", icon: Bot, animation: "group-hover/icon-hover:animate-[icon-shake_0.5s_ease-in-out]" },
-    { title: "Playbooks", url: "/dashboard/playbooks", icon: BookOpen, animation: "group-hover/icon-hover:animate-[icon-page-turn_0.6s_ease-in-out]" },
+    {
+        title: "AI Simulator",
+        url: "/dashboard/interview-coach",
+        icon: "https://cdn.lordicon.com/kbtmbyzy.json" // robot/ai
+    },
+    {
+        title: "Playbooks",
+        url: "/dashboard/playbooks",
+        icon: "https://cdn.lordicon.com/wyqtxzeh.json" // book
+    },
 ];
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -74,6 +118,10 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props }: AppSidebarProps) {
+    const [dashboardHovered, setDashboardHovered] = useState(false);
+    const [expertHovered, setExpertHovered] = useState(false);
+    const [referHovered, setReferHovered] = useState(false);
+
     return (
         <Sidebar variant="inset" {...props}>
             <SidebarHeader className="p-4 flex flex-row items-center justify-between">
@@ -89,8 +137,17 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                         <SidebarMenu>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
-                                    <Link href="/dashboard" className="group/icon-hover flex items-center gap-3 w-full my-0.5">
-                                        <DashboardChartIcon className="size-[18px]" />
+                                    <Link
+                                        href="/dashboard"
+                                        className="flex items-center gap-3 w-full my-0.5"
+                                        onMouseEnter={() => setDashboardHovered(true)}
+                                        onMouseLeave={() => setDashboardHovered(false)}
+                                    >
+                                        <LordIcon
+                                            src="https://cdn.lordicon.com/egiwmiit.json"
+                                            size={18}
+                                            onTrigger={dashboardHovered}
+                                        />
                                         <span className="text-sm font-medium">Dashboard</span>
                                     </Link>
                                 </SidebarMenuButton>
@@ -105,14 +162,12 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {jobsItems.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <Link href={item.url} className="group/icon-hover flex items-center gap-3 w-full my-0.5">
-                                            <item.icon className={`size-[18px] ${item.animation}`} />
-                                            <span className="text-sm font-medium">{item.title}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
+                                <AnimatedMenuItem
+                                    key={item.title}
+                                    href={item.url}
+                                    icon={item.icon}
+                                    title={item.title}
+                                />
                             ))}
                         </SidebarMenu>
                     </SidebarGroupContent>
@@ -124,14 +179,12 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {resumesItems.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <Link href={item.url} className="group/icon-hover flex items-center gap-3 w-full my-0.5">
-                                            <item.icon className={`size-[18px] ${item.animation}`} />
-                                            <span className="text-sm font-medium">{item.title}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
+                                <AnimatedMenuItem
+                                    key={item.title}
+                                    href={item.url}
+                                    icon={item.icon}
+                                    title={item.title}
+                                />
                             ))}
                         </SidebarMenu>
                     </SidebarGroupContent>
@@ -143,14 +196,12 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {interviewItems.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <Link href={item.url} className="group/icon-hover flex items-center gap-3 w-full my-0.5">
-                                            <item.icon className={`size-[18px] ${item.animation}`} />
-                                            <span className="text-sm font-medium">{item.title}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
+                                <AnimatedMenuItem
+                                    key={item.title}
+                                    href={item.url}
+                                    icon={item.icon}
+                                    title={item.title}
+                                />
                             ))}
                         </SidebarMenu>
                     </SidebarGroupContent>
@@ -162,9 +213,15 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                         <SidebarMenuButton asChild>
                             <div
                                 onClick={onOpenUploadModal}
-                                className="group/icon-hover flex items-center gap-3 text-blue-600 dark:text-blue-400 font-medium w-full my-0.5 cursor-pointer hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                                className="flex items-center gap-3 text-blue-600 dark:text-blue-400 font-medium w-full my-0.5 cursor-pointer hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                                onMouseEnter={() => setExpertHovered(true)}
+                                onMouseLeave={() => setExpertHovered(false)}
                             >
-                                <Gem className="size-[18px] group-hover/icon-hover:animate-[icon-sparkle_0.5s_ease-in-out]" />
+                                <LordIcon
+                                    src="https://cdn.lordicon.com/iltqorsz.json"
+                                    size={18}
+                                    onTrigger={expertHovered}
+                                />
                                 <span className="flex-1 text-sm">Get Expert Review</span>
                                 <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full font-bold dark:bg-blue-900/40 dark:text-blue-400 group-data-[collapsible=icon]:hidden">
                                     FREE
@@ -176,9 +233,15 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                         <SidebarMenuButton asChild>
                             <div
                                 onClick={onOpenReferModal}
-                                className="group/icon-hover flex items-center gap-3 text-green-600 dark:text-green-500 font-medium w-full cursor-pointer my-0.5"
+                                className="flex items-center gap-3 text-green-600 dark:text-green-500 font-medium w-full cursor-pointer my-0.5"
+                                onMouseEnter={() => setReferHovered(true)}
+                                onMouseLeave={() => setReferHovered(false)}
                             >
-                                <Gift className="size-[18px] group-hover/icon-hover:animate-[icon-shake_0.5s_ease-in-out]" />
+                                <LordIcon
+                                    src="https://cdn.lordicon.com/hbwqfgcf.json"
+                                    size={18}
+                                    onTrigger={referHovered}
+                                />
                                 <span className="flex-1 text-sm">Refer a Friend</span>
                                 <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-bold dark:bg-green-900/40 dark:text-green-400 group-data-[collapsible=icon]:hidden">
                                     -30%
