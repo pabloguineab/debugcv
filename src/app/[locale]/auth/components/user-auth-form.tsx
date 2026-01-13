@@ -53,15 +53,17 @@ export function UserAuthForm({ className, buttonText = "Sign In with Email", ...
                         </Label>
                         <Input
                             id="email"
+                            name="email"
                             placeholder="name@example.com"
                             type="email"
                             autoCapitalize="none"
                             autoComplete="email"
                             autoCorrect="off"
                             disabled={isLoading}
+                            required
                         />
                     </div>
-                    <Button disabled={isLoading} className="bg-blue-600 hover:bg-blue-700 text-white w-full">
+                    <Button disabled={isLoading} type="submit" className="bg-blue-600 hover:bg-blue-700 text-white w-full">
                         {isLoading && (
                             <svg
                                 className="mr-2 h-4 w-4 animate-spin"
