@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { DashboardHeader } from "@/components/dashboard-header";
@@ -20,17 +20,13 @@ interface DashboardLayoutClientProps {
 export function DashboardLayoutClient({ children, user }: DashboardLayoutClientProps) {
     const [isReferModalOpen, setIsReferModalOpen] = useState(false);
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-    const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
 
     // Local state for user to reflect updates immediately
     const [currentUser, setCurrentUser] = useState(user);
 
-    useEffect(() => {
-        // If user is logged in but has no name (or name is email), show onboarding
-        if (currentUser && (!currentUser.name || currentUser.name === currentUser.email)) {
-            setIsOnboardingOpen(true);
-        }
-    }, [currentUser]);
+    // Initialize onboarding modal state directly - no flash!
+    const needsOnboarding = Boolean(currentUser && (!currentUser.name || currentUser.name === currentUser.email));
+    const [isOnboardingOpen, setIsOnboardingOpen] = useState(needsOnboarding);
 
     const handleOnboardingComplete = (fullName: string) => {
         setCurrentUser(prev => prev ? { ...prev, name: fullName } : prev);
