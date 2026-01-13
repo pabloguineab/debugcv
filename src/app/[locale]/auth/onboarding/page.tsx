@@ -84,11 +84,6 @@ export default function OnboardingPage() {
                     <CardDescription>
                         Enter your details below to finish setting up your account
                     </CardDescription>
-                    <CardAction>
-                        <Link href="/auth/signin" className="text-sm text-muted-foreground hover:underline">
-                            Sign In
-                        </Link>
-                    </CardAction>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit} id="onboarding-form">
