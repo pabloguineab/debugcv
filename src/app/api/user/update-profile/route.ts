@@ -20,9 +20,12 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Invalid name" }, { status: 400 });
         }
 
-        // Prepare update data
-        const updateData: Record<string, string> = {
+        // Prepare upsert data
+        const upsertData: Record<string, string> = {
+            user_email: userEmail,
+            provider: 'otp',
             name: name.trim(),
+            email: userEmail,
             updated_at: new Date().toISOString(),
         };
 
@@ -30,17 +33,16 @@ export async function POST(req: Request) {
         if (password && typeof password === 'string' && password.length >= 6) {
             const salt = await bcrypt.genSalt(10);
             const passwordHash = await bcrypt.hash(password, salt);
-            updateData.password_hash = passwordHash;
+            upsertData.password_hash = passwordHash;
             console.log('[update-profile] Hashing password for:', userEmail);
         }
 
-        console.log('[update-profile] Updating user:', userEmail, 'with fields:', Object.keys(updateData));
+        console.log('[update-profile] Upserting user:', userEmail, 'with fields:', Object.keys(upsertData));
 
-        // Update user identity in Supabase
+        // Upsert user identity in Supabase (insert if not exists, update if exists)
         const { data, error } = await supabase
             .from('user_identities')
-            .update(updateData)
-            .eq('user_email', userEmail)
+            .upsert(upsertData, { onConflict: 'user_email' })
             .select()
             .single();
 
@@ -49,7 +51,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
         }
 
-        console.log('[update-profile] Successfully updated user:', userEmail);
+        console.log('[update-profile] Successfully upserted user:', userEmail);
         return NextResponse.json({ success: true, name: name.trim() });
 
     } catch (error) {

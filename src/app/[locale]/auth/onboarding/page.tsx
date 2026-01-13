@@ -78,16 +78,14 @@ export default function OnboardingPage() {
 
     return (
         <div className="min-h-screen bg-white flex items-center justify-center p-4">
-            <Card className="w-full max-w-md border-0 shadow-xl">
-                <CardHeader className="space-y-1">
-                    <CardTitle className="text-2xl font-bold text-blue-600">
-                        Complete your profile
-                    </CardTitle>
+            <Card className="w-full max-w-sm">
+                <CardHeader>
+                    <CardTitle className="text-xl">Complete your profile</CardTitle>
                     <CardDescription>
                         Enter your details below to finish setting up your account
                     </CardDescription>
                     <CardAction>
-                        <Link href="/auth/signin" className="text-sm text-blue-600 hover:underline">
+                        <Link href="/auth/signin" className="text-sm text-muted-foreground hover:underline">
                             Sign In
                         </Link>
                     </CardAction>
@@ -104,7 +102,7 @@ export default function OnboardingPage() {
                                         placeholder="John"
                                         value={firstName}
                                         onChange={(e) => setFirstName(e.target.value)}
-                                        className="focus-visible:ring-blue-500"
+
                                         required
                                     />
                                 </div>
@@ -116,7 +114,7 @@ export default function OnboardingPage() {
                                         placeholder="Doe"
                                         value={lastName}
                                         onChange={(e) => setLastName(e.target.value)}
-                                        className="focus-visible:ring-blue-500"
+
                                         required
                                     />
                                 </div>
@@ -130,7 +128,7 @@ export default function OnboardingPage() {
                                         placeholder="Create a password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="focus-visible:ring-blue-500 pr-10"
+                                        className="pr-10"
                                         required
                                     />
                                     <button
@@ -150,7 +148,7 @@ export default function OnboardingPage() {
                                     placeholder="Confirm your password"
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
-                                    className="focus-visible:ring-blue-500"
+
                                     required
                                 />
                             </div>
@@ -164,7 +162,7 @@ export default function OnboardingPage() {
                     <Button
                         type="submit"
                         form="onboarding-form"
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                        className="w-full"
                         disabled={isLoading}
                     >
                         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
