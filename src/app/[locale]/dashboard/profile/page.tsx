@@ -306,22 +306,6 @@ export default function ProfilePage() {
                                 </div>
                             </div>
 
-                            {/* Username */}
-                            <div className="grid grid-cols-[200px_1fr] gap-8 items-start py-6 border-b">
-                                <div>
-                                    <h3 className="text-sm font-medium">LinkedIn Username*</h3>
-                                    <p className="text-sm text-muted-foreground mt-1">
-                                        This will link your profile to your LinkedIn account.
-                                    </p>
-                                </div>
-                                <div className="space-y-2 max-w-xs">
-                                    <Input
-                                        value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
-                                    />
-                                    <p className="text-sm text-muted-foreground transition-all">linkedin.com/in/{username}</p>
-                                </div>
-                            </div>
 
                             {/* Social Links */}
                             <div className="grid grid-cols-[200px_1fr] gap-8 items-start py-6 border-b">
@@ -334,33 +318,39 @@ export default function ProfilePage() {
                                 <div className="space-y-4 max-w-md">
                                     {/* LinkedIn */}
                                     <div>
-                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 block">LinkedIn</label>
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 block">LinkedIn Username</label>
                                         <div className="relative">
-                                            <div className="absolute left-0 top-0 h-full w-12 flex items-center justify-center border-r bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded-l-lg">
+                                            <div className="absolute left-0 top-0 h-full w-12 flex items-center justify-center border-r bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded-l-lg z-10">
                                                 <Linkedin className="size-5 text-[#0A66C2]" />
                                             </div>
                                             <Input
                                                 value={linkedinUrl}
                                                 onChange={(e) => setLinkedinUrl(e.target.value)}
-                                                placeholder="e.g. linkedin.com/in/richard-hendricks-pied"
+                                                placeholder="richard-hendricks-pied"
                                                 className="pl-14 h-11 text-sm rounded-lg border-gray-200 focus:border-blue-500 focus:ring-blue-500"
                                             />
                                         </div>
+                                        {linkedinUrl && (
+                                            <p className="text-sm text-muted-foreground mt-1.5">linkedin.com/in/{linkedinUrl}</p>
+                                        )}
                                     </div>
                                     {/* GitHub */}
                                     <div>
-                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 block">GitHub</label>
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 block">GitHub Username</label>
                                         <div className="relative">
-                                            <div className="absolute left-0 top-0 h-full w-12 flex items-center justify-center border-r bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded-l-lg">
+                                            <div className="absolute left-0 top-0 h-full w-12 flex items-center justify-center border-r bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded-l-lg z-10">
                                                 <Github className="size-5 text-gray-900 dark:text-white" />
                                             </div>
                                             <Input
                                                 value={githubUrl}
                                                 onChange={(e) => setGithubUrl(e.target.value)}
-                                                placeholder="e.g. github.com/piedpiper"
+                                                placeholder="piedpiper"
                                                 className="pl-14 h-11 text-sm rounded-lg border-gray-200 focus:border-blue-500 focus:ring-blue-500"
                                             />
                                         </div>
+                                        {githubUrl && (
+                                            <p className="text-sm text-muted-foreground mt-1.5">github.com/{githubUrl}</p>
+                                        )}
                                     </div>
                                 </div>
                             </div>
