@@ -173,11 +173,65 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                     </SidebarGroupContent>
                 </SidebarGroup>
 
+
                 {/* Resumes Group */}
                 <SidebarGroup>
                     <SidebarGroupLabel>Resumes</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
+                            {/* Profile Collapsible */}
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <div className="w-full">
+                                        <details className="group/profile w-full">
+                                            <summary className="flex items-center gap-3 w-full my-0.5 cursor-pointer list-none">
+                                                <svg className="size-4 transition-transform group-open/profile:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                </svg>
+                                                <span className="text-sm font-medium flex-1">Profile</span>
+                                            </summary>
+
+                                            {/* Profile Card */}
+                                            <div className="mt-2 ml-7 mb-3 p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
+                                                <h3 className="text-sm font-semibold mb-2">Complete your profile</h3>
+                                                <p className="text-xs text-muted-foreground mb-3">
+                                                    A complete profile helps us match you with relevant jobs and personalize our AI tools to you.
+                                                </p>
+
+                                                {/* Progress Bar */}
+                                                <div className="mb-3 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                                    <div className="h-full bg-gradient-to-r from-purple-500 to-purple-600 w-1/4 transition-all" />
+                                                </div>
+
+                                                {/* Profile Sections */}
+                                                <div className="space-y-2">
+                                                    <div className="flex items-center gap-2 text-xs">
+                                                        <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                        <span>Overview</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2 text-xs">
+                                                        <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                        <span>Preferences</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2 text-xs">
+                                                        <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                        <span>Tech stack</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2 text-xs">
+                                                        <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                        <span>Experience</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2 text-xs">
+                                                        <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                        <span>Education</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </details>
+                                    </div>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+
                             {resumesItems.map((item) => (
                                 <AnimatedMenuItem
                                     key={item.title}
