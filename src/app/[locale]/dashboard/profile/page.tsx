@@ -422,6 +422,151 @@ export default function ProfilePage() {
         setEducations(educations.filter(edu => edu.id !== id));
     };
 
+    // Projects state
+    type Project = {
+        id: string;
+        name: string;
+        projectUrl: string;
+        description: string;
+        technologies: string[];
+        isOngoing: boolean;
+        startMonth: string;
+        startYear: string;
+        endMonth: string;
+        endYear: string;
+    };
+
+    const [projects, setProjects] = useState<Project[]>([]);
+    const [isAddProjectOpen, setIsAddProjectOpen] = useState(false);
+    const [isAddProjectWithAIOpen, setIsAddProjectWithAIOpen] = useState(false);
+
+    // Project form state
+    const [projName, setProjName] = useState("");
+    const [projUrl, setProjUrl] = useState("");
+    const [projDescription, setProjDescription] = useState("");
+    const [projTechnologies, setProjTechnologies] = useState<string[]>([]);
+    const [projTechSearch, setProjTechSearch] = useState("");
+    const [projIsOngoing, setProjIsOngoing] = useState(false);
+    const [projStartMonth, setProjStartMonth] = useState("");
+    const [projStartYear, setProjStartYear] = useState("");
+    const [projEndMonth, setProjEndMonth] = useState("");
+    const [projEndYear, setProjEndYear] = useState("");
+    const [aiProjectText, setAiProjectText] = useState("");
+
+    const resetProjectForm = () => {
+        setProjName("");
+        setProjUrl("");
+        setProjDescription("");
+        setProjTechnologies([]);
+        setProjTechSearch("");
+        setProjIsOngoing(false);
+        setProjStartMonth("");
+        setProjStartYear("");
+        setProjEndMonth("");
+        setProjEndYear("");
+    };
+
+    const addProject = () => {
+        if (projName && projDescription) {
+            const newProj: Project = {
+                id: Date.now().toString(),
+                name: projName,
+                projectUrl: projUrl,
+                description: projDescription,
+                technologies: projTechnologies,
+                isOngoing: projIsOngoing,
+                startMonth: projStartMonth,
+                startYear: projStartYear,
+                endMonth: projIsOngoing ? "" : projEndMonth,
+                endYear: projIsOngoing ? "" : projEndYear,
+            };
+            setProjects([...projects, newProj]);
+            resetProjectForm();
+            setIsAddProjectOpen(false);
+        }
+    };
+
+    const removeProject = (id: string) => {
+        setProjects(projects.filter(proj => proj.id !== id));
+    };
+
+    const addTechToProject = (tech: string) => {
+        if (!projTechnologies.includes(tech)) {
+            setProjTechnologies([...projTechnologies, tech]);
+        }
+        setProjTechSearch("");
+    };
+
+    const removeTechFromProject = (tech: string) => {
+        setProjTechnologies(projTechnologies.filter(t => t !== tech));
+    };
+
+    // Certifications state
+    type Certification = {
+        id: string;
+        name: string;
+        issuingOrganization: string;
+        issueMonth: string;
+        issueYear: string;
+        expirationMonth: string;
+        expirationYear: string;
+        doesNotExpire: boolean;
+        credentialId: string;
+        credentialUrl: string;
+    };
+
+    const [certifications, setCertifications] = useState<Certification[]>([]);
+    const [isAddCertificationOpen, setIsAddCertificationOpen] = useState(false);
+    const [isAddCertificationWithAIOpen, setIsAddCertificationWithAIOpen] = useState(false);
+
+    // Certification form state
+    const [certName, setCertName] = useState("");
+    const [certIssuingOrg, setCertIssuingOrg] = useState("");
+    const [certIssueMonth, setCertIssueMonth] = useState("");
+    const [certIssueYear, setCertIssueYear] = useState("");
+    const [certExpirationMonth, setCertExpirationMonth] = useState("");
+    const [certExpirationYear, setCertExpirationYear] = useState("");
+    const [certDoesNotExpire, setCertDoesNotExpire] = useState(false);
+    const [certCredentialId, setCertCredentialId] = useState("");
+    const [certCredentialUrl, setCertCredentialUrl] = useState("");
+    const [aiCertificationText, setAiCertificationText] = useState("");
+
+    const resetCertificationForm = () => {
+        setCertName("");
+        setCertIssuingOrg("");
+        setCertIssueMonth("");
+        setCertIssueYear("");
+        setCertExpirationMonth("");
+        setCertExpirationYear("");
+        setCertDoesNotExpire(false);
+        setCertCredentialId("");
+        setCertCredentialUrl("");
+    };
+
+    const addCertification = () => {
+        if (certName && certIssuingOrg && certIssueMonth && certIssueYear) {
+            const newCert: Certification = {
+                id: Date.now().toString(),
+                name: certName,
+                issuingOrganization: certIssuingOrg,
+                issueMonth: certIssueMonth,
+                issueYear: certIssueYear,
+                expirationMonth: certDoesNotExpire ? "" : certExpirationMonth,
+                expirationYear: certDoesNotExpire ? "" : certExpirationYear,
+                doesNotExpire: certDoesNotExpire,
+                credentialId: certCredentialId,
+                credentialUrl: certCredentialUrl,
+            };
+            setCertifications([...certifications, newCert]);
+            resetCertificationForm();
+            setIsAddCertificationOpen(false);
+        }
+    };
+
+    const removeCertification = (id: string) => {
+        setCertifications(certifications.filter(cert => cert.id !== id));
+    };
+
     return (
         <div className="flex flex-col h-full w-full bg-background">
             {/* Header */}
@@ -981,10 +1126,100 @@ export default function ProfilePage() {
                         )}
                     </TabsContent>
 
-                    <TabsContent value="projects" className="space-y-8 max-w-3xl">
-                        <div className="text-center py-12 text-muted-foreground">
-                            Projects content coming soon...
+                    <TabsContent value="projects" className="space-y-6">
+                        <div>
+                            <h3 className="text-lg font-medium mb-1">Projects</h3>
+                            <p className="text-sm text-muted-foreground">
+                                Showcase your personal and professional projects to demonstrate your skills.
+                            </p>
                         </div>
+
+                        {/* Empty State */}
+                        {projects.length === 0 ? (
+                            <div className="border rounded-xl p-12 text-center">
+                                <div className="inline-flex items-center justify-center size-14 rounded-full bg-blue-50 dark:bg-blue-900/30 mb-4">
+                                    <FolderKanban className="size-6 text-blue-600" />
+                                </div>
+                                <h4 className="text-lg font-semibold mb-2">You haven&apos;t added any projects yet</h4>
+                                <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
+                                    Adding projects will help showcase your skills and experience.
+                                </p>
+                                <div className="flex items-center justify-center gap-3">
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => setIsAddProjectWithAIOpen(true)}
+                                    >
+                                        Add with AI
+                                    </Button>
+                                    <Button
+                                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                                        onClick={() => setIsAddProjectOpen(true)}
+                                    >
+                                        <Plus className="size-4 mr-1" />
+                                        Add project
+                                    </Button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                {/* Projects List */}
+                                {projects.map((proj) => (
+                                    <div key={proj.id} className="rounded-xl border bg-card p-6">
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex items-start gap-4">
+                                                <div className="size-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
+                                                    <FolderKanban className="size-5 text-gray-600 dark:text-gray-400" />
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-semibold">{proj.name}</h4>
+                                                    {proj.projectUrl && (
+                                                        <a href={proj.projectUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:underline flex items-center gap-1">
+                                                            View project <ExternalLink className="size-3" />
+                                                        </a>
+                                                    )}
+                                                    {proj.startYear && (
+                                                        <p className="text-sm text-muted-foreground mt-1">
+                                                            {proj.startMonth} {proj.startYear} - {proj.isOngoing ? "Present" : `${proj.endMonth} ${proj.endYear}`}
+                                                        </p>
+                                                    )}
+                                                    {proj.technologies.length > 0 && (
+                                                        <div className="flex flex-wrap gap-1.5 mt-2">
+                                                            {proj.technologies.map((tech) => (
+                                                                <span key={tech} className="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-xs rounded-md">
+                                                                    {tech}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                    {proj.description && (
+                                                        <p className="text-sm mt-2">{proj.description}</p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="text-muted-foreground hover:text-red-600"
+                                                onClick={() => removeProject(proj.id)}
+                                            >
+                                                <Trash2 className="size-4" />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ))}
+
+                                {/* Add More Buttons */}
+                                <div className="flex items-center gap-3 pt-4">
+                                    <Button variant="outline" onClick={() => setIsAddProjectWithAIOpen(true)}>
+                                        Add with AI
+                                    </Button>
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setIsAddProjectOpen(true)}>
+                                        <Plus className="size-4 mr-1" />
+                                        Add project
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
                     </TabsContent>
 
                     <TabsContent value="education" className="space-y-6">
@@ -1075,10 +1310,94 @@ export default function ProfilePage() {
                         )}
                     </TabsContent>
 
-                    <TabsContent value="certifications" className="space-y-8 max-w-3xl">
-                        <div className="text-center py-12 text-muted-foreground">
-                            Certifications content coming soon...
+                    <TabsContent value="certifications" className="space-y-6">
+                        <div>
+                            <h3 className="text-lg font-medium mb-1">Certifications</h3>
+                            <p className="text-sm text-muted-foreground">
+                                Add your professional certifications and credentials.
+                            </p>
                         </div>
+
+                        {/* Empty State */}
+                        {certifications.length === 0 ? (
+                            <div className="border rounded-xl p-12 text-center">
+                                <div className="inline-flex items-center justify-center size-14 rounded-full bg-blue-50 dark:bg-blue-900/30 mb-4">
+                                    <Award className="size-6 text-blue-600" />
+                                </div>
+                                <h4 className="text-lg font-semibold mb-2">You haven&apos;t added any certifications yet</h4>
+                                <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
+                                    Adding certifications will help validate your skills and expertise.
+                                </p>
+                                <div className="flex items-center justify-center gap-3">
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => setIsAddCertificationWithAIOpen(true)}
+                                    >
+                                        Add with AI
+                                    </Button>
+                                    <Button
+                                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                                        onClick={() => setIsAddCertificationOpen(true)}
+                                    >
+                                        <Plus className="size-4 mr-1" />
+                                        Add certification
+                                    </Button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                {/* Certifications List */}
+                                {certifications.map((cert) => (
+                                    <div key={cert.id} className="rounded-xl border bg-card p-6">
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex items-start gap-4">
+                                                <div className="size-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
+                                                    <Award className="size-5 text-gray-600 dark:text-gray-400" />
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-semibold">{cert.name}</h4>
+                                                    <p className="text-sm text-muted-foreground">{cert.issuingOrganization}</p>
+                                                    <p className="text-sm text-muted-foreground mt-1">
+                                                        Issued {cert.issueMonth} {cert.issueYear}
+                                                        {!cert.doesNotExpire && cert.expirationMonth && cert.expirationYear && (
+                                                            <> · Expires {cert.expirationMonth} {cert.expirationYear}</>
+                                                        )}
+                                                        {cert.doesNotExpire && " · No expiration"}
+                                                    </p>
+                                                    {cert.credentialId && (
+                                                        <p className="text-xs text-muted-foreground mt-1">Credential ID: {cert.credentialId}</p>
+                                                    )}
+                                                    {cert.credentialUrl && (
+                                                        <a href={cert.credentialUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:underline flex items-center gap-1 mt-1">
+                                                            View credential <ExternalLink className="size-3" />
+                                                        </a>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="text-muted-foreground hover:text-red-600"
+                                                onClick={() => removeCertification(cert.id)}
+                                            >
+                                                <Trash2 className="size-4" />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ))}
+
+                                {/* Add More Buttons */}
+                                <div className="flex items-center gap-3 pt-4">
+                                    <Button variant="outline" onClick={() => setIsAddCertificationWithAIOpen(true)}>
+                                        Add with AI
+                                    </Button>
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setIsAddCertificationOpen(true)}>
+                                        <Plus className="size-4 mr-1" />
+                                        Add certification
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
                     </TabsContent>
                 </Tabs>
 
@@ -1663,6 +1982,318 @@ export default function ProfilePage() {
                                     >
                                         Add education
                                     </Button>
+                                </div>
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Projects Modals */}
+                {/* Add Project with AI Modal */}
+                <AnimatePresence>
+                    {isAddProjectWithAIOpen && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.15 }}
+                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
+                            onClick={(e) => e.target === e.currentTarget && setIsAddProjectWithAIOpen(false)}
+                        >
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ duration: 0.15 }}
+                                className="w-full max-w-lg mx-4 bg-background rounded-xl shadow-2xl border border-border/50 flex flex-col max-h-[85vh]"
+                            >
+                                <div className="p-6 pb-0">
+                                    <div className="flex items-start gap-4">
+                                        <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
+                                            <Sparkles className="size-5 text-blue-600" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="text-lg font-semibold">Add project with AI</h3>
+                                            <p className="text-sm text-muted-foreground mt-1">
+                                                Paste in details about your project and let our AI extract the information for you.
+                                            </p>
+                                        </div>
+                                        <button onClick={() => setIsAddProjectWithAIOpen(false)} className="p-1 hover:bg-muted rounded-md">
+                                            <X className="size-4" />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="flex-1 overflow-y-auto p-6">
+                                    <div>
+                                        <label className="text-sm font-medium">Project details*</label>
+                                        <Textarea
+                                            value={aiProjectText}
+                                            onChange={(e) => setAiProjectText(e.target.value)}
+                                            placeholder="Paste project details here..."
+                                            className="mt-2 min-h-[120px] resize-none"
+                                            maxLength={16000}
+                                        />
+                                        <p className="text-xs text-muted-foreground mt-1">{(16000 - aiProjectText.length).toLocaleString()} characters left</p>
+                                    </div>
+                                </div>
+                                <div className="flex-shrink-0 px-6 py-4 border-t bg-muted/30 rounded-b-xl flex items-center justify-end gap-3">
+                                    <Button variant="outline" onClick={() => setIsAddProjectWithAIOpen(false)}>Cancel</Button>
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" disabled={!aiProjectText.trim()}>Add with AI</Button>
+                                </div>
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Add Project Modal */}
+                <AnimatePresence>
+                    {isAddProjectOpen && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.15 }}
+                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
+                            onClick={(e) => e.target === e.currentTarget && setIsAddProjectOpen(false)}
+                        >
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ duration: 0.15 }}
+                                className="w-full max-w-lg mx-4 bg-background rounded-xl shadow-2xl border border-border/50 flex flex-col max-h-[85vh]"
+                            >
+                                <div className="p-6 pb-0">
+                                    <div className="flex items-start gap-4">
+                                        <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
+                                            <FolderKanban className="size-5 text-blue-600" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="text-lg font-semibold">Add project</h3>
+                                            <p className="text-sm text-muted-foreground mt-1">Showcase your work and side projects.</p>
+                                        </div>
+                                        <button onClick={() => { resetProjectForm(); setIsAddProjectOpen(false); }} className="p-1 hover:bg-muted rounded-md">
+                                            <X className="size-4" />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="flex-1 overflow-y-auto p-6 space-y-5">
+                                    <div>
+                                        <label className="text-sm font-medium">Project name*</label>
+                                        <Input value={projName} onChange={(e) => setProjName(e.target.value.slice(0, 80))} placeholder="Ex: E-commerce Platform" className="mt-2" />
+                                        <p className="text-xs text-muted-foreground mt-1">80 characters</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium">Project URL</label>
+                                        <Input value={projUrl} onChange={(e) => setProjUrl(e.target.value)} placeholder="Ex: https://github.com/user/project" className="mt-2" />
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium">Description*</label>
+                                        <Textarea value={projDescription} onChange={(e) => setProjDescription(e.target.value.slice(0, 500))} placeholder="Describe your project, its purpose, and your role..." className="mt-2 min-h-[100px] resize-none" />
+                                        <p className="text-xs text-muted-foreground mt-1">500 characters</p>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium">Technologies</label>
+                                        {projTechnologies.length > 0 && (
+                                            <div className="flex flex-wrap gap-1.5 mt-2 mb-2">
+                                                {projTechnologies.map((tech) => (
+                                                    <span key={tech} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs rounded-md">
+                                                        {tech}
+                                                        <button onClick={() => removeTechFromProject(tech)} className="hover:text-red-600"><Minus className="size-3" /></button>
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
+                                        <div className="relative mt-2">
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                                            <Input value={projTechSearch} onChange={(e) => setProjTechSearch(e.target.value)} placeholder="Search technologies..." className="pl-10" />
+                                        </div>
+                                        {projTechSearch && (
+                                            <div className="mt-2 border rounded-lg max-h-32 overflow-y-auto">
+                                                {allTechs.filter(t => t.name.toLowerCase().includes(projTechSearch.toLowerCase()) && !projTechnologies.includes(t.name)).slice(0, 5).map((tech) => (
+                                                    <button key={tech.name} onClick={() => addTechToProject(tech.name)} className="w-full px-3 py-2 text-left text-sm hover:bg-muted flex items-center gap-2">
+                                                        <Plus className="size-3" /> {tech.name}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="text-sm font-medium">Start date</label>
+                                            <div className="grid grid-cols-2 gap-2 mt-2">
+                                                <Select value={projStartMonth} onValueChange={setProjStartMonth}>
+                                                    <SelectTrigger className="w-full"><SelectValue placeholder="Month" /></SelectTrigger>
+                                                    <SelectContent>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
+                                                </Select>
+                                                <Select value={projStartYear} onValueChange={setProjStartYear}>
+                                                    <SelectTrigger className="w-full"><SelectValue placeholder="Year" /></SelectTrigger>
+                                                    <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
+                                                </Select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="text-sm font-medium">End date</label>
+                                            <div className="grid grid-cols-2 gap-2 mt-2">
+                                                <Select value={projIsOngoing ? "Present" : projEndMonth} onValueChange={(val) => { if (val === "Present") { setProjIsOngoing(true); setProjEndMonth(""); setProjEndYear(""); } else { setProjIsOngoing(false); setProjEndMonth(val); } }}>
+                                                    <SelectTrigger className="w-full"><SelectValue placeholder="Month" /></SelectTrigger>
+                                                    <SelectContent><SelectItem value="Present">Present</SelectItem>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
+                                                </Select>
+                                                <Select value={projEndYear} onValueChange={setProjEndYear} disabled={projIsOngoing}>
+                                                    <SelectTrigger className={cn("w-full", projIsOngoing && "opacity-50")}><SelectValue placeholder="Year" /></SelectTrigger>
+                                                    <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
+                                                </Select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Checkbox id="ongoingProject" checked={projIsOngoing} onCheckedChange={(checked) => { setProjIsOngoing(checked as boolean); if (checked) { setProjEndMonth(""); setProjEndYear(""); } }} />
+                                        <label htmlFor="ongoingProject" className="text-sm cursor-pointer">This is an ongoing project</label>
+                                    </div>
+                                </div>
+                                <div className="flex-shrink-0 px-6 py-4 border-t bg-muted/30 rounded-b-xl flex items-center justify-end gap-3">
+                                    <Button variant="outline" onClick={() => { resetProjectForm(); setIsAddProjectOpen(false); }}>Cancel</Button>
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={addProject} disabled={!projName || !projDescription}>Add project</Button>
+                                </div>
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Certifications Modals */}
+                {/* Add Certification with AI Modal */}
+                <AnimatePresence>
+                    {isAddCertificationWithAIOpen && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.15 }}
+                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
+                            onClick={(e) => e.target === e.currentTarget && setIsAddCertificationWithAIOpen(false)}
+                        >
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ duration: 0.15 }}
+                                className="w-full max-w-lg mx-4 bg-background rounded-xl shadow-2xl border border-border/50 flex flex-col max-h-[85vh]"
+                            >
+                                <div className="p-6 pb-0">
+                                    <div className="flex items-start gap-4">
+                                        <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
+                                            <Sparkles className="size-5 text-blue-600" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="text-lg font-semibold">Add certification with AI</h3>
+                                            <p className="text-sm text-muted-foreground mt-1">Paste certification details and let our AI extract the information.</p>
+                                        </div>
+                                        <button onClick={() => setIsAddCertificationWithAIOpen(false)} className="p-1 hover:bg-muted rounded-md">
+                                            <X className="size-4" />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="flex-1 overflow-y-auto p-6">
+                                    <div>
+                                        <label className="text-sm font-medium">Certification details*</label>
+                                        <Textarea value={aiCertificationText} onChange={(e) => setAiCertificationText(e.target.value)} placeholder="Paste certification details here..." className="mt-2 min-h-[120px] resize-none" maxLength={16000} />
+                                        <p className="text-xs text-muted-foreground mt-1">{(16000 - aiCertificationText.length).toLocaleString()} characters left</p>
+                                    </div>
+                                </div>
+                                <div className="flex-shrink-0 px-6 py-4 border-t bg-muted/30 rounded-b-xl flex items-center justify-end gap-3">
+                                    <Button variant="outline" onClick={() => setIsAddCertificationWithAIOpen(false)}>Cancel</Button>
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" disabled={!aiCertificationText.trim()}>Add with AI</Button>
+                                </div>
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Add Certification Modal */}
+                <AnimatePresence>
+                    {isAddCertificationOpen && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.15 }}
+                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
+                            onClick={(e) => e.target === e.currentTarget && setIsAddCertificationOpen(false)}
+                        >
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ duration: 0.15 }}
+                                className="w-full max-w-lg mx-4 bg-background rounded-xl shadow-2xl border border-border/50 flex flex-col max-h-[85vh]"
+                            >
+                                <div className="p-6 pb-0">
+                                    <div className="flex items-start gap-4">
+                                        <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
+                                            <Award className="size-5 text-blue-600" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="text-lg font-semibold">Add certification</h3>
+                                            <p className="text-sm text-muted-foreground mt-1">Add your professional certifications and credentials.</p>
+                                        </div>
+                                        <button onClick={() => { resetCertificationForm(); setIsAddCertificationOpen(false); }} className="p-1 hover:bg-muted rounded-md">
+                                            <X className="size-4" />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="flex-1 overflow-y-auto p-6 space-y-5">
+                                    <div>
+                                        <label className="text-sm font-medium">Certification name*</label>
+                                        <Input value={certName} onChange={(e) => setCertName(e.target.value.slice(0, 100))} placeholder="Ex: AWS Solutions Architect" className="mt-2" />
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium">Issuing organization*</label>
+                                        <Input value={certIssuingOrg} onChange={(e) => setCertIssuingOrg(e.target.value)} placeholder="Ex: Amazon Web Services" className="mt-2" />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="text-sm font-medium">Issue date*</label>
+                                            <div className="grid grid-cols-2 gap-2 mt-2">
+                                                <Select value={certIssueMonth} onValueChange={setCertIssueMonth}>
+                                                    <SelectTrigger className="w-full"><SelectValue placeholder="Month" /></SelectTrigger>
+                                                    <SelectContent>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
+                                                </Select>
+                                                <Select value={certIssueYear} onValueChange={setCertIssueYear}>
+                                                    <SelectTrigger className="w-full"><SelectValue placeholder="Year" /></SelectTrigger>
+                                                    <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
+                                                </Select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="text-sm font-medium">Expiration date</label>
+                                            <div className="grid grid-cols-2 gap-2 mt-2">
+                                                <Select value={certDoesNotExpire ? "" : certExpirationMonth} onValueChange={setCertExpirationMonth} disabled={certDoesNotExpire}>
+                                                    <SelectTrigger className={cn("w-full", certDoesNotExpire && "opacity-50")}><SelectValue placeholder="Month" /></SelectTrigger>
+                                                    <SelectContent>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
+                                                </Select>
+                                                <Select value={certDoesNotExpire ? "" : certExpirationYear} onValueChange={setCertExpirationYear} disabled={certDoesNotExpire}>
+                                                    <SelectTrigger className={cn("w-full", certDoesNotExpire && "opacity-50")}><SelectValue placeholder="Year" /></SelectTrigger>
+                                                    <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
+                                                </Select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Checkbox id="noExpiration" checked={certDoesNotExpire} onCheckedChange={(checked) => { setCertDoesNotExpire(checked as boolean); if (checked) { setCertExpirationMonth(""); setCertExpirationYear(""); } }} />
+                                        <label htmlFor="noExpiration" className="text-sm cursor-pointer">This credential does not expire</label>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium">Credential ID</label>
+                                        <Input value={certCredentialId} onChange={(e) => setCertCredentialId(e.target.value)} placeholder="Ex: ABC123XYZ" className="mt-2" />
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium">Credential URL</label>
+                                        <Input value={certCredentialUrl} onChange={(e) => setCertCredentialUrl(e.target.value)} placeholder="Ex: https://verify.credential.com/..." className="mt-2" />
+                                    </div>
+                                </div>
+                                <div className="flex-shrink-0 px-6 py-4 border-t bg-muted/30 rounded-b-xl flex items-center justify-end gap-3">
+                                    <Button variant="outline" onClick={() => { resetCertificationForm(); setIsAddCertificationOpen(false); }}>Cancel</Button>
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={addCertification} disabled={!certName || !certIssuingOrg || !certIssueMonth || !certIssueYear}>Add certification</Button>
                                 </div>
                             </motion.div>
                         </motion.div>
