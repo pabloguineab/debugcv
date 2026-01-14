@@ -31,6 +31,11 @@ import {
 import { Slider } from "@/components/ui/slider";
 import getCroppedImg from "@/lib/crop-image";
 import { useBreadcrumb } from "@/contexts/breadcrumb-context";
+import {
+    fetchFullProfile, updateProfile, saveExperience, deleteExperience,
+    saveEducation, deleteEducation, saveProject, deleteProject,
+    saveCertification, deleteCertification
+} from "@/lib/actions/profile";
 
 export default function ProfilePage() {
     const [username, setUsername] = useState("lourdesbuendia");
@@ -72,16 +77,28 @@ export default function ProfilePage() {
         { value: "basic", label: "Basic" }
     ];
 
-    const addLanguage = () => {
+    const addLanguage = async () => {
         if (newLanguage && newLevel) {
-            setLanguages([...languages, { language: newLanguage, level: newLevel }]);
+            const newList = [...languages, { language: newLanguage, level: newLevel }];
+            setLanguages(newList);
             setNewLanguage("");
             setNewLevel("");
+            try {
+                await updateProfile({ languages: newList });
+            } catch (err) {
+                console.error("Failed to save language", err);
+            }
         }
     };
 
-    const removeLanguage = (index: number) => {
-        setLanguages(languages.filter((_, i) => i !== index));
+    const removeLanguage = async (index: number) => {
+        const newList = languages.filter((_, i) => i !== index);
+        setLanguages(newList);
+        try {
+            await updateProfile({ languages: newList });
+        } catch (err) {
+            console.error("Failed to save language", err);
+        }
     };
 
     // Tab titles mapping
@@ -99,6 +116,112 @@ export default function ProfilePage() {
         setBreadcrumbTab(tabTitles[activeTab] || null);
         return () => setBreadcrumbTab(null);
     }, [activeTab, setBreadcrumbTab]);
+
+    const [isLoadingData, setIsLoadingData] = useState(true);
+
+    // Load data from DB
+    useEffect(() => {
+        const loadData = async () => {
+            setIsLoadingData(true);
+            try {
+                const data = await fetchFullProfile();
+                console.log("Loaded profile data:", data);
+                if (data) {
+                    // Profile
+                    if (data.profile) {
+                        setLinkedinUrl(data.profile.linkedin_user || "");
+                        setGithubUrl(data.profile.github_user || "");
+                        setIntroduction(data.profile.bio || "");
+                        if (data.profile.tech_stack) setSelectedTechs(data.profile.tech_stack);
+                        if (data.profile.languages) setLanguages(Array.isArray(data.profile.languages) ? data.profile.languages : []);
+                    }
+
+                    // Experience
+                    if (data.experiences) {
+                        setExperiences(data.experiences.map((e: any) => ({
+                            id: e.id!,
+                            title: e.title,
+                            employmentType: e.employment_type,
+                            companyName: e.company_name,
+                            country: e.country || "",
+                            isCurrentRole: e.is_current,
+                            startMonth: e.start_month,
+                            startYear: e.start_year,
+                            endMonth: e.end_month,
+                            endYear: e.end_year,
+                            skills: e.skills || [],
+                            description: e.description
+                        })));
+                    }
+
+                    // Education
+                    if (data.educations) {
+                        setEducations(data.educations.map((e: any) => ({
+                            id: e.id!,
+                            school: e.school,
+                            schoolUrl: e.school_url || "",
+                            degree: e.degree || "",
+                            fieldOfStudy: e.field_of_study || "",
+                            grade: e.grade || "",
+                            activities: e.activities || "",
+                            description: e.description || "",
+                            isCurrentlyStudying: e.is_current,
+                            startYear: e.start_year,
+                            endYear: e.end_year
+                        })));
+                    }
+
+                    // Projects
+                    if (data.projects) {
+                        setProjects(data.projects.map((p: any) => ({
+                            id: p.id!,
+                            name: p.name,
+                            projectUrl: p.project_url || "",
+                            description: p.description || "",
+                            technologies: p.technologies || [],
+                            isOngoing: p.is_ongoing,
+                            startMonth: p.start_month || "",
+                            startYear: p.start_year || "",
+                            endMonth: p.end_month || "",
+                            endYear: p.end_year || ""
+                        })));
+                    }
+
+                    // Certifications
+                    if (data.certifications) {
+                        setCertifications(data.certifications.map((c: any) => ({
+                            id: c.id!,
+                            name: c.name,
+                            issuingOrganization: c.issuing_org,
+                            credentialId: c.credential_id || "",
+                            credentialUrl: c.credential_url || "",
+                            issueMonth: c.issue_month || "",
+                            issueYear: c.issue_year || "",
+                            expirationMonth: c.expiration_month || "",
+                            expirationYear: c.expiration_year || "",
+                            doesNotExpire: c.no_expiration || false,
+                            skills: c.skills || []
+                        })));
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to load profile data", error);
+            } finally {
+                setIsLoadingData(false);
+            }
+        };
+        loadData();
+    }, []);
+
+    // Auto-save location
+    useEffect(() => {
+        if (!isLoadingData && selectedCity && selectedRegion) {
+            const timer = setTimeout(() => {
+                updateProfile({ location: `${selectedCity}, ${selectedRegion}` }).catch(err => console.error("Auto-save location error", err));
+            }, 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [selectedCity, selectedRegion, isLoadingData]);
 
     // Tab subtitles mapping
     const tabSubtitles: Record<string, string> = {
@@ -197,12 +320,18 @@ export default function ProfilePage() {
         "postgressql", "git", "firebase", "vercel"
     ];
 
-    const toggleTech = (techId: string) => {
-        setSelectedTechs(prev =>
-            prev.includes(techId)
-                ? prev.filter(id => id !== techId)
-                : [...prev, techId]
-        );
+    const toggleTech = async (techId: string) => {
+        const newTechs = selectedTechs.includes(techId)
+            ? selectedTechs.filter(id => id !== techId)
+            : [...selectedTechs, techId];
+
+        setSelectedTechs(newTechs);
+
+        try {
+            await updateProfile({ tech_stack: newTechs });
+        } catch (err) {
+            console.error("Failed to save tech stack", err);
+        }
     };
 
     const groupedSelectedTechs = useMemo(() => {
@@ -320,30 +449,55 @@ export default function ProfilePage() {
         setExpDescription("");
     };
 
-    const addExperience = () => {
+    const addExperience = async () => {
         if (expTitle && expEmploymentType && expCompanyName && expStartMonth && expStartYear && expDescription) {
-            const newExp: Experience = {
-                id: Date.now().toString(),
-                title: expTitle,
-                employmentType: expEmploymentType,
-                companyName: expCompanyName,
-                country: expCountry,
-                isCurrentRole: expIsCurrentRole,
-                startMonth: expStartMonth,
-                startYear: expStartYear,
-                endMonth: expIsCurrentRole ? "" : expEndMonth,
-                endYear: expIsCurrentRole ? "" : expEndYear,
-                skills: expSkills,
-                description: expDescription,
-            };
-            setExperiences([...experiences, newExp]);
-            resetExperienceForm();
-            setIsAddExperienceOpen(false);
+            try {
+                const saved = await saveExperience({
+                    title: expTitle,
+                    employment_type: expEmploymentType,
+                    company_name: expCompanyName,
+                    country: expCountry,
+                    start_month: expStartMonth,
+                    start_year: expStartYear,
+                    end_month: expIsCurrentRole ? "" : expEndMonth,
+                    end_year: expIsCurrentRole ? "" : expEndYear,
+                    is_current: expIsCurrentRole,
+                    description: expDescription,
+                    skills: expSkills
+                });
+
+                if (saved) {
+                    const newExp: Experience = {
+                        id: saved.id,
+                        title: saved.title,
+                        employmentType: saved.employment_type,
+                        companyName: saved.company_name,
+                        country: saved.country || "",
+                        isCurrentRole: saved.is_current,
+                        startMonth: saved.start_month,
+                        startYear: saved.start_year,
+                        endMonth: saved.end_month,
+                        endYear: saved.end_year,
+                        skills: saved.skills || [],
+                        description: saved.description,
+                    };
+                    setExperiences([...experiences, newExp]);
+                    resetExperienceForm();
+                    setIsAddExperienceOpen(false);
+                }
+            } catch (err) {
+                console.error("Failed to save experience", err);
+            }
         }
     };
 
-    const removeExperience = (id: string) => {
+    const removeExperience = async (id: string) => {
         setExperiences(experiences.filter(exp => exp.id !== id));
+        try {
+            await deleteExperience(id);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     const addSkillToExperience = (skillName: string) => {
@@ -402,29 +556,53 @@ export default function ProfilePage() {
         setEduEndYear("");
     };
 
-    const addEducation = () => {
+    const addEducation = async () => {
         if (eduSchool && eduSchoolUrl && eduStartYear) {
-            const newEdu: Education = {
-                id: Date.now().toString(),
-                school: eduSchool,
-                schoolUrl: eduSchoolUrl,
-                degree: eduDegree,
-                fieldOfStudy: eduFieldOfStudy,
-                grade: eduGrade,
-                activities: eduActivities,
-                description: eduDescription,
-                isCurrentlyStudying: eduIsCurrentlyStudying,
-                startYear: eduStartYear,
-                endYear: eduIsCurrentlyStudying ? "" : eduEndYear,
-            };
-            setEducations([...educations, newEdu]);
-            resetEducationForm();
-            setIsAddEducationOpen(false);
+            try {
+                const saved = await saveEducation({
+                    school: eduSchool,
+                    school_url: eduSchoolUrl,
+                    degree: eduDegree,
+                    field_of_study: eduFieldOfStudy,
+                    grade: eduGrade,
+                    activities: eduActivities,
+                    description: eduDescription,
+                    start_year: eduStartYear,
+                    end_year: eduIsCurrentlyStudying ? "" : eduEndYear,
+                    is_current: eduIsCurrentlyStudying
+                });
+
+                if (saved) {
+                    const newEdu: Education = {
+                        id: saved.id,
+                        school: saved.school,
+                        schoolUrl: saved.school_url || "",
+                        degree: saved.degree || "",
+                        fieldOfStudy: saved.field_of_study || "",
+                        grade: saved.grade || "",
+                        activities: saved.activities || "",
+                        description: saved.description || "",
+                        isCurrentlyStudying: saved.is_current,
+                        startYear: saved.start_year,
+                        endYear: saved.end_year,
+                    };
+                    setEducations([...educations, newEdu]);
+                    resetEducationForm();
+                    setIsAddEducationOpen(false);
+                }
+            } catch (err) {
+                console.error("Failed to save education", err);
+            }
         }
     };
 
-    const removeEducation = (id: string) => {
+    const removeEducation = async (id: string) => {
         setEducations(educations.filter(edu => edu.id !== id));
+        try {
+            await deleteEducation(id);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     // Projects state
@@ -471,28 +649,51 @@ export default function ProfilePage() {
         setProjEndYear("");
     };
 
-    const addProject = () => {
+    const addProject = async () => {
         if (projName && projDescription) {
-            const newProj: Project = {
-                id: Date.now().toString(),
-                name: projName,
-                projectUrl: projUrl,
-                description: projDescription,
-                technologies: projTechnologies,
-                isOngoing: projIsOngoing,
-                startMonth: projStartMonth,
-                startYear: projStartYear,
-                endMonth: projIsOngoing ? "" : projEndMonth,
-                endYear: projIsOngoing ? "" : projEndYear,
-            };
-            setProjects([...projects, newProj]);
-            resetProjectForm();
-            setIsAddProjectOpen(false);
+            try {
+                const saved = await saveProject({
+                    name: projName,
+                    project_url: projUrl,
+                    description: projDescription,
+                    technologies: projTechnologies,
+                    is_ongoing: projIsOngoing,
+                    start_month: projStartMonth,
+                    start_year: projStartYear,
+                    end_month: projIsOngoing ? "" : projEndMonth,
+                    end_year: projIsOngoing ? "" : projEndYear
+                });
+
+                if (saved) {
+                    const newProj: Project = {
+                        id: saved.id,
+                        name: saved.name,
+                        projectUrl: saved.project_url || "",
+                        description: saved.description || "",
+                        technologies: saved.technologies || [],
+                        isOngoing: saved.is_ongoing,
+                        startMonth: saved.start_month || "",
+                        startYear: saved.start_year || "",
+                        endMonth: saved.end_month || "",
+                        endYear: saved.end_year || ""
+                    };
+                    setProjects([...projects, newProj]);
+                    resetProjectForm();
+                    setIsAddProjectOpen(false);
+                }
+            } catch (err) {
+                console.error("Failed to save project", err);
+            }
         }
     };
 
-    const removeProject = (id: string) => {
+    const removeProject = async (id: string) => {
         setProjects(projects.filter(proj => proj.id !== id));
+        try {
+            await deleteProject(id);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     const addTechToProject = (tech: string) => {
@@ -548,28 +749,65 @@ export default function ProfilePage() {
         setCertCredentialUrl("");
     };
 
-    const addCertification = () => {
+    const addCertification = async () => {
         if (certName && certIssuingOrg && certIssueMonth && certIssueYear) {
-            const newCert: Certification = {
-                id: Date.now().toString(),
-                name: certName,
-                issuingOrganization: certIssuingOrg,
-                issueMonth: certIssueMonth,
-                issueYear: certIssueYear,
-                expirationMonth: certDoesNotExpire ? "" : certExpirationMonth,
-                expirationYear: certDoesNotExpire ? "" : certExpirationYear,
-                doesNotExpire: certDoesNotExpire,
-                credentialId: certCredentialId,
-                credentialUrl: certCredentialUrl,
-            };
-            setCertifications([...certifications, newCert]);
-            resetCertificationForm();
-            setIsAddCertificationOpen(false);
+            try {
+                const saved = await saveCertification({
+                    name: certName,
+                    issuing_org: certIssuingOrg,
+                    issue_month: certIssueMonth,
+                    issue_year: certIssueYear,
+                    expiration_month: certDoesNotExpire ? "" : certExpirationMonth,
+                    expiration_year: certDoesNotExpire ? "" : certExpirationYear,
+                    no_expiration: certDoesNotExpire,
+                    credential_id: certCredentialId,
+                    credential_url: certCredentialUrl,
+                    skills: []
+                });
+
+                if (saved) {
+                    const newCert: Certification = {
+                        id: saved.id,
+                        name: saved.name,
+                        issuingOrganization: saved.issuing_org,
+                        issueMonth: saved.issue_month,
+                        issueYear: saved.issue_year,
+                        expirationMonth: saved.expiration_month,
+                        expirationYear: saved.expiration_year,
+                        doesNotExpire: saved.no_expiration,
+                        credentialId: saved.credential_id || "",
+                        credentialUrl: saved.credential_url || "",
+                    };
+                    setCertifications([...certifications, newCert]);
+                    resetCertificationForm();
+                    setIsAddCertificationOpen(false);
+                }
+            } catch (err) {
+                console.error("Failed to save certification", err);
+            }
         }
     };
 
-    const removeCertification = (id: string) => {
+    const removeCertification = async (id: string) => {
         setCertifications(certifications.filter(cert => cert.id !== id));
+        try {
+            await deleteCertification(id);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleSaveBasicInfo = async () => {
+        try {
+            await updateProfile({
+                linkedin_user: linkedinUrl,
+                github_user: githubUrl,
+                bio: introduction,
+                location: selectedCity ? `${selectedCity}, ${selectedRegion}` : (selectedRegion || undefined)
+            });
+        } catch (err) {
+            console.error("Failed to save basic info", err);
+        }
     };
 
     return (
@@ -716,6 +954,7 @@ export default function ProfilePage() {
                                             <Input
                                                 value={linkedinUrl}
                                                 onChange={(e) => setLinkedinUrl(e.target.value)}
+                                                onBlur={handleSaveBasicInfo}
                                                 placeholder="john-doe-dev"
                                                 spellCheck={false}
                                                 className="pl-14 h-11 text-sm rounded-lg border-gray-200 focus:border-blue-500 focus:ring-blue-500"
@@ -735,6 +974,7 @@ export default function ProfilePage() {
                                             <Input
                                                 value={githubUrl}
                                                 onChange={(e) => setGithubUrl(e.target.value)}
+                                                onBlur={handleSaveBasicInfo}
                                                 placeholder="johndoe"
                                                 spellCheck={false}
                                                 className="pl-14 h-11 text-sm rounded-lg border-gray-200 focus:border-blue-500 focus:ring-blue-500"
@@ -759,6 +999,7 @@ export default function ProfilePage() {
                                     <textarea
                                         value={introduction}
                                         onChange={(e) => setIntroduction(e.target.value)}
+                                        onBlur={handleSaveBasicInfo}
                                         placeholder="e.g. We're spread all over the world..."
                                         rows={3}
                                         className="w-full bg-white dark:bg-input/30 border border-gray-200 dark:border-input rounded-lg px-3 py-3 text-sm placeholder:text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-[3px] focus:ring-blue-500/20 transition-colors resize-none"
