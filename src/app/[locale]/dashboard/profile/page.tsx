@@ -5,6 +5,8 @@ import { Country, State, City, ICountry, IState, ICity } from "country-state-cit
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 
 import {
     Select,
@@ -15,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import { allTechs, TechItem } from "@/data/tech-stack";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus, Linkedin, Github, IdCard, Settings, Code, Briefcase, GraduationCap, CloudUpload, FolderKanban, Award, Languages, Trash2, Search, Check } from "lucide-react";
+import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus, Linkedin, Github, IdCard, Settings, Code, Briefcase, GraduationCap, CloudUpload, FolderKanban, Award, Languages, Trash2, Search, Check, Sparkles, Wand2, Flag, Building2, CalendarDays } from "lucide-react";
 import Image from "next/image";
 import Cropper from "react-easy-crop";
 import {
@@ -250,6 +252,104 @@ export default function ProfilePage() {
 
         return result.slice(0, GRID_SIZE);
     }, [techSearch]);
+
+    // Experience State
+    type Experience = {
+        id: string;
+        title: string;
+        employmentType: string;
+        companyName: string;
+        country: string;
+        isCurrentRole: boolean;
+        startMonth: string;
+        startYear: string;
+        endMonth: string;
+        endYear: string;
+        skills: string[];
+        description: string;
+    };
+
+    const [experiences, setExperiences] = useState<Experience[]>([]);
+    const [isAddExperienceOpen, setIsAddExperienceOpen] = useState(false);
+    const [isAddWithAIOpen, setIsAddWithAIOpen] = useState(false);
+
+    // Experience form state
+    const [expTitle, setExpTitle] = useState("");
+    const [expEmploymentType, setExpEmploymentType] = useState("");
+    const [expCompanyName, setExpCompanyName] = useState("");
+    const [expCountry, setExpCountry] = useState("");
+    const [expIsCurrentRole, setExpIsCurrentRole] = useState(false);
+    const [expStartMonth, setExpStartMonth] = useState("");
+    const [expStartYear, setExpStartYear] = useState("");
+    const [expEndMonth, setExpEndMonth] = useState("");
+    const [expEndYear, setExpEndYear] = useState("");
+    const [expSkills, setExpSkills] = useState<string[]>([]);
+    const [expSkillSearch, setExpSkillSearch] = useState("");
+    const [expDescription, setExpDescription] = useState("");
+    const [aiExperienceText, setAiExperienceText] = useState("");
+
+    const employmentTypes = [
+        "Full-time", "Part-time", "Contract", "Freelance", "Internship", "Self-employed"
+    ];
+
+    const months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    const years = Array.from({ length: 50 }, (_, i) => (new Date().getFullYear() - i).toString());
+
+    const resetExperienceForm = () => {
+        setExpTitle("");
+        setExpEmploymentType("");
+        setExpCompanyName("");
+        setExpCountry("");
+        setExpIsCurrentRole(false);
+        setExpStartMonth("");
+        setExpStartYear("");
+        setExpEndMonth("");
+        setExpEndYear("");
+        setExpSkills([]);
+        setExpSkillSearch("");
+        setExpDescription("");
+    };
+
+    const addExperience = () => {
+        if (expTitle && expEmploymentType && expCompanyName && expStartMonth && expStartYear && expDescription) {
+            const newExp: Experience = {
+                id: Date.now().toString(),
+                title: expTitle,
+                employmentType: expEmploymentType,
+                companyName: expCompanyName,
+                country: expCountry,
+                isCurrentRole: expIsCurrentRole,
+                startMonth: expStartMonth,
+                startYear: expStartYear,
+                endMonth: expIsCurrentRole ? "" : expEndMonth,
+                endYear: expIsCurrentRole ? "" : expEndYear,
+                skills: expSkills,
+                description: expDescription,
+            };
+            setExperiences([...experiences, newExp]);
+            resetExperienceForm();
+            setIsAddExperienceOpen(false);
+        }
+    };
+
+    const removeExperience = (id: string) => {
+        setExperiences(experiences.filter(exp => exp.id !== id));
+    };
+
+    const addSkillToExperience = (skillName: string) => {
+        if (!expSkills.includes(skillName)) {
+            setExpSkills([...expSkills, skillName]);
+        }
+        setExpSkillSearch("");
+    };
+
+    const removeSkillFromExperience = (skillName: string) => {
+        setExpSkills(expSkills.filter(s => s !== skillName));
+    };
 
     return (
         <div className="flex flex-col h-full w-full bg-background">
@@ -717,10 +817,346 @@ export default function ProfilePage() {
                         </div>
                     </TabsContent>
 
-                    <TabsContent value="experience" className="space-y-8 max-w-3xl">
-                        <div className="text-center py-12 text-muted-foreground">
-                            Experience content coming soon...
+                    <TabsContent value="experience" className="space-y-6">
+                        <div>
+                            <h3 className="text-lg font-medium mb-1">Experience</h3>
+                            <p className="text-sm text-muted-foreground">
+                                Add your experience to your profile to help us match you with the right opportunities.
+                            </p>
                         </div>
+
+                        {experiences.length === 0 ? (
+                            /* Empty State */
+                            <div className="border rounded-xl p-12 text-center">
+                                <div className="inline-flex items-center justify-center size-14 rounded-full bg-blue-50 dark:bg-blue-900/30 mb-4">
+                                    <Wand2 className="size-6 text-blue-600" />
+                                </div>
+                                <h4 className="text-lg font-semibold mb-2">You haven&apos;t added your work experience yet</h4>
+                                <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
+                                    Adding experience will help us match you with the right opportunities.
+                                </p>
+                                <div className="flex items-center justify-center gap-3">
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => setIsAddWithAIOpen(true)}
+                                    >
+                                        Add with AI
+                                    </Button>
+                                    <Button
+                                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                                        onClick={() => setIsAddExperienceOpen(true)}
+                                    >
+                                        <Plus className="size-4 mr-1" />
+                                        Add experience
+                                    </Button>
+                                </div>
+                            </div>
+                        ) : (
+                            /* Experience List */
+                            <div className="space-y-4">
+                                {experiences.map((exp) => (
+                                    <div key={exp.id} className="border rounded-xl p-5 relative group">
+                                        <button
+                                            onClick={() => removeExperience(exp.id)}
+                                            className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-red-50 dark:hover:bg-red-900/30 transition-all"
+                                        >
+                                            <Trash2 className="size-4 text-red-500" />
+                                        </button>
+                                        <div className="flex gap-4">
+                                            <div className="size-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
+                                                <Building2 className="size-6 text-muted-foreground" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <h4 className="font-semibold text-base">{exp.title}</h4>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {exp.companyName} · {exp.employmentType}
+                                                </p>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {exp.startMonth} {exp.startYear} - {exp.isCurrentRole ? "Present" : `${exp.endMonth} ${exp.endYear}`}
+                                                    {exp.country && ` · ${exp.country}`}
+                                                </p>
+                                                {exp.skills.length > 0 && (
+                                                    <div className="flex flex-wrap gap-1.5 mt-2">
+                                                        {exp.skills.map((skill) => (
+                                                            <span key={skill} className="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-xs rounded-md">
+                                                                {skill}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                                <p className="text-sm mt-2 line-clamp-2">{exp.description}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+
+                                {/* Add more button */}
+                                <div className="flex gap-3">
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => setIsAddWithAIOpen(true)}
+                                    >
+                                        Add with AI
+                                    </Button>
+                                    <Button
+                                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                                        onClick={() => setIsAddExperienceOpen(true)}
+                                    >
+                                        <Plus className="size-4 mr-1" />
+                                        Add experience
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Add with AI Dialog */}
+                        <Dialog open={isAddWithAIOpen} onOpenChange={setIsAddWithAIOpen}>
+                            <DialogContent className="sm:max-w-lg ml-[var(--sidebar-width,240px)] left-[calc(50%+var(--sidebar-width,120px))]">
+                                <DialogHeader>
+                                    <div className="flex items-start gap-4">
+                                        <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
+                                            <Sparkles className="size-5 text-blue-600" />
+                                        </div>
+                                        <div>
+                                            <DialogTitle className="text-lg">Add experience with AI</DialogTitle>
+                                            <p className="text-sm text-muted-foreground mt-1">
+                                                Paste in the relevant section from your resume or LinkedIn and let our AI extract your work experience for you.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </DialogHeader>
+                                <div className="space-y-4 mt-4">
+                                    <div>
+                                        <label className="text-sm font-medium">Experience*</label>
+                                        <Textarea
+                                            value={aiExperienceText}
+                                            onChange={(e) => setAiExperienceText(e.target.value)}
+                                            placeholder="Paste in the experience section from your resume or LinkedIn here..."
+                                            className="mt-2 min-h-[120px] resize-none"
+                                            maxLength={16000}
+                                        />
+                                        <p className="text-xs text-muted-foreground mt-1">
+                                            {(16000 - aiExperienceText.length).toLocaleString()} characters left
+                                        </p>
+                                    </div>
+                                </div>
+                                <DialogFooter className="mt-4">
+                                    <Button variant="outline" onClick={() => setIsAddWithAIOpen(false)}>
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                                        disabled={!aiExperienceText.trim()}
+                                    >
+                                        Add with AI
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+
+                        {/* Add Experience Dialog */}
+                        <Dialog open={isAddExperienceOpen} onOpenChange={setIsAddExperienceOpen}>
+                            <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto ml-[var(--sidebar-width,240px)] left-[calc(50%+var(--sidebar-width,120px))]">
+                                <DialogHeader>
+                                    <div className="flex items-start gap-4">
+                                        <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
+                                            <Flag className="size-5 text-blue-600" />
+                                        </div>
+                                        <div>
+                                            <DialogTitle className="text-lg">Add experience</DialogTitle>
+                                            <p className="text-sm text-muted-foreground mt-1">
+                                                Share a role and achievements on your profile.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </DialogHeader>
+                                <div className="space-y-5 mt-4">
+                                    {/* Title */}
+                                    <div>
+                                        <label className="text-sm font-medium">Title*</label>
+                                        <Input
+                                            value={expTitle}
+                                            onChange={(e) => setExpTitle(e.target.value.slice(0, 40))}
+                                            placeholder="Ex: Software Engineer"
+                                            className="mt-2"
+                                        />
+                                        <p className="text-xs text-muted-foreground mt-1">40 characters</p>
+                                    </div>
+
+                                    {/* Employment Type */}
+                                    <div>
+                                        <label className="text-sm font-medium">Employment type*</label>
+                                        <Select value={expEmploymentType} onValueChange={setExpEmploymentType}>
+                                            <SelectTrigger className="mt-2">
+                                                <SelectValue placeholder="Select employment type" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {employmentTypes.map((type) => (
+                                                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    {/* Company Name */}
+                                    <div>
+                                        <label className="text-sm font-medium">Company name*</label>
+                                        <div className="relative mt-2">
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                                            <Input
+                                                value={expCompanyName}
+                                                onChange={(e) => setExpCompanyName(e.target.value)}
+                                                placeholder="e.g. Himalayas"
+                                                className="pl-10"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Country */}
+                                    <div>
+                                        <label className="text-sm font-medium">Country</label>
+                                        <Select value={expCountry} onValueChange={setExpCountry}>
+                                            <SelectTrigger className="mt-2">
+                                                <Search className="size-4 text-muted-foreground mr-2" />
+                                                <SelectValue placeholder="Search for a country" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {Country.getAllCountries().map((c) => (
+                                                    <SelectItem key={c.isoCode} value={c.name}>{c.name}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    {/* Currently Working Checkbox */}
+                                    <div className="flex items-center gap-2">
+                                        <Checkbox
+                                            id="currentRole"
+                                            checked={expIsCurrentRole}
+                                            onCheckedChange={(checked) => setExpIsCurrentRole(checked as boolean)}
+                                        />
+                                        <label htmlFor="currentRole" className="text-sm cursor-pointer">
+                                            I am currently working in this role
+                                        </label>
+                                    </div>
+
+                                    {/* Start Date */}
+                                    <div>
+                                        <label className="text-sm font-medium">Start date*</label>
+                                        <div className="grid grid-cols-2 gap-3 mt-2">
+                                            <Select value={expStartMonth} onValueChange={setExpStartMonth}>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Month" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {months.map((m) => (
+                                                        <SelectItem key={m} value={m}>{m}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            <Select value={expStartYear} onValueChange={setExpStartYear}>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Year" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {years.map((y) => (
+                                                        <SelectItem key={y} value={y}>{y}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    </div>
+
+                                    {/* End Date */}
+                                    {!expIsCurrentRole && (
+                                        <div>
+                                            <label className="text-sm font-medium">End date*</label>
+                                            <div className="grid grid-cols-2 gap-3 mt-2">
+                                                <Select value={expEndMonth} onValueChange={setExpEndMonth}>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Month" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {months.map((m) => (
+                                                            <SelectItem key={m} value={m}>{m}</SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                                <Select value={expEndYear} onValueChange={setExpEndYear}>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Year" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {years.map((y) => (
+                                                            <SelectItem key={y} value={y}>{y}</SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Skills */}
+                                    <div>
+                                        <label className="text-sm font-medium">Skills</label>
+                                        {expSkills.length > 0 && (
+                                            <div className="flex flex-wrap gap-1.5 mt-2 mb-2">
+                                                {expSkills.map((skill) => (
+                                                    <span
+                                                        key={skill}
+                                                        className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-sm rounded-md"
+                                                    >
+                                                        {skill}
+                                                        <button onClick={() => removeSkillFromExperience(skill)}>
+                                                            <X className="size-3" />
+                                                        </button>
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
+                                        <div className="relative mt-2">
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                                            <Input
+                                                value={expSkillSearch}
+                                                onChange={(e) => setExpSkillSearch(e.target.value)}
+                                                placeholder="e.g. Next.js"
+                                                className="pl-10"
+                                                onKeyDown={(e) => {
+                                                    if (e.key === "Enter" && expSkillSearch.trim()) {
+                                                        addSkillToExperience(expSkillSearch.trim());
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Description */}
+                                    <div>
+                                        <label className="text-sm font-medium">Description*</label>
+                                        <Textarea
+                                            value={expDescription}
+                                            onChange={(e) => setExpDescription(e.target.value.slice(0, 400))}
+                                            placeholder="e.g. I was a software engineer at Google."
+                                            className="mt-2 min-h-[100px] resize-none"
+                                        />
+                                        <p className="text-xs text-muted-foreground mt-1">400 characters</p>
+                                    </div>
+                                </div>
+
+                                <DialogFooter className="mt-6">
+                                    <Button variant="outline" onClick={() => { resetExperienceForm(); setIsAddExperienceOpen(false); }}>
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                                        onClick={addExperience}
+                                        disabled={!expTitle || !expEmploymentType || !expCompanyName || !expStartMonth || !expStartYear || !expDescription}
+                                    >
+                                        Add experience
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
                     </TabsContent>
 
                     <TabsContent value="projects" className="space-y-8 max-w-3xl">
