@@ -37,8 +37,8 @@ export function DashboardHeader() {
     const dashboardIndex = segments.findIndex(s => s === 'dashboard');
     const pathSegments = dashboardIndex >= 0 ? segments.slice(dashboardIndex) : segments;
 
-    // Skip the 'dashboard' segment from breadcrumbs (we already have Home)
-    const filteredSegments = pathSegments.filter(s => s !== 'dashboard');
+    // Skip the 'dashboard' and 'resumes' segments from breadcrumbs (we already have Home)
+    const filteredSegments = pathSegments.filter(s => s !== 'dashboard' && s !== 'resumes');
 
     // Build breadcrumb items
     const breadcrumbItems = filteredSegments.map((segment, index) => {
