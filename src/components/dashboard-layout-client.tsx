@@ -37,7 +37,7 @@ export function DashboardLayoutClient({ children, user }: DashboardLayoutClientP
                 />
                 <SidebarInset>
                     <DashboardHeader />
-                    <div className="flex flex-1 flex-col gap-4 p-4 min-h-[calc(100vh-4rem)]">
+                    <div className="flex flex-1 flex-col gap-4 px-4 pt-2 pb-4 min-h-[calc(100vh-4rem)]">
                         {children}
                     </div>
                     <ReferFriendModal
