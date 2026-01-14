@@ -708,7 +708,7 @@ export default function ProfilePage() {
                                             <Input
                                                 value={linkedinUrl}
                                                 onChange={(e) => setLinkedinUrl(e.target.value)}
-                                                placeholder="richard-hendricks-pied"
+                                                placeholder="john-doe-dev"
                                                 spellCheck={false}
                                                 className="pl-14 h-11 text-sm rounded-lg border-gray-200 focus:border-blue-500 focus:ring-blue-500"
                                             />
@@ -727,7 +727,7 @@ export default function ProfilePage() {
                                             <Input
                                                 value={githubUrl}
                                                 onChange={(e) => setGithubUrl(e.target.value)}
-                                                placeholder="piedpiper"
+                                                placeholder="johndoe"
                                                 spellCheck={false}
                                                 className="pl-14 h-11 text-sm rounded-lg border-gray-200 focus:border-blue-500 focus:ring-blue-500"
                                             />
