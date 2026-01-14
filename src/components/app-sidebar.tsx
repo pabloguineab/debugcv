@@ -189,8 +189,8 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                         <SidebarMenu>
                             {/* Profile Collapsible */}
                             <SidebarMenuItem>
-                                <Accordion type="single" collapsible className="w-full border-none rounded-none shadow-none">
-                                    <AccordionItem value="profile" className="border-none data-[state=open]:bg-transparent shadow-none">
+                                <Accordion type="single" collapsible className="w-full border-none rounded-none shadow-none bg-transparent">
+                                    <AccordionItem value="profile" className="border-none data-open:bg-transparent bg-transparent shadow-none">
                                         <AccordionTrigger
                                             className="p-0 hover:underline-none hover:no-underline border-none data-[state=open]:bg-transparent [&>svg]:hidden shadow-none"
                                         >
