@@ -11,6 +11,14 @@ export default async function DashboardLayout({ children }: { children: React.Re
         redirect("/auth/signin");
     }
 
+    // Check if new user (from session flag) or incomplete profile (missing password_hash check if needed, though isNewUser flag is cleaner for strictly first-time)
+    // We cast to any because isNewUser is added in the session callback
+    const isNewUser = (session.user as any)?.isNewUser;
+
+    if (isNewUser) {
+        redirect("/auth/onboarding");
+    }
+
     // Fetch the real user identity from Supabase (in case it has been updated)
     let user = session.user;
 

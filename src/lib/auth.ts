@@ -163,6 +163,7 @@ export const authOptions: AuthOptions = {
                         token.identityName = user.name;
                         token.identityEmail = user.email;
                         token.identityPicture = user.image;
+                        token.isNewUser = true; // Flag for client-side redirection
 
                         if (account.provider === 'linkedin') {
                             token.linkedInId = profile?.sub;
@@ -253,6 +254,8 @@ export const authOptions: AuthOptions = {
                 (session.user as any).accessToken = token.accessToken;
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (session.user as any).googleAccessToken = token.googleAccessToken;
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (session.user as any).isNewUser = token.isNewUser;
 
                 // CRITICAL: Load original identity from token
                 // Always prefer the preserved identity over current token values

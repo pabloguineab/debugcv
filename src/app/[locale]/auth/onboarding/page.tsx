@@ -21,7 +21,7 @@ import Link from "next/link"
 export default function OnboardingPage() {
     const router = useRouter()
     const searchParams = useSearchParams()
-    const { data: session } = useSession()
+    const { data: session, update } = useSession()
 
     // Prefer session email if available, otherwise fallback to searchParams
     const email = session?.user?.email || searchParams.get('email') || ''
@@ -84,6 +84,9 @@ export default function OnboardingPage() {
                 setIsLoading(false);
                 return;
             }
+
+            // Force session update to clear isNewUser flag
+            await update();
 
             // Success - redirect to upload resume page
             window.location.href = `/auth/upload-resume?email=${encodeURIComponent(email)}`;
