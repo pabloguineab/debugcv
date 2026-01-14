@@ -997,20 +997,26 @@ export default function ProfilePage() {
 
                         {/* Empty State */}
                         {educations.length === 0 ? (
-                            <div className="rounded-xl border bg-card p-8 flex flex-col items-center justify-center text-center">
-                                <div className="size-12 rounded-full bg-muted flex items-center justify-center mb-4">
-                                    <GraduationCap className="size-5 text-muted-foreground" />
+                            <div className="border rounded-xl p-12 text-center">
+                                <div className="inline-flex items-center justify-center size-14 rounded-full bg-blue-50 dark:bg-blue-900/30 mb-4">
+                                    <GraduationCap className="size-6 text-blue-600" />
                                 </div>
-                                <h4 className="text-lg font-medium mb-1">You haven't added your education yet</h4>
-                                <p className="text-sm text-muted-foreground mb-6 max-w-sm">
+                                <h4 className="text-lg font-semibold mb-2">You haven&apos;t added your education yet</h4>
+                                <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
                                     Adding education will help you attract the right opportunities.
                                 </p>
-                                <div className="flex items-center gap-3">
-                                    <Button variant="outline" onClick={() => setIsAddEducationWithAIOpen(true)}>
+                                <div className="flex items-center justify-center gap-3">
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => setIsAddEducationWithAIOpen(true)}
+                                    >
                                         Add with AI
                                     </Button>
-                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white gap-2" onClick={() => setIsAddEducationOpen(true)}>
-                                        <Plus className="size-4" />
+                                    <Button
+                                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                                        onClick={() => setIsAddEducationOpen(true)}
+                                    >
+                                        <Plus className="size-4 mr-1" />
                                         Add education
                                     </Button>
                                 </div>
