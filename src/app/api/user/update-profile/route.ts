@@ -38,12 +38,39 @@ export async function POST(req: Request) {
 
         console.log('[update-profile] Upserting user:', userEmail, 'with fields:', Object.keys(upsertData));
 
-        // Upsert user identity in Supabase (insert if not exists, update if exists)
-        const { data, error } = await supabase
+        // Check if user exists
+        const { data: existingUser } = await supabase
             .from('user_identities')
-            .upsert(upsertData, { onConflict: 'user_email' })
-            .select()
+            .select('provider')
+            .eq('user_email', userEmail)
             .single();
+
+        let error;
+        let data;
+
+        if (existingUser) {
+            // Update existing user (don't touch provider)
+            const { error: updateError, data: updateData } = await supabase
+                .from('user_identities')
+                .update(upsertData)
+                .eq('user_email', userEmail)
+                .select()
+                .single();
+            error = updateError;
+            data = updateData;
+        } else {
+            // Insert new user (set default provider)
+            const { error: insertError, data: insertData } = await supabase
+                .from('user_identities')
+                .insert({
+                    ...upsertData,
+                    provider: 'email' // Default provider for new users here
+                })
+                .select()
+                .single();
+            error = insertError;
+            data = insertData;
+        }
 
         if (error) {
             console.error("[update-profile] Supabase error:", error);
