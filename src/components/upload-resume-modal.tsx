@@ -137,7 +137,7 @@ export function UploadResumeModal({
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.15 }}
-                    className="fixed inset-y-0 right-0 z-40 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
+                    className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-black/5 backdrop-blur-md p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
                     onClick={handleOverlayClick}
                 >
                     <motion.div
