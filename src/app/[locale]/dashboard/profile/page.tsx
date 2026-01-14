@@ -85,7 +85,6 @@ export default function ProfilePage() {
     // Tab titles mapping
     const tabTitles: Record<string, string> = {
         overview: "Overview",
-        preferences: "Your Preferences",
         "tech-stack": "Your Tech Stack",
         experience: "Your Experience",
         projects: "Your Projects",
@@ -96,7 +95,6 @@ export default function ProfilePage() {
     // Tab subtitles mapping
     const tabSubtitles: Record<string, string> = {
         overview: "Complete your profile to get matched with relevant jobs",
-        preferences: "Set your job preferences and work style",
         "tech-stack": "Add your technical skills and expertise",
         experience: "Showcase your professional experience",
         projects: "Highlight your personal and professional projects",
@@ -107,7 +105,6 @@ export default function ProfilePage() {
     // Tab icons mapping
     const tabIcons: Record<string, React.ComponentType<{ className?: string }>> = {
         overview: IdCard,
-        preferences: Settings,
         "tech-stack": Code,
         experience: Briefcase,
         projects: FolderKanban,
@@ -605,12 +602,6 @@ export default function ProfilePage() {
                             Overview
                         </TabsTrigger>
                         <TabsTrigger
-                            value="preferences"
-                            className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
-                        >
-                            Preferences
-                        </TabsTrigger>
-                        <TabsTrigger
                             value="tech-stack"
                             className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
                         >
@@ -938,12 +929,6 @@ export default function ProfilePage() {
                                 </div>
                             </div>
 
-                        </div>
-                    </TabsContent>
-
-                    <TabsContent value="preferences" className="space-y-8 max-w-3xl">
-                        <div className="text-center py-12 text-muted-foreground">
-                            Preferences content coming soon...
                         </div>
                     </TabsContent>
 
