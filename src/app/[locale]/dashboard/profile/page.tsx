@@ -380,7 +380,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Content using Tabs */}
-            <div className="flex-1 overflow-auto p-8 relative">
+            <div className="flex-1 overflow-auto p-8">
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList variant="line" className="flex items-center justify-start bg-transparent border-b h-auto p-0 mb-8 rounded-none w-fit gap-8">
                         <TabsTrigger
@@ -939,7 +939,7 @@ export default function ProfilePage() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.15 }}
-                            className="absolute inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm rounded-xl"
+                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
                             onClick={(e) => e.target === e.currentTarget && setIsAddWithAIOpen(false)}
                         >
                             <motion.div
@@ -1009,7 +1009,7 @@ export default function ProfilePage() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.15 }}
-                            className="absolute inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm rounded-xl"
+                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
                             onClick={(e) => e.target === e.currentTarget && setIsAddExperienceOpen(false)}
                         >
                             <motion.div
