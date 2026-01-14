@@ -57,7 +57,7 @@ export function WelcomePreloader({ userName, onComplete, duration = 2500 }: Welc
             filter: "blur(10px)",
             transition: {
                 duration: 0.6,
-                ease: [0.96, -0.02, 0.38, 1.01],
+                ease: [0.96, -0.02, 0.38, 1.01] as const,
             },
         },
     };
@@ -73,7 +73,7 @@ export function WelcomePreloader({ userName, onComplete, duration = 2500 }: Welc
             opacity: 1,
             filter: "blur(0px)",
             transition: {
-                type: "spring",
+                type: "spring" as const,
                 damping: 20,
                 stiffness: 100,
                 duration: 0.9,
@@ -91,7 +91,7 @@ export function WelcomePreloader({ userName, onComplete, duration = 2500 }: Welc
             y: -100,
             transition: {
                 duration: 0.8,
-                ease: [0.96, -0.02, 0.38, 1.01],
+                ease: [0.96, -0.02, 0.38, 1.01] as const,
             },
         },
     };
