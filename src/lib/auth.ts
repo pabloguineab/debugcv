@@ -136,7 +136,13 @@ export const authOptions: AuthOptions = {
         signIn: "/auth/signin",
     },
     callbacks: {
-        async jwt({ token, account, profile, user }) {
+        async jwt({ token, account, profile, user, trigger, session }) {
+            // Handle session update (e.g. clearing isNewUser flag)
+            if (trigger === "update" && session?.isNewUser === false) {
+                console.log("[JWT] Clearing isNewUser flag via session update");
+                token.isNewUser = false;
+            }
+
             // When account exists, it means this is a sign-in event
             if (account && user?.email) {
                 try {
@@ -241,6 +247,7 @@ export const authOptions: AuthOptions = {
             }
 
             return token;
+
         },
         async session({ session, token }) {
             if (session.user) {

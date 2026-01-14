@@ -86,7 +86,7 @@ export default function OnboardingPage() {
             }
 
             // Force session update to clear isNewUser flag
-            await update();
+            await update({ isNewUser: false });
 
             // Success - redirect to upload resume page
             window.location.href = `/auth/upload-resume?email=${encodeURIComponent(email)}`;
