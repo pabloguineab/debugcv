@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Fragment } from "react";
+import { useBreadcrumb } from "@/contexts/breadcrumb-context";
 
 const routeNames: Record<string, string> = {
     "dashboard": "Dashboard",
@@ -28,6 +29,7 @@ const routeNames: Record<string, string> = {
 
 export function DashboardHeader() {
     const pathname = usePathname();
+    const { activeTab } = useBreadcrumb();
 
     // Extract the path segments after locale (e.g., /en/dashboard/playbooks/strategy -> ['dashboard', 'playbooks', 'strategy'])
     const segments = pathname?.split('/').filter(Boolean) || [];
@@ -43,7 +45,7 @@ export function DashboardHeader() {
         const name = routeNames[segment] || segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ');
         // Build the full path including dashboard prefix
         const href = '/dashboard/' + filteredSegments.slice(0, index + 1).join('/');
-        const isLast = index === filteredSegments.length - 1;
+        const isLast = index === filteredSegments.length - 1 && !activeTab;
 
         return { name, href, isLast };
     });
@@ -69,6 +71,14 @@ export function DashboardHeader() {
                             </BreadcrumbItem>
                         </Fragment>
                     ))}
+                    {activeTab && (
+                        <Fragment>
+                            <BreadcrumbSeparator className="hidden md:block" />
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>{activeTab}</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </Fragment>
+                    )}
                 </BreadcrumbList>
             </Breadcrumb>
 
@@ -80,4 +90,3 @@ export function DashboardHeader() {
         </header>
     );
 }
-

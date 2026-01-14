@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Country, State, City, ICountry, IState, ICity } from "country-state-city";
 import { cn } from "@/lib/utils";
@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
 import getCroppedImg from "@/lib/crop-image";
+import { useBreadcrumb } from "@/contexts/breadcrumb-context";
 
 export default function ProfilePage() {
     const [username, setUsername] = useState("lourdesbuendia");
@@ -48,6 +49,7 @@ export default function ProfilePage() {
     const [introduction, setIntroduction] = useState<string>("");
     const [userName, setUserName] = useState<string>("Lourdes Buendia"); // TODO: Get from user session
     const [activeTab, setActiveTab] = useState<string>("overview");
+    const { setActiveTab: setBreadcrumbTab } = useBreadcrumb();
 
     // Languages state
     const [languages, setLanguages] = useState<{ language: string; level: string }[]>([]);
@@ -85,12 +87,18 @@ export default function ProfilePage() {
     // Tab titles mapping
     const tabTitles: Record<string, string> = {
         overview: "Overview",
-        "tech-stack": "Your Tech Stack",
-        experience: "Your Experience",
-        projects: "Your Projects",
-        education: "Your Education",
-        certifications: "Your Certifications"
+        "tech-stack": "Tech Stack",
+        experience: "Experience",
+        projects: "Projects",
+        education: "Education",
+        certifications: "Certifications"
     };
+
+    // Sync active tab with breadcrumb context
+    useEffect(() => {
+        setBreadcrumbTab(tabTitles[activeTab] || null);
+        return () => setBreadcrumbTab(null);
+    }, [activeTab, setBreadcrumbTab]);
 
     // Tab subtitles mapping
     const tabSubtitles: Record<string, string> = {

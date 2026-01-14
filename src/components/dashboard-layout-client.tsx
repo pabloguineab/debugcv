@@ -6,6 +6,7 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { ReferFriendModal } from "@/components/refer-friend-modal";
 import { UploadResumeModal } from "@/components/upload-resume-modal";
+import { BreadcrumbProvider } from "@/contexts/breadcrumb-context";
 
 interface DashboardLayoutClientProps {
     children: React.ReactNode;
@@ -21,32 +22,34 @@ export function DashboardLayoutClient({ children, user }: DashboardLayoutClientP
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
     return (
-        <SidebarProvider>
-            <AppSidebar
-                user={user}
-                onOpenReferModal={() => {
-                    setIsReferModalOpen(true);
-                    setIsUploadModalOpen(false);
-                }}
-                onOpenUploadModal={() => {
-                    setIsUploadModalOpen(true);
-                    setIsReferModalOpen(false);
-                }}
-            />
-            <SidebarInset>
-                <DashboardHeader />
-                <div className="flex flex-1 flex-col gap-4 p-4 min-h-[calc(100vh-4rem)]">
-                    {children}
-                </div>
-                <ReferFriendModal
-                    open={isReferModalOpen}
-                    onClose={() => setIsReferModalOpen(false)}
+        <BreadcrumbProvider>
+            <SidebarProvider>
+                <AppSidebar
+                    user={user}
+                    onOpenReferModal={() => {
+                        setIsReferModalOpen(true);
+                        setIsUploadModalOpen(false);
+                    }}
+                    onOpenUploadModal={() => {
+                        setIsUploadModalOpen(true);
+                        setIsReferModalOpen(false);
+                    }}
                 />
-                <UploadResumeModal
-                    open={isUploadModalOpen}
-                    onClose={() => setIsUploadModalOpen(false)}
-                />
-            </SidebarInset>
-        </SidebarProvider>
+                <SidebarInset>
+                    <DashboardHeader />
+                    <div className="flex flex-1 flex-col gap-4 p-4 min-h-[calc(100vh-4rem)]">
+                        {children}
+                    </div>
+                    <ReferFriendModal
+                        open={isReferModalOpen}
+                        onClose={() => setIsReferModalOpen(false)}
+                    />
+                    <UploadResumeModal
+                        open={isUploadModalOpen}
+                        onClose={() => setIsUploadModalOpen(false)}
+                    />
+                </SidebarInset>
+            </SidebarProvider>
+        </BreadcrumbProvider>
     );
 }
