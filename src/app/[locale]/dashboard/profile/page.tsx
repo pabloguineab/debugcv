@@ -29,6 +29,7 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
+import { Skeleton } from "@/components/ui/skeleton";
 import getCroppedImg from "@/lib/crop-image";
 import { useBreadcrumb } from "@/contexts/breadcrumb-context";
 import {
@@ -809,6 +810,62 @@ export default function ProfilePage() {
             console.error("Failed to save basic info", err);
         }
     };
+
+    if (isLoadingData) {
+        return (
+            <div className="flex flex-col h-full w-full bg-background animate-in fade-in duration-300">
+                {/* Header Skeleton */}
+                <div className="flex items-center justify-between px-8 py-6 border-b">
+                    <div>
+                        <Skeleton className="h-8 w-48 mb-2" />
+                        <Skeleton className="h-4 w-64" />
+                    </div>
+                    <Skeleton className="h-9 w-32" />
+                </div>
+
+                {/* Content Skeleton area */}
+                <div className="flex-1 overflow-auto px-8 py-6">
+                    {/* Tabs Skeleton */}
+                    <div className="flex gap-8 mb-8 border-b pb-0">
+                        {[1, 2, 3, 4, 5, 6].map((i) => (
+                            <div key={i} className="pb-3">
+                                <Skeleton className="h-6 w-24" />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Overview Form Skeleton */}
+                    <div className="space-y-12 max-w-4xl py-4">
+                        {/* Photo Section */}
+                        <div className="flex items-start justify-between gap-12 pb-8 border-b border-border/50">
+                            <div className="space-y-3 max-w-xs">
+                                <Skeleton className="h-5 w-32" />
+                                <Skeleton className="h-20 w-full" />
+                            </div>
+                            <div className="flex items-center gap-8 flex-1">
+                                <Skeleton className="size-24 rounded-full" />
+                                <Skeleton className="h-32 flex-1 rounded-xl border border-dashed border-gray-200" />
+                            </div>
+                        </div>
+
+                        {/* Form Fields */}
+                        {[1, 2, 3].map((i) => (
+                            <div key={i} className="grid grid-cols-[200px_1fr] gap-12 items-start py-6 border-b border-border/50">
+                                <div className="space-y-3">
+                                    <Skeleton className="h-5 w-40" />
+                                    <Skeleton className="h-4 w-56 opacity-60" />
+                                </div>
+                                <div className="space-y-4">
+                                    <Skeleton className="h-11 w-full max-w-md rounded-lg" />
+                                    {i === 2 && <Skeleton className="h-11 w-full max-w-md rounded-lg" />}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col h-full w-full bg-background">
