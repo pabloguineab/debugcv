@@ -35,11 +35,15 @@ export function DashboardHeader() {
     const dashboardIndex = segments.findIndex(s => s === 'dashboard');
     const pathSegments = dashboardIndex >= 0 ? segments.slice(dashboardIndex) : segments;
 
+    // Skip the 'dashboard' segment from breadcrumbs (we already have Home)
+    const filteredSegments = pathSegments.filter(s => s !== 'dashboard');
+
     // Build breadcrumb items
-    const breadcrumbItems = pathSegments.map((segment, index) => {
+    const breadcrumbItems = filteredSegments.map((segment, index) => {
         const name = routeNames[segment] || segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ');
-        const href = '/' + pathSegments.slice(0, index + 1).join('/');
-        const isLast = index === pathSegments.length - 1;
+        // Build the full path including dashboard prefix
+        const href = '/dashboard/' + filteredSegments.slice(0, index + 1).join('/');
+        const isLast = index === filteredSegments.length - 1;
 
         return { name, href, isLast };
     });
@@ -53,7 +57,7 @@ export function DashboardHeader() {
                     <BreadcrumbItem className="hidden md:block">
                         <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
                     </BreadcrumbItem>
-                    {breadcrumbItems.map((item, index) => (
+                    {breadcrumbItems.map((item) => (
                         <Fragment key={item.href}>
                             <BreadcrumbSeparator className="hidden md:block" />
                             <BreadcrumbItem>
