@@ -23,7 +23,6 @@ export async function POST(req: Request) {
         // Prepare upsert data
         const upsertData: Record<string, string> = {
             user_email: userEmail,
-            provider: 'otp',
             name: name.trim(),
             email: userEmail,
             updated_at: new Date().toISOString(),

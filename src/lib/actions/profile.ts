@@ -14,6 +14,9 @@ export type ProfileData = {
     portfolio_url?: string;
     bio?: string;
     location?: string;
+    image_url?: string;
+    resume_url?: string;
+    full_name?: string;
     tech_stack?: string[];
     languages?: { language: string, level: string }[];
 }

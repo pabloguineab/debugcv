@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { useSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -20,13 +21,30 @@ import Link from "next/link"
 export default function OnboardingPage() {
     const router = useRouter()
     const searchParams = useSearchParams()
-    const email = searchParams.get('email') || ''
+    const { data: session } = useSession()
 
+    // Prefer session email if available, otherwise fallback to searchParams
+    const email = session?.user?.email || searchParams.get('email') || ''
+
+    // State
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const [showPassword, setShowPassword] = useState(false)
+
+    // Pre-fill from session
+    useEffect(() => {
+        if (session?.user?.name) {
+            const parts = session.user.name.trim().split(' ');
+            if (parts.length > 0) {
+                setFirstName(parts[0]);
+                if (parts.length > 1) {
+                    setLastName(parts.slice(1).join(' '));
+                }
+            }
+        }
+    }, [session]);
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 

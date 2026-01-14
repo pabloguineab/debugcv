@@ -10,6 +10,9 @@ CREATE TABLE IF NOT EXISTS profiles (
     portfolio_url TEXT,
     bio TEXT,
     location TEXT,
+    image_url TEXT,
+    resume_url TEXT,
+    full_name TEXT,
     tech_stack TEXT[], -- Array of tech IDs
     languages JSONB, -- Array of {language, level} objects
     created_at TIMESTAMPTZ DEFAULT NOW(),

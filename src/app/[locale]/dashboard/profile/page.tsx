@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useMemo, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Country, State, City, ICountry, IState, ICity } from "country-state-city";
 import { cn } from "@/lib/utils";
@@ -39,6 +40,7 @@ import {
 } from "@/lib/actions/profile";
 
 export default function ProfilePage() {
+    const { data: session } = useSession();
     const [username, setUsername] = useState("lourdesbuendia");
     const [profileImage, setProfileImage] = useState<string | null>(null);
     const [imageToCrop, setImageToCrop] = useState<string | null>(null);
@@ -53,7 +55,7 @@ export default function ProfilePage() {
     const [linkedinUrl, setLinkedinUrl] = useState<string>("");
     const [githubUrl, setGithubUrl] = useState<string>("");
     const [introduction, setIntroduction] = useState<string>("");
-    const [userName, setUserName] = useState<string>("Lourdes Buendia"); // TODO: Get from user session
+    const [userName, setUserName] = useState<string>("");
     const [activeTab, setActiveTab] = useState<string>("overview");
     const { setActiveTab: setBreadcrumbTab } = useBreadcrumb();
 
@@ -135,6 +137,8 @@ export default function ProfilePage() {
                         setIntroduction(data.profile.bio || "");
                         if (data.profile.tech_stack) setSelectedTechs(data.profile.tech_stack);
                         if (data.profile.languages) setLanguages(Array.isArray(data.profile.languages) ? data.profile.languages : []);
+                        if (data.profile.image_url) setProfileImage(data.profile.image_url);
+                        if (data.profile.full_name) setUserName(data.profile.full_name);
                     }
 
                     // Experience
@@ -213,6 +217,14 @@ export default function ProfilePage() {
         };
         loadData();
     }, []);
+
+    // Sync session data if profile data is missing
+    useEffect(() => {
+        if (!isLoadingData && session?.user) {
+            setProfileImage(prev => prev || session.user?.image || null);
+            setUserName(prev => prev || session.user?.name || "");
+        }
+    }, [session, isLoadingData]);
 
     // Auto-save location
     useEffect(() => {
@@ -295,6 +307,10 @@ export default function ProfilePage() {
             try {
                 const croppedImage = await getCroppedImg(imageToCrop, croppedAreaPixels);
                 setProfileImage(croppedImage);
+
+                // Save to backend
+                await updateProfile({ image_url: croppedImage });
+
                 setIsCropDialogOpen(false);
                 setImageToCrop(null);
             } catch (e) {
