@@ -2,6 +2,7 @@
 
 import { useState, useRef, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { useSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Upload, FileText, X, Loader2 } from "lucide-react"
 import Link from "next/link"
@@ -9,7 +10,9 @@ import Link from "next/link"
 function UploadResumeContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
+    const { data: session } = useSession()
     const email = searchParams.get('email') || ''
+    const userName = session?.user?.name || ''
 
     const [file, setFile] = useState<File | null>(null)
     const [isDragging, setIsDragging] = useState(false)
@@ -70,8 +73,8 @@ function UploadResumeContent() {
                 return
             }
 
-            // Success - redirect to dashboard
-            window.location.href = "/dashboard"
+            // Success - redirect to welcome page
+            window.location.href = `/auth/welcome?name=${encodeURIComponent(userName)}`
         } catch (err) {
             console.error('Error uploading resume:', err)
             setError("An error occurred. Please try again.")
@@ -80,7 +83,7 @@ function UploadResumeContent() {
     }
 
     const handleSkip = () => {
-        window.location.href = "/dashboard"
+        window.location.href = `/auth/welcome?name=${encodeURIComponent(userName)}`
     }
 
     return (

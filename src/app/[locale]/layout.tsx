@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Instrument_Serif } from "next/font/google";
 import "@/app/globals.css";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
@@ -9,6 +9,12 @@ import { Providers } from "@/components/providers";
 import NextTopLoader from 'nextjs-toploader';
 
 const inter = Inter({ subsets: ["latin"] });
+const instrumentSerif = Instrument_Serif({
+  weight: "400",
+  subsets: ["latin"],
+  style: "italic",
+  variable: "--font-instrument-serif"
+});
 
 export const metadata: Metadata = {
   title: "DebugCV",
@@ -34,7 +40,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={`${inter.className} ${instrumentSerif.variable}`}>
         <NextTopLoader color="#2563eb" showSpinner={false} height={3} />
         <Providers>
           <NextIntlClientProvider messages={messages}>
