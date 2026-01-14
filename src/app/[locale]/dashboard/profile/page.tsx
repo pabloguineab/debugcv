@@ -352,6 +352,76 @@ export default function ProfilePage() {
         setExpSkills(expSkills.filter(s => s !== skillName));
     };
 
+    // Education state
+    type Education = {
+        id: string;
+        school: string;
+        schoolUrl: string;
+        degree: string;
+        fieldOfStudy: string;
+        grade: string;
+        activities: string;
+        description: string;
+        isCurrentlyStudying: boolean;
+        startYear: string;
+        endYear: string;
+    };
+
+    const [educations, setEducations] = useState<Education[]>([]);
+    const [isAddEducationOpen, setIsAddEducationOpen] = useState(false);
+    const [isAddEducationWithAIOpen, setIsAddEducationWithAIOpen] = useState(false);
+
+    // Education form state
+    const [eduSchool, setEduSchool] = useState("");
+    const [eduSchoolUrl, setEduSchoolUrl] = useState("");
+    const [eduDegree, setEduDegree] = useState("");
+    const [eduFieldOfStudy, setEduFieldOfStudy] = useState("");
+    const [eduGrade, setEduGrade] = useState("");
+    const [eduActivities, setEduActivities] = useState("");
+    const [eduDescription, setEduDescription] = useState("");
+    const [eduIsCurrentlyStudying, setEduIsCurrentlyStudying] = useState(false);
+    const [eduStartYear, setEduStartYear] = useState("");
+    const [eduEndYear, setEduEndYear] = useState("");
+    const [aiEducationText, setAiEducationText] = useState("");
+
+    const resetEducationForm = () => {
+        setEduSchool("");
+        setEduSchoolUrl("");
+        setEduDegree("");
+        setEduFieldOfStudy("");
+        setEduGrade("");
+        setEduActivities("");
+        setEduDescription("");
+        setEduIsCurrentlyStudying(false);
+        setEduStartYear("");
+        setEduEndYear("");
+    };
+
+    const addEducation = () => {
+        if (eduSchool && eduSchoolUrl && eduStartYear) {
+            const newEdu: Education = {
+                id: Date.now().toString(),
+                school: eduSchool,
+                schoolUrl: eduSchoolUrl,
+                degree: eduDegree,
+                fieldOfStudy: eduFieldOfStudy,
+                grade: eduGrade,
+                activities: eduActivities,
+                description: eduDescription,
+                isCurrentlyStudying: eduIsCurrentlyStudying,
+                startYear: eduStartYear,
+                endYear: eduIsCurrentlyStudying ? "" : eduEndYear,
+            };
+            setEducations([...educations, newEdu]);
+            resetEducationForm();
+            setIsAddEducationOpen(false);
+        }
+    };
+
+    const removeEducation = (id: string) => {
+        setEducations(educations.filter(edu => edu.id !== id));
+    };
+
     return (
         <div className="flex flex-col h-full w-full bg-background">
             {/* Header */}
@@ -917,10 +987,86 @@ export default function ProfilePage() {
                         </div>
                     </TabsContent>
 
-                    <TabsContent value="education" className="space-y-8 max-w-3xl">
-                        <div className="text-center py-12 text-muted-foreground">
-                            Education content coming soon...
+                    <TabsContent value="education" className="space-y-6">
+                        <div>
+                            <h3 className="text-lg font-medium mb-1">Education</h3>
+                            <p className="text-sm text-muted-foreground">
+                                Add your education to your profile to help us match you with the right opportunities.
+                            </p>
                         </div>
+
+                        {/* Empty State */}
+                        {educations.length === 0 ? (
+                            <div className="rounded-xl border bg-card p-8 flex flex-col items-center justify-center text-center">
+                                <div className="size-12 rounded-full bg-muted flex items-center justify-center mb-4">
+                                    <GraduationCap className="size-5 text-muted-foreground" />
+                                </div>
+                                <h4 className="text-lg font-medium mb-1">You haven't added your education yet</h4>
+                                <p className="text-sm text-muted-foreground mb-6 max-w-sm">
+                                    Adding education will help you attract the right opportunities.
+                                </p>
+                                <div className="flex items-center gap-3">
+                                    <Button variant="outline" onClick={() => setIsAddEducationWithAIOpen(true)}>
+                                        Add with AI
+                                    </Button>
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white gap-2" onClick={() => setIsAddEducationOpen(true)}>
+                                        <Plus className="size-4" />
+                                        Add education
+                                    </Button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                {/* Education List */}
+                                {educations.map((edu) => (
+                                    <div key={edu.id} className="rounded-xl border bg-card p-6">
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex items-start gap-4">
+                                                <div className="size-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
+                                                    <GraduationCap className="size-5 text-gray-600 dark:text-gray-400" />
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-semibold">{edu.school}</h4>
+                                                    {edu.degree && edu.fieldOfStudy && (
+                                                        <p className="text-sm text-muted-foreground">
+                                                            {edu.degree} in {edu.fieldOfStudy}
+                                                        </p>
+                                                    )}
+                                                    <p className="text-sm text-muted-foreground mt-1">
+                                                        {edu.startYear} - {edu.isCurrentlyStudying ? "Present" : edu.endYear}
+                                                    </p>
+                                                    {edu.grade && (
+                                                        <p className="text-sm text-muted-foreground">Grade: {edu.grade}</p>
+                                                    )}
+                                                    {edu.description && (
+                                                        <p className="text-sm mt-2">{edu.description}</p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="text-muted-foreground hover:text-red-600"
+                                                onClick={() => removeEducation(edu.id)}
+                                            >
+                                                <Trash2 className="size-4" />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ))}
+
+                                {/* Add More Buttons */}
+                                <div className="flex items-center gap-3 pt-4">
+                                    <Button variant="outline" onClick={() => setIsAddEducationWithAIOpen(true)}>
+                                        Add with AI
+                                    </Button>
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white gap-2" onClick={() => setIsAddEducationOpen(true)}>
+                                        <Plus className="size-4" />
+                                        Add education
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
                     </TabsContent>
 
                     <TabsContent value="certifications" className="space-y-8 max-w-3xl">
@@ -1243,6 +1389,273 @@ export default function ProfilePage() {
                                         disabled={!expTitle || !expEmploymentType || !expCompanyName || !expStartMonth || !expStartYear || !expDescription}
                                     >
                                         Add experience
+                                    </Button>
+                                </div>
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Education Modals */}
+                {/* Add Education with AI Modal */}
+                <AnimatePresence>
+                    {isAddEducationWithAIOpen && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.15 }}
+                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
+                            onClick={(e) => e.target === e.currentTarget && setIsAddEducationWithAIOpen(false)}
+                        >
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ duration: 0.15 }}
+                                className="w-full max-w-lg mx-4 bg-background rounded-xl shadow-2xl border border-border/50 flex flex-col max-h-[85vh]"
+                            >
+                                {/* Header */}
+                                <div className="p-6 pb-0">
+                                    <div className="flex items-start gap-4">
+                                        <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
+                                            <Sparkles className="size-5 text-blue-600" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="text-lg font-semibold">Add education with AI</h3>
+                                            <p className="text-sm text-muted-foreground mt-1">
+                                                Paste in the relevant section from your resume or LinkedIn and let our AI extract your education for you.
+                                            </p>
+                                        </div>
+                                        <button onClick={() => setIsAddEducationWithAIOpen(false)} className="p-1 hover:bg-muted rounded-md">
+                                            <X className="size-4" />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Content */}
+                                <div className="flex-1 overflow-y-auto p-6">
+                                    <div>
+                                        <label className="text-sm font-medium">Education*</label>
+                                        <Textarea
+                                            value={aiEducationText}
+                                            onChange={(e) => setAiEducationText(e.target.value)}
+                                            placeholder="Paste in the education section from your resume or LinkedIn here..."
+                                            className="mt-2 min-h-[120px] resize-none"
+                                            maxLength={16000}
+                                        />
+                                        <p className="text-xs text-muted-foreground mt-1">
+                                            {(16000 - aiEducationText.length).toLocaleString()} characters left
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Footer */}
+                                <div className="flex-shrink-0 px-6 py-4 border-t bg-muted/30 rounded-b-xl flex items-center justify-end gap-3">
+                                    <Button variant="outline" onClick={() => setIsAddEducationWithAIOpen(false)}>
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                                        disabled={!aiEducationText.trim()}
+                                    >
+                                        Add with AI
+                                    </Button>
+                                </div>
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Add Education Modal */}
+                <AnimatePresence>
+                    {isAddEducationOpen && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.15 }}
+                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
+                            onClick={(e) => e.target === e.currentTarget && setIsAddEducationOpen(false)}
+                        >
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ duration: 0.15 }}
+                                className="w-full max-w-lg mx-4 bg-background rounded-xl shadow-2xl border border-border/50 flex flex-col max-h-[85vh]"
+                            >
+                                {/* Header */}
+                                <div className="p-6 pb-0">
+                                    <div className="flex items-start gap-4">
+                                        <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
+                                            <Flag className="size-5 text-blue-600" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="text-lg font-semibold">Add education</h3>
+                                            <p className="text-sm text-muted-foreground mt-1">
+                                                Share your educational background and academic achievements.
+                                            </p>
+                                        </div>
+                                        <button onClick={() => { resetEducationForm(); setIsAddEducationOpen(false); }} className="p-1 hover:bg-muted rounded-md">
+                                            <X className="size-4" />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Scrollable Form */}
+                                <div className="flex-1 overflow-y-auto p-6 space-y-5">
+                                    {/* School */}
+                                    <div>
+                                        <label className="text-sm font-medium">School*</label>
+                                        <Input
+                                            value={eduSchool}
+                                            onChange={(e) => setEduSchool(e.target.value.slice(0, 80))}
+                                            placeholder="Ex: Harvard University"
+                                            className="mt-2"
+                                        />
+                                        <p className="text-xs text-muted-foreground mt-1">80 characters</p>
+                                    </div>
+
+                                    {/* School URL */}
+                                    <div>
+                                        <label className="text-sm font-medium">School URL*</label>
+                                        <Input
+                                            value={eduSchoolUrl}
+                                            onChange={(e) => setEduSchoolUrl(e.target.value)}
+                                            placeholder="Ex: https://www.harvard.edu"
+                                            className="mt-2"
+                                        />
+                                    </div>
+
+                                    {/* Degree */}
+                                    <div>
+                                        <label className="text-sm font-medium">Degree</label>
+                                        <Input
+                                            value={eduDegree}
+                                            onChange={(e) => setEduDegree(e.target.value)}
+                                            placeholder="Ex: Bachelor of Arts"
+                                            className="mt-2"
+                                        />
+                                    </div>
+
+                                    {/* Field of Study */}
+                                    <div>
+                                        <label className="text-sm font-medium">Field of study</label>
+                                        <Input
+                                            value={eduFieldOfStudy}
+                                            onChange={(e) => setEduFieldOfStudy(e.target.value)}
+                                            placeholder="Ex: Computer Science"
+                                            className="mt-2"
+                                        />
+                                    </div>
+
+                                    {/* Grade */}
+                                    <div>
+                                        <label className="text-sm font-medium">Grade</label>
+                                        <Input
+                                            value={eduGrade}
+                                            onChange={(e) => setEduGrade(e.target.value)}
+                                            placeholder="Ex: 3.8"
+                                            className="mt-2"
+                                        />
+                                    </div>
+
+                                    {/* Activities */}
+                                    <div>
+                                        <label className="text-sm font-medium">Activities</label>
+                                        <Textarea
+                                            value={eduActivities}
+                                            onChange={(e) => setEduActivities(e.target.value.slice(0, 400))}
+                                            placeholder="Ex: Student Government, Debate Club"
+                                            className="mt-2 min-h-[80px] resize-none"
+                                        />
+                                        <p className="text-xs text-muted-foreground mt-1">400 characters</p>
+                                    </div>
+
+                                    {/* Description */}
+                                    <div>
+                                        <label className="text-sm font-medium">Description</label>
+                                        <Textarea
+                                            value={eduDescription}
+                                            onChange={(e) => setEduDescription(e.target.value.slice(0, 400))}
+                                            placeholder="e.g. Graduated with honors, specialized in Machine Learning and AI. Led research projects in Natural Language Processing."
+                                            className="mt-2 min-h-[100px] resize-none"
+                                        />
+                                        <p className="text-xs text-muted-foreground mt-1">400 characters</p>
+                                    </div>
+
+                                    {/* Currently Studying Checkbox */}
+                                    <div className="flex items-center gap-2">
+                                        <Checkbox
+                                            id="currentlyStudying"
+                                            checked={eduIsCurrentlyStudying}
+                                            onCheckedChange={(checked) => {
+                                                setEduIsCurrentlyStudying(checked as boolean);
+                                                if (checked) {
+                                                    setEduEndYear("");
+                                                }
+                                            }}
+                                        />
+                                        <label htmlFor="currentlyStudying" className="text-sm cursor-pointer">
+                                            I am currently studying at this institution
+                                        </label>
+                                    </div>
+
+                                    {/* Start Year & End Year */}
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="text-sm font-medium">Start year*</label>
+                                            <Select value={eduStartYear} onValueChange={setEduStartYear}>
+                                                <SelectTrigger className="mt-2 w-full">
+                                                    <SelectValue placeholder="YYYY" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {years.map((y) => (
+                                                        <SelectItem key={y} value={y}>{y}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <div>
+                                            <label className="text-sm font-medium">End year</label>
+                                            <Select
+                                                value={eduIsCurrentlyStudying ? "Present" : eduEndYear}
+                                                onValueChange={(val) => {
+                                                    if (val === "Present") {
+                                                        setEduIsCurrentlyStudying(true);
+                                                        setEduEndYear("");
+                                                    } else {
+                                                        setEduIsCurrentlyStudying(false);
+                                                        setEduEndYear(val);
+                                                    }
+                                                }}
+                                            >
+                                                <SelectTrigger className="mt-2 w-full">
+                                                    <SelectValue placeholder="YYYY" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="Present">Present</SelectItem>
+                                                    {years.map((y) => (
+                                                        <SelectItem key={y} value={y}>{y}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Footer */}
+                                <div className="flex-shrink-0 px-6 py-4 border-t bg-muted/30 rounded-b-xl flex items-center justify-end gap-3">
+                                    <Button variant="outline" onClick={() => { resetEducationForm(); setIsAddEducationOpen(false); }}>
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                                        onClick={addEducation}
+                                        disabled={!eduSchool || !eduSchoolUrl || !eduStartYear}
+                                    >
+                                        Add education
                                     </Button>
                                 </div>
                             </motion.div>
