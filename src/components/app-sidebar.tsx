@@ -210,33 +210,46 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                                 <span className="text-sm font-medium flex-1 text-left">Profile</span>
                                             </div>
                                         </AccordionTrigger>
-                                        <AccordionContent className="pb-2 px-0">
-                                            {/* Profile Sections - Simple list without box */}
-                                            <div className="space-y-1 pl-9">
-                                                <Link href="/dashboard/profile" className="flex items-center gap-2 text-xs py-1.5 hover:text-blue-600 transition-colors">
-                                                    <div className="size-3 rounded-full border-2 border-gray-300 dark:border-gray-600" />
-                                                    <span>Overview</span>
-                                                </Link>
-                                                <Link href="/dashboard/profile?tab=tech-stack" className="flex items-center gap-2 text-xs py-1.5 hover:text-blue-600 transition-colors">
-                                                    <div className="size-3 rounded-full border-2 border-gray-300 dark:border-gray-600" />
-                                                    <span>Tech Stack</span>
-                                                </Link>
-                                                <Link href="/dashboard/profile?tab=experience" className="flex items-center gap-2 text-xs py-1.5 hover:text-blue-600 transition-colors">
-                                                    <div className="size-3 rounded-full border-2 border-gray-300 dark:border-gray-600" />
-                                                    <span>Experience</span>
-                                                </Link>
-                                                <Link href="/dashboard/profile?tab=projects" className="flex items-center gap-2 text-xs py-1.5 hover:text-blue-600 transition-colors">
-                                                    <div className="size-3 rounded-full border-2 border-gray-300 dark:border-gray-600" />
-                                                    <span>Projects</span>
-                                                </Link>
-                                                <Link href="/dashboard/profile?tab=education" className="flex items-center gap-2 text-xs py-1.5 hover:text-blue-600 transition-colors">
-                                                    <div className="size-3 rounded-full border-2 border-gray-300 dark:border-gray-600" />
-                                                    <span>Education</span>
-                                                </Link>
-                                                <Link href="/dashboard/profile?tab=certifications" className="flex items-center gap-2 text-xs py-1.5 hover:text-blue-600 transition-colors">
-                                                    <div className="size-3 rounded-full border-2 border-gray-300 dark:border-gray-600" />
-                                                    <span>Certifications</span>
-                                                </Link>
+                                        <AccordionContent className="pb-2 px-0 pt-2">
+                                            {/* Profile Card with blue border */}
+                                            <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
+                                                <h3 className="text-sm font-semibold mb-2">Complete your profile</h3>
+                                                <p className="text-xs text-muted-foreground mb-3">
+                                                    A complete profile helps us match you with relevant jobs and personalize our AI tools to you.
+                                                </p>
+
+                                                {/* Progress Bar */}
+                                                <div className="mb-3 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                                    <div className="h-full bg-gradient-to-r from-blue-500 to-blue-600 w-1/4 transition-all" />
+                                                </div>
+
+                                                {/* Profile Sections */}
+                                                <div className="space-y-2">
+                                                    <Link href="/dashboard/profile" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
+                                                        <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                        <span>Overview</span>
+                                                    </Link>
+                                                    <Link href="/dashboard/profile?tab=tech-stack" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
+                                                        <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                        <span>Tech Stack</span>
+                                                    </Link>
+                                                    <Link href="/dashboard/profile?tab=experience" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
+                                                        <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                        <span>Experience</span>
+                                                    </Link>
+                                                    <Link href="/dashboard/profile?tab=projects" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
+                                                        <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                        <span>Projects</span>
+                                                    </Link>
+                                                    <Link href="/dashboard/profile?tab=education" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
+                                                        <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                        <span>Education</span>
+                                                    </Link>
+                                                    <Link href="/dashboard/profile?tab=certifications" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
+                                                        <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                        <span>Certifications</span>
+                                                    </Link>
+                                                </div>
                                             </div>
                                         </AccordionContent>
                                     </AccordionItem>

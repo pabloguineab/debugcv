@@ -1559,74 +1559,33 @@ export default function ProfilePage() {
                                         </Select>
                                     </div>
 
-                                    {/* Start Date */}
-                                    <div>
-                                        <label className="text-sm font-medium">Start date*</label>
-                                        <div className="grid grid-cols-2 gap-3 mt-2">
-                                            <Select value={expStartMonth} onValueChange={setExpStartMonth}>
-                                                <SelectTrigger className="w-full">
-                                                    <SelectValue placeholder="Month" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {months.map((m) => (
-                                                        <SelectItem key={m} value={m}>{m}</SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                            <Select value={expStartYear} onValueChange={setExpStartYear}>
-                                                <SelectTrigger className="w-full">
-                                                    <SelectValue placeholder="Year" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {years.map((y) => (
-                                                        <SelectItem key={y} value={y}>{y}</SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
+                                    {/* Start Date & End Date - Same Row */}
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="text-sm font-medium">Start date*</label>
+                                            <div className="grid grid-cols-2 gap-2 mt-2">
+                                                <Select value={expStartMonth} onValueChange={setExpStartMonth}>
+                                                    <SelectTrigger className="w-full"><SelectValue placeholder="Month" /></SelectTrigger>
+                                                    <SelectContent>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
+                                                </Select>
+                                                <Select value={expStartYear} onValueChange={setExpStartYear}>
+                                                    <SelectTrigger className="w-full"><SelectValue placeholder="Year" /></SelectTrigger>
+                                                    <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
+                                                </Select>
+                                            </div>
                                         </div>
-                                    </div>
-
-                                    {/* End Date */}
-                                    <div>
-                                        <label className="text-sm font-medium">End date*</label>
-                                        <div className="grid grid-cols-2 gap-3 mt-2">
-                                            <Select
-                                                value={expIsCurrentRole ? "Present" : expEndMonth}
-                                                onValueChange={(val) => {
-                                                    if (val === "Present") {
-                                                        setExpIsCurrentRole(true);
-                                                        setExpEndMonth("");
-                                                        setExpEndYear("");
-                                                    } else {
-                                                        setExpIsCurrentRole(false);
-                                                        setExpEndMonth(val);
-                                                    }
-                                                }}
-                                            >
-                                                <SelectTrigger className="w-full">
-                                                    <SelectValue placeholder="Month" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="Present">Present</SelectItem>
-                                                    {months.map((m) => (
-                                                        <SelectItem key={m} value={m}>{m}</SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                            <Select
-                                                value={expEndYear}
-                                                onValueChange={setExpEndYear}
-                                                disabled={expIsCurrentRole}
-                                            >
-                                                <SelectTrigger className={cn("w-full", expIsCurrentRole && "opacity-50")}>
-                                                    <SelectValue placeholder="Year" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {years.map((y) => (
-                                                        <SelectItem key={y} value={y}>{y}</SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
+                                        <div>
+                                            <label className="text-sm font-medium">End date*</label>
+                                            <div className="grid grid-cols-2 gap-2 mt-2">
+                                                <Select value={expIsCurrentRole ? "Present" : expEndMonth} onValueChange={(val) => { if (val === "Present") { setExpIsCurrentRole(true); setExpEndMonth(""); setExpEndYear(""); } else { setExpIsCurrentRole(false); setExpEndMonth(val); } }}>
+                                                    <SelectTrigger className="w-full"><SelectValue placeholder="Month" /></SelectTrigger>
+                                                    <SelectContent><SelectItem value="Present">Present</SelectItem>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
+                                                </Select>
+                                                <Select value={expEndYear} onValueChange={setExpEndYear} disabled={expIsCurrentRole}>
+                                                    <SelectTrigger className={cn("w-full", expIsCurrentRole && "opacity-50")}><SelectValue placeholder="Year" /></SelectTrigger>
+                                                    <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
+                                                </Select>
+                                            </div>
                                         </div>
                                     </div>
 
