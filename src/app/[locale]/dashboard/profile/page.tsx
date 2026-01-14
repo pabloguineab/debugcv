@@ -1034,7 +1034,7 @@ export default function ProfilePage() {
                                 </div>
                                 <h4 className="text-lg font-semibold mb-2">You haven&apos;t added your work experience yet</h4>
                                 <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
-                                    Adding experience will help us match you with the right opportunities.
+                                    Adding experience helps us match you with the right opportunities.
                                 </p>
                                 <div className="flex items-center justify-center gap-3">
                                     <Button
