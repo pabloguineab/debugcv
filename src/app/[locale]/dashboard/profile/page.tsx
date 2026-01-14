@@ -1414,7 +1414,7 @@ export default function ProfilePage() {
                                 className="w-full max-w-md mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[75vh]"
                             >
                                 {/* Header */}
-                                <div className="p-6 pb-0">
+                                <div className="p-6 pb-4">
                                     <div className="flex items-start gap-4">
                                         <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
                                             <Sparkles className="size-5 text-blue-600" />
@@ -1484,7 +1484,7 @@ export default function ProfilePage() {
                                 className="w-full max-w-md mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[75vh]"
                             >
                                 {/* Header */}
-                                <div className="p-6 pb-0">
+                                <div className="p-6 pb-4">
                                     <div className="flex items-start gap-4">
                                         <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
                                             <Flag className="size-5 text-blue-600" />
@@ -1502,7 +1502,7 @@ export default function ProfilePage() {
                                 </div>
 
                                 {/* Scrollable Form */}
-                                <div className="flex-1 overflow-y-auto p-6 space-y-5">
+                                <div className="flex-1 overflow-y-auto px-6 pt-6 pb-6 space-y-5">
                                     {/* Title */}
                                     <div>
                                         <label className="text-sm font-medium">Title*</label>
@@ -1693,7 +1693,7 @@ export default function ProfilePage() {
                                 className="w-full max-w-md mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[75vh]"
                             >
                                 {/* Header */}
-                                <div className="p-6 pb-0">
+                                <div className="p-6 pb-4">
                                     <div className="flex items-start gap-4">
                                         <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
                                             <Sparkles className="size-5 text-blue-600" />
@@ -1763,7 +1763,7 @@ export default function ProfilePage() {
                                 className="w-full max-w-md mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[75vh]"
                             >
                                 {/* Header */}
-                                <div className="p-6 pb-0">
+                                <div className="p-6 pb-4">
                                     <div className="flex items-start gap-4">
                                         <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
                                             <Flag className="size-5 text-blue-600" />
@@ -1781,7 +1781,7 @@ export default function ProfilePage() {
                                 </div>
 
                                 {/* Scrollable Form */}
-                                <div className="flex-1 overflow-y-auto p-6 space-y-5">
+                                <div className="flex-1 overflow-y-auto px-6 pt-6 pb-6 space-y-5">
                                     {/* School */}
                                     <div>
                                         <label className="text-sm font-medium">School*</label>
@@ -1959,7 +1959,7 @@ export default function ProfilePage() {
                                 transition={{ duration: 0.15 }}
                                 className="w-full max-w-md mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[75vh]"
                             >
-                                <div className="p-6 pb-0">
+                                <div className="p-6 pb-4">
                                     <div className="flex items-start gap-4">
                                         <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
                                             <Sparkles className="size-5 text-blue-600" />
@@ -2015,7 +2015,7 @@ export default function ProfilePage() {
                                 transition={{ duration: 0.15 }}
                                 className="w-full max-w-md mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[75vh]"
                             >
-                                <div className="p-6 pb-0">
+                                <div className="p-6 pb-4">
                                     <div className="flex items-start gap-4">
                                         <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
                                             <FolderKanban className="size-5 text-blue-600" />
@@ -2029,7 +2029,7 @@ export default function ProfilePage() {
                                         </button>
                                     </div>
                                 </div>
-                                <div className="flex-1 overflow-y-auto p-6 space-y-5">
+                                <div className="flex-1 overflow-y-auto px-6 pt-6 pb-6 space-y-5">
                                     <div>
                                         <label className="text-sm font-medium">Project name*</label>
                                         <Input value={projName} onChange={(e) => setProjName(e.target.value.slice(0, 80))} placeholder="Ex: E-commerce Platform" className="mt-2" />
@@ -2131,7 +2131,7 @@ export default function ProfilePage() {
                                 transition={{ duration: 0.15 }}
                                 className="w-full max-w-md mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[75vh]"
                             >
-                                <div className="p-6 pb-0">
+                                <div className="p-6 pb-4">
                                     <div className="flex items-start gap-4">
                                         <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
                                             <Sparkles className="size-5 text-blue-600" />
@@ -2179,7 +2179,7 @@ export default function ProfilePage() {
                                 transition={{ duration: 0.15 }}
                                 className="w-full max-w-md mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[75vh]"
                             >
-                                <div className="p-6 pb-0">
+                                <div className="p-6 pb-4">
                                     <div className="flex items-start gap-4">
                                         <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
                                             <Award className="size-5 text-blue-600" />
@@ -2193,7 +2193,7 @@ export default function ProfilePage() {
                                         </button>
                                     </div>
                                 </div>
-                                <div className="flex-1 overflow-y-auto p-6 space-y-5">
+                                <div className="flex-1 overflow-y-auto px-6 pt-6 pb-6 space-y-5">
                                     <div>
                                         <label className="text-sm font-medium">Certification name*</label>
                                         <Input value={certName} onChange={(e) => setCertName(e.target.value.slice(0, 100))} placeholder="Ex: AWS Solutions Architect" className="mt-2" />
