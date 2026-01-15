@@ -36,7 +36,7 @@ const STATUS_LABELS = {
     applied: "📤 Applied",
     interview: "💬 Interview",
     offer: "🎉 Offer",
-    rejected: "❌ Rejected",
+
 };
 
 const PRIORITY_LABELS = {
@@ -54,7 +54,7 @@ const formSchema = z.object({
     workMode: z.enum(["remote", "hybrid", "onsite"]),
     expectedSalary: z.array(z.number()).length(2),
     priority: z.enum(["high", "medium", "low"]),
-    status: z.enum(["wishlist", "applied", "interview", "offer", "rejected"]),
+    status: z.enum(["wishlist", "applied", "interview", "offer"]),
     jobDescription: z.string().optional(),
 });
 
@@ -354,7 +354,6 @@ export function AddApplicationModal({
                                                         <SelectItem value="applied">📤 Applied</SelectItem>
                                                         <SelectItem value="interview">💬 Interview</SelectItem>
                                                         <SelectItem value="offer">🎉 Offer</SelectItem>
-                                                        <SelectItem value="rejected">❌ Rejected</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                             </Field>
