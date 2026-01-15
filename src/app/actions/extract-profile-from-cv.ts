@@ -87,7 +87,7 @@ export async function extractProfileFromCV(formData: FormData): Promise<Extracte
         const mimeType = file.type || 'application/pdf';
 
         const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-preview-05-20" });
+        const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
         const jsonSchema = {
             overview: {
