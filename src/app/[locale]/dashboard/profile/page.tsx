@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { allTechs, TechItem } from "@/data/tech-stack";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus, Linkedin, Github, IdCard, Settings, Code, Briefcase, GraduationCap, CloudUpload, FolderKanban, Award, Languages, Trash2, Search, Check, Sparkles, Wand2, Flag, Building2, CalendarDays } from "lucide-react";
+import { Upload, MoreHorizontal, ExternalLink, X, Minus, Plus, Linkedin, Github, IdCard, Settings, Code, Briefcase, GraduationCap, CloudUpload, FolderKanban, Award, Languages, Trash2, Search, Check, Sparkles, Wand2, Flag, Building2, CalendarDays, Pencil } from "lucide-react";
 import Image from "next/image";
 import Cropper from "react-easy-crop";
 import {
@@ -439,6 +439,7 @@ export default function ProfilePage() {
     const [experiences, setExperiences] = useState<Experience[]>([]);
     const [isAddExperienceOpen, setIsAddExperienceOpen] = useState(false);
     const [isAddWithAIOpen, setIsAddWithAIOpen] = useState(false);
+    const [editingExperienceId, setEditingExperienceId] = useState<string | null>(null);
 
     // Experience form state
     const [expTitle, setExpTitle] = useState("");
@@ -483,10 +484,11 @@ export default function ProfilePage() {
         setExpDescription("");
     };
 
-    const addExperience = async () => {
+    const saveOrUpdateExperience = async () => {
         if (expTitle && expEmploymentType && expCompanyName && expStartMonth && expStartYear && expDescription) {
             try {
-                const saved = await saveExperience({
+                const experienceData = {
+                    id: editingExperienceId || undefined,
                     title: expTitle,
                     employment_type: expEmploymentType,
                     company_name: expCompanyName,
@@ -499,10 +501,12 @@ export default function ProfilePage() {
                     is_current: expIsCurrentRole,
                     description: expDescription,
                     skills: expSkills
-                });
+                };
+
+                const saved = await saveExperience(experienceData);
 
                 if (saved) {
-                    const newExp: Experience = {
+                    const updatedExp: Experience = {
                         id: saved.id,
                         title: saved.title,
                         employmentType: saved.employment_type,
@@ -517,8 +521,16 @@ export default function ProfilePage() {
                         skills: saved.skills || [],
                         description: saved.description,
                     };
-                    setExperiences([...experiences, newExp]);
+
+                    if (editingExperienceId) {
+                        // Update existing
+                        setExperiences(experiences.map(exp => exp.id === editingExperienceId ? updatedExp : exp));
+                    } else {
+                        // Add new
+                        setExperiences([...experiences, updatedExp]);
+                    }
                     resetExperienceForm();
+                    setEditingExperienceId(null);
                     setIsAddExperienceOpen(false);
                     await refreshCompletionStatus();
                 }
@@ -526,6 +538,23 @@ export default function ProfilePage() {
                 console.error("Failed to save experience", err);
             }
         }
+    };
+
+    const editExperience = (exp: Experience) => {
+        setEditingExperienceId(exp.id);
+        setExpTitle(exp.title);
+        setExpEmploymentType(exp.employmentType);
+        setExpCompanyName(exp.companyName);
+        setExpCompanyUrl(exp.companyUrl);
+        setExpCountry(exp.country);
+        setExpIsCurrentRole(exp.isCurrentRole);
+        setExpStartMonth(exp.startMonth);
+        setExpStartYear(exp.startYear);
+        setExpEndMonth(exp.endMonth);
+        setExpEndYear(exp.endYear);
+        setExpSkills(exp.skills);
+        setExpDescription(exp.description);
+        setIsAddExperienceOpen(true);
     };
 
     const removeExperience = async (id: string) => {
@@ -567,6 +596,7 @@ export default function ProfilePage() {
     const [educations, setEducations] = useState<Education[]>([]);
     const [isAddEducationOpen, setIsAddEducationOpen] = useState(false);
     const [isAddEducationWithAIOpen, setIsAddEducationWithAIOpen] = useState(false);
+    const [editingEducationId, setEditingEducationId] = useState<string | null>(null);
 
     // Education form state
     const [eduSchool, setEduSchool] = useState("");
@@ -594,10 +624,11 @@ export default function ProfilePage() {
         setEduEndYear("");
     };
 
-    const addEducation = async () => {
+    const saveOrUpdateEducation = async () => {
         if (eduSchool && eduSchoolUrl && eduStartYear) {
             try {
                 const saved = await saveEducation({
+                    id: editingEducationId || undefined,
                     school: eduSchool,
                     school_url: eduSchoolUrl,
                     degree: eduDegree,
@@ -611,7 +642,7 @@ export default function ProfilePage() {
                 });
 
                 if (saved) {
-                    const newEdu: Education = {
+                    const updatedEdu: Education = {
                         id: saved.id,
                         school: saved.school,
                         schoolUrl: saved.school_url || "",
@@ -624,8 +655,14 @@ export default function ProfilePage() {
                         startYear: saved.start_year,
                         endYear: saved.end_year,
                     };
-                    setEducations([...educations, newEdu]);
+
+                    if (editingEducationId) {
+                        setEducations(educations.map(edu => edu.id === editingEducationId ? updatedEdu : edu));
+                    } else {
+                        setEducations([...educations, updatedEdu]);
+                    }
                     resetEducationForm();
+                    setEditingEducationId(null);
                     setIsAddEducationOpen(false);
                     await refreshCompletionStatus();
                 }
@@ -633,6 +670,21 @@ export default function ProfilePage() {
                 console.error("Failed to save education", err);
             }
         }
+    };
+
+    const editEducation = (edu: Education) => {
+        setEditingEducationId(edu.id);
+        setEduSchool(edu.school);
+        setEduSchoolUrl(edu.schoolUrl);
+        setEduDegree(edu.degree);
+        setEduFieldOfStudy(edu.fieldOfStudy);
+        setEduGrade(edu.grade);
+        setEduActivities(edu.activities);
+        setEduDescription(edu.description);
+        setEduIsCurrentlyStudying(edu.isCurrentlyStudying);
+        setEduStartYear(edu.startYear);
+        setEduEndYear(edu.endYear);
+        setIsAddEducationOpen(true);
     };
 
     const removeEducation = async (id: string) => {
@@ -662,6 +714,7 @@ export default function ProfilePage() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [isAddProjectOpen, setIsAddProjectOpen] = useState(false);
     const [isAddProjectWithAIOpen, setIsAddProjectWithAIOpen] = useState(false);
+    const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
 
     // Project form state
     const [projName, setProjName] = useState("");
@@ -689,10 +742,11 @@ export default function ProfilePage() {
         setProjEndYear("");
     };
 
-    const addProject = async () => {
+    const saveOrUpdateProject = async () => {
         if (projName && projDescription) {
             try {
                 const saved = await saveProject({
+                    id: editingProjectId || undefined,
                     name: projName,
                     project_url: projUrl,
                     description: projDescription,
@@ -705,7 +759,7 @@ export default function ProfilePage() {
                 });
 
                 if (saved) {
-                    const newProj: Project = {
+                    const updatedProj: Project = {
                         id: saved.id,
                         name: saved.name,
                         projectUrl: saved.project_url || "",
@@ -717,8 +771,14 @@ export default function ProfilePage() {
                         endMonth: saved.end_month || "",
                         endYear: saved.end_year || ""
                     };
-                    setProjects([...projects, newProj]);
+
+                    if (editingProjectId) {
+                        setProjects(projects.map(proj => proj.id === editingProjectId ? updatedProj : proj));
+                    } else {
+                        setProjects([...projects, updatedProj]);
+                    }
                     resetProjectForm();
+                    setEditingProjectId(null);
                     setIsAddProjectOpen(false);
                     await refreshCompletionStatus();
                 }
@@ -726,6 +786,20 @@ export default function ProfilePage() {
                 console.error("Failed to save project", err);
             }
         }
+    };
+
+    const editProject = (proj: Project) => {
+        setEditingProjectId(proj.id);
+        setProjName(proj.name);
+        setProjUrl(proj.projectUrl);
+        setProjDescription(proj.description);
+        setProjTechnologies(proj.technologies);
+        setProjIsOngoing(proj.isOngoing);
+        setProjStartMonth(proj.startMonth);
+        setProjStartYear(proj.startYear);
+        setProjEndMonth(proj.endMonth);
+        setProjEndYear(proj.endYear);
+        setIsAddProjectOpen(true);
     };
 
     const removeProject = async (id: string) => {
@@ -766,6 +840,7 @@ export default function ProfilePage() {
     const [certifications, setCertifications] = useState<Certification[]>([]);
     const [isAddCertificationOpen, setIsAddCertificationOpen] = useState(false);
     const [isAddCertificationWithAIOpen, setIsAddCertificationWithAIOpen] = useState(false);
+    const [editingCertificationId, setEditingCertificationId] = useState<string | null>(null);
 
     // Certification form state
     const [certName, setCertName] = useState("");
@@ -791,10 +866,11 @@ export default function ProfilePage() {
         setCertCredentialUrl("");
     };
 
-    const addCertification = async () => {
+    const saveOrUpdateCertification = async () => {
         if (certName && certIssuingOrg && certIssueMonth && certIssueYear) {
             try {
                 const saved = await saveCertification({
+                    id: editingCertificationId || undefined,
                     name: certName,
                     issuing_org: certIssuingOrg,
                     issue_month: certIssueMonth,
@@ -808,7 +884,7 @@ export default function ProfilePage() {
                 });
 
                 if (saved) {
-                    const newCert: Certification = {
+                    const updatedCert: Certification = {
                         id: saved.id,
                         name: saved.name,
                         issuingOrganization: saved.issuing_org,
@@ -820,8 +896,14 @@ export default function ProfilePage() {
                         credentialId: saved.credential_id || "",
                         credentialUrl: saved.credential_url || "",
                     };
-                    setCertifications([...certifications, newCert]);
+
+                    if (editingCertificationId) {
+                        setCertifications(certifications.map(cert => cert.id === editingCertificationId ? updatedCert : cert));
+                    } else {
+                        setCertifications([...certifications, updatedCert]);
+                    }
                     resetCertificationForm();
+                    setEditingCertificationId(null);
                     setIsAddCertificationOpen(false);
                     await refreshCompletionStatus();
                 }
@@ -829,6 +911,20 @@ export default function ProfilePage() {
                 console.error("Failed to save certification", err);
             }
         }
+    };
+
+    const editCertification = (cert: Certification) => {
+        setEditingCertificationId(cert.id);
+        setCertName(cert.name);
+        setCertIssuingOrg(cert.issuingOrganization);
+        setCertIssueMonth(cert.issueMonth);
+        setCertIssueYear(cert.issueYear);
+        setCertExpirationMonth(cert.expirationMonth);
+        setCertExpirationYear(cert.expirationYear);
+        setCertDoesNotExpire(cert.doesNotExpire);
+        setCertCredentialId(cert.credentialId);
+        setCertCredentialUrl(cert.credentialUrl);
+        setIsAddCertificationOpen(true);
     };
 
     const removeCertification = async (id: string) => {
@@ -1627,12 +1723,20 @@ export default function ProfilePage() {
                             <div className="space-y-4">
                                 {experiences.map((exp) => (
                                     <div key={exp.id} className="border rounded-xl p-5 relative group">
-                                        <button
-                                            onClick={() => removeExperience(exp.id)}
-                                            className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-red-50 dark:hover:bg-red-900/30 transition-all"
-                                        >
-                                            <Trash2 className="size-4 text-red-500" />
-                                        </button>
+                                        <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                                            <button
+                                                onClick={() => editExperience(exp)}
+                                                className="p-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/30"
+                                            >
+                                                <Pencil className="size-4 text-blue-500" />
+                                            </button>
+                                            <button
+                                                onClick={() => removeExperience(exp.id)}
+                                                className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/30"
+                                            >
+                                                <Trash2 className="size-4 text-red-500" />
+                                            </button>
+                                        </div>
                                         <div className="flex gap-4">
                                             <div className="size-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
                                                 <Building2 className="size-6 text-muted-foreground" />
@@ -1751,14 +1855,24 @@ export default function ProfilePage() {
                                                     )}
                                                 </div>
                                             </div>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="text-muted-foreground hover:text-red-600"
-                                                onClick={() => removeProject(proj.id)}
-                                            >
-                                                <Trash2 className="size-4" />
-                                            </Button>
+                                            <div className="flex gap-1">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="text-muted-foreground hover:text-blue-600"
+                                                    onClick={() => editProject(proj)}
+                                                >
+                                                    <Pencil className="size-4" />
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="text-muted-foreground hover:text-red-600"
+                                                    onClick={() => removeProject(proj.id)}
+                                                >
+                                                    <Trash2 className="size-4" />
+                                                </Button>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
@@ -1839,14 +1953,24 @@ export default function ProfilePage() {
                                                     )}
                                                 </div>
                                             </div>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="text-muted-foreground hover:text-red-600"
-                                                onClick={() => removeEducation(edu.id)}
-                                            >
-                                                <Trash2 className="size-4" />
-                                            </Button>
+                                            <div className="flex gap-1">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="text-muted-foreground hover:text-blue-600"
+                                                    onClick={() => editEducation(edu)}
+                                                >
+                                                    <Pencil className="size-4" />
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="text-muted-foreground hover:text-red-600"
+                                                    onClick={() => removeEducation(edu.id)}
+                                                >
+                                                    <Trash2 className="size-4" />
+                                                </Button>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
@@ -1929,14 +2053,24 @@ export default function ProfilePage() {
                                                     )}
                                                 </div>
                                             </div>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="text-muted-foreground hover:text-red-600"
-                                                onClick={() => removeCertification(cert.id)}
-                                            >
-                                                <Trash2 className="size-4" />
-                                            </Button>
+                                            <div className="flex gap-1">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="text-muted-foreground hover:text-blue-600"
+                                                    onClick={() => editCertification(cert)}
+                                                >
+                                                    <Pencil className="size-4" />
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="text-muted-foreground hover:text-red-600"
+                                                    onClick={() => removeCertification(cert.id)}
+                                                >
+                                                    <Trash2 className="size-4" />
+                                                </Button>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
@@ -2052,12 +2186,12 @@ export default function ProfilePage() {
                                             <Flag className="size-5 text-blue-600" />
                                         </div>
                                         <div className="flex-1">
-                                            <h3 className="text-lg font-semibold">Add experience</h3>
+                                            <h3 className="text-lg font-semibold">{editingExperienceId ? 'Edit experience' : 'Add experience'}</h3>
                                             <p className="text-sm text-muted-foreground mt-1">
                                                 Share a role and achievements on your profile.
                                             </p>
                                         </div>
-                                        <button onClick={() => { resetExperienceForm(); setIsAddExperienceOpen(false); }} className="p-1 hover:bg-muted rounded-md">
+                                        <button onClick={() => { resetExperienceForm(); setEditingExperienceId(null); setIsAddExperienceOpen(false); }} className="p-1 hover:bg-muted rounded-md">
                                             <X className="size-4" />
                                         </button>
                                     </div>
@@ -2233,15 +2367,15 @@ export default function ProfilePage() {
 
                                 {/* Footer */}
                                 <div className="flex-shrink-0 px-6 py-4 border-t bg-muted/30 rounded-b-xl flex items-center justify-end gap-3">
-                                    <Button variant="outline" onClick={() => { resetExperienceForm(); setIsAddExperienceOpen(false); }}>
+                                    <Button variant="outline" onClick={() => { resetExperienceForm(); setEditingExperienceId(null); setIsAddExperienceOpen(false); }}>
                                         Cancel
                                     </Button>
                                     <Button
                                         className="bg-blue-600 hover:bg-blue-700 text-white"
-                                        onClick={addExperience}
+                                        onClick={saveOrUpdateExperience}
                                         disabled={!expTitle || !expEmploymentType || !expCompanyName || !expStartMonth || !expStartYear || !expDescription}
                                     >
-                                        Add experience
+                                        {editingExperienceId ? 'Save changes' : 'Add experience'}
                                     </Button>
                                 </div>
                             </motion.div>
@@ -2345,12 +2479,12 @@ export default function ProfilePage() {
                                             <Flag className="size-5 text-blue-600" />
                                         </div>
                                         <div className="flex-1">
-                                            <h3 className="text-lg font-semibold">Add education</h3>
+                                            <h3 className="text-lg font-semibold">{editingEducationId ? 'Edit education' : 'Add education'}</h3>
                                             <p className="text-sm text-muted-foreground mt-1">
                                                 Share your educational background and academic achievements.
                                             </p>
                                         </div>
-                                        <button onClick={() => { resetEducationForm(); setIsAddEducationOpen(false); }} className="p-1 hover:bg-muted rounded-md">
+                                        <button onClick={() => { resetEducationForm(); setEditingEducationId(null); setIsAddEducationOpen(false); }} className="p-1 hover:bg-muted rounded-md">
                                             <X className="size-4" />
                                         </button>
                                     </div>
@@ -2500,15 +2634,15 @@ export default function ProfilePage() {
 
                                 {/* Footer */}
                                 <div className="flex-shrink-0 px-6 py-4 border-t bg-muted/30 rounded-b-xl flex items-center justify-end gap-3">
-                                    <Button variant="outline" onClick={() => { resetEducationForm(); setIsAddEducationOpen(false); }}>
+                                    <Button variant="outline" onClick={() => { resetEducationForm(); setEditingEducationId(null); setIsAddEducationOpen(false); }}>
                                         Cancel
                                     </Button>
                                     <Button
                                         className="bg-blue-600 hover:bg-blue-700 text-white"
-                                        onClick={addEducation}
+                                        onClick={saveOrUpdateEducation}
                                         disabled={!eduSchool || !eduSchoolUrl || !eduStartYear}
                                     >
-                                        Add education
+                                        {editingEducationId ? 'Save changes' : 'Add education'}
                                     </Button>
                                 </div>
                             </motion.div>
@@ -2597,10 +2731,10 @@ export default function ProfilePage() {
                                             <FolderKanban className="size-5 text-blue-600" />
                                         </div>
                                         <div className="flex-1">
-                                            <h3 className="text-lg font-semibold">Add project</h3>
+                                            <h3 className="text-lg font-semibold">{editingProjectId ? 'Edit project' : 'Add project'}</h3>
                                             <p className="text-sm text-muted-foreground mt-1">Showcase your work and side projects.</p>
                                         </div>
-                                        <button onClick={() => { resetProjectForm(); setIsAddProjectOpen(false); }} className="p-1 hover:bg-muted rounded-md">
+                                        <button onClick={() => { resetProjectForm(); setEditingProjectId(null); setIsAddProjectOpen(false); }} className="p-1 hover:bg-muted rounded-md">
                                             <X className="size-4" />
                                         </button>
                                     </div>
@@ -2680,8 +2814,8 @@ export default function ProfilePage() {
                                     </div>
                                 </div>
                                 <div className="flex-shrink-0 px-6 py-4 border-t bg-muted/30 rounded-b-xl flex items-center justify-end gap-3">
-                                    <Button variant="outline" onClick={() => { resetProjectForm(); setIsAddProjectOpen(false); }}>Cancel</Button>
-                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={addProject} disabled={!projName || !projDescription}>Add project</Button>
+                                    <Button variant="outline" onClick={() => { resetProjectForm(); setEditingProjectId(null); setIsAddProjectOpen(false); }}>Cancel</Button>
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={saveOrUpdateProject} disabled={!projName || !projDescription}>{editingProjectId ? 'Save changes' : 'Add project'}</Button>
                                 </div>
                             </motion.div>
                         </motion.div>
@@ -2761,10 +2895,10 @@ export default function ProfilePage() {
                                             <Award className="size-5 text-blue-600" />
                                         </div>
                                         <div className="flex-1">
-                                            <h3 className="text-lg font-semibold">Add certification</h3>
+                                            <h3 className="text-lg font-semibold">{editingCertificationId ? 'Edit certification' : 'Add certification'}</h3>
                                             <p className="text-sm text-muted-foreground mt-1">Add your professional certifications and credentials.</p>
                                         </div>
-                                        <button onClick={() => { resetCertificationForm(); setIsAddCertificationOpen(false); }} className="p-1 hover:bg-muted rounded-md">
+                                        <button onClick={() => { resetCertificationForm(); setEditingCertificationId(null); setIsAddCertificationOpen(false); }} className="p-1 hover:bg-muted rounded-md">
                                             <X className="size-4" />
                                         </button>
                                     </div>
@@ -2820,8 +2954,8 @@ export default function ProfilePage() {
                                     </div>
                                 </div>
                                 <div className="flex-shrink-0 px-6 py-4 border-t bg-muted/30 rounded-b-xl flex items-center justify-end gap-3">
-                                    <Button variant="outline" onClick={() => { resetCertificationForm(); setIsAddCertificationOpen(false); }}>Cancel</Button>
-                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={addCertification} disabled={!certName || !certIssuingOrg || !certIssueMonth || !certIssueYear}>Add certification</Button>
+                                    <Button variant="outline" onClick={() => { resetCertificationForm(); setEditingCertificationId(null); setIsAddCertificationOpen(false); }}>Cancel</Button>
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={saveOrUpdateCertification} disabled={!certName || !certIssuingOrg || !certIssueMonth || !certIssueYear}>{editingCertificationId ? 'Save changes' : 'Add certification'}</Button>
                                 </div>
                             </motion.div>
                         </motion.div>
