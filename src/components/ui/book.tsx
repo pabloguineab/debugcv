@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FileText } from "lucide-react";
 
 interface BookProps {
     title?: string;
@@ -88,52 +87,61 @@ export function Book({
                     }}
                     transition={{ type: "spring", bounce: 0, duration: 0.6 }}
                 >
-                    {/* Custom Cover Design */}
+                    {/* Custom Cover Design - Minimalist & Elegant */}
                     <div
                         className="relative w-full h-full overflow-hidden"
                         style={{
-                            background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%)",
+                            background: "linear-gradient(180deg, #fafafa 0%, #f5f5f4 100%)",
                         }}
                     >
-                        {/* Decorative circles */}
+                        {/* Subtle geometric accent */}
                         <div
-                            className="absolute -top-10 -right-10 w-32 h-32 rounded-full opacity-20"
-                            style={{ background: "radial-gradient(circle, white 0%, transparent 70%)" }}
+                            className="absolute top-0 right-0 w-24 h-24"
+                            style={{
+                                background: "linear-gradient(135deg, transparent 50%, rgba(59, 130, 246, 0.08) 50%)"
+                            }}
                         />
                         <div
-                            className="absolute -bottom-16 -left-16 w-40 h-40 rounded-full opacity-10"
-                            style={{ background: "radial-gradient(circle, white 0%, transparent 70%)" }}
+                            className="absolute bottom-0 left-0 w-16 h-16"
+                            style={{
+                                background: "linear-gradient(315deg, transparent 50%, rgba(59, 130, 246, 0.05) 50%)"
+                            }}
                         />
 
                         {/* Content */}
-                        <div className="relative h-full flex flex-col justify-between p-5 text-white">
-                            {/* Top - Icon & Label */}
+                        <div className="relative h-full flex flex-col justify-between p-5">
+                            {/* Top - Elegant label */}
                             <div className="flex items-center gap-2">
-                                <div className="w-8 h-8 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                                    <FileText className="w-4 h-4 text-white" />
-                                </div>
-                                <span className="text-[10px] font-medium uppercase tracking-widest opacity-80">
+                                <div className="w-1 h-4 bg-blue-500 rounded-full" />
+                                <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-gray-400">
                                     {subtitle}
                                 </span>
                             </div>
 
-                            {/* Middle - Job Title */}
-                            <div className="flex-1 flex flex-col justify-center">
-                                <h3 className="text-xl font-bold leading-tight tracking-tight">
+                            {/* Middle - Job Title with serif font */}
+                            <div className="flex-1 flex flex-col justify-center py-4">
+                                <h3
+                                    className="text-xl font-semibold leading-snug text-gray-900 tracking-tight"
+                                    style={{ fontFamily: '"Georgia", serif' }}
+                                >
                                     {title}
                                 </h3>
+                                <div className="mt-3 h-px w-12 bg-gradient-to-r from-blue-400 to-transparent" />
                             </div>
 
                             {/* Bottom - Target Company */}
-                            <div className="space-y-1">
-                                <p className="text-[10px] uppercase tracking-widest opacity-60">
+                            <div className="space-y-0.5">
+                                <p className="text-[8px] uppercase tracking-[0.15em] text-gray-400">
                                     Tailored for
                                 </p>
-                                <p className="text-sm font-semibold opacity-90">
+                                <p className="text-sm font-medium text-gray-700">
                                     {target}
                                 </p>
                             </div>
                         </div>
+
+                        {/* Thin accent line at bottom */}
+                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-300" />
                     </div>
 
                     {/* Spine Light Effect */}
