@@ -157,6 +157,7 @@ export default function ProfilePage() {
                             title: e.title,
                             employmentType: e.employment_type,
                             companyName: e.company_name,
+                            companyUrl: e.company_url || "",
                             country: e.country || "",
                             isCurrentRole: e.is_current,
                             startMonth: e.start_month,
@@ -424,6 +425,7 @@ export default function ProfilePage() {
         title: string;
         employmentType: string;
         companyName: string;
+        companyUrl: string;
         country: string;
         isCurrentRole: boolean;
         startMonth: string;
@@ -442,6 +444,7 @@ export default function ProfilePage() {
     const [expTitle, setExpTitle] = useState("");
     const [expEmploymentType, setExpEmploymentType] = useState("");
     const [expCompanyName, setExpCompanyName] = useState("");
+    const [expCompanyUrl, setExpCompanyUrl] = useState("");
     const [expCountry, setExpCountry] = useState("");
     const [expIsCurrentRole, setExpIsCurrentRole] = useState(false);
     const [expStartMonth, setExpStartMonth] = useState("");
@@ -468,6 +471,7 @@ export default function ProfilePage() {
         setExpTitle("");
         setExpEmploymentType("");
         setExpCompanyName("");
+        setExpCompanyUrl("");
         setExpCountry("");
         setExpIsCurrentRole(false);
         setExpStartMonth("");
@@ -486,6 +490,7 @@ export default function ProfilePage() {
                     title: expTitle,
                     employment_type: expEmploymentType,
                     company_name: expCompanyName,
+                    company_url: expCompanyUrl,
                     country: expCountry,
                     start_month: expStartMonth,
                     start_year: expStartYear,
@@ -502,6 +507,7 @@ export default function ProfilePage() {
                         title: saved.title,
                         employmentType: saved.employment_type,
                         companyName: saved.company_name,
+                        companyUrl: saved.company_url || "",
                         country: saved.country || "",
                         isCurrentRole: saved.is_current,
                         startMonth: saved.start_month,
@@ -894,6 +900,7 @@ export default function ProfilePage() {
                         title: exp.title,
                         employment_type: exp.employment_type || "Full-time",
                         company_name: exp.company_name,
+                        company_url: exp.company_url || "",
                         country: exp.country || "",
                         start_month: exp.start_month,
                         start_year: exp.start_year,
@@ -910,6 +917,7 @@ export default function ProfilePage() {
                             title: saved.title,
                             employmentType: saved.employment_type,
                             companyName: saved.company_name,
+                            companyUrl: saved.company_url || "",
                             country: saved.country || "",
                             isCurrentRole: saved.is_current,
                             startMonth: saved.start_month,
@@ -2059,6 +2067,20 @@ export default function ProfilePage() {
                                                 value={expCompanyName}
                                                 onChange={(e) => setExpCompanyName(e.target.value)}
                                                 placeholder="e.g. Google"
+                                                className="pl-10"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Company URL */}
+                                    <div>
+                                        <label className="text-sm font-medium">Company website</label>
+                                        <div className="relative mt-2">
+                                            <ExternalLink className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                                            <Input
+                                                value={expCompanyUrl}
+                                                onChange={(e) => setExpCompanyUrl(e.target.value)}
+                                                placeholder="e.g. https://www.google.com"
                                                 className="pl-10"
                                             />
                                         </div>

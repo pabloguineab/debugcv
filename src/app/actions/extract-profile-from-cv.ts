@@ -18,6 +18,7 @@ export interface ExtractedProfile {
         title: string;
         employment_type: string;
         company_name: string;
+        company_url: string;
         country: string;
         start_month: string;
         start_year: string;
@@ -102,6 +103,7 @@ export async function extractProfileFromCV(formData: FormData): Promise<Extracte
                 title: "string - Job title",
                 employment_type: "string - One of: Full-time, Part-time, Contract, Freelance, Internship, Self-employed",
                 company_name: "string - Company name",
+                company_url: "string - Company website URL. If explicitly in CV, use it. Otherwise, infer the most likely official website (e.g., 'Google' -> 'https://www.google.com', 'Microsoft' -> 'https://www.microsoft.com'). For well-known companies, provide the official URL. If unknown small company, leave empty.",
                 country: "string - Country of the job",
                 start_month: "string - Start month name (e.g., 'January')",
                 start_year: "string - Start year (e.g., '2020')",
@@ -163,7 +165,8 @@ IMPORTANT RULES:
 5. For employment_type, infer from context if not explicit (full-time is default for regular jobs).
 6. For months, use full month names (e.g., "January", "February").
 7. For linkedin_user and github_user, extract ONLY the username, not the full URL.
-8. Be thorough - capture every piece of information from the CV.
+8. For company_url in experiences: If URL is in the CV, use it. If not, but it's a well-known company (Google, Microsoft, Amazon, Meta, Apple, etc.), provide the official website URL. For unknown companies, leave empty.
+9. Be thorough - capture every piece of information from the CV.
 
 Expected JSON structure:
 ${JSON.stringify(jsonSchema, null, 2)}
