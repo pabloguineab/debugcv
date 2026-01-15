@@ -1685,12 +1685,7 @@ export default function ProfilePage() {
                     </TabsContent>
 
                     <TabsContent value="experience" className="space-y-6">
-                        <div>
-                            <h3 className="text-lg font-medium mb-1">Experience</h3>
-                            <p className="text-sm text-muted-foreground">
-                                Add your experience to your profile to help us match you with the right opportunities.
-                            </p>
-                        </div>
+
 
                         {experiences.length === 0 ? (
                             /* Empty State */
@@ -1786,12 +1781,7 @@ export default function ProfilePage() {
                     </TabsContent>
 
                     <TabsContent value="projects" className="space-y-6">
-                        <div>
-                            <h3 className="text-lg font-medium mb-1">Projects</h3>
-                            <p className="text-sm text-muted-foreground">
-                                Showcase your personal and professional projects to demonstrate your skills.
-                            </p>
-                        </div>
+
 
                         {/* Empty State */}
                         {projects.length === 0 ? (
@@ -1892,12 +1882,7 @@ export default function ProfilePage() {
                     </TabsContent>
 
                     <TabsContent value="education" className="space-y-6">
-                        <div>
-                            <h3 className="text-lg font-medium mb-1">Education</h3>
-                            <p className="text-sm text-muted-foreground">
-                                Add your education to your profile to help us match you with the right opportunities.
-                            </p>
-                        </div>
+
 
                         {/* Empty State */}
                         {educations.length === 0 ? (
@@ -1990,12 +1975,7 @@ export default function ProfilePage() {
                     </TabsContent>
 
                     <TabsContent value="certifications" className="space-y-6">
-                        <div>
-                            <h3 className="text-lg font-medium mb-1">Certifications</h3>
-                            <p className="text-sm text-muted-foreground">
-                                Add your professional certifications and credentials.
-                            </p>
-                        </div>
+
 
                         {/* Empty State */}
                         {certifications.length === 0 ? (
