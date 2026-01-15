@@ -131,16 +131,10 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
     const [profileHovered, setProfileHovered] = useState(false);
     const [expertHovered, setExpertHovered] = useState(false);
     const [referHovered, setReferHovered] = useState(false);
-    const [activeAccordion, setActiveAccordion] = useState("");
 
-    // Sync accordion state with URL path
-    React.useEffect(() => {
-        if (pathname?.includes("/dashboard/profile")) {
-            setActiveAccordion("profile");
-        } else {
-            setActiveAccordion("");
-        }
-    }, [pathname]);
+    // Fully controlled by URL to avoid navigation race conditions
+    const isProfileActive = pathname?.includes("/dashboard/profile");
+    const activeAccordionValue = isProfileActive ? "profile" : "";
 
     return (
         <Sidebar variant="inset" {...props}>
@@ -205,15 +199,8 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                     type="single"
                                     collapsible
                                     className="w-full border-none rounded-none shadow-none bg-transparent"
-                                    value={activeAccordion}
-                                    onValueChange={(val) => {
-                                        // If we are on profile page and try to close it, ignore.
-                                        // This prevents the accordion from closing when clicking the trigger while already on the page.
-                                        if (pathname?.includes("/dashboard/profile") && val === "") {
-                                            return;
-                                        }
-                                        setActiveAccordion(val);
-                                    }}
+                                    value={activeAccordionValue}
+                                    onValueChange={() => { }}
                                 >
                                     <AccordionItem value="profile" className="border-none data-open:bg-transparent bg-transparent shadow-none">
                                         <AccordionTrigger
