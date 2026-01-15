@@ -1,11 +1,15 @@
 import { Book } from "@/components/ui/book";
+import { FileText } from "lucide-react";
 
 export default function ResumesPage() {
     return (
-        <div className="flex flex-1 flex-col gap-8 p-4">
-            <div className="flex flex-col gap-2">
-                <h2 className="text-3xl font-bold tracking-tight">My Resumes</h2>
-                <p className="text-muted-foreground">Manage your resumes and create tailored versions for different job applications.</p>
+        <div className="flex flex-1 flex-col gap-6 p-4">
+            <div className="flex items-center gap-3">
+                <FileText className="w-6 h-6 text-muted-foreground" />
+                <div>
+                    <h2 className="text-[15px] font-medium">CV Builder</h2>
+                    <p className="text-xs text-muted-foreground">Manage your resumes and create tailored versions for different job applications.</p>
+                </div>
             </div>
 
             <div className="flex flex-wrap gap-4">
