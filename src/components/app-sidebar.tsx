@@ -77,7 +77,7 @@ const jobsItems = [
     },
     {
         title: "Application Board",
-        url: "/dashboard/application-board",
+        url: "/dashboard/applications",
         icon: "/animated/wired-outline-1660-noticeboard-hover-pinch.json"
     },
 ];
