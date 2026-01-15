@@ -1869,7 +1869,7 @@ export default function ProfilePage() {
                                             <Input
                                                 value={expCompanyName}
                                                 onChange={(e) => setExpCompanyName(e.target.value)}
-                                                placeholder="e.g. Himalayas"
+                                                placeholder="e.g. Google"
                                                 className="pl-10"
                                             />
                                         </div>
