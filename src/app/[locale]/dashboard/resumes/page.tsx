@@ -11,7 +11,7 @@ export default function ResumesPage() {
                         <FileText className="w-6 h-6 text-blue-600" />
                         CV Builder
                     </h1>
-                    <p className="text-sm text-muted-foreground mt-1 italic">
+                    <p className="text-sm text-muted-foreground mt-1">
                         Manage your resumes and create tailored versions for different job applications
                     </p>
                 </div>
