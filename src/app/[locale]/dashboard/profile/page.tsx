@@ -38,9 +38,11 @@ import {
     saveEducation, deleteEducation, saveProject, deleteProject,
     saveCertification, deleteCertification
 } from "@/lib/actions/profile";
+import { useProfileCompletion } from "@/contexts/profile-completion-context";
 
 export default function ProfilePage() {
     const { data: session } = useSession();
+    const { refreshCompletionStatus } = useProfileCompletion();
     const [username, setUsername] = useState("lourdesbuendia");
     const [profileImage, setProfileImage] = useState<string | null>(null);
     const [imageToCrop, setImageToCrop] = useState<string | null>(null);
@@ -88,6 +90,7 @@ export default function ProfilePage() {
             setNewLevel("");
             try {
                 await updateProfile({ languages: newList });
+                await refreshCompletionStatus();
             } catch (err) {
                 console.error("Failed to save language", err);
             }
@@ -99,6 +102,7 @@ export default function ProfilePage() {
         setLanguages(newList);
         try {
             await updateProfile({ languages: newList });
+            await refreshCompletionStatus();
         } catch (err) {
             console.error("Failed to save language", err);
         }
@@ -230,7 +234,9 @@ export default function ProfilePage() {
     useEffect(() => {
         if (!isLoadingData && selectedCity && selectedRegion) {
             const timer = setTimeout(() => {
-                updateProfile({ location: `${selectedCity}, ${selectedRegion}` }).catch(err => console.error("Auto-save location error", err));
+                updateProfile({ location: `${selectedCity}, ${selectedRegion}` })
+                    .then(() => refreshCompletionStatus())
+                    .catch(err => console.error("Auto-save location error", err));
             }, 1000);
             return () => clearTimeout(timer);
         }
@@ -310,6 +316,7 @@ export default function ProfilePage() {
 
                 // Save to backend
                 await updateProfile({ image_url: croppedImage });
+                await refreshCompletionStatus();
 
                 setIsCropDialogOpen(false);
                 setImageToCrop(null);
@@ -346,6 +353,7 @@ export default function ProfilePage() {
 
         try {
             await updateProfile({ tech_stack: newTechs });
+            await refreshCompletionStatus();
         } catch (err) {
             console.error("Failed to save tech stack", err);
         }
@@ -501,6 +509,7 @@ export default function ProfilePage() {
                     setExperiences([...experiences, newExp]);
                     resetExperienceForm();
                     setIsAddExperienceOpen(false);
+                    await refreshCompletionStatus();
                 }
             } catch (err) {
                 console.error("Failed to save experience", err);
@@ -512,6 +521,7 @@ export default function ProfilePage() {
         setExperiences(experiences.filter(exp => exp.id !== id));
         try {
             await deleteExperience(id);
+            await refreshCompletionStatus();
         } catch (err) {
             console.error(err);
         }
@@ -606,6 +616,7 @@ export default function ProfilePage() {
                     setEducations([...educations, newEdu]);
                     resetEducationForm();
                     setIsAddEducationOpen(false);
+                    await refreshCompletionStatus();
                 }
             } catch (err) {
                 console.error("Failed to save education", err);
@@ -617,6 +628,7 @@ export default function ProfilePage() {
         setEducations(educations.filter(edu => edu.id !== id));
         try {
             await deleteEducation(id);
+            await refreshCompletionStatus();
         } catch (err) {
             console.error(err);
         }
@@ -697,6 +709,7 @@ export default function ProfilePage() {
                     setProjects([...projects, newProj]);
                     resetProjectForm();
                     setIsAddProjectOpen(false);
+                    await refreshCompletionStatus();
                 }
             } catch (err) {
                 console.error("Failed to save project", err);
@@ -708,6 +721,7 @@ export default function ProfilePage() {
         setProjects(projects.filter(proj => proj.id !== id));
         try {
             await deleteProject(id);
+            await refreshCompletionStatus();
         } catch (err) {
             console.error(err);
         }
@@ -798,6 +812,7 @@ export default function ProfilePage() {
                     setCertifications([...certifications, newCert]);
                     resetCertificationForm();
                     setIsAddCertificationOpen(false);
+                    await refreshCompletionStatus();
                 }
             } catch (err) {
                 console.error("Failed to save certification", err);
@@ -809,6 +824,7 @@ export default function ProfilePage() {
         setCertifications(certifications.filter(cert => cert.id !== id));
         try {
             await deleteCertification(id);
+            await refreshCompletionStatus();
         } catch (err) {
             console.error(err);
         }
@@ -822,6 +838,7 @@ export default function ProfilePage() {
                 bio: introduction,
                 location: selectedCity ? `${selectedCity}, ${selectedRegion}` : (selectedRegion || undefined)
             });
+            await refreshCompletionStatus();
         } catch (err) {
             console.error("Failed to save basic info", err);
         }
