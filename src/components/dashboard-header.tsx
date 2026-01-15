@@ -19,7 +19,7 @@ const routeNames: Record<string, string> = {
     "dashboard": "Dashboard",
     "job-search": "Job Search",
     "application-board": "Application Board",
-    "resumes": "My Versions",
+    "resumes": "CV Builder",
     "ats-score": "ATS Score",
     "cover-letters": "Cover Letters",
     "interview-coach": "AI Simulator",
@@ -37,8 +37,8 @@ export function DashboardHeader() {
     const dashboardIndex = segments.findIndex(s => s === 'dashboard');
     const pathSegments = dashboardIndex >= 0 ? segments.slice(dashboardIndex) : segments;
 
-    // Skip the 'dashboard' and 'resumes' segments from breadcrumbs (we already have Home)
-    const filteredSegments = pathSegments.filter(s => s !== 'dashboard' && s !== 'resumes');
+    // Skip only 'dashboard' segment
+    const filteredSegments = pathSegments.filter(s => s !== 'dashboard');
 
     // Build breadcrumb items
     const breadcrumbItems = filteredSegments.map((segment, index) => {
