@@ -9,6 +9,7 @@ import {
     User,
     CreditCard,
     Bell,
+    Check,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { LordIcon } from "@/components/icons/lord-icon";
@@ -146,8 +147,8 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
     // Helper to render completion check circle
     const StatusCircle = ({ completed }: { completed?: boolean }) => (
         <div className={`size-4 rounded-full border-2 flex items-center justify-center transition-colors ${completed
-                ? "border-blue-500 bg-blue-500"
-                : "border-gray-300 dark:border-gray-600"
+            ? "border-blue-500 bg-blue-500"
+            : "border-gray-300 dark:border-gray-600"
             }`}>
             {completed && <Check className="size-2.5 text-white" strokeWidth={3} />}
         </div>
