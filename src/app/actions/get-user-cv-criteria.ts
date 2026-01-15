@@ -78,7 +78,9 @@ export async function getUserCvCriteria(): Promise<CVCriteria | null> {
         }
 
         const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // Updated to a stable model name if possible, or fallback
+        // Using 'gemini-3-flash-preview' model as requested, matching ATS route configuration and other files.
+        const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+
 
         const prompt = `
             You are an expert Job Search Assistant.
