@@ -285,7 +285,11 @@ export function AddApplicationModal({
                                                     onValueChange={field.onChange}
                                                 >
                                                     <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Select work mode" />
+                                                        {field.value ? (
+                                                            <span>{WORK_MODE_LABELS[field.value as keyof typeof WORK_MODE_LABELS]}</span>
+                                                        ) : (
+                                                            <span className="text-muted-foreground">Select work mode</span>
+                                                        )}
                                                     </SelectTrigger>
                                                     <SelectContent>
                                                         <SelectItem value="remote">🌍 Remote</SelectItem>
@@ -339,7 +343,11 @@ export function AddApplicationModal({
                                                     onValueChange={field.onChange}
                                                 >
                                                     <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Select status" />
+                                                        {field.value ? (
+                                                            <span>{STATUS_LABELS[field.value as keyof typeof STATUS_LABELS]}</span>
+                                                        ) : (
+                                                            <span className="text-muted-foreground">Select status</span>
+                                                        )}
                                                     </SelectTrigger>
                                                     <SelectContent>
                                                         <SelectItem value="wishlist">📋 Wishlist</SelectItem>
@@ -364,7 +372,11 @@ export function AddApplicationModal({
                                                     onValueChange={field.onChange}
                                                 >
                                                     <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Select priority" />
+                                                        {field.value ? (
+                                                            <span>{PRIORITY_LABELS[field.value as keyof typeof PRIORITY_LABELS]}</span>
+                                                        ) : (
+                                                            <span className="text-muted-foreground">Select priority</span>
+                                                        )}
                                                     </SelectTrigger>
                                                     <SelectContent>
                                                         <SelectItem value="high">🔴 High</SelectItem>
