@@ -191,7 +191,7 @@ export default function AISimulatorPage() {
                     {isLoading ? (
                         // Loading skeleton
                         <div className="space-y-4">
-                            {[1, 2].map((i) => (
+                            {[1].map((i) => (
                                 <Card key={i}>
                                     <CardContent className="p-6">
                                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
