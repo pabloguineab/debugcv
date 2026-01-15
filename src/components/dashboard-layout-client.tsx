@@ -8,6 +8,15 @@ import { ReferFriendModal } from "@/components/refer-friend-modal";
 import { UploadResumeModal } from "@/components/upload-resume-modal";
 import { BreadcrumbProvider } from "@/contexts/breadcrumb-context";
 
+export interface CompletionStatus {
+    overview: boolean;
+    techStack: boolean;
+    experience: boolean;
+    projects: boolean;
+    education: boolean;
+    certifications: boolean;
+}
+
 interface DashboardLayoutClientProps {
     children: React.ReactNode;
     user?: {
@@ -15,9 +24,10 @@ interface DashboardLayoutClientProps {
         email?: string | null;
         image?: string | null;
     };
+    completionStatus?: CompletionStatus;
 }
 
-export function DashboardLayoutClient({ children, user }: DashboardLayoutClientProps) {
+export function DashboardLayoutClient({ children, user, completionStatus }: DashboardLayoutClientProps) {
     const [isReferModalOpen, setIsReferModalOpen] = useState(false);
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
@@ -26,6 +36,7 @@ export function DashboardLayoutClient({ children, user }: DashboardLayoutClientP
             <SidebarProvider>
                 <AppSidebar
                     user={user}
+                    completionStatus={completionStatus}
                     onOpenReferModal={() => {
                         setIsReferModalOpen(true);
                         setIsUploadModalOpen(false);

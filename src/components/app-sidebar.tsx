@@ -114,17 +114,27 @@ const interviewItems = [
     },
 ];
 
+interface CompletionStatus {
+    overview: boolean;
+    techStack: boolean;
+    experience: boolean;
+    projects: boolean;
+    education: boolean;
+    certifications: boolean;
+}
+
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
     user?: {
         name?: string | null;
         email?: string | null;
         image?: string | null;
     };
+    completionStatus?: CompletionStatus;
     onOpenReferModal: () => void;
     onOpenUploadModal?: () => void;
 }
 
-export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props }: AppSidebarProps) {
+export function AppSidebar({ user, completionStatus, onOpenReferModal, onOpenUploadModal, ...props }: AppSidebarProps) {
     const router = useRouter();
     const pathname = usePathname();
     const [dashboardHovered, setDashboardHovered] = useState(false);
@@ -135,6 +145,16 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
     // Fully controlled by URL to avoid navigation race conditions
     // Check if we are in profile section
     const isProfileActive = pathname?.includes("profile");
+
+    // Helper to render completion check circle
+    const StatusCircle = ({ completed }: { completed?: boolean }) => (
+        <div className={`size-4 rounded-full border-2 flex items-center justify-center transition-colors ${completed
+                ? "border-blue-500 bg-blue-500"
+                : "border-gray-300 dark:border-gray-600"
+            }`}>
+            {completed && <Check className="size-2.5 text-white" strokeWidth={3} />}
+        </div>
+    );
 
     return (
         <Sidebar variant="inset" {...props}>
@@ -226,33 +246,45 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
 
                                                 {/* Progress Bar */}
                                                 <div className="mb-3 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                                    <div className="h-full bg-gradient-to-r from-blue-500 to-blue-600 w-1/4 transition-all" />
+                                                    {/* Calculate progress width */}
+                                                    <div
+                                                        className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
+                                                        style={{
+                                                            width: `${((completionStatus?.overview ? 1 : 0) +
+                                                                    (completionStatus?.techStack ? 1 : 0) +
+                                                                    (completionStatus?.experience ? 1 : 0) +
+                                                                    (completionStatus?.projects ? 1 : 0) +
+                                                                    (completionStatus?.education ? 1 : 0) +
+                                                                    (completionStatus?.certifications ? 1 : 0)) / 6 * 100
+                                                                }%`
+                                                        }}
+                                                    />
                                                 </div>
 
                                                 {/* Profile Sections */}
                                                 <div className="space-y-2">
                                                     <Link href="/dashboard/profile" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                        <StatusCircle completed={completionStatus?.overview} />
                                                         <span>Overview</span>
                                                     </Link>
                                                     <Link href="/dashboard/profile?tab=tech-stack" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                        <StatusCircle completed={completionStatus?.techStack} />
                                                         <span>Tech Stack</span>
                                                     </Link>
                                                     <Link href="/dashboard/profile?tab=experience" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                        <StatusCircle completed={completionStatus?.experience} />
                                                         <span>Experience</span>
                                                     </Link>
                                                     <Link href="/dashboard/profile?tab=projects" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                        <StatusCircle completed={completionStatus?.projects} />
                                                         <span>Projects</span>
                                                     </Link>
                                                     <Link href="/dashboard/profile?tab=education" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                        <StatusCircle completed={completionStatus?.education} />
                                                         <span>Education</span>
                                                     </Link>
                                                     <Link href="/dashboard/profile?tab=certifications" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                                                        <StatusCircle completed={completionStatus?.certifications} />
                                                         <span>Certifications</span>
                                                     </Link>
                                                 </div>
