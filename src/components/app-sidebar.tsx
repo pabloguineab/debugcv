@@ -41,7 +41,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/components/Logo";
-import { Link, useRouter, usePathname } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
+import { usePathname } from "next/navigation";
 
 // Menu item wrapper with hover state
 function AnimatedMenuItem({ href, icon, title }: { href: string; icon: string; title: string }) {
@@ -132,9 +133,8 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
     const [referHovered, setReferHovered] = useState(false);
 
     // Fully controlled by URL to avoid navigation race conditions
-    // Using simple include check since we are using i18n usePathname which is cleaner
+    // Check if we are in profile section
     const isProfileActive = pathname?.includes("profile");
-    const activeAccordionValue = isProfileActive ? "profile" : "";
 
     return (
         <Sidebar variant="inset" {...props}>
@@ -194,35 +194,29 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {/* Profile Collapsible */}
+                            {/* Profile Section - Direct Conditional Rendering */}
                             <SidebarMenuItem>
-                                <Accordion
-                                    type="single"
-                                    collapsible
-                                    className="w-full border-none rounded-none shadow-none bg-transparent"
-                                    value={activeAccordionValue}
-                                    onValueChange={() => { }}
-                                >
-                                    <AccordionItem value="profile" className="border-none data-open:bg-transparent bg-transparent shadow-none">
-                                        <AccordionTrigger
-                                            className="p-0 hover:underline-none hover:no-underline border-none data-[state=open]:bg-transparent [&>svg]:hidden shadow-none"
+                                <div className="w-full">
+                                    <Link
+                                        href="/dashboard/profile"
+                                        className="w-full"
+                                    >
+                                        <div
+                                            className="flex items-center gap-3 w-full px-2 py-2 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer transition-colors"
+                                            onMouseEnter={() => setProfileHovered(true)}
+                                            onMouseLeave={() => setProfileHovered(false)}
                                         >
-                                            <div
-                                                className="flex items-center gap-3 w-full px-2 py-2 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer transition-colors"
-                                                onMouseEnter={() => setProfileHovered(true)}
-                                                onMouseLeave={() => setProfileHovered(false)}
-                                                onClick={(e) => {
-                                                    router.push('/dashboard/profile');
-                                                }}
-                                            >
-                                                <LordIcon
-                                                    src="/animated/wired-outline-44-avatar-user-in-circle-hover-looking-around.json"
-                                                    size={24}
-                                                    onTrigger={profileHovered}
-                                                />
-                                                <span className="text-sm font-medium flex-1 text-left">Profile</span>
-                                            </div>
-                                        </AccordionTrigger>
-                                        <AccordionContent className="pb-2 px-0 pt-2">
+                                            <LordIcon
+                                                src="/animated/wired-outline-44-avatar-user-in-circle-hover-looking-around.json"
+                                                size={24}
+                                                onTrigger={profileHovered}
+                                            />
+                                            <span className="text-sm font-medium flex-1 text-left">Profile</span>
+                                        </div>
+                                    </Link>
+
+                                    {isProfileActive && (
+                                        <div className="pb-2 px-0 pt-2 animate-in slide-in-from-top-2 duration-200 fade-in pl-3">
                                             {/* Profile Card with blue border */}
                                             <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
                                                 <h3 className="text-sm font-semibold mb-2">Complete your profile</h3>
@@ -263,9 +257,9 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                                     </Link>
                                                 </div>
                                             </div>
-                                        </AccordionContent>
-                                    </AccordionItem>
-                                </Accordion>
+                                        </div>
+                                    )}
+                                </div>
                             </SidebarMenuItem>
 
                             {resumesItems.map((item) => (
