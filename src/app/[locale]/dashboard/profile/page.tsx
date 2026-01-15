@@ -1813,14 +1813,14 @@ export default function ProfilePage() {
                             <div className="space-y-4">
                                 {/* Projects List */}
                                 {projects.map((proj) => (
-                                    <div key={proj.id} className="rounded-xl border bg-card p-6">
+                                    <div key={proj.id} className="rounded-xl border bg-card p-5">
                                         <div className="flex items-start justify-between">
                                             <div className="flex items-start gap-4">
                                                 <div className="size-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
-                                                    <FolderKanban className="size-5 text-gray-600 dark:text-gray-400" />
+                                                    <FolderKanban className="size-6 text-muted-foreground" />
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-semibold">{proj.name}</h4>
+                                                    <h4 className="font-semibold text-base">{proj.name}</h4>
                                                     {proj.projectUrl && (
                                                         <a href={proj.projectUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:underline flex items-center gap-1">
                                                             View project <ExternalLink className="size-3" />
@@ -1914,14 +1914,14 @@ export default function ProfilePage() {
                             <div className="space-y-4">
                                 {/* Education List */}
                                 {educations.map((edu) => (
-                                    <div key={edu.id} className="rounded-xl border bg-card p-6">
+                                    <div key={edu.id} className="rounded-xl border bg-card p-5">
                                         <div className="flex items-start justify-between">
                                             <div className="flex items-start gap-4">
                                                 <div className="size-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
-                                                    <GraduationCap className="size-5 text-gray-600 dark:text-gray-400" />
+                                                    <GraduationCap className="size-6 text-muted-foreground" />
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-semibold">{edu.school}</h4>
+                                                    <h4 className="font-semibold text-base">{edu.school}</h4>
                                                     {edu.degree && edu.fieldOfStudy && (
                                                         <p className="text-sm text-muted-foreground">
                                                             {edu.degree} in {edu.fieldOfStudy}
@@ -2007,14 +2007,14 @@ export default function ProfilePage() {
                             <div className="space-y-4">
                                 {/* Certifications List */}
                                 {certifications.map((cert) => (
-                                    <div key={cert.id} className="rounded-xl border bg-card p-6">
+                                    <div key={cert.id} className="rounded-xl border bg-card p-5">
                                         <div className="flex items-start justify-between">
                                             <div className="flex items-start gap-4">
                                                 <div className="size-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
-                                                    <Award className="size-5 text-gray-600 dark:text-gray-400" />
+                                                    <Award className="size-6 text-muted-foreground" />
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-semibold">{cert.name}</h4>
+                                                    <h4 className="font-semibold text-base">{cert.name}</h4>
                                                     <p className="text-sm text-muted-foreground">{cert.issuingOrganization}</p>
                                                     <p className="text-sm text-muted-foreground mt-1">
                                                         Issued {cert.issueMonth} {cert.issueYear}
