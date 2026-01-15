@@ -41,16 +41,17 @@ export default async function DashboardLayout({ children }: { children: React.Re
     }
 
     // Calculate profile completion status
-    const profileData = await fetchFullProfile();
+    // Temporarily disabled to debug application error
+    // const profileData = await fetchFullProfile();
 
     // Default to false if fetch fails or is null
     const completionStatus = {
-        overview: !!(profileData?.profile?.full_name && profileData?.profile?.bio),
-        techStack: (profileData?.profile?.tech_stack?.length || 0) > 0,
-        experience: (profileData?.experiences?.length || 0) > 0,
-        projects: (profileData?.projects?.length || 0) > 0,
-        education: (profileData?.educations?.length || 0) > 0,
-        certifications: (profileData?.certifications?.length || 0) > 0,
+        overview: false, // !!(profileData?.profile?.full_name && profileData?.profile?.bio),
+        techStack: false, // (profileData?.profile?.tech_stack?.length || 0) > 0,
+        experience: false, // (profileData?.experiences?.length || 0) > 0,
+        projects: false, // (profileData?.projects?.length || 0) > 0,
+        education: false, // (profileData?.educations?.length || 0) > 0,
+        certifications: false, // (profileData?.certifications?.length || 0) > 0,
     };
 
     return (
