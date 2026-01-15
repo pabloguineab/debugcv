@@ -858,6 +858,33 @@ export default function ProfilePage() {
     // Handler for importing CV data
     const handleImportComplete = async (data: ExtractedProfile) => {
         try {
+            // FIRST: Delete all existing data to prevent duplicates
+            // Delete existing experiences
+            for (const exp of experiences) {
+                await deleteExperience(exp.id);
+            }
+            setExperiences([]);
+
+            // Delete existing educations
+            for (const edu of educations) {
+                await deleteEducation(edu.id);
+            }
+            setEducations([]);
+
+            // Delete existing projects
+            for (const proj of projects) {
+                await deleteProject(proj.id);
+            }
+            setProjects([]);
+
+            // Delete existing certifications
+            for (const cert of certifications) {
+                await deleteCertification(cert.id);
+            }
+            setCertifications([]);
+
+            // NOW: Import new data from CV
+
             // 1. Update Overview/Profile data
             if (data.overview) {
                 const { bio, linkedin_user, github_user, location, full_name } = data.overview;
@@ -877,9 +904,8 @@ export default function ProfilePage() {
                 });
             }
 
-            // 2. Update Tech Stack
+            // 2. Update Tech Stack (replace, not append)
             if (data.tech_stack && data.tech_stack.length > 0) {
-                // Map tech names to our tech IDs (lowercase, replace spaces with dashes)
                 const techIds = data.tech_stack.map(tech =>
                     tech.toLowerCase().replace(/\s+/g, '-').replace(/\./g, '')
                 );
@@ -887,13 +913,14 @@ export default function ProfilePage() {
                 await updateProfile({ tech_stack: techIds });
             }
 
-            // 3. Update Languages
+            // 3. Update Languages (replace, not append)
             if (data.languages && data.languages.length > 0) {
                 setLanguages(data.languages);
                 await updateProfile({ languages: data.languages });
             }
 
             // 4. Save Experiences
+            const newExperiences: Experience[] = [];
             if (data.experiences && data.experiences.length > 0) {
                 for (const exp of data.experiences) {
                     const saved = await saveExperience({
@@ -912,7 +939,7 @@ export default function ProfilePage() {
                     });
 
                     if (saved) {
-                        setExperiences(prev => [...prev, {
+                        newExperiences.push({
                             id: saved.id,
                             title: saved.title,
                             employmentType: saved.employment_type,
@@ -926,12 +953,14 @@ export default function ProfilePage() {
                             endYear: saved.end_year,
                             skills: saved.skills || [],
                             description: saved.description,
-                        }]);
+                        });
                     }
                 }
             }
+            setExperiences(newExperiences);
 
             // 5. Save Education
+            const newEducations: Education[] = [];
             if (data.educations && data.educations.length > 0) {
                 for (const edu of data.educations) {
                     const saved = await saveEducation({
@@ -948,7 +977,7 @@ export default function ProfilePage() {
                     });
 
                     if (saved) {
-                        setEducations(prev => [...prev, {
+                        newEducations.push({
                             id: saved.id,
                             school: saved.school,
                             schoolUrl: saved.school_url || "",
@@ -960,12 +989,14 @@ export default function ProfilePage() {
                             isCurrentlyStudying: saved.is_current,
                             startYear: saved.start_year,
                             endYear: saved.end_year,
-                        }]);
+                        });
                     }
                 }
             }
+            setEducations(newEducations);
 
             // 6. Save Projects
+            const newProjects: Project[] = [];
             if (data.projects && data.projects.length > 0) {
                 for (const proj of data.projects) {
                     const saved = await saveProject({
@@ -981,7 +1012,7 @@ export default function ProfilePage() {
                     });
 
                     if (saved) {
-                        setProjects(prev => [...prev, {
+                        newProjects.push({
                             id: saved.id,
                             name: saved.name,
                             projectUrl: saved.project_url || "",
@@ -992,12 +1023,14 @@ export default function ProfilePage() {
                             startYear: saved.start_year || "",
                             endMonth: saved.end_month || "",
                             endYear: saved.end_year || ""
-                        }]);
+                        });
                     }
                 }
             }
+            setProjects(newProjects);
 
             // 7. Save Certifications
+            const newCertifications: Certification[] = [];
             if (data.certifications && data.certifications.length > 0) {
                 for (const cert of data.certifications) {
                     const saved = await saveCertification({
@@ -1014,7 +1047,7 @@ export default function ProfilePage() {
                     });
 
                     if (saved) {
-                        setCertifications(prev => [...prev, {
+                        newCertifications.push({
                             id: saved.id,
                             name: saved.name,
                             issuingOrganization: saved.issuing_org,
@@ -1025,10 +1058,11 @@ export default function ProfilePage() {
                             doesNotExpire: saved.no_expiration,
                             credentialId: saved.credential_id || "",
                             credentialUrl: saved.credential_url || "",
-                        }]);
+                        });
                     }
                 }
             }
+            setCertifications(newCertifications);
 
             // Refresh completion status after all imports
             await refreshCompletionStatus();
