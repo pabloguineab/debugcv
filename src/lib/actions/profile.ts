@@ -155,6 +155,7 @@ export async function saveExperience(data: Experience) {
         title: data.title,
         employment_type: data.employment_type,
         company_name: data.company_name,
+        company_url: data.company_url,
         country: data.country,
         location: data.location,
         start_month: data.start_month,
