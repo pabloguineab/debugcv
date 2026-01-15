@@ -106,15 +106,19 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
     const domain = getDomain();
 
     useEffect(() => {
-        // Try Brandfetch first for high quality logos (same as Playbook)
-        setLogoSrc(`https://cdn.brandfetch.io/${domain}/w/400/h/400`);
-        setTriedFallback(true);
+        // Try Clearbit first (better coverage for smaller companies)
+        setLogoSrc(`https://logo.clearbit.com/${domain}`);
+        setTriedFallback(false);
         setHasError(false);
     }, [logo, company, website, domain]);
 
     const handleImageError = () => {
-        // If Brandfetch failed, try the provided logo from API
-        if (logo && logoSrc !== logo) {
+        if (!triedFallback) {
+            // Then try Brandfetch
+            setLogoSrc(`https://cdn.brandfetch.io/${domain}/w/400/h/400`);
+            setTriedFallback(true);
+        } else if (logo && logoSrc !== logo) {
+            // Finally try the provided logo from API
             setLogoSrc(logo);
         } else {
             setHasError(true);
