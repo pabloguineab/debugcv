@@ -30,7 +30,7 @@ export function ProfileCompletionProvider({ children }: { children: React.ReactN
             const data = await fetchFullProfile();
             if (data) {
                 const newStatus = {
-                    overview: !!(data.profile?.full_name && data.profile?.bio),
+                    overview: !!(data.profile?.bio && data.profile.bio.trim().length > 0),
                     techStack: (data.profile?.tech_stack?.length || 0) > 0,
                     experience: (data.experiences?.length || 0) > 0,
                     projects: (data.projects?.length || 0) > 0,
