@@ -206,7 +206,14 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                     collapsible
                                     className="w-full border-none rounded-none shadow-none bg-transparent"
                                     value={activeAccordion}
-                                    onValueChange={setActiveAccordion}
+                                    onValueChange={(val) => {
+                                        // If we are on profile page and try to close it, ignore.
+                                        // This prevents the accordion from closing when clicking the trigger while already on the page.
+                                        if (pathname?.includes("/dashboard/profile") && val === "") {
+                                            return;
+                                        }
+                                        setActiveAccordion(val);
+                                    }}
                                 >
                                     <AccordionItem value="profile" className="border-none data-open:bg-transparent bg-transparent shadow-none">
                                         <AccordionTrigger
