@@ -65,7 +65,7 @@ export const Logo = ({ className = "", variant = "default" }: LogoProps) => {
             <text
                 x="48"
                 y="29"
-                fontFamily="'Inter', system-ui, -apple-system, sans-serif"
+                fontFamily="'Poppins', system-ui, -apple-system, sans-serif"
                 fontWeight="800"
                 fontSize="28"
                 className={isWhite ? "fill-white" : "fill-[#0F172A]"}
