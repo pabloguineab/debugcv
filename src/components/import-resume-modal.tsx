@@ -90,7 +90,7 @@ export function ImportResumeModal({ open, onClose, onImportComplete }: ImportRes
 
     return (
         <Dialog open={open} onOpenChange={handleClose}>
-            <DialogContent className="sm:max-w-md md:left-[calc(50%+8rem)]" overlayClassName="bg-white/20 dark:bg-black/20 backdrop-blur-[2px] z-0">
+            <DialogContent className="sm:max-w-md md:left-[calc(50%+8rem)]" overlayClassName="bg-white/20 dark:bg-black/20 backdrop-blur-[2px] z-50 md:left-[16rem]">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <FileText className="size-5 text-blue-600" />
