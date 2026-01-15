@@ -131,9 +131,16 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
     const [profileHovered, setProfileHovered] = useState(false);
     const [expertHovered, setExpertHovered] = useState(false);
     const [referHovered, setReferHovered] = useState(false);
+    const [activeAccordion, setActiveAccordion] = useState("");
 
-    // Auto-expand profile section if we are on a profile page
-    const isProfileActive = pathname?.includes("/dashboard/profile");
+    // Sync accordion state with URL path
+    React.useEffect(() => {
+        if (pathname?.includes("/dashboard/profile")) {
+            setActiveAccordion("profile");
+        } else {
+            setActiveAccordion("");
+        }
+    }, [pathname]);
 
     return (
         <Sidebar variant="inset" {...props}>
@@ -198,7 +205,8 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                     type="single"
                                     collapsible
                                     className="w-full border-none rounded-none shadow-none bg-transparent"
-                                    value={isProfileActive ? "profile" : ""}
+                                    value={activeAccordion}
+                                    onValueChange={setActiveAccordion}
                                 >
                                     <AccordionItem value="profile" className="border-none data-open:bg-transparent bg-transparent shadow-none">
                                         <AccordionTrigger
