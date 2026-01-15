@@ -62,7 +62,7 @@ function AnimatedMenuItem({ href, icon, title }: { href: string; icon: string; t
                         size={24}
                         onTrigger={isHovered}
                     />
-                    <span className="text-sm font-medium">{title}</span>
+                    <span className="text-[15px] font-medium">{title}</span>
                 </Link>
             </SidebarMenuButton>
         </SidebarMenuItem>
@@ -162,7 +162,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                             size={24}
                                             onTrigger={dashboardHovered}
                                         />
-                                        <span className="text-sm font-medium">Dashboard</span>
+                                        <span className="text-[15px] font-medium">Dashboard</span>
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
@@ -211,7 +211,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                                 size={24}
                                                 onTrigger={profileHovered}
                                             />
-                                            <span className="text-sm font-medium flex-1 text-left">Profile</span>
+                                            <span className="text-[15px] font-medium flex-1 text-left">Profile</span>
                                         </div>
                                     </Link>
 
@@ -306,7 +306,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                     size={24}
                                     onTrigger={expertHovered}
                                 />
-                                <span className="flex-1 text-sm">Get Expert Review</span>
+                                <span className="flex-1 text-[15px]">Get Expert Review</span>
                                 <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full font-bold dark:bg-blue-900/40 dark:text-blue-400 group-data-[collapsible=icon]:hidden">
                                     FREE
                                 </span>
@@ -326,7 +326,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                     size={24}
                                     onTrigger={referHovered}
                                 />
-                                <span className="flex-1 text-sm">Refer a Friend</span>
+                                <span className="flex-1 text-[15px]">Refer a Friend</span>
                                 <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-bold dark:bg-green-900/40 dark:text-green-400 group-data-[collapsible=icon]:hidden">
                                     -30%
                                 </span>
