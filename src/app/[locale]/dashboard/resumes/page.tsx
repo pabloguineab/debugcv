@@ -44,7 +44,7 @@ export default function ResumesPage() {
                             <path d="M12 5v14" />
                         </svg>
                     </div>
-                    <span className="font-medium text-gray-900 dark:text-gray-100">Create New Resume</span>
+                    <span className="font-medium text-gray-900 dark:text-gray-100">New Resume</span>
                 </div>
             </div>
         </div>
