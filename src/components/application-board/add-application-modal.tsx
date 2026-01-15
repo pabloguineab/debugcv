@@ -189,7 +189,7 @@ export function AddApplicationModal({
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.15 }}
-                        className="w-full max-w-lg mx-4 bg-background rounded-xl shadow-2xl border border-border/50 flex flex-col max-h-[85vh]"
+                        className="w-full max-w-md mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 flex flex-col max-h-[85vh]"
                     >
                         {/* Close button */}
                         {/* Close button removed as requested */}
