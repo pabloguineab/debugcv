@@ -41,6 +41,7 @@ import {
 import { useProfileCompletion } from "@/contexts/profile-completion-context";
 import { ImportResumeModal } from "@/components/import-resume-modal";
 import { type ExtractedProfile } from "@/app/actions/extract-profile-from-cv";
+import { InstitutionLogo } from "@/components/institution-logo";
 
 export default function ProfilePage() {
     const { data: session } = useSession();
@@ -1917,9 +1918,11 @@ export default function ProfilePage() {
                                     <div key={edu.id} className="rounded-xl border bg-card p-5">
                                         <div className="flex items-start justify-between">
                                             <div className="flex items-start gap-4">
-                                                <div className="size-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
-                                                    <GraduationCap className="size-6 text-muted-foreground" />
-                                                </div>
+                                                <InstitutionLogo
+                                                    name={edu.school}
+                                                    website={edu.schoolUrl}
+                                                    size="lg"
+                                                />
                                                 <div>
                                                     <h4 className="font-semibold text-base">{edu.school}</h4>
                                                     {edu.degree && edu.fieldOfStudy && (
