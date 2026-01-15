@@ -12,7 +12,11 @@ function UploadResumeContent() {
     const searchParams = useSearchParams()
     const { data: session } = useSession()
     const email = searchParams.get('email') || ''
-    const userName = session?.user?.name || ''
+
+    // Get name from URL (passed from onboarding) or session
+    // Filter out email addresses from session name
+    const sessionName = session?.user?.name?.includes('@') ? '' : session?.user?.name
+    const userName = searchParams.get('name') || sessionName || ''
 
     const [file, setFile] = useState<File | null>(null)
     const [isDragging, setIsDragging] = useState(false)

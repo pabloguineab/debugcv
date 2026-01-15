@@ -36,6 +36,11 @@ export default function OnboardingPage() {
     // Pre-fill from session
     useEffect(() => {
         if (session?.user?.name) {
+            // Check if name is an email (contains @)
+            if (session.user.name.includes('@')) {
+                return;
+            }
+
             const parts = session.user.name.trim().split(' ');
             if (parts.length > 0) {
                 setFirstName(parts[0]);
@@ -89,7 +94,7 @@ export default function OnboardingPage() {
             await update({ isNewUser: false });
 
             // Success - redirect to upload resume page
-            window.location.href = `/auth/upload-resume?email=${encodeURIComponent(email)}`;
+            window.location.href = `/auth/upload-resume?email=${encodeURIComponent(email)}&name=${encodeURIComponent(fullName)}`;
         } catch (err) {
             console.error('Error saving profile:', err);
             setError("An error occurred. Please try again.");
