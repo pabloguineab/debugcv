@@ -115,7 +115,7 @@ export default function AISimulatorPage() {
 
     return (
         <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
-            <div className="max-w-7xl mx-auto w-full space-y-6">
+            <div className="max-w-7xl mx-auto w-full flex flex-col flex-1 gap-6">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
                     <div>
@@ -189,7 +189,7 @@ export default function AISimulatorPage() {
                 {/* Interview Cards, Loading Skeleton, or Empty State */}
                 {isLoading ? (
                     // Loading skeleton
-                    <div className="space-y-4">
+                    <div className="space-y-4 flex-1">
                         {[1, 2].map((i) => (
                             <Card key={i}>
                                 <CardContent className="p-6">
@@ -219,6 +219,7 @@ export default function AISimulatorPage() {
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
+                        className="flex-1"
                     >
                         <Card className="border-dashed">
                             <CardContent className="p-12 text-center">
@@ -243,7 +244,7 @@ export default function AISimulatorPage() {
                         </Card>
                     </motion.div>
                 ) : (
-                    <div className="space-y-4">
+                    <div className="space-y-4 flex-1">
                         {filteredApplications.map((app, index) => {
                             const daysUntil = getDaysUntilInterview(app.interviewDate);
                             const readiness = getReadinessLevel(daysUntil);
@@ -344,24 +345,26 @@ export default function AISimulatorPage() {
                 )}
 
                 {/* AI Feature Hint */}
-                <Card className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30 border-purple-200 dark:border-purple-800">
-                    <CardContent className="flex items-center justify-between p-4">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
-                                <Brain className="w-5 h-5 text-purple-600" />
+                <div className="mt-auto">
+                    <Card className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30 border-purple-200 dark:border-purple-800">
+                        <CardContent className="flex items-center justify-between p-4">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
+                                    <Brain className="w-5 h-5 text-purple-600" />
+                                </div>
+                                <div>
+                                    <p className="font-medium text-sm">AI-Powered Practice</p>
+                                    <p className="text-xs text-muted-foreground">
+                                        Get personalized interview questions based on your resume and job description
+                                    </p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="font-medium text-sm">AI-Powered Practice</p>
-                                <p className="text-xs text-muted-foreground">
-                                    Get personalized interview questions based on your resume and job description
-                                </p>
-                            </div>
-                        </div>
-                        <Badge variant="outline" className="bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-700">
-                            Coming Soon
-                        </Badge>
-                    </CardContent>
-                </Card>
+                            <Badge variant="outline" className="bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-700">
+                                Coming Soon
+                            </Badge>
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         </div>
     );

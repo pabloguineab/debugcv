@@ -272,7 +272,7 @@ export default function ApplicationBoardPage() {
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="max-w-7xl mx-auto w-full space-y-6"
+                className="max-w-7xl mx-auto w-full flex flex-col flex-1 gap-6"
             >
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -352,6 +352,7 @@ export default function ApplicationBoardPage() {
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: 20 }}
+                                className="flex-1"
                             >
                                 <KanbanBoard
                                     applications={applications}
@@ -366,6 +367,7 @@ export default function ApplicationBoardPage() {
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: -20 }}
+                                className="flex-1"
                             >
                                 <ListView
                                     applications={applications}
@@ -377,37 +379,39 @@ export default function ApplicationBoardPage() {
                 )}
 
                 {/* Gmail Sync Feature */}
-                <Card className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/30 border-red-200 dark:border-red-800">
-                    <CardContent className="flex items-center justify-between p-4">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-                                <img src="/gmail.svg" alt="Gmail" className="w-6 h-6" />
+                <div className="mt-auto">
+                    <Card className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/30 border-red-200 dark:border-red-800">
+                        <CardContent className="flex items-center justify-between p-4">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+                                    <img src="/gmail.svg" alt="Gmail" className="w-6 h-6" />
+                                </div>
+                                <div>
+                                    <p className="font-medium text-sm">Sync with Gmail</p>
+                                    <p className="text-xs text-muted-foreground">
+                                        Automatically import your job applications from the last 60 days
+                                    </p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="font-medium text-sm">Sync with Gmail</p>
-                                <p className="text-xs text-muted-foreground">
-                                    Automatically import your job applications from the last 60 days
-                                </p>
-                            </div>
-                        </div>
-                        <GmailSync
-                            onApplicationsImported={(apps) => {
-                                const newApplications = apps.map(app => ({
-                                    id: app.id,
-                                    userEmail: session?.user?.email || "demo@example.com",
-                                    title: app.title,
-                                    company: app.company,
-                                    location: app.location || undefined,
-                                    priority: "medium" as const,
-                                    status: "applied" as ApplicationStatus,
-                                    date: app.appliedDate,
-                                    jobUrl: app.jobUrl || undefined,
-                                }));
-                                setApplications(prev => [...prev, ...newApplications]);
-                            }}
-                        />
-                    </CardContent>
-                </Card>
+                            <GmailSync
+                                onApplicationsImported={(apps) => {
+                                    const newApplications = apps.map(app => ({
+                                        id: app.id,
+                                        userEmail: session?.user?.email || "demo@example.com",
+                                        title: app.title,
+                                        company: app.company,
+                                        location: app.location || undefined,
+                                        priority: "medium" as const,
+                                        status: "applied" as ApplicationStatus,
+                                        date: app.appliedDate,
+                                        jobUrl: app.jobUrl || undefined,
+                                    }));
+                                    setApplications(prev => [...prev, ...newApplications]);
+                                }}
+                            />
+                        </CardContent>
+                    </Card>
+                </div>
             </motion.div>
 
             {/* Add/Edit Modal */}
