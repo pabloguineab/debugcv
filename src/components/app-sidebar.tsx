@@ -3,6 +3,7 @@
 
 import * as React from "react";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
     MoreVertical,
     LogOut,
@@ -146,12 +147,12 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
     const isProfileActive = pathname?.includes("profile");
     const isFullyComplete = status?.totalProgress === 100;
 
-    // Auto-hide the box after 5 seconds when profile is fully complete
+    // Auto-hide the box after 3 seconds when profile is fully complete
     React.useEffect(() => {
         if (isFullyComplete) {
             const timer = setTimeout(() => {
                 setHideCompletionBox(true);
-            }, 5000);
+            }, 3000);
             return () => clearTimeout(timer);
         } else {
             // Show the box again if profile becomes incomplete
@@ -250,50 +251,58 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                         </div>
                                     </Link>
 
-                                    {showCompletionBox && (
-                                        <div className="pb-2 px-0 pt-2 animate-in slide-in-from-top-2 duration-200 fade-in pl-3">
-                                            <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
-                                                <h3 className="text-sm font-semibold mb-2">Complete your profile</h3>
-                                                <p className="text-xs text-muted-foreground mb-3">
-                                                    A complete profile helps us match you with relevant jobs and personalize our AI tools to you.
-                                                </p>
+                                    <AnimatePresence>
+                                        {showCompletionBox && (
+                                            <motion.div
+                                                initial={{ opacity: 0, height: 0 }}
+                                                animate={{ opacity: 1, height: "auto" }}
+                                                exit={{ opacity: 0, height: 0, marginTop: 0, marginBottom: 0 }}
+                                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                                className="pb-2 px-0 pt-2 pl-3 overflow-hidden"
+                                            >
+                                                <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
+                                                    <h3 className="text-sm font-semibold mb-2">Complete your profile</h3>
+                                                    <p className="text-xs text-muted-foreground mb-3">
+                                                        A complete profile helps us match you with relevant jobs and personalize our AI tools to you.
+                                                    </p>
 
-                                                <div className="mb-3 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                                    <div
-                                                        className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
-                                                        style={{ width: `${status?.totalProgress || 0}%` }}
-                                                    />
-                                                </div>
+                                                    <div className="mb-3 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                                        <div
+                                                            className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
+                                                            style={{ width: `${status?.totalProgress || 0}%` }}
+                                                        />
+                                                    </div>
 
-                                                <div className="space-y-2">
-                                                    <Link href="/dashboard/profile" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <StatusCircle completed={status?.overview} />
-                                                        <span>Overview</span>
-                                                    </Link>
-                                                    <Link href="/dashboard/profile?tab=tech-stack" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <StatusCircle completed={status?.techStack} />
-                                                        <span>Tech Stack</span>
-                                                    </Link>
-                                                    <Link href="/dashboard/profile?tab=experience" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <StatusCircle completed={status?.experience} />
-                                                        <span>Experience</span>
-                                                    </Link>
-                                                    <Link href="/dashboard/profile?tab=projects" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <StatusCircle completed={status?.projects} />
-                                                        <span>Projects</span>
-                                                    </Link>
-                                                    <Link href="/dashboard/profile?tab=education" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <StatusCircle completed={status?.education} />
-                                                        <span>Education</span>
-                                                    </Link>
-                                                    <Link href="/dashboard/profile?tab=certifications" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <StatusCircle completed={status?.certifications} />
-                                                        <span>Certifications</span>
-                                                    </Link>
+                                                    <div className="space-y-2">
+                                                        <Link href="/dashboard/profile" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
+                                                            <StatusCircle completed={status?.overview} />
+                                                            <span>Overview</span>
+                                                        </Link>
+                                                        <Link href="/dashboard/profile?tab=tech-stack" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
+                                                            <StatusCircle completed={status?.techStack} />
+                                                            <span>Tech Stack</span>
+                                                        </Link>
+                                                        <Link href="/dashboard/profile?tab=experience" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
+                                                            <StatusCircle completed={status?.experience} />
+                                                            <span>Experience</span>
+                                                        </Link>
+                                                        <Link href="/dashboard/profile?tab=projects" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
+                                                            <StatusCircle completed={status?.projects} />
+                                                            <span>Projects</span>
+                                                        </Link>
+                                                        <Link href="/dashboard/profile?tab=education" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
+                                                            <StatusCircle completed={status?.education} />
+                                                            <span>Education</span>
+                                                        </Link>
+                                                        <Link href="/dashboard/profile?tab=certifications" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
+                                                            <StatusCircle completed={status?.certifications} />
+                                                            <span>Certifications</span>
+                                                        </Link>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    )}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
                             </SidebarMenuItem>
 
