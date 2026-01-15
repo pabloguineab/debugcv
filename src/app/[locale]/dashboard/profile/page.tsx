@@ -42,6 +42,7 @@ import { useProfileCompletion } from "@/contexts/profile-completion-context";
 import { ImportResumeModal } from "@/components/import-resume-modal";
 import { type ExtractedProfile } from "@/app/actions/extract-profile-from-cv";
 import { InstitutionLogo } from "@/components/institution-logo";
+import { CompanyLogo } from "@/components/company-logo";
 
 export default function ProfilePage() {
     const { data: session } = useSession();
@@ -486,7 +487,7 @@ export default function ProfilePage() {
     };
 
     const saveOrUpdateExperience = async () => {
-        if (expTitle && expEmploymentType && expCompanyName && expStartMonth && expStartYear && expDescription) {
+        if (expTitle && expEmploymentType && expCompanyName && expCompanyUrl && expStartMonth && expStartYear && expDescription) {
             try {
                 const experienceData = {
                     id: editingExperienceId || undefined,
@@ -1734,9 +1735,11 @@ export default function ProfilePage() {
                                             </button>
                                         </div>
                                         <div className="flex gap-4">
-                                            <div className="size-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
-                                                <Building2 className="size-6 text-muted-foreground" />
-                                            </div>
+                                            <CompanyLogo
+                                                company={exp.companyName}
+                                                website={exp.companyUrl}
+                                                size="xl"
+                                            />
                                             <div className="flex-1 min-w-0">
                                                 <h4 className="font-semibold text-base">{exp.title}</h4>
                                                 <p className="text-sm text-muted-foreground">
@@ -2225,7 +2228,7 @@ export default function ProfilePage() {
 
                                     {/* Company URL */}
                                     <div>
-                                        <label className="text-sm font-medium">Company website</label>
+                                        <label className="text-sm font-medium">Company website*</label>
                                         <div className="relative mt-2">
                                             <ExternalLink className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                                             <Input
@@ -2356,7 +2359,7 @@ export default function ProfilePage() {
                                     <Button
                                         className="bg-blue-600 hover:bg-blue-700 text-white"
                                         onClick={saveOrUpdateExperience}
-                                        disabled={!expTitle || !expEmploymentType || !expCompanyName || !expStartMonth || !expStartYear || !expDescription}
+                                        disabled={!expTitle || !expEmploymentType || !expCompanyName || !expCompanyUrl || !expStartMonth || !expStartYear || !expDescription}
                                     >
                                         {editingExperienceId ? 'Save changes' : 'Add experience'}
                                     </Button>
