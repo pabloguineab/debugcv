@@ -36,7 +36,6 @@ const STATUS_LABELS = {
     applied: "📤 Applied",
     interview: "💬 Interview",
     offer: "🎉 Offer",
-
 };
 
 const PRIORITY_LABELS = {
@@ -110,7 +109,7 @@ export function AddApplicationModal({
                     ? initialData.expectedSalary
                     : [80, 150],
                 priority: initialData.priority || "medium",
-                status: initialData.status || "wishlist",
+                status: (initialData.status === "rejected" ? "wishlist" : initialData.status) || "wishlist",
                 jobDescription: initialData.jobDescription || "",
             });
         } else {
