@@ -11,13 +11,13 @@ export default function ResumesPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center md:justify-items-start">
                 <Book
                     title="Software Engineer"
-                    description="Updated Oct 2024"
+                    author="Updated Oct 2024"
                     width={220}
                     height={320}
                 />
                 <Book
                     title="Frontend Lead"
-                    description="Target: Google"
+                    author="Target: Google"
                     width={220}
                     height={320}
                 />
