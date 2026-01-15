@@ -41,8 +41,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/components/Logo";
-import { Link, useRouter } from "@/i18n/routing";
-import { usePathname } from "next/navigation";
+import { Link, useRouter, usePathname } from "@/i18n/routing";
 
 // Menu item wrapper with hover state
 function AnimatedMenuItem({ href, icon, title }: { href: string; icon: string; title: string }) {
@@ -133,7 +132,8 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
     const [referHovered, setReferHovered] = useState(false);
 
     // Fully controlled by URL to avoid navigation race conditions
-    const isProfileActive = pathname?.includes("/dashboard/profile");
+    // Using simple include check since we are using i18n usePathname which is cleaner
+    const isProfileActive = pathname?.includes("profile");
     const activeAccordionValue = isProfileActive ? "profile" : "";
 
     return (
