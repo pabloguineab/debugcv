@@ -114,14 +114,9 @@ const interviewItems = [
     },
 ];
 
-interface CompletionStatus {
-    overview: boolean;
-    techStack: boolean;
-    experience: boolean;
-    projects: boolean;
-    education: boolean;
-    certifications: boolean;
-}
+import { useProfileCompletion } from "@/contexts/profile-completion-context";
+
+// ... (keep other imports)
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
     user?: {
@@ -129,21 +124,23 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
         email?: string | null;
         image?: string | null;
     };
-    completionStatus?: CompletionStatus;
+    // completionStatus removed
     onOpenReferModal: () => void;
     onOpenUploadModal?: () => void;
 }
 
-export function AppSidebar({ user, completionStatus, onOpenReferModal, onOpenUploadModal, ...props }: AppSidebarProps) {
+export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props }: AppSidebarProps) {
     const router = useRouter();
     const pathname = usePathname();
+    const { status } = useProfileCompletion(); // Use hook here
+
+    // ... (keep state)
     const [dashboardHovered, setDashboardHovered] = useState(false);
     const [profileHovered, setProfileHovered] = useState(false);
     const [expertHovered, setExpertHovered] = useState(false);
     const [referHovered, setReferHovered] = useState(false);
 
-    // Fully controlled by URL to avoid navigation race conditions
-    // Check if we are in profile section
+    // ... (keep isProfileActive)
     const isProfileActive = pathname?.includes("profile");
 
     // Helper to render completion check circle
@@ -158,6 +155,7 @@ export function AppSidebar({ user, completionStatus, onOpenReferModal, onOpenUpl
 
     return (
         <Sidebar variant="inset" {...props}>
+            {/* ... header ... */}
             <SidebarHeader className="p-4 flex flex-row items-center justify-between">
                 <Link href="/dashboard" className="flex items-center gap-2 -ml-1">
                     <Logo className="h-8 w-auto dark:hidden" />
@@ -165,7 +163,9 @@ export function AppSidebar({ user, completionStatus, onOpenReferModal, onOpenUpl
                 </Link>
             </SidebarHeader>
             <SidebarContent>
-                {/* Dashboard - Standalone Group */}
+                {/* ... (keep groups up to Resumes) ... */}
+
+                {/* Dashboard Group */}
                 <SidebarGroup>
                     <SidebarGroupContent>
                         <SidebarMenu>
@@ -214,13 +214,9 @@ export function AppSidebar({ user, completionStatus, onOpenReferModal, onOpenUpl
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {/* Profile Collapsible */}
-                            {/* Profile Section - Direct Conditional Rendering */}
                             <SidebarMenuItem>
                                 <div className="w-full">
-                                    <Link
-                                        href="/dashboard/profile"
-                                        className="w-full"
-                                    >
+                                    <Link href="/dashboard/profile" className="w-full">
                                         <div
                                             className="flex items-center gap-3 w-full px-2 py-2 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer transition-colors"
                                             onMouseEnter={() => setProfileHovered(true)}
@@ -237,54 +233,42 @@ export function AppSidebar({ user, completionStatus, onOpenReferModal, onOpenUpl
 
                                     {isProfileActive && (
                                         <div className="pb-2 px-0 pt-2 animate-in slide-in-from-top-2 duration-200 fade-in pl-3">
-                                            {/* Profile Card with blue border */}
                                             <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
                                                 <h3 className="text-sm font-semibold mb-2">Complete your profile</h3>
                                                 <p className="text-xs text-muted-foreground mb-3">
                                                     A complete profile helps us match you with relevant jobs and personalize our AI tools to you.
                                                 </p>
 
-                                                {/* Progress Bar */}
                                                 <div className="mb-3 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                                    {/* Calculate progress width */}
                                                     <div
                                                         className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
-                                                        style={{
-                                                            width: `${((completionStatus?.overview ? 1 : 0) +
-                                                                    (completionStatus?.techStack ? 1 : 0) +
-                                                                    (completionStatus?.experience ? 1 : 0) +
-                                                                    (completionStatus?.projects ? 1 : 0) +
-                                                                    (completionStatus?.education ? 1 : 0) +
-                                                                    (completionStatus?.certifications ? 1 : 0)) / 6 * 100
-                                                                }%`
-                                                        }}
+                                                        style={{ width: `${status?.totalProgress || 0}%` }}
                                                     />
                                                 </div>
 
-                                                {/* Profile Sections */}
                                                 <div className="space-y-2">
                                                     <Link href="/dashboard/profile" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <StatusCircle completed={completionStatus?.overview} />
+                                                        <StatusCircle completed={status?.overview} />
                                                         <span>Overview</span>
                                                     </Link>
                                                     <Link href="/dashboard/profile?tab=tech-stack" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <StatusCircle completed={completionStatus?.techStack} />
+                                                        <StatusCircle completed={status?.techStack} />
                                                         <span>Tech Stack</span>
                                                     </Link>
                                                     <Link href="/dashboard/profile?tab=experience" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <StatusCircle completed={completionStatus?.experience} />
+                                                        <StatusCircle completed={status?.experience} />
                                                         <span>Experience</span>
                                                     </Link>
                                                     <Link href="/dashboard/profile?tab=projects" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <StatusCircle completed={completionStatus?.projects} />
+                                                        <StatusCircle completed={status?.projects} />
                                                         <span>Projects</span>
                                                     </Link>
                                                     <Link href="/dashboard/profile?tab=education" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <StatusCircle completed={completionStatus?.education} />
+                                                        <StatusCircle completed={status?.education} />
                                                         <span>Education</span>
                                                     </Link>
                                                     <Link href="/dashboard/profile?tab=certifications" className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors">
-                                                        <StatusCircle completed={completionStatus?.certifications} />
+                                                        <StatusCircle completed={status?.certifications} />
                                                         <span>Certifications</span>
                                                     </Link>
                                                 </div>

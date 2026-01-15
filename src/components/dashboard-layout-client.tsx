@@ -7,15 +7,7 @@ import { DashboardHeader } from "@/components/dashboard-header";
 import { ReferFriendModal } from "@/components/refer-friend-modal";
 import { UploadResumeModal } from "@/components/upload-resume-modal";
 import { BreadcrumbProvider } from "@/contexts/breadcrumb-context";
-
-export interface CompletionStatus {
-    overview: boolean;
-    techStack: boolean;
-    experience: boolean;
-    projects: boolean;
-    education: boolean;
-    certifications: boolean;
-}
+import { ProfileCompletionProvider } from "@/contexts/profile-completion-context";
 
 interface DashboardLayoutClientProps {
     children: React.ReactNode;
@@ -24,33 +16,34 @@ interface DashboardLayoutClientProps {
         email?: string | null;
         image?: string | null;
     };
-    completionStatus?: CompletionStatus;
 }
 
-export function DashboardLayoutClient({ children, user, completionStatus }: DashboardLayoutClientProps) {
+export function DashboardLayoutClient({ children, user }: DashboardLayoutClientProps) {
     const [isReferModalOpen, setIsReferModalOpen] = useState(false);
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
     return (
         <BreadcrumbProvider>
-            <SidebarProvider>
-                <AppSidebar
-                    user={user}
-                    completionStatus={completionStatus}
-                    onOpenReferModal={() => {
-                        setIsReferModalOpen(true);
-                        setIsUploadModalOpen(false);
-                    }}
-                    onOpenUploadModal={() => {
-                        setIsUploadModalOpen(true);
-                        setIsReferModalOpen(false);
-                    }}
-                />
-                <SidebarInset>
-                    <DashboardHeader />
-                    <div className="flex flex-1 flex-col gap-4 px-4 pt-2 pb-4 min-h-[calc(100vh-4rem)]">
-                        {children}
-                    </div>
+            <ProfileCompletionProvider>
+                <SidebarProvider>
+                    <AppSidebar
+                        user={user}
+                        onOpenReferModal={() => {
+                            setIsReferModalOpen(true);
+                            setIsUploadModalOpen(false);
+                        }}
+                        onOpenUploadModal={() => {
+                            setIsUploadModalOpen(true);
+                            setIsReferModalOpen(false);
+                        }}
+                    />
+                    <SidebarInset>
+                        <DashboardHeader />
+                        <div className="flex flex-1 flex-col gap-4 px-4 pt-2 pb-4 min-h-[calc(100vh-4rem)]">
+                            {children}
+                        </div>
+                    </SidebarInset>
+
                     <ReferFriendModal
                         open={isReferModalOpen}
                         onClose={() => setIsReferModalOpen(false)}
@@ -59,8 +52,8 @@ export function DashboardLayoutClient({ children, user, completionStatus }: Dash
                         open={isUploadModalOpen}
                         onClose={() => setIsUploadModalOpen(false)}
                     />
-                </SidebarInset>
-            </SidebarProvider>
+                </SidebarProvider>
+            </ProfileCompletionProvider>
         </BreadcrumbProvider>
     );
 }

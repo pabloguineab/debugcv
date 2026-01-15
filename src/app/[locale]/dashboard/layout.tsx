@@ -4,7 +4,7 @@ import { DashboardLayoutClient } from "@/components/dashboard-layout-client";
 import { redirect } from "next/navigation";
 import { getUserIdentity } from "@/lib/supabase";
 
-import { fetchFullProfile } from "@/lib/actions/profile";
+
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
     const session = await getServerSession(authOptions);
@@ -40,22 +40,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
         }
     }
 
-    // Calculate profile completion status
-    // Temporarily disabled to debug application error
-    // const profileData = await fetchFullProfile();
-
-    // Default to false if fetch fails or is null
-    const completionStatus = {
-        overview: false, // !!(profileData?.profile?.full_name && profileData?.profile?.bio),
-        techStack: false, // (profileData?.profile?.tech_stack?.length || 0) > 0,
-        experience: false, // (profileData?.experiences?.length || 0) > 0,
-        projects: false, // (profileData?.projects?.length || 0) > 0,
-        education: false, // (profileData?.educations?.length || 0) > 0,
-        certifications: false, // (profileData?.certifications?.length || 0) > 0,
-    };
-
     return (
-        <DashboardLayoutClient user={user} completionStatus={completionStatus}>
+        <DashboardLayoutClient user={user}>
             {children}
         </DashboardLayoutClient>
     );
