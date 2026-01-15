@@ -42,6 +42,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/components/Logo";
 import { Link, useRouter } from "@/i18n/routing";
+import { usePathname } from "next/navigation";
 
 // Menu item wrapper with hover state
 function AnimatedMenuItem({ href, icon, title }: { href: string; icon: string; title: string }) {
@@ -125,10 +126,14 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props }: AppSidebarProps) {
     const router = useRouter();
+    const pathname = usePathname();
     const [dashboardHovered, setDashboardHovered] = useState(false);
     const [profileHovered, setProfileHovered] = useState(false);
     const [expertHovered, setExpertHovered] = useState(false);
     const [referHovered, setReferHovered] = useState(false);
+
+    // Auto-expand profile section if we are on a profile page
+    const isProfileActive = pathname?.includes("/dashboard/profile");
 
     return (
         <Sidebar variant="inset" {...props}>
@@ -189,7 +194,12 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                         <SidebarMenu>
                             {/* Profile Collapsible */}
                             <SidebarMenuItem>
-                                <Accordion type="single" collapsible className="w-full border-none rounded-none shadow-none bg-transparent">
+                                <Accordion
+                                    type="single"
+                                    collapsible
+                                    className="w-full border-none rounded-none shadow-none bg-transparent"
+                                    value={isProfileActive ? "profile" : ""}
+                                >
                                     <AccordionItem value="profile" className="border-none data-open:bg-transparent bg-transparent shadow-none">
                                         <AccordionTrigger
                                             className="p-0 hover:underline-none hover:no-underline border-none data-[state=open]:bg-transparent [&>svg]:hidden shadow-none"
