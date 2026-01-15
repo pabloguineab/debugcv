@@ -15,7 +15,7 @@ import { extractProfileFromCV, type ExtractedProfile } from "@/app/actions/extra
 interface ImportResumeModalProps {
     open: boolean;
     onClose: () => void;
-    onImportComplete: (data: ExtractedProfile) => void;
+    onImportComplete: (data: ExtractedProfile) => Promise<void> | void;
 }
 
 type ImportStatus = "idle" | "uploading" | "processing" | "success" | "error";
@@ -52,10 +52,12 @@ export function ImportResumeModal({ open, onClose, onImportComplete }: ImportRes
             const result = await extractProfileFromCV(formData);
 
             if (result) {
+                // Process the data first while showing the loader
+                await onImportComplete(result);
+                
                 setStatus("success");
                 // Short delay to show success state
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                onImportComplete(result);
+                await new Promise(resolve => setTimeout(resolve, 2000));
                 handleClose();
             } else {
                 setError("Could not extract data from the CV. Please try again.");
