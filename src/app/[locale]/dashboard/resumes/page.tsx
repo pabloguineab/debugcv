@@ -3,12 +3,17 @@ import { FileText } from "lucide-react";
 
 export default function ResumesPage() {
     return (
-        <div className="flex flex-1 flex-col gap-6 p-4">
-            <div className="flex items-center gap-3">
-                <FileText className="w-6 h-6 text-muted-foreground" />
+        <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <div>
-                    <h2 className="text-[15px] font-medium">CV Builder</h2>
-                    <p className="text-xs text-muted-foreground">Manage your resumes and create tailored versions for different job applications.</p>
+                    <h1 className="text-2xl font-bold flex items-center gap-2 dark:text-white">
+                        <FileText className="w-6 h-6 text-blue-600" />
+                        CV Builder
+                    </h1>
+                    <p className="text-sm text-muted-foreground mt-1 italic">
+                        Manage your resumes and create tailored versions for different job applications
+                    </p>
                 </div>
             </div>
 
