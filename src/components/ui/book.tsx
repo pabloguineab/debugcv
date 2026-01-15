@@ -1,22 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { Suspense } from "react";
-
-// Dynamically import the Framer Book component from the CDN
-const FramerBook = dynamic(
-    () => import("https://framer.com/m/Book-AFRs.js@mxOP9zughWqzCr7yH17p").then((mod) => mod.default),
-    {
-        ssr: false,
-        loading: () => (
-            <div
-                className="animate-pulse bg-gray-200 dark:bg-gray-800 rounded-lg"
-                style={{ width: 200, height: 305 }}
-            />
-        )
-    }
-);
-
 interface BookProps {
     title?: string;
     author?: string;
@@ -28,23 +11,31 @@ interface BookProps {
 export function Book({
     title = "My Resume",
     author = "Pablo Guinea",
-    image,
+    image = "https://framerusercontent.com/images/JXL9OqyS9HXAxdkH6ZGIV5PQXQQ.jpg",
     width = 200,
     height = 305
 }: BookProps) {
+    // Construct the Framer embed URL with parameters
+    const params = new URLSearchParams({
+        title,
+        author,
+        image,
+    });
+
+    const embedUrl = `https://framer.com/embed/Book-AFRs.js@mxOP9zughWqzCr7yH17p?${params.toString()}`;
+
     return (
-        <Suspense fallback={
-            <div
-                className="animate-pulse bg-gray-200 dark:bg-gray-800 rounded-lg"
-                style={{ width, height }}
-            />
-        }>
-            <FramerBook
-                title={title}
-                author={author}
-                image={image}
-                style={{ width, height }}
-            />
-        </Suspense>
+        <iframe
+            src={embedUrl}
+            width={width}
+            height={height}
+            style={{
+                border: "none",
+                overflow: "hidden",
+                background: "transparent"
+            }}
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            loading="lazy"
+        />
     );
 }
