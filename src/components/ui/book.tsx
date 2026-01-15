@@ -8,6 +8,7 @@ interface BookProps {
     target?: string;
     width?: number;
     height?: number;
+    variant?: "resume" | "cover-letter";
 }
 
 export function Book({
@@ -15,8 +16,21 @@ export function Book({
     subtitle = "Resume",
     target = "Google",
     width = 200,
-    height = 305
+    height = 305,
+    variant = "resume"
 }: BookProps) {
+    const isResume = variant === "resume";
+    const accentColor = isResume ? "blue" : "indigo";
+
+    // Tailwind classes need to be full strings, so we map them manually for safety
+    const accentClasses = {
+        bar: isResume ? "bg-blue-500" : "bg-indigo-500",
+        gradientLine: isResume ? "from-blue-400" : "from-indigo-400",
+        bottomLine: isResume ? "from-blue-500 via-blue-400 to-blue-300" : "from-indigo-500 via-indigo-400 to-indigo-300",
+        bgAccent1: isResume ? "rgba(59, 130, 246, 0.08)" : "rgba(99, 102, 241, 0.08)",
+        bgAccent2: isResume ? "rgba(59, 130, 246, 0.05)" : "rgba(99, 102, 241, 0.05)",
+    };
+
     return (
         <motion.div
             className="relative cursor-pointer"
@@ -25,6 +39,7 @@ export function Book({
                 height,
                 perspective: 1200,
             }}
+            // ... (keep initial motion props)
             initial={{
                 boxShadow: "0px 0.7px 0.7px -0.625px rgba(0,0,0,0), 0px 1.8px 1.8px -1.25px rgba(0,0,0,0), 0px 3.6px 3.6px -1.875px rgba(0,0,0,0), 0px 6.9px 6.9px -2.5px rgba(0,0,0,0), 0px 13.6px 13.6px -3.125px rgba(0,0,0,0), 0px 30px 30px -3.75px rgba(0,0,0,0)"
             }}
@@ -54,21 +69,33 @@ export function Book({
                         zIndex: 0,
                     }}
                 >
-                    {/* Mini Resume Preview */}
+                    {/* Mini Resume/Letter Preview */}
                     <div className="w-full space-y-3">
                         <div className="h-2 w-1/3 bg-gray-200 rounded" />
-                        <div className="h-px w-full bg-gray-100" />
+                        <div className={`h-px w-full ${isResume ? 'bg-gray-100' : 'bg-transparent'}`} /> {/* Separator only for resume */}
                         <div className="space-y-1.5">
                             <div className="h-1.5 w-full bg-gray-100 rounded" />
                             <div className="h-1.5 w-full bg-gray-100 rounded" />
                             <div className="h-1.5 w-2/3 bg-gray-100 rounded" />
                         </div>
-                        <div className="h-px w-full bg-gray-100 mt-2" />
-                        <div className="space-y-1.5">
-                            <div className="h-1.5 w-full bg-gray-100 rounded" />
-                            <div className="h-1.5 w-full bg-gray-100 rounded" />
-                            <div className="h-1.5 w-4/5 bg-gray-100 rounded" />
-                        </div>
+                        {/* More text lines for letter */}
+                        {!isResume && (
+                            <div className="space-y-1.5 mt-2">
+                                <div className="h-1.5 w-full bg-gray-100 rounded" />
+                                <div className="h-1.5 w-full bg-gray-100 rounded" />
+                                <div className="h-1.5 w-5/6 bg-gray-100 rounded" />
+                            </div>
+                        )}
+                        {isResume && (
+                            <>
+                                <div className="h-px w-full bg-gray-100 mt-2" />
+                                <div className="space-y-1.5">
+                                    <div className="h-1.5 w-full bg-gray-100 rounded" />
+                                    <div className="h-1.5 w-full bg-gray-100 rounded" />
+                                    <div className="h-1.5 w-4/5 bg-gray-100 rounded" />
+                                </div>
+                            </>
+                        )}
                     </div>
                 </motion.div>
 
@@ -98,13 +125,13 @@ export function Book({
                         <div
                             className="absolute top-0 right-0 w-24 h-24"
                             style={{
-                                background: "linear-gradient(135deg, transparent 50%, rgba(59, 130, 246, 0.08) 50%)"
+                                background: `linear-gradient(135deg, transparent 50%, ${accentClasses.bgAccent1} 50%)`
                             }}
                         />
                         <div
                             className="absolute bottom-0 left-0 w-16 h-16"
                             style={{
-                                background: "linear-gradient(315deg, transparent 50%, rgba(59, 130, 246, 0.05) 50%)"
+                                background: `linear-gradient(315deg, transparent 50%, ${accentClasses.bgAccent2} 50%)`
                             }}
                         />
 
@@ -112,7 +139,7 @@ export function Book({
                         <div className="relative h-full flex flex-col justify-between p-5">
                             {/* Top - Elegant label */}
                             <div className="flex items-center gap-2">
-                                <div className="w-1 h-4 bg-blue-500 rounded-full" />
+                                <div className={`w-1 h-4 ${accentClasses.bar} rounded-full`} />
                                 <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-gray-400">
                                     {subtitle}
                                 </span>
@@ -126,7 +153,7 @@ export function Book({
                                 >
                                     {title}
                                 </h3>
-                                <div className="mt-3 h-px w-12 bg-gradient-to-r from-blue-400 to-transparent" />
+                                <div className={`mt-3 h-px w-12 bg-gradient-to-r ${accentClasses.gradientLine} to-transparent`} />
                             </div>
 
                             {/* Bottom - Target Company */}
@@ -141,7 +168,7 @@ export function Book({
                         </div>
 
                         {/* Thin accent line at bottom */}
-                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-300" />
+                        <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${accentClasses.bottomLine}`} />
                     </div>
 
                     {/* Spine Light Effect */}

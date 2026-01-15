@@ -25,6 +25,7 @@ export default function CoverLettersPage() {
                     target="Google"
                     width={180}
                     height={260}
+                    variant="cover-letter"
                 />
                 <Book
                     title="Frontend Lead"
@@ -32,6 +33,7 @@ export default function CoverLettersPage() {
                     target="Meta"
                     width={180}
                     height={260}
+                    variant="cover-letter"
                 />
 
                 {/* Add New placeholder */}
