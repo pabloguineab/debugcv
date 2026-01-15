@@ -130,7 +130,7 @@ export function WelcomePreloader({ userName, onComplete, duration = 2500 }: Welc
                                         variants={charVariants}
                                         className="text-4xl md:text-5xl lg:text-6xl text-slate-900"
                                         style={{
-                                            fontFamily: "var(--font-poppins), 'Poppins', sans-serif",
+                                            fontFamily: "var(--font-instrument-serif), 'Instrument Serif', Georgia, serif",
                                             fontStyle: "italic",
                                             display: char === " " ? "inline" : "inline-block",
                                         }}
@@ -148,7 +148,7 @@ export function WelcomePreloader({ userName, onComplete, duration = 2500 }: Welc
                                         variants={charVariants}
                                         className="text-5xl md:text-6xl lg:text-7xl text-blue-600"
                                         style={{
-                                            fontFamily: "var(--font-poppins), 'Poppins', sans-serif",
+                                            fontFamily: "var(--font-instrument-serif), 'Instrument Serif', Georgia, serif",
                                             fontStyle: "italic",
                                             display: char === " " ? "inline" : "inline-block",
                                         }}
