@@ -37,18 +37,28 @@ export function DashboardHeader() {
     const dashboardIndex = segments.findIndex(s => s === 'dashboard');
     const pathSegments = dashboardIndex >= 0 ? segments.slice(dashboardIndex) : segments;
 
-    // Skip only 'dashboard' segment
-    const filteredSegments = pathSegments.filter(s => s !== 'dashboard');
+    // Generate breadcrumb items
+    const breadcrumbItems = pathSegments
+        .map((segment, index) => {
+            // Skip 'dashboard' since we explicitly add 'Home' link
+            if (segment === 'dashboard') return null;
 
-    // Build breadcrumb items
-    const breadcrumbItems = filteredSegments.map((segment, index) => {
-        const name = routeNames[segment] || segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ');
-        // Build the full path including dashboard prefix
-        const href = '/dashboard/' + filteredSegments.slice(0, index + 1).join('/');
-        const isLast = index === filteredSegments.length - 1 && !activeTab;
+            // Skip 'resumes' if we are on 'ats-score' page (visual flattening)
+            if (segment === 'resumes' && pathSegments.includes('ats-score')) return null;
 
-        return { name, href, isLast };
-    });
+            const name = routeNames[segment] || segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ');
+
+            // Construct full href path up to this segment
+            const href = '/' + pathSegments.slice(0, index + 1).join('/');
+
+            return { name, href, isLast: false };
+        })
+        .filter((item): item is { name: string; href: string; isLast: boolean } => item !== null);
+
+    // Set isLast for the final item
+    if (breadcrumbItems.length > 0) {
+        breadcrumbItems[breadcrumbItems.length - 1].isLast = !activeTab;
+    }
 
     return (
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
