@@ -1921,7 +1921,7 @@ export default function ProfilePage() {
                                                 <InstitutionLogo
                                                     name={edu.school}
                                                     website={edu.schoolUrl}
-                                                    size="lg"
+                                                    size="xl"
                                                 />
                                                 <div>
                                                     <h4 className="font-semibold text-base">{edu.school}</h4>
