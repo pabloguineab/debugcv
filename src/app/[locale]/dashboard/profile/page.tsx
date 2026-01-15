@@ -2079,7 +2079,7 @@ export default function ProfilePage() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.15 }}
-                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-[2px] p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
+                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-md p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
                             onClick={(e) => e.target === e.currentTarget && setIsAddWithAIOpen(false)}
                         >
                             <motion.div
@@ -2149,7 +2149,7 @@ export default function ProfilePage() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.15 }}
-                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-[2px] p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
+                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-md p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
                             onClick={(e) => e.target === e.currentTarget && setIsAddExperienceOpen(false)}
                         >
                             <motion.div
@@ -2372,7 +2372,7 @@ export default function ProfilePage() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.15 }}
-                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-[2px] p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
+                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-md p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
                             onClick={(e) => e.target === e.currentTarget && setIsAddEducationWithAIOpen(false)}
                         >
                             <motion.div
@@ -2442,7 +2442,7 @@ export default function ProfilePage() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.15 }}
-                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-[2px] p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
+                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-md p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
                             onClick={(e) => e.target === e.currentTarget && setIsAddEducationOpen(false)}
                         >
                             <motion.div
@@ -2639,7 +2639,7 @@ export default function ProfilePage() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.15 }}
-                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-[2px] p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
+                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-md p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
                             onClick={(e) => e.target === e.currentTarget && setIsAddProjectWithAIOpen(false)}
                         >
                             <motion.div
@@ -2695,7 +2695,7 @@ export default function ProfilePage() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.15 }}
-                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-[2px] p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
+                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-md p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
                             onClick={(e) => e.target === e.currentTarget && setIsAddProjectOpen(false)}
                         >
                             <motion.div
@@ -2811,7 +2811,7 @@ export default function ProfilePage() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.15 }}
-                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-[2px] p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
+                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-md p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
                             onClick={(e) => e.target === e.currentTarget && setIsAddCertificationWithAIOpen(false)}
                         >
                             <motion.div
@@ -2859,7 +2859,7 @@ export default function ProfilePage() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.15 }}
-                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-[2px] p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
+                            className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-md p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
                             onClick={(e) => e.target === e.currentTarget && setIsAddCertificationOpen(false)}
                         >
                             <motion.div
@@ -2947,7 +2947,7 @@ export default function ProfilePage() {
             <Dialog open={isCropDialogOpen} onOpenChange={setIsCropDialogOpen}>
                 <DialogContent
                     className="sm:max-w-[500px] p-0 overflow-hidden bg-white shadow-2xl border-none md:left-[calc(50%_+_8rem)]"
-                    overlayClassName="bg-white/20 dark:bg-black/20 backdrop-blur-[2px] left-0 md:left-[16rem] transition-[left] duration-300"
+                    overlayClassName="bg-white/20 dark:bg-black/20 backdrop-blur-md left-0 md:left-[16rem] transition-[left] duration-300"
                 >
                     <DialogHeader className="p-5 border-b">
                         <DialogTitle className="text-xl font-normal text-gray-800">Edit photo</DialogTitle>
