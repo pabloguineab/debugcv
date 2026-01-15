@@ -8,7 +8,7 @@ export default function ResumesPage() {
                 <p className="text-muted-foreground">Manage your resumes and create tailored versions for different job applications.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center md:justify-items-start">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 justify-items-center md:justify-items-start">
                 <Book
                     title="Software Engineer"
                     subtitle="Resume"
