@@ -124,7 +124,7 @@ function SimulatorContent() {
             </div>
 
             {/* Header */}
-            <header className="absolute top-0 left-0 right-0 z-50 p-6 flex justify-between items-center">
+            <header className="absolute top-14 left-0 right-0 z-50 px-6 py-4 flex justify-between items-center">
                 <div className="flex items-center gap-3">
                     <button
                         onClick={() => router.back()}
@@ -135,7 +135,7 @@ function SimulatorContent() {
 
                     {/* Company Logo or Default Icon */}
                     {application?.company ? (
-                        <CompanyLogo company={application.company} size="xl" />
+                        <CompanyLogo company={application.company} size="lg" />
                     ) : (
                         <div className="w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
                             <Cpu className="w-8 h-8 text-white" />
