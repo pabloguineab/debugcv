@@ -306,7 +306,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                     size={24}
                                     onTrigger={expertHovered}
                                 />
-                                <span className="flex-1 text-[15px]">Get Expert Review</span>
+                                <span className="flex-1 text-[15px]">Expert Review</span>
                                 <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full font-bold dark:bg-blue-900/40 dark:text-blue-400 group-data-[collapsible=icon]:hidden">
                                     FREE
                                 </span>
