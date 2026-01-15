@@ -39,6 +39,8 @@ import {
     saveCertification, deleteCertification
 } from "@/lib/actions/profile";
 import { useProfileCompletion } from "@/contexts/profile-completion-context";
+import { ImportResumeModal } from "@/components/import-resume-modal";
+import { type ExtractedProfile } from "@/app/actions/extract-profile-from-cv";
 
 export default function ProfilePage() {
     const { data: session } = useSession();
@@ -60,6 +62,9 @@ export default function ProfilePage() {
     const [userName, setUserName] = useState<string>("");
     const [activeTab, setActiveTab] = useState<string>("overview");
     const { setActiveTab: setBreadcrumbTab } = useBreadcrumb();
+
+    // Import Resume Modal state
+    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
     // Languages state
     const [languages, setLanguages] = useState<{ language: string; level: string }[]>([]);
@@ -844,6 +849,187 @@ export default function ProfilePage() {
         }
     };
 
+    // Handler for importing CV data
+    const handleImportComplete = async (data: ExtractedProfile) => {
+        try {
+            // 1. Update Overview/Profile data
+            if (data.overview) {
+                const { bio, linkedin_user, github_user, location, full_name } = data.overview;
+
+                if (bio) setIntroduction(bio);
+                if (linkedin_user) setLinkedinUrl(linkedin_user);
+                if (github_user) setGithubUrl(github_user);
+                if (full_name) setUserName(full_name);
+
+                // Save to database
+                await updateProfile({
+                    bio: bio || undefined,
+                    linkedin_user: linkedin_user || undefined,
+                    github_user: github_user || undefined,
+                    full_name: full_name || undefined,
+                    location: location || undefined,
+                });
+            }
+
+            // 2. Update Tech Stack
+            if (data.tech_stack && data.tech_stack.length > 0) {
+                // Map tech names to our tech IDs (lowercase, replace spaces with dashes)
+                const techIds = data.tech_stack.map(tech =>
+                    tech.toLowerCase().replace(/\s+/g, '-').replace(/\./g, '')
+                );
+                setSelectedTechs(techIds);
+                await updateProfile({ tech_stack: techIds });
+            }
+
+            // 3. Update Languages
+            if (data.languages && data.languages.length > 0) {
+                setLanguages(data.languages);
+                await updateProfile({ languages: data.languages });
+            }
+
+            // 4. Save Experiences
+            if (data.experiences && data.experiences.length > 0) {
+                for (const exp of data.experiences) {
+                    const saved = await saveExperience({
+                        title: exp.title,
+                        employment_type: exp.employment_type || "Full-time",
+                        company_name: exp.company_name,
+                        country: exp.country || "",
+                        start_month: exp.start_month,
+                        start_year: exp.start_year,
+                        end_month: exp.end_month || "",
+                        end_year: exp.end_year || "",
+                        is_current: exp.is_current,
+                        description: exp.description,
+                        skills: exp.skills || []
+                    });
+
+                    if (saved) {
+                        setExperiences(prev => [...prev, {
+                            id: saved.id,
+                            title: saved.title,
+                            employmentType: saved.employment_type,
+                            companyName: saved.company_name,
+                            country: saved.country || "",
+                            isCurrentRole: saved.is_current,
+                            startMonth: saved.start_month,
+                            startYear: saved.start_year,
+                            endMonth: saved.end_month,
+                            endYear: saved.end_year,
+                            skills: saved.skills || [],
+                            description: saved.description,
+                        }]);
+                    }
+                }
+            }
+
+            // 5. Save Education
+            if (data.educations && data.educations.length > 0) {
+                for (const edu of data.educations) {
+                    const saved = await saveEducation({
+                        school: edu.school,
+                        school_url: edu.school_url || "",
+                        degree: edu.degree || "",
+                        field_of_study: edu.field_of_study || "",
+                        grade: edu.grade || "",
+                        activities: edu.activities || "",
+                        description: edu.description || "",
+                        start_year: edu.start_year,
+                        end_year: edu.end_year || "",
+                        is_current: edu.is_current
+                    });
+
+                    if (saved) {
+                        setEducations(prev => [...prev, {
+                            id: saved.id,
+                            school: saved.school,
+                            schoolUrl: saved.school_url || "",
+                            degree: saved.degree || "",
+                            fieldOfStudy: saved.field_of_study || "",
+                            grade: saved.grade || "",
+                            activities: saved.activities || "",
+                            description: saved.description || "",
+                            isCurrentlyStudying: saved.is_current,
+                            startYear: saved.start_year,
+                            endYear: saved.end_year,
+                        }]);
+                    }
+                }
+            }
+
+            // 6. Save Projects
+            if (data.projects && data.projects.length > 0) {
+                for (const proj of data.projects) {
+                    const saved = await saveProject({
+                        name: proj.name,
+                        project_url: proj.project_url || "",
+                        description: proj.description || "",
+                        technologies: proj.technologies || [],
+                        is_ongoing: proj.is_ongoing,
+                        start_month: proj.start_month || "",
+                        start_year: proj.start_year || "",
+                        end_month: proj.end_month || "",
+                        end_year: proj.end_year || ""
+                    });
+
+                    if (saved) {
+                        setProjects(prev => [...prev, {
+                            id: saved.id,
+                            name: saved.name,
+                            projectUrl: saved.project_url || "",
+                            description: saved.description || "",
+                            technologies: saved.technologies || [],
+                            isOngoing: saved.is_ongoing,
+                            startMonth: saved.start_month || "",
+                            startYear: saved.start_year || "",
+                            endMonth: saved.end_month || "",
+                            endYear: saved.end_year || ""
+                        }]);
+                    }
+                }
+            }
+
+            // 7. Save Certifications
+            if (data.certifications && data.certifications.length > 0) {
+                for (const cert of data.certifications) {
+                    const saved = await saveCertification({
+                        name: cert.name,
+                        issuing_org: cert.issuing_org,
+                        credential_id: cert.credential_id || "",
+                        credential_url: cert.credential_url || "",
+                        issue_month: cert.issue_month || "",
+                        issue_year: cert.issue_year || "",
+                        expiration_month: cert.expiration_month || "",
+                        expiration_year: cert.expiration_year || "",
+                        no_expiration: cert.no_expiration,
+                        skills: cert.skills || []
+                    });
+
+                    if (saved) {
+                        setCertifications(prev => [...prev, {
+                            id: saved.id,
+                            name: saved.name,
+                            issuingOrganization: saved.issuing_org,
+                            issueMonth: saved.issue_month,
+                            issueYear: saved.issue_year,
+                            expirationMonth: saved.expiration_month,
+                            expirationYear: saved.expiration_year,
+                            doesNotExpire: saved.no_expiration,
+                            credentialId: saved.credential_id || "",
+                            credentialUrl: saved.credential_url || "",
+                        }]);
+                    }
+                }
+            }
+
+            // Refresh completion status after all imports
+            await refreshCompletionStatus();
+
+        } catch (error) {
+            console.error("Error importing CV data:", error);
+        }
+    };
+
     if (isLoadingData) {
         return (
             <div className="flex flex-col h-full w-full bg-background animate-in fade-in duration-300">
@@ -920,7 +1106,10 @@ export default function ProfilePage() {
                     <Button variant="outline" size="icon">
                         <MoreHorizontal className="size-4" />
                     </Button>
-                    <Button className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 hover:border-blue-600 transition-colors">
+                    <Button
+                        onClick={() => setIsImportModalOpen(true)}
+                        className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 hover:border-blue-600 transition-colors"
+                    >
                         <CloudUpload className="size-4 mr-2" />
                         Import resume
                     </Button>
@@ -2655,6 +2844,13 @@ export default function ProfilePage() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {/* Import Resume Modal */}
+            <ImportResumeModal
+                open={isImportModalOpen}
+                onClose={() => setIsImportModalOpen(false)}
+                onImportComplete={handleImportComplete}
+            />
         </div >
     );
 }
