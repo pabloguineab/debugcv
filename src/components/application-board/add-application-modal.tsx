@@ -285,9 +285,7 @@ export function AddApplicationModal({
                                                     onValueChange={field.onChange}
                                                 >
                                                     <SelectTrigger className="w-full">
-                                                        <SelectValue>
-                                                            {field.value ? WORK_MODE_LABELS[field.value as keyof typeof WORK_MODE_LABELS] : "Select work mode"}
-                                                        </SelectValue>
+                                                        <SelectValue placeholder="Select work mode" />
                                                     </SelectTrigger>
                                                     <SelectContent>
                                                         <SelectItem value="remote">🌍 Remote</SelectItem>
@@ -341,9 +339,7 @@ export function AddApplicationModal({
                                                     onValueChange={field.onChange}
                                                 >
                                                     <SelectTrigger className="w-full">
-                                                        <SelectValue>
-                                                            {field.value ? STATUS_LABELS[field.value as keyof typeof STATUS_LABELS] : "Select status"}
-                                                        </SelectValue>
+                                                        <SelectValue placeholder="Select status" />
                                                     </SelectTrigger>
                                                     <SelectContent>
                                                         <SelectItem value="wishlist">📋 Wishlist</SelectItem>
@@ -368,9 +364,7 @@ export function AddApplicationModal({
                                                     onValueChange={field.onChange}
                                                 >
                                                     <SelectTrigger className="w-full">
-                                                        <SelectValue>
-                                                            {field.value ? PRIORITY_LABELS[field.value as keyof typeof PRIORITY_LABELS] : "Select priority"}
-                                                        </SelectValue>
+                                                        <SelectValue placeholder="Select priority" />
                                                     </SelectTrigger>
                                                     <SelectContent>
                                                         <SelectItem value="high">🔴 High</SelectItem>
