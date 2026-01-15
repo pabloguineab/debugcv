@@ -85,14 +85,14 @@ const jobsItems = [
 
 const resumesItems = [
     {
-        title: "CV Builder",
-        url: "/dashboard/resumes",
-        icon: "/animated/wired-outline-982-cv-curriculum-vitae-resume-hover-swipe.json"
-    },
-    {
         title: "ATS Score",
         url: "/dashboard/resumes/ats-score",
         icon: "/animated/wired-outline-458-goal-target-hover-hit.json"
+    },
+    {
+        title: "CV Builder",
+        url: "/dashboard/resumes",
+        icon: "/animated/wired-outline-982-cv-curriculum-vitae-resume-hover-swipe.json"
     },
     {
         title: "Cover Letters",
