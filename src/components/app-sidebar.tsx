@@ -133,16 +133,34 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props }: AppSidebarProps) {
     const router = useRouter();
     const pathname = usePathname();
-    const { status } = useProfileCompletion(); // Use hook here
+    const { status } = useProfileCompletion();
 
-    // ... (keep state)
     const [dashboardHovered, setDashboardHovered] = useState(false);
     const [profileHovered, setProfileHovered] = useState(false);
     const [expertHovered, setExpertHovered] = useState(false);
     const [referHovered, setReferHovered] = useState(false);
 
-    // ... (keep isProfileActive)
+    // State to hide the completion box when profile is 100% complete
+    const [hideCompletionBox, setHideCompletionBox] = useState(false);
+
     const isProfileActive = pathname?.includes("profile");
+    const isFullyComplete = status?.totalProgress === 100;
+
+    // Auto-hide the box after 5 seconds when profile is fully complete
+    React.useEffect(() => {
+        if (isFullyComplete) {
+            const timer = setTimeout(() => {
+                setHideCompletionBox(true);
+            }, 5000);
+            return () => clearTimeout(timer);
+        } else {
+            // Show the box again if profile becomes incomplete
+            setHideCompletionBox(false);
+        }
+    }, [isFullyComplete]);
+
+    // Determine if we should show the completion box
+    const showCompletionBox = isProfileActive && !hideCompletionBox;
 
     // Helper to render completion check circle
     const StatusCircle = ({ completed }: { completed?: boolean }) => (
@@ -232,7 +250,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                         </div>
                                     </Link>
 
-                                    {isProfileActive && (
+                                    {showCompletionBox && (
                                         <div className="pb-2 px-0 pt-2 animate-in slide-in-from-top-2 duration-200 fade-in pl-3">
                                             <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
                                                 <h3 className="text-sm font-semibold mb-2">Complete your profile</h3>
