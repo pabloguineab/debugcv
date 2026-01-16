@@ -6,6 +6,10 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 
 // Types matching the profile structure
 export interface ExtractedProfile {
+    // Validation fields
+    document_type: 'resume' | 'other';
+    industry: 'tech' | 'healthcare' | 'legal' | 'business' | 'education' | 'other';
+    
     overview: {
         bio: string;
         linkedin_user: string;
@@ -69,17 +73,31 @@ export interface ExtractedProfile {
     }[];
 }
 
-export async function extractProfileFromCV(formData: FormData): Promise<ExtractedProfile | null> {
+// Error types for import validation
+export type ImportError = 
+    | 'NOT_A_RESUME'
+    | 'NOT_TECH_RESUME'
+    | 'EXTRACTION_FAILED'
+    | null;
+
+export interface ExtractResult {
+    success: boolean;
+    data: ExtractedProfile | null;
+    error: ImportError;
+    errorMessage?: string;
+}
+
+export async function extractProfileFromCV(formData: FormData): Promise<ExtractResult> {
     try {
         const file = formData.get("file") as File;
         if (!file) {
             console.error("No file provided");
-            return null;
+            return { success: false, data: null, error: 'EXTRACTION_FAILED', errorMessage: 'No file provided' };
         }
 
         if (!GEMINI_API_KEY) {
             console.error("GEMINI_API_KEY missing");
-            return null;
+            return { success: false, data: null, error: 'EXTRACTION_FAILED', errorMessage: 'API key missing' };
         }
 
         const arrayBuffer = await file.arrayBuffer();
@@ -91,6 +109,8 @@ export async function extractProfileFromCV(formData: FormData): Promise<Extracte
         const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
         const jsonSchema = {
+            document_type: "string - REQUIRED: Analyze if this is a resume/CV or some other type of document. Must be exactly one of: 'resume' or 'other'. A resume/CV contains work experience, education, skills. If it's a letter, invoice, article, form, or any other non-CV document, set to 'other'.",
+            industry: "string - REQUIRED: Identify the primary industry/field of the candidate based on their experience and skills. Must be exactly one of: 'tech', 'healthcare', 'legal', 'business', 'education', 'other'. Tech includes: software development, IT, data science, cybersecurity, DevOps, cloud engineering, QA, UX/UI design for digital products. Healthcare includes: nurses, doctors, medical. Legal includes: lawyers, paralegals. Business includes: marketing (non-digital), sales, HR, finance, consulting. Education includes: teachers, professors.",
             overview: {
                 bio: "string - Professional summary/about me section. Leave empty string if not found.",
                 linkedin_user: "string - LinkedIn username only (not full URL). Leave empty if not found.",
@@ -155,9 +175,23 @@ export async function extractProfileFromCV(formData: FormData): Promise<Extracte
         };
 
         const prompt = `
-You are an expert CV/Resume parser. Extract ALL information from the provided CV document and map it to the JSON structure below.
+You are an expert document analyzer and CV/Resume parser. First, analyze the document to determine:
+1. Is this a resume/CV or some other type of document?
+2. If it's a resume, what industry/field is the candidate in?
 
-IMPORTANT RULES:
+Then, extract ALL information and map it to the JSON structure below.
+
+CRITICAL FIRST STEP - DOCUMENT CLASSIFICATION:
+- document_type: Set to "resume" ONLY if this is clearly a CV/resume with work experience, education, and skills. Set to "other" for letters, invoices, articles, forms, contracts, or any non-CV document.
+- industry: Based on the candidate's experience and skills, classify as:
+  * "tech" - software engineers, developers, data scientists, DevOps, cloud engineers, IT professionals, QA engineers, UX/UI designers (for digital products), cybersecurity
+  * "healthcare" - nurses, doctors, medical professionals, pharmacists, therapists
+  * "legal" - lawyers, paralegals, legal assistants
+  * "business" - marketing, sales, HR, finance, consulting, management (non-tech)
+  * "education" - teachers, professors, academic staff
+  * "other" - any other field not listed above
+
+EXTRACTION RULES (only if document is a resume):
 1. ONLY extract information that is EXPLICITLY stated in the CV. DO NOT invent or assume any data.
 2. If a field is not found in the CV, use an empty string "" for text fields, empty array [] for arrays, or false for booleans.
 3. For tech_stack, extract ALL technical skills, programming languages, frameworks, databases, tools, and technologies mentioned anywhere in the CV.
@@ -190,11 +224,40 @@ Return ONLY valid JSON matching this structure. No explanations, no markdown for
         // Clean markdown if Gemini adds it
         text = text.replace(/```json/g, "").replace(/```/g, "").trim();
 
-        const data = JSON.parse(text);
-        return data as ExtractedProfile;
+        const data = JSON.parse(text) as ExtractedProfile;
+        
+        // Validate document type
+        if (data.document_type !== 'resume') {
+            return {
+                success: false,
+                data: null,
+                error: 'NOT_A_RESUME',
+                errorMessage: 'The uploaded file does not appear to be a resume/CV. Please upload your resume.'
+            };
+        }
+        
+        // Validate industry
+        if (data.industry !== 'tech') {
+            const industryNames: Record<string, string> = {
+                healthcare: 'Healthcare',
+                legal: 'Legal',
+                business: 'Business',
+                education: 'Education',
+                other: 'another field'
+            };
+            const industryName = industryNames[data.industry] || 'another field';
+            return {
+                success: false,
+                data: null,
+                error: 'NOT_TECH_RESUME',
+                errorMessage: `It looks like your resume is from ${industryName}. DebugCV currently only optimizes Tech resumes (Software Engineering, Data Science, DevOps, etc.). We're working on expanding to other industries soon!`
+            };
+        }
+        
+        return { success: true, data, error: null };
 
     } catch (error) {
         console.error("Error in extractProfileFromCV:", error);
-        return null;
+        return { success: false, data: null, error: 'EXTRACTION_FAILED', errorMessage: 'An error occurred while processing the document.' };
     }
 }

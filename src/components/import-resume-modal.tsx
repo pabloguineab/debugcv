@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Upload, FileText, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
-import { extractProfileFromCV, type ExtractedProfile } from "@/app/actions/extract-profile-from-cv";
+import { extractProfileFromCV, type ExtractedProfile, type ExtractResult, type ImportError } from "@/app/actions/extract-profile-from-cv";
 
 interface ImportResumeModalProps {
     open: boolean;
@@ -51,16 +51,17 @@ export function ImportResumeModal({ open, onClose, onImportComplete }: ImportRes
 
             const result = await extractProfileFromCV(formData);
 
-            if (result) {
+            if (result.success && result.data) {
                 // Process the data first while showing the loader
-                await onImportComplete(result);
+                await onImportComplete(result.data);
                 
                 setStatus("success");
                 // Short delay to show success state
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 handleClose();
             } else {
-                setError("Could not extract data from the CV. Please try again.");
+                // Handle specific error types
+                setError(result.errorMessage || "Could not extract data from the CV. Please try again.");
                 setStatus("error");
             }
         } catch (err) {
