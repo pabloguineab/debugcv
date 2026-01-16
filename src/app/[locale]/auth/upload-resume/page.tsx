@@ -66,13 +66,14 @@ function UploadResumeContent() {
     const saveImportedData = async (data: ExtractedProfile) => {
         // 1. Update Overview/Profile data
         if (data.overview) {
-            const { bio, linkedin_user, github_user, location, full_name } = data.overview;
+            const { bio, linkedin_user, github_user, location, full_name, phone_number } = data.overview;
             await updateProfile({
                 bio: bio || undefined,
                 linkedin_user: linkedin_user || undefined,
                 github_user: github_user || undefined,
                 full_name: full_name || undefined,
                 location: location || undefined,
+                phone_number: phone_number || undefined,
             });
         }
 

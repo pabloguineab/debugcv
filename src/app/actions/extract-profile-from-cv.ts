@@ -16,6 +16,7 @@ export interface ExtractedProfile {
         github_user: string;
         location: string;
         full_name: string;
+        phone_number: string;
     };
     tech_stack: string[];
     experiences: {
@@ -116,7 +117,8 @@ export async function extractProfileFromCV(formData: FormData): Promise<ExtractR
                 linkedin_user: "string - LinkedIn username only (not full URL). Leave empty if not found.",
                 github_user: "string - GitHub username only (not full URL). Leave empty if not found.",
                 location: "string - Current city and country (e.g., 'Madrid, Spain'). Leave empty if not found.",
-                full_name: "string - Full name of the candidate."
+                full_name: "string - Full name of the candidate.",
+                phone_number: "string - Phone number with country code if available (e.g., '+34 612345678', '+1 555-123-4567'). Extract exactly as written in CV. Leave empty if not found."
             },
             tech_stack: "array of strings - Technical skills, programming languages, frameworks, tools mentioned",
             experiences: [{

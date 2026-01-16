@@ -43,6 +43,7 @@ import { ImportResumeModal } from "@/components/import-resume-modal";
 import { type ExtractedProfile } from "@/app/actions/extract-profile-from-cv";
 import { InstitutionLogo } from "@/components/institution-logo";
 import { CompanyLogo } from "@/components/company-logo";
+import { PhoneInput } from "@/components/ui/phone-input";
 
 // Helper: Convert month name to number for sorting
 const monthToNumber = (month: string): number => {
@@ -104,6 +105,7 @@ export default function ProfilePage() {
     const [githubUrl, setGithubUrl] = useState<string>("");
     const [introduction, setIntroduction] = useState<string>("");
     const [userName, setUserName] = useState<string>("");
+    const [phoneNumber, setPhoneNumber] = useState<string>("");
     const [activeTab, setActiveTab] = useState<string>("overview");
     const { setActiveTab: setBreadcrumbTab } = useBreadcrumb();
 
@@ -192,6 +194,7 @@ export default function ProfilePage() {
                         if (data.profile.languages) setLanguages(Array.isArray(data.profile.languages) ? data.profile.languages : []);
                         if (data.profile.image_url) setProfileImage(data.profile.image_url);
                         if (data.profile.full_name) setUserName(data.profile.full_name);
+                        if (data.profile.phone_number) setPhoneNumber(data.profile.phone_number);
                     }
 
                     // Experience (sorted by date, most recent first)
@@ -1027,12 +1030,13 @@ export default function ProfilePage() {
 
             // 1. Update Overview/Profile data
             if (data.overview) {
-                const { bio, linkedin_user, github_user, location, full_name } = data.overview;
+                const { bio, linkedin_user, github_user, location, full_name, phone_number } = data.overview;
 
                 if (bio) setIntroduction(bio);
                 if (linkedin_user) setLinkedinUrl(linkedin_user);
                 if (github_user) setGithubUrl(github_user);
                 if (full_name) setUserName(full_name);
+                if (phone_number) setPhoneNumber(phone_number);
 
                 // Save to database
                 await updateProfile({
@@ -1041,6 +1045,7 @@ export default function ProfilePage() {
                     github_user: github_user || undefined,
                     full_name: full_name || undefined,
                     location: location || undefined,
+                    phone_number: phone_number || undefined,
                 });
             }
 
@@ -1552,6 +1557,32 @@ export default function ProfilePage() {
                                     </div>
                                 </div>
                             )}
+
+                            {/* Phone Number */}
+                            <div className="grid grid-cols-[200px_1fr] gap-8 items-start py-6 border-b">
+                                <div>
+                                    <h3 className="text-sm font-medium">Phone Number</h3>
+                                    <p className="text-sm text-muted-foreground mt-1">
+                                        Optional. Used for recruiter contact.
+                                    </p>
+                                </div>
+                                <div className="max-w-sm">
+                                    <PhoneInput
+                                        value={phoneNumber}
+                                        onChange={(value) => {
+                                            setPhoneNumber(value);
+                                        }}
+                                        defaultCountry={selectedCountry}
+                                        placeholder="612 345 678"
+                                    />
+                                    <button
+                                        onClick={() => updateProfile({ phone_number: phoneNumber })}
+                                        className="mt-2 text-xs text-blue-600 hover:underline"
+                                    >
+                                        Save phone number
+                                    </button>
+                                </div>
+                            </div>
 
                             {/* Languages */}
                             <div className="grid grid-cols-[200px_1fr] gap-8 items-start py-6 border-b">
