@@ -188,12 +188,12 @@ export function AddApplicationModal({
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.15 }}
-                        className="w-full max-w-4xl mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 flex flex-col max-h-[90vh]"
+                        className="w-full max-w-3xl mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 flex flex-col max-h-[90vh]"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Scrollable Form Area */}
                         <div className="flex-1 overflow-y-auto p-6">
-                            <form id="application-form" onSubmit={handleSubmit(onSubmit)} className="grid md:grid-cols-2 gap-6">
+                            <form id="application-form" onSubmit={handleSubmit(onSubmit)} className="grid md:grid-cols-2 gap-4">
                                 {/* Left Column */}
                                 <div className="space-y-4">
                                     {/* Job Title */}
