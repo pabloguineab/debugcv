@@ -44,6 +44,48 @@ import { type ExtractedProfile } from "@/app/actions/extract-profile-from-cv";
 import { InstitutionLogo } from "@/components/institution-logo";
 import { CompanyLogo } from "@/components/company-logo";
 
+// Helper: Convert month name to number for sorting
+const monthToNumber = (month: string): number => {
+    const months: Record<string, number> = {
+        'January': 1, 'February': 2, 'March': 3, 'April': 4, 'May': 5, 'June': 6,
+        'July': 7, 'August': 8, 'September': 9, 'October': 10, 'November': 11, 'December': 12
+    };
+    return months[month] || 0;
+};
+
+// Helper: Sort by date (most recent first, "Present/Current" always on top)
+const sortByDateDesc = <T extends { 
+    startYear?: string; 
+    startMonth?: string;
+    endYear?: string;
+    isCurrentRole?: boolean; 
+    isCurrentlyStudying?: boolean;
+    isOngoing?: boolean;
+    issueYear?: string;
+    issueMonth?: string;
+}>(items: T[]): T[] => {
+    return [...items].sort((a, b) => {
+        // Current/Present items always come first
+        const aIsCurrent = a.isCurrentRole || a.isCurrentlyStudying || a.isOngoing;
+        const bIsCurrent = b.isCurrentRole || b.isCurrentlyStudying || b.isOngoing;
+        
+        if (aIsCurrent && !bIsCurrent) return -1;
+        if (!aIsCurrent && bIsCurrent) return 1;
+        
+        // Sort by start year (or issue year for certifications)
+        const aYear = parseInt(a.startYear || a.issueYear || '0');
+        const bYear = parseInt(b.startYear || b.issueYear || '0');
+        
+        if (aYear !== bYear) return bYear - aYear; // Descending
+        
+        // If same year, sort by month
+        const aMonth = monthToNumber(a.startMonth || a.issueMonth || '');
+        const bMonth = monthToNumber(b.startMonth || b.issueMonth || '');
+        
+        return bMonth - aMonth; // Descending
+    });
+};
+
 export default function ProfilePage() {
     const { data: session } = useSession();
     const { refreshCompletionStatus } = useProfileCompletion();
@@ -152,9 +194,9 @@ export default function ProfilePage() {
                         if (data.profile.full_name) setUserName(data.profile.full_name);
                     }
 
-                    // Experience
+                    // Experience (sorted by date, most recent first)
                     if (data.experiences) {
-                        setExperiences(data.experiences.map((e: any) => ({
+                        setExperiences(sortByDateDesc(data.experiences.map((e: any) => ({
                             id: e.id!,
                             title: e.title,
                             employmentType: e.employment_type,
@@ -168,12 +210,12 @@ export default function ProfilePage() {
                             endYear: e.end_year,
                             skills: e.skills || [],
                             description: e.description
-                        })));
+                        }))));
                     }
 
-                    // Education
+                    // Education (sorted by date, most recent first)
                     if (data.educations) {
-                        setEducations(data.educations.map((e: any) => ({
+                        setEducations(sortByDateDesc(data.educations.map((e: any) => ({
                             id: e.id!,
                             school: e.school,
                             schoolUrl: e.school_url || "",
@@ -185,12 +227,12 @@ export default function ProfilePage() {
                             isCurrentlyStudying: e.is_current,
                             startYear: e.start_year,
                             endYear: e.end_year
-                        })));
+                        }))));
                     }
 
-                    // Projects
+                    // Projects (sorted by date, most recent first)
                     if (data.projects) {
-                        setProjects(data.projects.map((p: any) => ({
+                        setProjects(sortByDateDesc(data.projects.map((p: any) => ({
                             id: p.id!,
                             name: p.name,
                             projectUrl: p.project_url || "",
@@ -201,12 +243,12 @@ export default function ProfilePage() {
                             startYear: p.start_year || "",
                             endMonth: p.end_month || "",
                             endYear: p.end_year || ""
-                        })));
+                        }))));
                     }
 
-                    // Certifications
+                    // Certifications (sorted by date, most recent first)
                     if (data.certifications) {
-                        setCertifications(data.certifications.map((c: any) => ({
+                        setCertifications(sortByDateDesc(data.certifications.map((c: any) => ({
                             id: c.id!,
                             name: c.name,
                             issuingOrganization: c.issuing_org,
@@ -218,7 +260,7 @@ export default function ProfilePage() {
                             expirationYear: c.expiration_year || "",
                             doesNotExpire: c.no_expiration || false,
                             skills: c.skills || []
-                        })));
+                        }))));
                     }
                 }
             } catch (error) {
@@ -525,11 +567,11 @@ export default function ProfilePage() {
                     };
 
                     if (editingExperienceId) {
-                        // Update existing
-                        setExperiences(experiences.map(exp => exp.id === editingExperienceId ? updatedExp : exp));
+                        // Update existing and re-sort
+                        setExperiences(sortByDateDesc(experiences.map(exp => exp.id === editingExperienceId ? updatedExp : exp)));
                     } else {
-                        // Add new
-                        setExperiences([...experiences, updatedExp]);
+                        // Add new and sort
+                        setExperiences(sortByDateDesc([...experiences, updatedExp]));
                     }
                     resetExperienceForm();
                     setEditingExperienceId(null);
@@ -659,9 +701,9 @@ export default function ProfilePage() {
                     };
 
                     if (editingEducationId) {
-                        setEducations(educations.map(edu => edu.id === editingEducationId ? updatedEdu : edu));
+                        setEducations(sortByDateDesc(educations.map(edu => edu.id === editingEducationId ? updatedEdu : edu)));
                     } else {
-                        setEducations([...educations, updatedEdu]);
+                        setEducations(sortByDateDesc([...educations, updatedEdu]));
                     }
                     resetEducationForm();
                     setEditingEducationId(null);
@@ -775,9 +817,9 @@ export default function ProfilePage() {
                     };
 
                     if (editingProjectId) {
-                        setProjects(projects.map(proj => proj.id === editingProjectId ? updatedProj : proj));
+                        setProjects(sortByDateDesc(projects.map(proj => proj.id === editingProjectId ? updatedProj : proj)));
                     } else {
-                        setProjects([...projects, updatedProj]);
+                        setProjects(sortByDateDesc([...projects, updatedProj]));
                     }
                     resetProjectForm();
                     setEditingProjectId(null);
@@ -900,9 +942,9 @@ export default function ProfilePage() {
                     };
 
                     if (editingCertificationId) {
-                        setCertifications(certifications.map(cert => cert.id === editingCertificationId ? updatedCert : cert));
+                        setCertifications(sortByDateDesc(certifications.map(cert => cert.id === editingCertificationId ? updatedCert : cert)));
                     } else {
-                        setCertifications([...certifications, updatedCert]);
+                        setCertifications(sortByDateDesc([...certifications, updatedCert]));
                     }
                     resetCertificationForm();
                     setEditingCertificationId(null);
