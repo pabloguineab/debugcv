@@ -2530,10 +2530,10 @@ export default function ProfilePage() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.15 }}
-                                className="w-full max-w-md mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[75vh]"
+                                className="w-full max-w-3xl mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[90vh]"
                             >
                                 {/* Header */}
-                                <div className="p-6 pb-4">
+                                <div className="p-6 pb-4 border-b">
                                     <div className="flex items-start gap-4">
                                         <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
                                             <Flag className="size-5 text-blue-600" />
@@ -2551,143 +2551,151 @@ export default function ProfilePage() {
                                 </div>
 
                                 {/* Scrollable Form */}
-                                <div className="flex-1 overflow-y-auto px-6 pt-6 pb-6 space-y-5">
-                                    {/* School */}
-                                    <div>
-                                        <label className="text-sm font-medium">School*</label>
-                                        <Input
-                                            value={eduSchool}
-                                            onChange={(e) => setEduSchool(e.target.value.slice(0, 80))}
-                                            placeholder="Ex: Harvard University"
-                                            className="mt-2"
-                                        />
-                                        <p className="text-xs text-muted-foreground mt-1">80 characters</p>
-                                    </div>
+                                <div className="flex-1 overflow-y-auto px-6 py-6">
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        {/* Left Column */}
+                                        <div className="space-y-4">
+                                            {/* School */}
+                                            <div>
+                                                <label className="text-sm font-medium">School*</label>
+                                                <Input
+                                                    value={eduSchool}
+                                                    onChange={(e) => setEduSchool(e.target.value.slice(0, 80))}
+                                                    placeholder="Ex: Harvard University"
+                                                    className="mt-2"
+                                                />
+                                                <p className="text-xs text-muted-foreground mt-1">80 characters</p>
+                                            </div>
 
-                                    {/* School URL */}
-                                    <div>
-                                        <label className="text-sm font-medium">School URL*</label>
-                                        <Input
-                                            value={eduSchoolUrl}
-                                            onChange={(e) => setEduSchoolUrl(e.target.value)}
-                                            placeholder="Ex: https://www.harvard.edu"
-                                            className="mt-2"
-                                        />
-                                    </div>
+                                            {/* School URL */}
+                                            <div>
+                                                <label className="text-sm font-medium">School URL*</label>
+                                                <Input
+                                                    value={eduSchoolUrl}
+                                                    onChange={(e) => setEduSchoolUrl(e.target.value)}
+                                                    placeholder="Ex: https://www.harvard.edu"
+                                                    className="mt-2"
+                                                />
+                                            </div>
 
-                                    {/* Degree */}
-                                    <div>
-                                        <label className="text-sm font-medium">Degree</label>
-                                        <Input
-                                            value={eduDegree}
-                                            onChange={(e) => setEduDegree(e.target.value)}
-                                            placeholder="Ex: Bachelor of Arts"
-                                            className="mt-2"
-                                        />
-                                    </div>
+                                            {/* Degree */}
+                                            <div>
+                                                <label className="text-sm font-medium">Degree</label>
+                                                <Input
+                                                    value={eduDegree}
+                                                    onChange={(e) => setEduDegree(e.target.value)}
+                                                    placeholder="Ex: Bachelor of Arts"
+                                                    className="mt-2"
+                                                />
+                                            </div>
 
-                                    {/* Field of Study */}
-                                    <div>
-                                        <label className="text-sm font-medium">Field of study</label>
-                                        <Input
-                                            value={eduFieldOfStudy}
-                                            onChange={(e) => setEduFieldOfStudy(e.target.value)}
-                                            placeholder="Ex: Computer Science"
-                                            className="mt-2"
-                                        />
-                                    </div>
+                                            {/* Field of Study */}
+                                            <div>
+                                                <label className="text-sm font-medium">Field of study</label>
+                                                <Input
+                                                    value={eduFieldOfStudy}
+                                                    onChange={(e) => setEduFieldOfStudy(e.target.value)}
+                                                    placeholder="Ex: Computer Science"
+                                                    className="mt-2"
+                                                />
+                                            </div>
 
-                                    {/* Grade */}
-                                    <div>
-                                        <label className="text-sm font-medium">Grade</label>
-                                        <Input
-                                            value={eduGrade}
-                                            onChange={(e) => setEduGrade(e.target.value)}
-                                            placeholder="Ex: 3.8"
-                                            className="mt-2"
-                                        />
-                                    </div>
-
-                                    {/* Activities */}
-                                    <div>
-                                        <label className="text-sm font-medium">Activities</label>
-                                        <Textarea
-                                            value={eduActivities}
-                                            onChange={(e) => setEduActivities(e.target.value.slice(0, 400))}
-                                            placeholder="Ex: Student Government, Debate Club"
-                                            className="mt-2 min-h-[80px] resize-none"
-                                        />
-                                        <p className="text-xs text-muted-foreground mt-1">400 characters</p>
-                                    </div>
-
-                                    {/* Description */}
-                                    <div>
-                                        <label className="text-sm font-medium">Description</label>
-                                        <Textarea
-                                            value={eduDescription}
-                                            onChange={(e) => setEduDescription(e.target.value.slice(0, 400))}
-                                            placeholder="e.g. Graduated with honors, specialized in Machine Learning and AI. Led research projects in Natural Language Processing."
-                                            className="mt-2 min-h-[100px] resize-none"
-                                        />
-                                        <p className="text-xs text-muted-foreground mt-1">400 characters</p>
-                                    </div>
-
-                                    {/* Currently Studying Checkbox */}
-                                    <div className="flex items-center gap-2">
-                                        <Checkbox
-                                            id="currentlyStudying"
-                                            checked={eduIsCurrentlyStudying}
-                                            onCheckedChange={(checked) => {
-                                                setEduIsCurrentlyStudying(checked as boolean);
-                                                if (checked) {
-                                                    setEduEndYear("");
-                                                }
-                                            }}
-                                        />
-                                        <label htmlFor="currentlyStudying" className="text-sm cursor-pointer">
-                                            I am currently studying at this institution
-                                        </label>
-                                    </div>
-
-                                    {/* Start Year & End Year */}
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="text-sm font-medium">Start year*</label>
-                                            <Select value={eduStartYear} onValueChange={setEduStartYear}>
-                                                <SelectTrigger className="mt-2 w-full">
-                                                    <SelectValue placeholder="YYYY" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {years.map((y) => (
-                                                        <SelectItem key={y} value={y}>{y}</SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
+                                            {/* Grade */}
+                                            <div>
+                                                <label className="text-sm font-medium">Grade</label>
+                                                <Input
+                                                    value={eduGrade}
+                                                    onChange={(e) => setEduGrade(e.target.value)}
+                                                    placeholder="Ex: 3.8"
+                                                    className="mt-2"
+                                                />
+                                            </div>
                                         </div>
-                                        <div>
-                                            <label className="text-sm font-medium">End year</label>
-                                            <Select
-                                                value={eduIsCurrentlyStudying ? "Present" : eduEndYear}
-                                                onValueChange={(val) => {
-                                                    if (val === "Present") {
-                                                        setEduIsCurrentlyStudying(true);
-                                                        setEduEndYear("");
-                                                    } else {
-                                                        setEduIsCurrentlyStudying(false);
-                                                        setEduEndYear(val);
-                                                    }
-                                                }}
-                                            >
-                                                <SelectTrigger className="mt-2 w-full">
-                                                    <SelectValue placeholder="YYYY" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="Present">Present</SelectItem>
-                                                    {years.map((y) => (
-                                                        <SelectItem key={y} value={y}>{y}</SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
+
+                                        {/* Right Column */}
+                                        <div className="space-y-4">
+                                            {/* Start Year & End Year */}
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="text-sm font-medium">Start year*</label>
+                                                    <Select value={eduStartYear} onValueChange={setEduStartYear}>
+                                                        <SelectTrigger className="mt-2 w-full">
+                                                            <SelectValue placeholder="YYYY" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {years.map((y) => (
+                                                                <SelectItem key={y} value={y}>{y}</SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+                                                <div>
+                                                    <label className="text-sm font-medium">End year</label>
+                                                    <Select
+                                                        value={eduIsCurrentlyStudying ? "Present" : eduEndYear}
+                                                        onValueChange={(val) => {
+                                                            if (val === "Present") {
+                                                                setEduIsCurrentlyStudying(true);
+                                                                setEduEndYear("");
+                                                            } else {
+                                                                setEduIsCurrentlyStudying(false);
+                                                                setEduEndYear(val);
+                                                            }
+                                                        }}
+                                                    >
+                                                        <SelectTrigger className="mt-2 w-full">
+                                                            <SelectValue placeholder="YYYY" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectItem value="Present">Present</SelectItem>
+                                                            {years.map((y) => (
+                                                                <SelectItem key={y} value={y}>{y}</SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+                                            </div>
+
+                                            {/* Currently Studying Checkbox */}
+                                            <div className="flex items-center gap-2">
+                                                <Checkbox
+                                                    id="currentlyStudying"
+                                                    checked={eduIsCurrentlyStudying}
+                                                    onCheckedChange={(checked) => {
+                                                        setEduIsCurrentlyStudying(checked as boolean);
+                                                        if (checked) {
+                                                            setEduEndYear("");
+                                                        }
+                                                    }}
+                                                />
+                                                <label htmlFor="currentlyStudying" className="text-sm cursor-pointer">
+                                                    I am currently studying at this institution
+                                                </label>
+                                            </div>
+
+                                            {/* Activities */}
+                                            <div>
+                                                <label className="text-sm font-medium">Activities</label>
+                                                <Textarea
+                                                    value={eduActivities}
+                                                    onChange={(e) => setEduActivities(e.target.value.slice(0, 400))}
+                                                    placeholder="Ex: Student Government, Debate Club"
+                                                    className="mt-2 min-h-[80px] resize-none"
+                                                />
+                                                <p className="text-xs text-muted-foreground mt-1">400 characters</p>
+                                            </div>
+
+                                            {/* Description */}
+                                            <div>
+                                                <label className="text-sm font-medium">Description</label>
+                                                <Textarea
+                                                    value={eduDescription}
+                                                    onChange={(e) => setEduDescription(e.target.value.slice(0, 400))}
+                                                    placeholder="e.g. Graduated with honors, specialized in Machine Learning and AI. Led research projects in Natural Language Processing."
+                                                    className="mt-2 min-h-[100px] resize-none"
+                                                />
+                                                <p className="text-xs text-muted-foreground mt-1">400 characters</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -2783,9 +2791,9 @@ export default function ProfilePage() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.15 }}
-                                className="w-full max-w-md mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[75vh]"
+                                className="w-full max-w-3xl mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[90vh]"
                             >
-                                <div className="p-6 pb-4">
+                                <div className="p-6 pb-4 border-b">
                                     <div className="flex items-start gap-4">
                                         <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
                                             <FolderKanban className="size-5 text-blue-600" />
@@ -2799,78 +2807,86 @@ export default function ProfilePage() {
                                         </button>
                                     </div>
                                 </div>
-                                <div className="flex-1 overflow-y-auto px-6 pt-6 pb-6 space-y-5">
-                                    <div>
-                                        <label className="text-sm font-medium">Project name*</label>
-                                        <Input value={projName} onChange={(e) => setProjName(e.target.value.slice(0, 80))} placeholder="Ex: E-commerce Platform" className="mt-2" />
-                                        <p className="text-xs text-muted-foreground mt-1">80 characters</p>
-                                    </div>
-                                    <div>
-                                        <label className="text-sm font-medium">Project URL</label>
-                                        <Input value={projUrl} onChange={(e) => setProjUrl(e.target.value)} placeholder="Ex: https://github.com/user/project" className="mt-2" />
-                                    </div>
-                                    <div>
-                                        <label className="text-sm font-medium">Description*</label>
-                                        <Textarea value={projDescription} onChange={(e) => setProjDescription(e.target.value.slice(0, 500))} placeholder="Describe your project, its purpose, and your role..." className="mt-2 min-h-[100px] resize-none" />
-                                        <p className="text-xs text-muted-foreground mt-1">500 characters</p>
-                                    </div>
-                                    <div>
-                                        <label className="text-sm font-medium">Technologies</label>
-                                        {projTechnologies.length > 0 && (
-                                            <div className="flex flex-wrap gap-1.5 mt-2 mb-2">
-                                                {projTechnologies.map((tech) => (
-                                                    <span key={tech} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs rounded-md">
-                                                        {tech}
-                                                        <button onClick={() => removeTechFromProject(tech)} className="hover:text-red-600"><Minus className="size-3" /></button>
-                                                    </span>
-                                                ))}
+                                <div className="flex-1 overflow-y-auto px-6 py-6">
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        {/* Left Column */}
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="text-sm font-medium">Project name*</label>
+                                                <Input value={projName} onChange={(e) => setProjName(e.target.value.slice(0, 80))} placeholder="Ex: E-commerce Platform" className="mt-2" />
+                                                <p className="text-xs text-muted-foreground mt-1">80 characters</p>
                                             </div>
-                                        )}
-                                        <div className="relative mt-2">
-                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                                            <Input value={projTechSearch} onChange={(e) => setProjTechSearch(e.target.value)} placeholder="Search technologies..." className="pl-10" />
-                                        </div>
-                                        {projTechSearch && (
-                                            <div className="mt-2 border rounded-lg max-h-32 overflow-y-auto">
-                                                {allTechs.filter(t => t.name.toLowerCase().includes(projTechSearch.toLowerCase()) && !projTechnologies.includes(t.name)).slice(0, 5).map((tech) => (
-                                                    <button key={tech.name} onClick={() => addTechToProject(tech.name)} className="w-full px-3 py-2 text-left text-sm hover:bg-muted flex items-center gap-2">
-                                                        <Plus className="size-3" /> {tech.name}
-                                                    </button>
-                                                ))}
+                                            <div>
+                                                <label className="text-sm font-medium">Project URL</label>
+                                                <Input value={projUrl} onChange={(e) => setProjUrl(e.target.value)} placeholder="Ex: https://github.com/user/project" className="mt-2" />
                                             </div>
-                                        )}
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="text-sm font-medium">Start date</label>
-                                            <div className="grid grid-cols-2 gap-2 mt-2">
-                                                <Select value={projStartMonth} onValueChange={setProjStartMonth}>
-                                                    <SelectTrigger className="w-full"><SelectValue placeholder="Month" /></SelectTrigger>
-                                                    <SelectContent>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
-                                                </Select>
-                                                <Select value={projStartYear} onValueChange={setProjStartYear}>
-                                                    <SelectTrigger className="w-full"><SelectValue placeholder="Year" /></SelectTrigger>
-                                                    <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
-                                                </Select>
+                                            <div>
+                                                <label className="text-sm font-medium">Technologies</label>
+                                                {projTechnologies.length > 0 && (
+                                                    <div className="flex flex-wrap gap-1.5 mt-2 mb-2">
+                                                        {projTechnologies.map((tech) => (
+                                                            <span key={tech} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs rounded-md">
+                                                                {tech}
+                                                                <button onClick={() => removeTechFromProject(tech)} className="hover:text-red-600"><Minus className="size-3" /></button>
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                                <div className="relative mt-2">
+                                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                                                    <Input value={projTechSearch} onChange={(e) => setProjTechSearch(e.target.value)} placeholder="Search technologies..." className="pl-10" />
+                                                </div>
+                                                {projTechSearch && (
+                                                    <div className="mt-2 border rounded-lg max-h-32 overflow-y-auto">
+                                                        {allTechs.filter(t => t.name.toLowerCase().includes(projTechSearch.toLowerCase()) && !projTechnologies.includes(t.name)).slice(0, 5).map((tech) => (
+                                                            <button key={tech.name} onClick={() => addTechToProject(tech.name)} className="w-full px-3 py-2 text-left text-sm hover:bg-muted flex items-center gap-2">
+                                                                <Plus className="size-3" /> {tech.name}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
-                                        <div>
-                                            <label className="text-sm font-medium">End date</label>
-                                            <div className="grid grid-cols-2 gap-2 mt-2">
-                                                <Select value={projIsOngoing ? "Present" : projEndMonth} onValueChange={(val) => { if (val === "Present") { setProjIsOngoing(true); setProjEndMonth(""); setProjEndYear(""); } else { setProjIsOngoing(false); setProjEndMonth(val); } }}>
-                                                    <SelectTrigger className="w-full"><SelectValue placeholder="Month" /></SelectTrigger>
-                                                    <SelectContent><SelectItem value="Present">Present</SelectItem>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
-                                                </Select>
-                                                <Select value={projEndYear} onValueChange={setProjEndYear} disabled={projIsOngoing}>
-                                                    <SelectTrigger className={cn("w-full", projIsOngoing && "opacity-50")}><SelectValue placeholder="Year" /></SelectTrigger>
-                                                    <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
-                                                </Select>
+                                        {/* Right Column */}
+                                        <div className="space-y-4">
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="text-sm font-medium">Start date</label>
+                                                    <div className="grid grid-cols-2 gap-2 mt-2">
+                                                        <Select value={projStartMonth} onValueChange={setProjStartMonth}>
+                                                            <SelectTrigger className="w-full"><SelectValue placeholder="Month" /></SelectTrigger>
+                                                            <SelectContent>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
+                                                        </Select>
+                                                        <Select value={projStartYear} onValueChange={setProjStartYear}>
+                                                            <SelectTrigger className="w-full"><SelectValue placeholder="Year" /></SelectTrigger>
+                                                            <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
+                                                        </Select>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label className="text-sm font-medium">End date</label>
+                                                    <div className="grid grid-cols-2 gap-2 mt-2">
+                                                        <Select value={projIsOngoing ? "Present" : projEndMonth} onValueChange={(val) => { if (val === "Present") { setProjIsOngoing(true); setProjEndMonth(""); setProjEndYear(""); } else { setProjIsOngoing(false); setProjEndMonth(val); } }}>
+                                                            <SelectTrigger className="w-full"><SelectValue placeholder="Month" /></SelectTrigger>
+                                                            <SelectContent><SelectItem value="Present">Present</SelectItem>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
+                                                        </Select>
+                                                        <Select value={projEndYear} onValueChange={setProjEndYear} disabled={projIsOngoing}>
+                                                            <SelectTrigger className={cn("w-full", projIsOngoing && "opacity-50")}><SelectValue placeholder="Year" /></SelectTrigger>
+                                                            <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
+                                                        </Select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Checkbox id="ongoingProject" checked={projIsOngoing} onCheckedChange={(checked) => { setProjIsOngoing(checked as boolean); if (checked) { setProjEndMonth(""); setProjEndYear(""); } }} />
+                                                <label htmlFor="ongoingProject" className="text-sm cursor-pointer">This is an ongoing project</label>
+                                            </div>
+                                            <div>
+                                                <label className="text-sm font-medium">Description*</label>
+                                                <Textarea value={projDescription} onChange={(e) => setProjDescription(e.target.value.slice(0, 500))} placeholder="Describe your project, its purpose, and your role..." className="mt-2 min-h-[120px] resize-none" />
+                                                <p className="text-xs text-muted-foreground mt-1">500 characters</p>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <Checkbox id="ongoingProject" checked={projIsOngoing} onCheckedChange={(checked) => { setProjIsOngoing(checked as boolean); if (checked) { setProjEndMonth(""); setProjEndYear(""); } }} />
-                                        <label htmlFor="ongoingProject" className="text-sm cursor-pointer">This is an ongoing project</label>
                                     </div>
                                 </div>
                                 <div className="flex-shrink-0 px-6 py-4 border-t bg-muted/30 rounded-b-xl flex items-center justify-end gap-3">
@@ -2947,9 +2963,9 @@ export default function ProfilePage() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.15 }}
-                                className="w-full max-w-md mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[75vh]"
+                                className="w-full max-w-3xl mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[90vh]"
                             >
-                                <div className="p-6 pb-4">
+                                <div className="p-6 pb-4 border-b">
                                     <div className="flex items-start gap-4">
                                         <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
                                             <Award className="size-5 text-blue-600" />
@@ -2963,54 +2979,62 @@ export default function ProfilePage() {
                                         </button>
                                     </div>
                                 </div>
-                                <div className="flex-1 overflow-y-auto px-6 pt-6 pb-6 space-y-5">
-                                    <div>
-                                        <label className="text-sm font-medium">Certification name*</label>
-                                        <Input value={certName} onChange={(e) => setCertName(e.target.value.slice(0, 100))} placeholder="Ex: AWS Solutions Architect" className="mt-2" />
-                                    </div>
-                                    <div>
-                                        <label className="text-sm font-medium">Issuing organization*</label>
-                                        <Input value={certIssuingOrg} onChange={(e) => setCertIssuingOrg(e.target.value)} placeholder="Ex: Amazon Web Services" className="mt-2" />
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="text-sm font-medium">Issue date*</label>
-                                            <div className="grid grid-cols-2 gap-2 mt-2">
-                                                <Select value={certIssueMonth} onValueChange={setCertIssueMonth}>
-                                                    <SelectTrigger className="w-full"><SelectValue placeholder="Month" /></SelectTrigger>
-                                                    <SelectContent>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
-                                                </Select>
-                                                <Select value={certIssueYear} onValueChange={setCertIssueYear}>
-                                                    <SelectTrigger className="w-full"><SelectValue placeholder="Year" /></SelectTrigger>
-                                                    <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
-                                                </Select>
+                                <div className="flex-1 overflow-y-auto px-6 py-6">
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        {/* Left Column */}
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="text-sm font-medium">Certification name*</label>
+                                                <Input value={certName} onChange={(e) => setCertName(e.target.value.slice(0, 100))} placeholder="Ex: AWS Solutions Architect" className="mt-2" />
+                                            </div>
+                                            <div>
+                                                <label className="text-sm font-medium">Issuing organization*</label>
+                                                <Input value={certIssuingOrg} onChange={(e) => setCertIssuingOrg(e.target.value)} placeholder="Ex: Amazon Web Services" className="mt-2" />
+                                            </div>
+                                            <div>
+                                                <label className="text-sm font-medium">Credential ID</label>
+                                                <Input value={certCredentialId} onChange={(e) => setCertCredentialId(e.target.value)} placeholder="Ex: ABC123XYZ" className="mt-2" />
+                                            </div>
+                                            <div>
+                                                <label className="text-sm font-medium">Credential URL</label>
+                                                <Input value={certCredentialUrl} onChange={(e) => setCertCredentialUrl(e.target.value)} placeholder="Ex: https://verify.credential.com/..." className="mt-2" />
                                             </div>
                                         </div>
-                                        <div>
-                                            <label className="text-sm font-medium">Expiration date</label>
-                                            <div className="grid grid-cols-2 gap-2 mt-2">
-                                                <Select value={certDoesNotExpire ? "" : certExpirationMonth} onValueChange={setCertExpirationMonth} disabled={certDoesNotExpire}>
-                                                    <SelectTrigger className={cn("w-full", certDoesNotExpire && "opacity-50")}><SelectValue placeholder="Month" /></SelectTrigger>
-                                                    <SelectContent>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
-                                                </Select>
-                                                <Select value={certDoesNotExpire ? "" : certExpirationYear} onValueChange={setCertExpirationYear} disabled={certDoesNotExpire}>
-                                                    <SelectTrigger className={cn("w-full", certDoesNotExpire && "opacity-50")}><SelectValue placeholder="Year" /></SelectTrigger>
-                                                    <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
-                                                </Select>
+                                        {/* Right Column */}
+                                        <div className="space-y-4">
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="text-sm font-medium">Issue date*</label>
+                                                    <div className="grid grid-cols-2 gap-2 mt-2">
+                                                        <Select value={certIssueMonth} onValueChange={setCertIssueMonth}>
+                                                            <SelectTrigger className="w-full"><SelectValue placeholder="Month" /></SelectTrigger>
+                                                            <SelectContent>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
+                                                        </Select>
+                                                        <Select value={certIssueYear} onValueChange={setCertIssueYear}>
+                                                            <SelectTrigger className="w-full"><SelectValue placeholder="Year" /></SelectTrigger>
+                                                            <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
+                                                        </Select>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label className="text-sm font-medium">Expiration date</label>
+                                                    <div className="grid grid-cols-2 gap-2 mt-2">
+                                                        <Select value={certDoesNotExpire ? "" : certExpirationMonth} onValueChange={setCertExpirationMonth} disabled={certDoesNotExpire}>
+                                                            <SelectTrigger className={cn("w-full", certDoesNotExpire && "opacity-50")}><SelectValue placeholder="Month" /></SelectTrigger>
+                                                            <SelectContent>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
+                                                        </Select>
+                                                        <Select value={certDoesNotExpire ? "" : certExpirationYear} onValueChange={setCertExpirationYear} disabled={certDoesNotExpire}>
+                                                            <SelectTrigger className={cn("w-full", certDoesNotExpire && "opacity-50")}><SelectValue placeholder="Year" /></SelectTrigger>
+                                                            <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
+                                                        </Select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Checkbox id="noExpiration" checked={certDoesNotExpire} onCheckedChange={(checked) => { setCertDoesNotExpire(checked as boolean); if (checked) { setCertExpirationMonth(""); setCertExpirationYear(""); } }} />
+                                                <label htmlFor="noExpiration" className="text-sm cursor-pointer">This credential does not expire</label>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <Checkbox id="noExpiration" checked={certDoesNotExpire} onCheckedChange={(checked) => { setCertDoesNotExpire(checked as boolean); if (checked) { setCertExpirationMonth(""); setCertExpirationYear(""); } }} />
-                                        <label htmlFor="noExpiration" className="text-sm cursor-pointer">This credential does not expire</label>
-                                    </div>
-                                    <div>
-                                        <label className="text-sm font-medium">Credential ID</label>
-                                        <Input value={certCredentialId} onChange={(e) => setCertCredentialId(e.target.value)} placeholder="Ex: ABC123XYZ" className="mt-2" />
-                                    </div>
-                                    <div>
-                                        <label className="text-sm font-medium">Credential URL</label>
-                                        <Input value={certCredentialUrl} onChange={(e) => setCertCredentialUrl(e.target.value)} placeholder="Ex: https://verify.credential.com/..." className="mt-2" />
                                     </div>
                                 </div>
                                 <div className="flex-shrink-0 px-6 py-4 border-t bg-muted/30 rounded-b-xl flex items-center justify-end gap-3">
