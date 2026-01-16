@@ -1307,37 +1307,37 @@ export default function ProfilePage() {
                         <TabsList variant="line" className="flex items-center justify-start bg-transparent border-b-0 h-auto p-0 rounded-none w-fit gap-8 -mb-px">
                             <TabsTrigger
                                 value="overview"
-                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
+                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground data-[state=active]:text-primary data-[state=active]:shadow-[inset_0_-2px_0_0_hsl(var(--primary))]"
                             >
                                 Overview
                             </TabsTrigger>
                             <TabsTrigger
                                 value="tech-stack"
-                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
+                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground data-[state=active]:text-primary data-[state=active]:shadow-[inset_0_-2px_0_0_hsl(var(--primary))]"
                             >
                                 Tech Stack
                             </TabsTrigger>
                             <TabsTrigger
                                 value="experience"
-                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
+                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground data-[state=active]:text-primary data-[state=active]:shadow-[inset_0_-2px_0_0_hsl(var(--primary))]"
                             >
                                 Experience
                             </TabsTrigger>
                             <TabsTrigger
                                 value="projects"
-                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
+                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground data-[state=active]:text-primary data-[state=active]:shadow-[inset_0_-2px_0_0_hsl(var(--primary))]"
                             >
                                 Projects
                             </TabsTrigger>
                             <TabsTrigger
                                 value="education"
-                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
+                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground data-[state=active]:text-primary data-[state=active]:shadow-[inset_0_-2px_0_0_hsl(var(--primary))]"
                             >
                                 Education
                             </TabsTrigger>
                             <TabsTrigger
                                 value="certifications"
-                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
+                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground data-[state=active]:text-primary data-[state=active]:shadow-[inset_0_-2px_0_0_hsl(var(--primary))]"
                             >
                                 Certifications
                             </TabsTrigger>
@@ -1348,6 +1348,7 @@ export default function ProfilePage() {
                             {activeTab === 'experience' && (
                                 <>
                                     <Button variant="outline" onClick={() => setIsAddWithAIOpen(true)}>
+                                        <Sparkles className="size-4 mr-1" />
                                         Add with AI
                                     </Button>
                                     <Button onClick={() => { resetExperienceForm(); setEditingExperienceId(null); setIsAddExperienceOpen(true); }}>
@@ -1359,6 +1360,7 @@ export default function ProfilePage() {
                             {activeTab === 'projects' && (
                                 <>
                                     <Button variant="outline" onClick={() => setIsAddProjectWithAIOpen(true)}>
+                                        <Sparkles className="size-4 mr-1" />
                                         Add with AI
                                     </Button>
                                     <Button onClick={() => { resetProjectForm(); setEditingProjectId(null); setIsAddProjectOpen(true); }}>
@@ -1370,6 +1372,7 @@ export default function ProfilePage() {
                             {activeTab === 'education' && (
                                 <>
                                     <Button variant="outline" onClick={() => setIsAddEducationWithAIOpen(true)}>
+                                        <Sparkles className="size-4 mr-1" />
                                         Add with AI
                                     </Button>
                                     <Button onClick={() => { resetEducationForm(); setEditingEducationId(null); setIsAddEducationOpen(true); }}>
@@ -1381,6 +1384,7 @@ export default function ProfilePage() {
                             {activeTab === 'certifications' && (
                                 <>
                                     <Button variant="outline" onClick={() => setIsAddCertificationWithAIOpen(true)}>
+                                        <Sparkles className="size-4 mr-1" />
                                         Add with AI
                                     </Button>
                                     <Button onClick={() => { resetCertificationForm(); setEditingCertificationId(null); setIsAddCertificationOpen(true); }}>
