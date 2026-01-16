@@ -2229,10 +2229,10 @@ export default function ProfilePage() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.15 }}
-                                className="w-full max-w-md mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[75vh]"
+                                className="w-full max-w-3xl mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[90vh]"
                             >
                                 {/* Header */}
-                                <div className="p-6 pb-4">
+                                <div className="p-6 pb-4 border-b">
                                     <div className="flex items-start gap-4">
                                         <div className="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
                                             <Flag className="size-5 text-blue-600" />
@@ -2250,170 +2250,178 @@ export default function ProfilePage() {
                                 </div>
 
                                 {/* Scrollable Form */}
-                                <div className="flex-1 overflow-y-auto px-6 pt-6 pb-6 space-y-5">
-                                    {/* Title */}
-                                    <div>
-                                        <label className="text-sm font-medium">Title*</label>
-                                        <Input
-                                            value={expTitle}
-                                            onChange={(e) => setExpTitle(e.target.value.slice(0, 40))}
-                                            placeholder="Ex: Software Engineer"
-                                            className="mt-2"
-                                        />
-                                        <p className="text-xs text-muted-foreground mt-1">40 characters</p>
-                                    </div>
+                                <div className="flex-1 overflow-y-auto px-6 py-6">
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        {/* Left Column */}
+                                        <div className="space-y-4">
+                                            {/* Title */}
+                                            <div>
+                                                <label className="text-sm font-medium">Title*</label>
+                                                <Input
+                                                    value={expTitle}
+                                                    onChange={(e) => setExpTitle(e.target.value.slice(0, 40))}
+                                                    placeholder="Ex: Software Engineer"
+                                                    className="mt-2"
+                                                />
+                                                <p className="text-xs text-muted-foreground mt-1">40 characters</p>
+                                            </div>
 
-                                    {/* Employment Type */}
-                                    <div>
-                                        <label className="text-sm font-medium">Employment type*</label>
-                                        <Select value={expEmploymentType} onValueChange={setExpEmploymentType}>
-                                            <SelectTrigger className="mt-2 w-full">
-                                                <SelectValue placeholder="Select employment type" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {employmentTypes.map((type) => (
-                                                    <SelectItem key={type} value={type}>{type}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-
-                                    {/* Company Name */}
-                                    <div>
-                                        <label className="text-sm font-medium">Company name*</label>
-                                        <div className="relative mt-2">
-                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                                            <Input
-                                                value={expCompanyName}
-                                                onChange={(e) => setExpCompanyName(e.target.value)}
-                                                placeholder="e.g. Google"
-                                                className="pl-10"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Company URL */}
-                                    <div>
-                                        <label className="text-sm font-medium">Company website*</label>
-                                        <div className="relative mt-2">
-                                            <ExternalLink className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                                            <Input
-                                                value={expCompanyUrl}
-                                                onChange={(e) => setExpCompanyUrl(e.target.value)}
-                                                placeholder="e.g. https://www.google.com"
-                                                className="pl-10"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Country */}
-                                    <div>
-                                        <label className="text-sm font-medium">Country</label>
-                                        <Select value={expCountry} onValueChange={setExpCountry}>
-                                            <SelectTrigger className="mt-2 w-full">
-                                                <SelectValue placeholder="Search for a country" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {Country.getAllCountries().map((c) => (
-                                                    <SelectItem key={c.isoCode} value={c.name}>{c.name}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-
-                                    {/* Start Date & End Date - Same Row */}
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="text-sm font-medium">Start date*</label>
-                                            <div className="grid grid-cols-2 gap-2 mt-2">
-                                                <Select value={expStartMonth} onValueChange={setExpStartMonth}>
-                                                    <SelectTrigger className="w-full"><SelectValue placeholder="Month" /></SelectTrigger>
-                                                    <SelectContent>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
+                                            {/* Employment Type */}
+                                            <div>
+                                                <label className="text-sm font-medium">Employment type*</label>
+                                                <Select value={expEmploymentType} onValueChange={setExpEmploymentType}>
+                                                    <SelectTrigger className="mt-2 w-full">
+                                                        <SelectValue placeholder="Select employment type" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {employmentTypes.map((type) => (
+                                                            <SelectItem key={type} value={type}>{type}</SelectItem>
+                                                        ))}
+                                                    </SelectContent>
                                                 </Select>
-                                                <Select value={expStartYear} onValueChange={setExpStartYear}>
-                                                    <SelectTrigger className="w-full"><SelectValue placeholder="Year" /></SelectTrigger>
-                                                    <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
+                                            </div>
+
+                                            {/* Company Name */}
+                                            <div>
+                                                <label className="text-sm font-medium">Company name*</label>
+                                                <div className="relative mt-2">
+                                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                                                    <Input
+                                                        value={expCompanyName}
+                                                        onChange={(e) => setExpCompanyName(e.target.value)}
+                                                        placeholder="e.g. Google"
+                                                        className="pl-10"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            {/* Company URL */}
+                                            <div>
+                                                <label className="text-sm font-medium">Company website*</label>
+                                                <div className="relative mt-2">
+                                                    <ExternalLink className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                                                    <Input
+                                                        value={expCompanyUrl}
+                                                        onChange={(e) => setExpCompanyUrl(e.target.value)}
+                                                        placeholder="e.g. https://www.google.com"
+                                                        className="pl-10"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            {/* Country */}
+                                            <div>
+                                                <label className="text-sm font-medium">Country</label>
+                                                <Select value={expCountry} onValueChange={setExpCountry}>
+                                                    <SelectTrigger className="mt-2 w-full">
+                                                        <SelectValue placeholder="Search for a country" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {Country.getAllCountries().map((c) => (
+                                                            <SelectItem key={c.isoCode} value={c.name}>{c.name}</SelectItem>
+                                                        ))}
+                                                    </SelectContent>
                                                 </Select>
                                             </div>
                                         </div>
-                                        <div>
-                                            <label className="text-sm font-medium">End date*</label>
-                                            <div className="grid grid-cols-2 gap-2 mt-2">
-                                                <Select value={expIsCurrentRole ? "Present" : expEndMonth} onValueChange={(val) => { if (val === "Present") { setExpIsCurrentRole(true); setExpEndMonth(""); setExpEndYear(""); } else { setExpIsCurrentRole(false); setExpEndMonth(val); } }}>
-                                                    <SelectTrigger className="w-full"><SelectValue placeholder="Month" /></SelectTrigger>
-                                                    <SelectContent><SelectItem value="Present">Present</SelectItem>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
-                                                </Select>
-                                                <Select value={expEndYear} onValueChange={setExpEndYear} disabled={expIsCurrentRole}>
-                                                    <SelectTrigger className={cn("w-full", expIsCurrentRole && "opacity-50")}><SelectValue placeholder="Year" /></SelectTrigger>
-                                                    <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
-                                                </Select>
+
+                                        {/* Right Column */}
+                                        <div className="space-y-4">
+                                            {/* Start Date & End Date */}
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="text-sm font-medium">Start date*</label>
+                                                    <div className="grid grid-cols-2 gap-2 mt-2">
+                                                        <Select value={expStartMonth} onValueChange={setExpStartMonth}>
+                                                            <SelectTrigger className="w-full"><SelectValue placeholder="Month" /></SelectTrigger>
+                                                            <SelectContent>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
+                                                        </Select>
+                                                        <Select value={expStartYear} onValueChange={setExpStartYear}>
+                                                            <SelectTrigger className="w-full"><SelectValue placeholder="Year" /></SelectTrigger>
+                                                            <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
+                                                        </Select>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label className="text-sm font-medium">End date*</label>
+                                                    <div className="grid grid-cols-2 gap-2 mt-2">
+                                                        <Select value={expIsCurrentRole ? "Present" : expEndMonth} onValueChange={(val) => { if (val === "Present") { setExpIsCurrentRole(true); setExpEndMonth(""); setExpEndYear(""); } else { setExpIsCurrentRole(false); setExpEndMonth(val); } }}>
+                                                            <SelectTrigger className="w-full"><SelectValue placeholder="Month" /></SelectTrigger>
+                                                            <SelectContent><SelectItem value="Present">Present</SelectItem>{months.map((m) => (<SelectItem key={m} value={m}>{m}</SelectItem>))}</SelectContent>
+                                                        </Select>
+                                                        <Select value={expEndYear} onValueChange={setExpEndYear} disabled={expIsCurrentRole}>
+                                                            <SelectTrigger className={cn("w-full", expIsCurrentRole && "opacity-50")}><SelectValue placeholder="Year" /></SelectTrigger>
+                                                            <SelectContent>{years.map((y) => (<SelectItem key={y} value={y}>{y}</SelectItem>))}</SelectContent>
+                                                        </Select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Currently Working Checkbox */}
+                                            <div className="flex items-center gap-2">
+                                                <Checkbox
+                                                    id="currentRole"
+                                                    checked={expIsCurrentRole}
+                                                    onCheckedChange={(checked) => {
+                                                        setExpIsCurrentRole(checked as boolean);
+                                                        if (checked) {
+                                                            setExpEndMonth("");
+                                                            setExpEndYear("");
+                                                        }
+                                                    }}
+                                                />
+                                                <label htmlFor="currentRole" className="text-sm cursor-pointer">
+                                                    I am currently working in this role
+                                                </label>
+                                            </div>
+
+                                            {/* Skills */}
+                                            <div>
+                                                <label className="text-sm font-medium">Skills</label>
+                                                {expSkills.length > 0 && (
+                                                    <div className="flex flex-wrap gap-1.5 mt-2 mb-2">
+                                                        {expSkills.map((skill) => (
+                                                            <span
+                                                                key={skill}
+                                                                className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-sm rounded-md"
+                                                            >
+                                                                {skill}
+                                                                <button onClick={() => removeSkillFromExperience(skill)}>
+                                                                    <X className="size-3" />
+                                                                </button>
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                                <div className="relative mt-2">
+                                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                                                    <Input
+                                                        value={expSkillSearch}
+                                                        onChange={(e) => setExpSkillSearch(e.target.value)}
+                                                        placeholder="e.g. Next.js"
+                                                        className="pl-10"
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === "Enter" && expSkillSearch.trim()) {
+                                                                e.preventDefault();
+                                                                addSkillToExperience(expSkillSearch.trim());
+                                                            }
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            {/* Description */}
+                                            <div>
+                                                <label className="text-sm font-medium">Description*</label>
+                                                <Textarea
+                                                    value={expDescription}
+                                                    onChange={(e) => setExpDescription(e.target.value.slice(0, 400))}
+                                                    placeholder="e.g. I was a software engineer at Google."
+                                                    className="mt-2 min-h-[120px] resize-none"
+                                                />
+                                                <p className="text-xs text-muted-foreground mt-1">400 characters</p>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    {/* Currently Working Checkbox */}
-                                    <div className="flex items-center gap-2">
-                                        <Checkbox
-                                            id="currentRole"
-                                            checked={expIsCurrentRole}
-                                            onCheckedChange={(checked) => {
-                                                setExpIsCurrentRole(checked as boolean);
-                                                if (checked) {
-                                                    setExpEndMonth("");
-                                                    setExpEndYear("");
-                                                }
-                                            }}
-                                        />
-                                        <label htmlFor="currentRole" className="text-sm cursor-pointer">
-                                            I am currently working in this role
-                                        </label>
-                                    </div>
-
-                                    {/* Skills */}
-                                    <div>
-                                        <label className="text-sm font-medium">Skills</label>
-                                        {expSkills.length > 0 && (
-                                            <div className="flex flex-wrap gap-1.5 mt-2 mb-2">
-                                                {expSkills.map((skill) => (
-                                                    <span
-                                                        key={skill}
-                                                        className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-sm rounded-md"
-                                                    >
-                                                        {skill}
-                                                        <button onClick={() => removeSkillFromExperience(skill)}>
-                                                            <X className="size-3" />
-                                                        </button>
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        )}
-                                        <div className="relative mt-2">
-                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                                            <Input
-                                                value={expSkillSearch}
-                                                onChange={(e) => setExpSkillSearch(e.target.value)}
-                                                placeholder="e.g. Next.js"
-                                                className="pl-10"
-                                                onKeyDown={(e) => {
-                                                    if (e.key === "Enter" && expSkillSearch.trim()) {
-                                                        e.preventDefault();
-                                                        addSkillToExperience(expSkillSearch.trim());
-                                                    }
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Description */}
-                                    <div>
-                                        <label className="text-sm font-medium">Description*</label>
-                                        <Textarea
-                                            value={expDescription}
-                                            onChange={(e) => setExpDescription(e.target.value.slice(0, 400))}
-                                            placeholder="e.g. I was a software engineer at Google."
-                                            className="mt-2 min-h-[100px] resize-none"
-                                        />
-                                        <p className="text-xs text-muted-foreground mt-1">400 characters</p>
                                     </div>
                                 </div>
 
