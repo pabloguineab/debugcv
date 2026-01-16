@@ -235,7 +235,7 @@ function UploadResumeContent() {
                         We'll use your resume to automatically complete your profile. This
                         means you get matched you with relevant jobs and can generate
                         tailored resumes, cover letters, and mock interviews. If you don't
-                        have a resume on hand, <Link href="/auth/linkedin-import" className="text-blue-600 hover:underline">upload your LinkedIn profile</Link> instead.
+                        have a resume on hand, upload your LinkedIn profile instead.
                     </p>
                 </div>
 
