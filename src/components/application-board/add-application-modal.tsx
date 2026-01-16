@@ -401,7 +401,7 @@ export function AddApplicationModal({
                                                     {...field}
                                                     id="jobDescription"
                                                     placeholder="Paste the job description here..."
-                                                    className="resize-none min-h-[180px]"
+                                                    className="resize-none min-h-[120px]"
                                                 />
                                                 <FieldDescription>
                                                     Adding the job description helps with AI match analysis.
