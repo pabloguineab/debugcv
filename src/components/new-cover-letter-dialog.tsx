@@ -92,14 +92,14 @@ export function NewCoverLetterDialog({ open, onOpenChange }: NewCoverLetterDialo
                                         className={cn(
                                             "relative flex items-center gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all hover:bg-accent",
                                             selectedResume === resume.id
-                                                ? "border-blue-600 bg-blue-50/50 dark:bg-blue-900/20"
-                                                : "border-gray-100 dark:border-gray-800 hover:border-blue-400/50"
+                                                ? "border-primary bg-primary/10 dark:bg-primary/20"
+                                                : "border-gray-100 dark:border-gray-800 hover:border-primary/50"
                                         )}
                                     >
                                         <div className={cn(
                                             "w-12 h-12 rounded-lg flex items-center justify-center transition-colors",
                                             selectedResume === resume.id
-                                                ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400"
+                                                ? "bg-primary/20 dark:bg-primary/30 text-primary"
                                                 : "bg-gray-100 dark:bg-gray-800 text-gray-500"
                                         )}>
                                             <FileText className="w-6 h-6" />
@@ -117,7 +117,7 @@ export function NewCoverLetterDialog({ open, onOpenChange }: NewCoverLetterDialo
                                         <div className={cn(
                                             "w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all",
                                             selectedResume === resume.id
-                                                ? "border-blue-600 bg-blue-600 text-white"
+                                                ? "border-primary bg-primary text-primary-foreground"
                                                 : "border-gray-300 dark:border-gray-600"
                                         )}>
                                             {selectedResume === resume.id && <Check className="w-3.5 h-3.5" />}
@@ -131,7 +131,7 @@ export function NewCoverLetterDialog({ open, onOpenChange }: NewCoverLetterDialo
                             <Button variant="outline" onClick={() => onOpenChange(false)}>
                                 Cancel
                             </Button>
-                            <Button disabled={!selectedResume} className="bg-blue-600 hover:bg-blue-700 text-white">
+                            <Button disabled={!selectedResume}>
                                 Create This Cover Letter
                             </Button>
                         </div>

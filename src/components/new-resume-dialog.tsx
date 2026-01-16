@@ -309,7 +309,7 @@ export function NewResumeDialog({ open, onOpenChange }: NewResumeDialogProps) {
                             <Button variant="outline" onClick={() => onOpenChange(false)}>
                                 Cancel
                             </Button>
-                            <Button disabled={!jobTitle || !jobDescription} className="bg-blue-600 hover:bg-blue-700 text-white">
+                            <Button disabled={!jobTitle || !jobDescription}>
                                 Create Resume
                             </Button>
                         </div>
