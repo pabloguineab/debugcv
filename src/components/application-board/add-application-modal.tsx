@@ -395,13 +395,13 @@ export function AddApplicationModal({
                                         name="jobDescription"
                                         control={control}
                                         render={({ field }) => (
-                                            <Field className="flex bg-transparent flex-col h-full">
+                                            <Field>
                                                 <FieldLabel htmlFor="jobDescription">Job Description</FieldLabel>
                                                 <Textarea
                                                     {...field}
                                                     id="jobDescription"
                                                     placeholder="Paste the job description here..."
-                                                    className="resize-none flex-1 min-h-[120px]"
+                                                    className="resize-none min-h-[180px]"
                                                 />
                                                 <FieldDescription>
                                                     Adding the job description helps with AI match analysis.
