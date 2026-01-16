@@ -1708,7 +1708,7 @@ export default function ProfilePage() {
                                     </Button>
                                     <Button
                                         className="bg-blue-600 hover:bg-blue-700 text-white"
-                                        onClick={() => setIsAddExperienceOpen(true)}
+                                        onClick={() => { resetExperienceForm(); setEditingExperienceId(null); setIsAddExperienceOpen(true); }}
                                     >
                                         <Plus className="size-4 mr-1" />
                                         Add experience
@@ -1774,7 +1774,7 @@ export default function ProfilePage() {
                                     </Button>
                                     <Button
                                         className="bg-blue-600 hover:bg-blue-700 text-white"
-                                        onClick={() => setIsAddExperienceOpen(true)}
+                                        onClick={() => { resetExperienceForm(); setEditingExperienceId(null); setIsAddExperienceOpen(true); }}
                                     >
                                         <Plus className="size-4 mr-1" />
                                         Add experience
@@ -1806,7 +1806,7 @@ export default function ProfilePage() {
                                     </Button>
                                     <Button
                                         className="bg-blue-600 hover:bg-blue-700 text-white"
-                                        onClick={() => setIsAddProjectOpen(true)}
+                                        onClick={() => { resetProjectForm(); setEditingProjectId(null); setIsAddProjectOpen(true); }}
                                     >
                                         <Plus className="size-4 mr-1" />
                                         Add project
@@ -1876,7 +1876,7 @@ export default function ProfilePage() {
                                     <Button variant="outline" onClick={() => setIsAddProjectWithAIOpen(true)}>
                                         Add with AI
                                     </Button>
-                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setIsAddProjectOpen(true)}>
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => { resetProjectForm(); setEditingProjectId(null); setIsAddProjectOpen(true); }}>
                                         <Plus className="size-4 mr-1" />
                                         Add project
                                     </Button>
@@ -1907,7 +1907,7 @@ export default function ProfilePage() {
                                     </Button>
                                     <Button
                                         className="bg-blue-600 hover:bg-blue-700 text-white"
-                                        onClick={() => setIsAddEducationOpen(true)}
+                                        onClick={() => { resetEducationForm(); setEditingEducationId(null); setIsAddEducationOpen(true); }}
                                     >
                                         <Plus className="size-4 mr-1" />
                                         Add education
@@ -1971,7 +1971,7 @@ export default function ProfilePage() {
                                     <Button variant="outline" onClick={() => setIsAddEducationWithAIOpen(true)}>
                                         Add with AI
                                     </Button>
-                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white gap-2" onClick={() => setIsAddEducationOpen(true)}>
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white gap-2" onClick={() => { resetEducationForm(); setEditingEducationId(null); setIsAddEducationOpen(true); }}>
                                         <Plus className="size-4" />
                                         Add education
                                     </Button>
@@ -2002,7 +2002,7 @@ export default function ProfilePage() {
                                     </Button>
                                     <Button
                                         className="bg-blue-600 hover:bg-blue-700 text-white"
-                                        onClick={() => setIsAddCertificationOpen(true)}
+                                        onClick={() => { resetCertificationForm(); setEditingCertificationId(null); setIsAddCertificationOpen(true); }}
                                     >
                                         <Plus className="size-4 mr-1" />
                                         Add certification
@@ -2068,7 +2068,7 @@ export default function ProfilePage() {
                                     <Button variant="outline" onClick={() => setIsAddCertificationWithAIOpen(true)}>
                                         Add with AI
                                     </Button>
-                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setIsAddCertificationOpen(true)}>
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => { resetCertificationForm(); setEditingCertificationId(null); setIsAddCertificationOpen(true); }}>
                                         <Plus className="size-4 mr-1" />
                                         Add certification
                                     </Button>
