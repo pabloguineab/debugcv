@@ -1,7 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import { Book } from "@/components/ui/book";
 import { FileText } from "lucide-react";
+import { NewResumeDialog } from "@/components/new-resume-dialog";
 
 export default function ResumesPage() {
+    const [isNewResumeDialogOpen, setIsNewResumeDialogOpen] = useState(false);
+
     return (
         <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
             {/* Header */}
@@ -35,6 +41,7 @@ export default function ResumesPage() {
 
                 {/* Add New placeholder */}
                 <div
+                    onClick={() => setIsNewResumeDialogOpen(true)}
                     className="group relative flex flex-col items-center justify-center border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-lg hover:border-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-all cursor-pointer"
                     style={{ width: 180, height: 260 }}
                 >
@@ -47,6 +54,12 @@ export default function ResumesPage() {
                     <span className="font-medium text-gray-900 dark:text-gray-100">New Resume</span>
                 </div>
             </div>
+
+            <NewResumeDialog 
+                open={isNewResumeDialogOpen} 
+                onOpenChange={setIsNewResumeDialogOpen} 
+            />
         </div>
     );
 }
+
