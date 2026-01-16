@@ -2995,10 +2995,6 @@ export default function ProfilePage() {
                                                 <label className="text-sm font-medium">Credential ID</label>
                                                 <Input value={certCredentialId} onChange={(e) => setCertCredentialId(e.target.value)} placeholder="Ex: ABC123XYZ" className="mt-2" />
                                             </div>
-                                            <div>
-                                                <label className="text-sm font-medium">Credential URL</label>
-                                                <Input value={certCredentialUrl} onChange={(e) => setCertCredentialUrl(e.target.value)} placeholder="Ex: https://verify.credential.com/..." className="mt-2" />
-                                            </div>
                                         </div>
                                         {/* Right Column */}
                                         <div className="space-y-4">
@@ -3033,6 +3029,10 @@ export default function ProfilePage() {
                                             <div className="flex items-center gap-2">
                                                 <Checkbox id="noExpiration" checked={certDoesNotExpire} onCheckedChange={(checked) => { setCertDoesNotExpire(checked as boolean); if (checked) { setCertExpirationMonth(""); setCertExpirationYear(""); } }} />
                                                 <label htmlFor="noExpiration" className="text-sm cursor-pointer">This credential does not expire</label>
+                                            </div>
+                                            <div>
+                                                <label className="text-sm font-medium">Credential URL</label>
+                                                <Input value={certCredentialUrl} onChange={(e) => setCertCredentialUrl(e.target.value)} placeholder="Ex: https://verify.credential.com/..." className="mt-2" />
                                             </div>
                                         </div>
                                     </div>
