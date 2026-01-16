@@ -1752,7 +1752,7 @@ export default function ProfilePage() {
                                                 className={cn(
                                                     "flex items-center gap-3 px-4 py-2 rounded-lg border cursor-pointer transition-all select-none relative min-w-0",
                                                     selectedTechs.includes(tech.id)
-                                                        ? "border-blue-600 bg-blue-50/80 dark:bg-blue-900/30"
+                                                        ? "border-primary bg-primary/10 dark:bg-primary/20"
                                                         : "border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-700"
                                                 )}
                                             >
@@ -1761,7 +1761,7 @@ export default function ProfilePage() {
                                                 </div>
                                                 <span className="text-sm font-medium truncate">{tech.name}</span>
                                                 {selectedTechs.includes(tech.id) && (
-                                                    <div className="absolute -top-1.5 -right-1.5 bg-blue-600 text-white p-0.5 rounded-full">
+                                                    <div className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground p-0.5 rounded-full">
                                                         <Check className="size-2.5" />
                                                     </div>
                                                 )}
@@ -1788,13 +1788,13 @@ export default function ProfilePage() {
                                                     <div
                                                         key={tech.id}
                                                         onClick={() => toggleTech(tech.id)}
-                                                        className="flex items-center gap-3 px-4 py-2 rounded-lg border-2 border-blue-600 bg-blue-50/80 dark:bg-blue-900/30 cursor-pointer transition-all select-none relative min-w-0"
+                                                        className="flex items-center gap-3 px-4 py-2 rounded-lg border-2 border-primary bg-primary/10 dark:bg-primary/20 cursor-pointer transition-all select-none relative min-w-0"
                                                     >
                                                         <div className="size-12 rounded-md flex items-center justify-center shrink-0">
                                                             <Image src={tech.iconPath} alt={tech.name} width={40} height={40} className="w-full h-full object-contain" />
                                                         </div>
                                                         <span className="text-sm font-medium truncate">{tech.name}</span>
-                                                        <div className="absolute -top-1.5 -right-1.5 bg-blue-600 text-white p-0.5 rounded-full">
+                                                        <div className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground p-0.5 rounded-full">
                                                             <Check className="size-2.5" />
                                                         </div>
                                                     </div>
