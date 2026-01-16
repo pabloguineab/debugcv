@@ -2328,7 +2328,7 @@ export default function ProfilePage() {
                                         {/* Right Column */}
                                         <div className="space-y-4">
                                             {/* Start Date & End Date */}
-                                            <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-4">
                                                 <div>
                                                     <label className="text-sm font-medium">Start date*</label>
                                                     <div className="grid grid-cols-2 gap-2 mt-2">
@@ -2615,7 +2615,7 @@ export default function ProfilePage() {
                                         {/* Right Column */}
                                         <div className="space-y-4">
                                             {/* Start Year & End Year */}
-                                            <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-4">
                                                 <div>
                                                     <label className="text-sm font-medium">Start year*</label>
                                                     <Select value={eduStartYear} onValueChange={setEduStartYear}>
@@ -2849,7 +2849,7 @@ export default function ProfilePage() {
                                         </div>
                                         {/* Right Column */}
                                         <div className="space-y-4">
-                                            <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-4">
                                                 <div>
                                                     <label className="text-sm font-medium">Start date</label>
                                                     <div className="grid grid-cols-2 gap-2 mt-2">
@@ -2998,7 +2998,7 @@ export default function ProfilePage() {
                                         </div>
                                         {/* Right Column */}
                                         <div className="space-y-4">
-                                            <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-4">
                                                 <div>
                                                     <label className="text-sm font-medium">Issue date*</label>
                                                     <div className="grid grid-cols-2 gap-2 mt-2">
