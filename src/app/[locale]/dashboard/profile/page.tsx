@@ -1303,44 +1303,94 @@ export default function ProfilePage() {
             {/* Content using Tabs */}
             <div className="flex-1 overflow-auto p-8">
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                    <TabsList variant="line" className="flex items-center justify-start bg-transparent border-b h-auto p-0 mb-8 rounded-none w-fit gap-8">
-                        <TabsTrigger
-                            value="overview"
-                            className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
-                        >
-                            Overview
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="tech-stack"
-                            className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
-                        >
-                            Tech Stack
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="experience"
-                            className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
-                        >
-                            Experience
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="projects"
-                            className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
-                        >
-                            Projects
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="education"
-                            className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
-                        >
-                            Education
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="certifications"
-                            className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
-                        >
-                            Certifications
-                        </TabsTrigger>
-                    </TabsList>
+                    <div className="flex items-center justify-between border-b mb-8">
+                        <TabsList variant="line" className="flex items-center justify-start bg-transparent border-b-0 h-auto p-0 rounded-none w-fit gap-8 -mb-px">
+                            <TabsTrigger
+                                value="overview"
+                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
+                            >
+                                Overview
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="tech-stack"
+                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
+                            >
+                                Tech Stack
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="experience"
+                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
+                            >
+                                Experience
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="projects"
+                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
+                            >
+                                Projects
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="education"
+                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
+                            >
+                                Education
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="certifications"
+                                className="flex-none rounded-none bg-transparent px-0 py-3 text-base font-medium text-muted-foreground transition-all hover:text-foreground"
+                            >
+                                Certifications
+                            </TabsTrigger>
+                        </TabsList>
+
+                        {/* Action buttons aligned with tabs */}
+                        <div className="flex items-center gap-3 pb-2">
+                            {activeTab === 'experience' && (
+                                <>
+                                    <Button variant="outline" onClick={() => setIsAddWithAIOpen(true)}>
+                                        Add with AI
+                                    </Button>
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => { resetExperienceForm(); setEditingExperienceId(null); setIsAddExperienceOpen(true); }}>
+                                        <Plus className="size-4 mr-1" />
+                                        Add experience
+                                    </Button>
+                                </>
+                            )}
+                            {activeTab === 'projects' && (
+                                <>
+                                    <Button variant="outline" onClick={() => setIsAddProjectWithAIOpen(true)}>
+                                        Add with AI
+                                    </Button>
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => { resetProjectForm(); setEditingProjectId(null); setIsAddProjectOpen(true); }}>
+                                        <Plus className="size-4 mr-1" />
+                                        Add project
+                                    </Button>
+                                </>
+                            )}
+                            {activeTab === 'education' && (
+                                <>
+                                    <Button variant="outline" onClick={() => setIsAddEducationWithAIOpen(true)}>
+                                        Add with AI
+                                    </Button>
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => { resetEducationForm(); setEditingEducationId(null); setIsAddEducationOpen(true); }}>
+                                        <Plus className="size-4 mr-1" />
+                                        Add education
+                                    </Button>
+                                </>
+                            )}
+                            {activeTab === 'certifications' && (
+                                <>
+                                    <Button variant="outline" onClick={() => setIsAddCertificationWithAIOpen(true)}>
+                                        Add with AI
+                                    </Button>
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => { resetCertificationForm(); setEditingCertificationId(null); setIsAddCertificationOpen(true); }}>
+                                        <Plus className="size-4 mr-1" />
+                                        Add certification
+                                    </Button>
+                                </>
+                            )}
+                        </div>
+                    </div>
 
                     <TabsContent value="overview" className="space-y-8 max-w-3xl">
 
@@ -1754,22 +1804,6 @@ export default function ProfilePage() {
                     </TabsContent>
 
                     <TabsContent value="experience" className="space-y-6">
-                        {/* Action buttons - always visible at top right */}
-                        <div className="flex items-center justify-end gap-3">
-                            <Button
-                                variant="outline"
-                                onClick={() => setIsAddWithAIOpen(true)}
-                            >
-                                Add with AI
-                            </Button>
-                            <Button
-                                className="bg-blue-600 hover:bg-blue-700 text-white"
-                                onClick={() => { resetExperienceForm(); setEditingExperienceId(null); setIsAddExperienceOpen(true); }}
-                            >
-                                <Plus className="size-4 mr-1" />
-                                Add experience
-                            </Button>
-                        </div>
 
                         {experiences.length === 0 ? (
                             /* Empty State */
@@ -1835,22 +1869,7 @@ export default function ProfilePage() {
                     </TabsContent>
 
                     <TabsContent value="projects" className="space-y-6">
-                        {/* Action buttons - always visible at top right */}
-                        <div className="flex items-center justify-end gap-3">
-                            <Button
-                                variant="outline"
-                                onClick={() => setIsAddProjectWithAIOpen(true)}
-                            >
-                                Add with AI
-                            </Button>
-                            <Button
-                                className="bg-blue-600 hover:bg-blue-700 text-white"
-                                onClick={() => { resetProjectForm(); setEditingProjectId(null); setIsAddProjectOpen(true); }}
-                            >
-                                <Plus className="size-4 mr-1" />
-                                Add project
-                            </Button>
-                        </div>
+
 
                         {/* Empty State */}
                         {projects.length === 0 ? (
@@ -1922,22 +1941,6 @@ export default function ProfilePage() {
                     </TabsContent>
 
                     <TabsContent value="education" className="space-y-6">
-                        {/* Action buttons - always visible at top right */}
-                        <div className="flex items-center justify-end gap-3">
-                            <Button
-                                variant="outline"
-                                onClick={() => setIsAddEducationWithAIOpen(true)}
-                            >
-                                Add with AI
-                            </Button>
-                            <Button
-                                className="bg-blue-600 hover:bg-blue-700 text-white"
-                                onClick={() => { resetEducationForm(); setEditingEducationId(null); setIsAddEducationOpen(true); }}
-                            >
-                                <Plus className="size-4 mr-1" />
-                                Add education
-                            </Button>
-                        </div>
 
                         {/* Empty State */}
                         {educations.length === 0 ? (
@@ -2006,22 +2009,6 @@ export default function ProfilePage() {
                     </TabsContent>
 
                     <TabsContent value="certifications" className="space-y-6">
-                        {/* Action buttons - always visible at top right */}
-                        <div className="flex items-center justify-end gap-3">
-                            <Button
-                                variant="outline"
-                                onClick={() => setIsAddCertificationWithAIOpen(true)}
-                            >
-                                Add with AI
-                            </Button>
-                            <Button
-                                className="bg-blue-600 hover:bg-blue-700 text-white"
-                                onClick={() => { resetCertificationForm(); setEditingCertificationId(null); setIsAddCertificationOpen(true); }}
-                            >
-                                <Plus className="size-4 mr-1" />
-                                Add certification
-                            </Button>
-                        </div>
 
                         {/* Empty State */}
                         {certifications.length === 0 ? (
