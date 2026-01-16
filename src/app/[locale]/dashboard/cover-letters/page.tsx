@@ -1,7 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import { Mail } from "lucide-react";
 import { Book } from "@/components/ui/book";
+import { NewCoverLetterDialog } from "@/components/new-cover-letter-dialog";
 
 export default function CoverLettersPage() {
+    const [isNewCoverLetterDialogOpen, setIsNewCoverLetterDialogOpen] = useState(false);
+
     return (
         <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
             {/* Header */}
@@ -38,6 +44,7 @@ export default function CoverLettersPage() {
 
                 {/* Add New placeholder */}
                 <div
+                    onClick={() => setIsNewCoverLetterDialogOpen(true)}
                     className="group relative flex flex-col items-center justify-center border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-lg hover:border-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-all cursor-pointer"
                     style={{ width: 180, height: 260 }}
                 >
@@ -50,6 +57,11 @@ export default function CoverLettersPage() {
                     <span className="font-medium text-gray-900 dark:text-gray-100">New Cover Letter</span>
                 </div>
             </div>
+
+            <NewCoverLetterDialog 
+                open={isNewCoverLetterDialogOpen} 
+                onOpenChange={setIsNewCoverLetterDialogOpen}
+            />
         </div>
     );
 }
