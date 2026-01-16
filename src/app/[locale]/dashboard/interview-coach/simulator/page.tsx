@@ -143,7 +143,7 @@ function SimulatorContent() {
                     )}
 
                     <div>
-                        <h1 className="font-bold text-lg tracking-tight">
+                        <h1 className="font-semibold text-lg tracking-tight">
                             {application ? `${application.title} - ${application.company}` : 'AI Interview Simulator'}
                         </h1>
                         <div className="flex items-center gap-2">

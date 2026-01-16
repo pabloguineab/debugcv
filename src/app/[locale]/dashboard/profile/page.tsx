@@ -1278,7 +1278,7 @@ export default function ProfilePage() {
             {/* Header */}
             <div className="flex items-center justify-between px-8 py-6 border-b">
                 <div>
-                    <h1 className="text-2xl font-bold flex items-center gap-2 dark:text-white">
+                    <h1 className="text-2xl font-semibold flex items-center gap-2 dark:text-white">
                         {(() => {
                             const IconComponent = tabIcons[activeTab];
                             return <IconComponent className="w-6 h-6 text-blue-600" />;

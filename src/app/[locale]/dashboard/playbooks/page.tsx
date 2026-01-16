@@ -135,7 +135,7 @@ export default function PlaybookPage() {
                 {/* Header Standardized to match Dashboard Layout (ATS Score / Application Board) */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-0">
                     <div>
-                        <h1 className="text-2xl font-bold flex items-center gap-2">
+                        <h1 className="text-2xl font-semibold flex items-center gap-2">
                             <Sparkles className="w-6 h-6 text-blue-600" />
                             {t('title')}
                         </h1>

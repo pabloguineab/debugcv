@@ -545,7 +545,7 @@ export default function ATSScannerPage() {
                         {/* Header - Desktop Style */}
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
                             <div>
-                                <h1 className="text-2xl font-bold flex items-center gap-2 dark:text-white">
+                                <h1 className="text-2xl font-semibold flex items-center gap-2 dark:text-white">
                                     <Target className="w-6 h-6 text-blue-600" />
                                     ATS Scanner
                                 </h1>

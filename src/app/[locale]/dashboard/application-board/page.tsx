@@ -277,7 +277,7 @@ export default function ApplicationBoardPage() {
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold flex items-center gap-2">
+                        <h1 className="text-2xl font-semibold flex items-center gap-2">
                             <Briefcase className="w-6 h-6 text-blue-600" />
                             Application Board
                         </h1>
