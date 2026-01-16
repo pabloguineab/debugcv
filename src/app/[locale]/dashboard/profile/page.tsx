@@ -1754,7 +1754,22 @@ export default function ProfilePage() {
                     </TabsContent>
 
                     <TabsContent value="experience" className="space-y-6">
-
+                        {/* Action buttons - always visible at top right */}
+                        <div className="flex items-center justify-end gap-3">
+                            <Button
+                                variant="outline"
+                                onClick={() => setIsAddWithAIOpen(true)}
+                            >
+                                Add with AI
+                            </Button>
+                            <Button
+                                className="bg-blue-600 hover:bg-blue-700 text-white"
+                                onClick={() => { resetExperienceForm(); setEditingExperienceId(null); setIsAddExperienceOpen(true); }}
+                            >
+                                <Plus className="size-4 mr-1" />
+                                Add experience
+                            </Button>
+                        </div>
 
                         {experiences.length === 0 ? (
                             /* Empty State */
@@ -1763,24 +1778,9 @@ export default function ProfilePage() {
                                     <Wand2 className="size-6 text-blue-600" />
                                 </div>
                                 <h4 className="text-lg font-semibold mb-2">You haven&apos;t added your work experience yet</h4>
-                                <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
+                                <p className="text-sm text-muted-foreground max-w-md mx-auto">
                                     Adding experience helps us match you with the right opportunities.
                                 </p>
-                                <div className="flex items-center justify-center gap-3">
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => setIsAddWithAIOpen(true)}
-                                    >
-                                        Add with AI
-                                    </Button>
-                                    <Button
-                                        className="bg-blue-600 hover:bg-blue-700 text-white"
-                                        onClick={() => { resetExperienceForm(); setEditingExperienceId(null); setIsAddExperienceOpen(true); }}
-                                    >
-                                        <Plus className="size-4 mr-1" />
-                                        Add experience
-                                    </Button>
-                                </div>
                             </div>
                         ) : (
                             /* Experience List */
@@ -1830,29 +1830,27 @@ export default function ProfilePage() {
                                         </div>
                                     </div>
                                 ))}
-
-                                {/* Add more button */}
-                                <div className="flex gap-3">
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => setIsAddWithAIOpen(true)}
-                                    >
-                                        Add with AI
-                                    </Button>
-                                    <Button
-                                        className="bg-blue-600 hover:bg-blue-700 text-white"
-                                        onClick={() => { resetExperienceForm(); setEditingExperienceId(null); setIsAddExperienceOpen(true); }}
-                                    >
-                                        <Plus className="size-4 mr-1" />
-                                        Add experience
-                                    </Button>
-                                </div>
                             </div>
                         )}
                     </TabsContent>
 
                     <TabsContent value="projects" className="space-y-6">
-
+                        {/* Action buttons - always visible at top right */}
+                        <div className="flex items-center justify-end gap-3">
+                            <Button
+                                variant="outline"
+                                onClick={() => setIsAddProjectWithAIOpen(true)}
+                            >
+                                Add with AI
+                            </Button>
+                            <Button
+                                className="bg-blue-600 hover:bg-blue-700 text-white"
+                                onClick={() => { resetProjectForm(); setEditingProjectId(null); setIsAddProjectOpen(true); }}
+                            >
+                                <Plus className="size-4 mr-1" />
+                                Add project
+                            </Button>
+                        </div>
 
                         {/* Empty State */}
                         {projects.length === 0 ? (
@@ -1861,24 +1859,9 @@ export default function ProfilePage() {
                                     <FolderKanban className="size-6 text-blue-600" />
                                 </div>
                                 <h4 className="text-lg font-semibold mb-2">You haven&apos;t added any projects yet</h4>
-                                <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
+                                <p className="text-sm text-muted-foreground max-w-md mx-auto">
                                     Adding projects will help showcase your skills and experience.
                                 </p>
-                                <div className="flex items-center justify-center gap-3">
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => setIsAddProjectWithAIOpen(true)}
-                                    >
-                                        Add with AI
-                                    </Button>
-                                    <Button
-                                        className="bg-blue-600 hover:bg-blue-700 text-white"
-                                        onClick={() => { resetProjectForm(); setEditingProjectId(null); setIsAddProjectOpen(true); }}
-                                    >
-                                        <Plus className="size-4 mr-1" />
-                                        Add project
-                                    </Button>
-                                </div>
                             </div>
                         ) : (
                             <div className="space-y-4">
@@ -1934,23 +1917,27 @@ export default function ProfilePage() {
                                         </div>
                                     </div>
                                 ))}
-
-                                {/* Add More Buttons */}
-                                <div className="flex items-center gap-3 pt-4">
-                                    <Button variant="outline" onClick={() => setIsAddProjectWithAIOpen(true)}>
-                                        Add with AI
-                                    </Button>
-                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => { resetProjectForm(); setEditingProjectId(null); setIsAddProjectOpen(true); }}>
-                                        <Plus className="size-4 mr-1" />
-                                        Add project
-                                    </Button>
-                                </div>
                             </div>
                         )}
                     </TabsContent>
 
                     <TabsContent value="education" className="space-y-6">
-
+                        {/* Action buttons - always visible at top right */}
+                        <div className="flex items-center justify-end gap-3">
+                            <Button
+                                variant="outline"
+                                onClick={() => setIsAddEducationWithAIOpen(true)}
+                            >
+                                Add with AI
+                            </Button>
+                            <Button
+                                className="bg-blue-600 hover:bg-blue-700 text-white"
+                                onClick={() => { resetEducationForm(); setEditingEducationId(null); setIsAddEducationOpen(true); }}
+                            >
+                                <Plus className="size-4 mr-1" />
+                                Add education
+                            </Button>
+                        </div>
 
                         {/* Empty State */}
                         {educations.length === 0 ? (
@@ -1959,24 +1946,9 @@ export default function ProfilePage() {
                                     <GraduationCap className="size-6 text-blue-600" />
                                 </div>
                                 <h4 className="text-lg font-semibold mb-2">You haven&apos;t added your education yet</h4>
-                                <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
+                                <p className="text-sm text-muted-foreground max-w-md mx-auto">
                                     Adding education will help you attract the right opportunities.
                                 </p>
-                                <div className="flex items-center justify-center gap-3">
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => setIsAddEducationWithAIOpen(true)}
-                                    >
-                                        Add with AI
-                                    </Button>
-                                    <Button
-                                        className="bg-blue-600 hover:bg-blue-700 text-white"
-                                        onClick={() => { resetEducationForm(); setEditingEducationId(null); setIsAddEducationOpen(true); }}
-                                    >
-                                        <Plus className="size-4 mr-1" />
-                                        Add education
-                                    </Button>
-                                </div>
                             </div>
                         ) : (
                             <div className="space-y-4">
@@ -2029,23 +2001,27 @@ export default function ProfilePage() {
                                         </div>
                                     </div>
                                 ))}
-
-                                {/* Add More Buttons */}
-                                <div className="flex items-center gap-3 pt-4">
-                                    <Button variant="outline" onClick={() => setIsAddEducationWithAIOpen(true)}>
-                                        Add with AI
-                                    </Button>
-                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white gap-2" onClick={() => { resetEducationForm(); setEditingEducationId(null); setIsAddEducationOpen(true); }}>
-                                        <Plus className="size-4" />
-                                        Add education
-                                    </Button>
-                                </div>
                             </div>
                         )}
                     </TabsContent>
 
                     <TabsContent value="certifications" className="space-y-6">
-
+                        {/* Action buttons - always visible at top right */}
+                        <div className="flex items-center justify-end gap-3">
+                            <Button
+                                variant="outline"
+                                onClick={() => setIsAddCertificationWithAIOpen(true)}
+                            >
+                                Add with AI
+                            </Button>
+                            <Button
+                                className="bg-blue-600 hover:bg-blue-700 text-white"
+                                onClick={() => { resetCertificationForm(); setEditingCertificationId(null); setIsAddCertificationOpen(true); }}
+                            >
+                                <Plus className="size-4 mr-1" />
+                                Add certification
+                            </Button>
+                        </div>
 
                         {/* Empty State */}
                         {certifications.length === 0 ? (
@@ -2054,24 +2030,9 @@ export default function ProfilePage() {
                                     <Award className="size-6 text-blue-600" />
                                 </div>
                                 <h4 className="text-lg font-semibold mb-2">You haven&apos;t added any certifications yet</h4>
-                                <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
+                                <p className="text-sm text-muted-foreground max-w-md mx-auto">
                                     Adding certifications will help validate your skills and expertise.
                                 </p>
-                                <div className="flex items-center justify-center gap-3">
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => setIsAddCertificationWithAIOpen(true)}
-                                    >
-                                        Add with AI
-                                    </Button>
-                                    <Button
-                                        className="bg-blue-600 hover:bg-blue-700 text-white"
-                                        onClick={() => { resetCertificationForm(); setEditingCertificationId(null); setIsAddCertificationOpen(true); }}
-                                    >
-                                        <Plus className="size-4 mr-1" />
-                                        Add certification
-                                    </Button>
-                                </div>
                             </div>
                         ) : (
                             <div className="space-y-4">
@@ -2126,17 +2087,6 @@ export default function ProfilePage() {
                                         </div>
                                     </div>
                                 ))}
-
-                                {/* Add More Buttons */}
-                                <div className="flex items-center gap-3 pt-4">
-                                    <Button variant="outline" onClick={() => setIsAddCertificationWithAIOpen(true)}>
-                                        Add with AI
-                                    </Button>
-                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => { resetCertificationForm(); setEditingCertificationId(null); setIsAddCertificationOpen(true); }}>
-                                        <Plus className="size-4 mr-1" />
-                                        Add certification
-                                    </Button>
-                                </div>
                             </div>
                         )}
                     </TabsContent>
