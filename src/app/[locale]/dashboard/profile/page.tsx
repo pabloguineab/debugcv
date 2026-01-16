@@ -1862,9 +1862,6 @@ export default function ProfilePage() {
                                     <div key={proj.id} className="rounded-xl border bg-card p-5">
                                         <div className="flex items-start justify-between">
                                             <div className="flex items-start gap-4">
-                                                <div className="size-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
-                                                    <FolderKanban className="size-6 text-muted-foreground" />
-                                                </div>
                                                 <div>
                                                     <h4 className="font-semibold text-base">{proj.name}</h4>
                                                     {proj.projectUrl && (
