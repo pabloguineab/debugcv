@@ -1572,15 +1572,12 @@ export default function ProfilePage() {
                                         onChange={(value) => {
                                             setPhoneNumber(value);
                                         }}
+                                        onBlur={() => {
+                                            if (phoneNumber) updateProfile({ phone_number: phoneNumber });
+                                        }}
                                         defaultCountry={selectedCountry}
                                         placeholder="612 345 678"
                                     />
-                                    <button
-                                        onClick={() => updateProfile({ phone_number: phoneNumber })}
-                                        className="mt-2 text-xs text-blue-600 hover:underline"
-                                    >
-                                        Save phone number
-                                    </button>
                                 </div>
                             </div>
 

@@ -63,6 +63,7 @@ const countries = [
 interface PhoneInputProps {
     value: string;
     onChange: (value: string) => void;
+    onBlur?: () => void;
     defaultCountry?: string;
     placeholder?: string;
     className?: string;
@@ -71,6 +72,7 @@ interface PhoneInputProps {
 export function PhoneInput({
     value,
     onChange,
+    onBlur,
     defaultCountry = "ES",
     placeholder = "XX XX XX XX",
     className = ""
@@ -202,6 +204,7 @@ export function PhoneInput({
                 type="tel"
                 value={getLocalNumber()}
                 onChange={handleNumberChange}
+                onBlur={onBlur}
                 placeholder={placeholder}
                 className="flex-1 px-3 py-2 border rounded-r-lg bg-background focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
             />
