@@ -2159,7 +2159,7 @@ export default function ProfilePage() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.15 }}
-                                className="w-full max-w-md mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[75vh]"
+                                className="w-full max-w-md bg-background rounded-xl shadow-2xl border relative flex flex-col max-h-[75vh]"
                             >
                                 {/* Header */}
                                 <div className="p-6 pb-4">
@@ -2229,7 +2229,7 @@ export default function ProfilePage() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.15 }}
-                                className="w-full max-w-3xl mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[90vh]"
+                                className="w-full max-w-3xl bg-background rounded-xl shadow-2xl border relative flex flex-col max-h-[90vh]"
                             >
                                 {/* Header */}
                                 <div className="p-6 pb-4 border-b">
@@ -2460,7 +2460,7 @@ export default function ProfilePage() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.15 }}
-                                className="w-full max-w-md mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[75vh]"
+                                className="w-full max-w-md bg-background rounded-xl shadow-2xl border relative flex flex-col max-h-[75vh]"
                             >
                                 {/* Header */}
                                 <div className="p-6 pb-4">
@@ -2530,7 +2530,7 @@ export default function ProfilePage() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.15 }}
-                                className="w-full max-w-3xl mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[90vh]"
+                                className="w-full max-w-3xl bg-background rounded-xl shadow-2xl border relative flex flex-col max-h-[90vh]"
                             >
                                 {/* Header */}
                                 <div className="p-6 pb-4 border-b">
@@ -2735,7 +2735,7 @@ export default function ProfilePage() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.15 }}
-                                className="w-full max-w-md mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[75vh]"
+                                className="w-full max-w-md bg-background rounded-xl shadow-2xl border relative flex flex-col max-h-[75vh]"
                             >
                                 <div className="p-6 pb-4">
                                     <div className="flex items-start gap-4">
@@ -2791,7 +2791,7 @@ export default function ProfilePage() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.15 }}
-                                className="w-full max-w-3xl mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[90vh]"
+                                className="w-full max-w-3xl bg-background rounded-xl shadow-2xl border relative flex flex-col max-h-[90vh]"
                             >
                                 <div className="p-6 pb-4 border-b">
                                     <div className="flex items-start gap-4">
@@ -2915,7 +2915,7 @@ export default function ProfilePage() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.15 }}
-                                className="w-full max-w-md mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[75vh]"
+                                className="w-full max-w-md bg-background rounded-xl shadow-2xl border relative flex flex-col max-h-[75vh]"
                             >
                                 <div className="p-6 pb-4">
                                     <div className="flex items-start gap-4">
@@ -2963,7 +2963,7 @@ export default function ProfilePage() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.15 }}
-                                className="w-full max-w-3xl mx-4 bg-background rounded-xl shadow-2xl border-2 border-blue-400 dark:border-blue-500 flex flex-col max-h-[90vh]"
+                                className="w-full max-w-3xl bg-background rounded-xl shadow-2xl border relative flex flex-col max-h-[90vh]"
                             >
                                 <div className="p-6 pb-4 border-b">
                                     <div className="flex items-start gap-4">
