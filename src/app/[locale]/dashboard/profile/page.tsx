@@ -1285,9 +1285,6 @@ export default function ProfilePage() {
                     </p>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Button variant="outline" size="icon">
-                        <MoreHorizontal className="size-4" />
-                    </Button>
                     <Button
                         onClick={() => setIsImportModalOpen(true)}
                         className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 hover:border-blue-600 transition-colors"
