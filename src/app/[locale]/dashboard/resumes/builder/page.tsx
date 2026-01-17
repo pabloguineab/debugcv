@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ResumeData, ResumeScore } from "@/types/resume";
 import { ResumePreview } from "@/components/resume-builder/resume-preview";
 import { ResumeEditorSidebar } from "@/components/resume-builder/resume-editor-sidebar";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, MessageCircle, Download, Loader2 } from "lucide-react";
+import { ArrowLeft, MessageCircle, Download, Loader2, Pencil, Check } from "lucide-react";
 
 // Helper to generate unique IDs
 const generateId = () => crypto.randomUUID();
@@ -48,6 +48,8 @@ export default function ResumeBuilderPage() {
     const [isCalculatingScore, setIsCalculatingScore] = useState(false);
     const [activeSection, setActiveSection] = useState<string>();
     const [isSaving, setIsSaving] = useState(false);
+    const [isEditingName, setIsEditingName] = useState(false);
+    const nameInputRef = useRef<HTMLInputElement>(null);
     
     // Job description from URL params (passed from the creation dialog)
     const jobDescription = searchParams.get("description") || "";
@@ -176,9 +178,37 @@ export default function ResumeBuilderPage() {
                         Back
                     </Button>
                     <div className="h-6 w-px bg-border" />
-                    <h1 className="font-semibold text-lg">
-                        {resumeData.name}
-                    </h1>
+                    {isEditingName ? (
+                        <div className="flex items-center gap-2">
+                            <input
+                                ref={nameInputRef}
+                                type="text"
+                                value={resumeData.name}
+                                onChange={(e) => handleUpdate({ name: e.target.value })}
+                                onBlur={() => setIsEditingName(false)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        setIsEditingName(false);
+                                    }
+                                }}
+                                className="font-semibold text-lg bg-transparent border-b-2 border-primary outline-none px-1 min-w-[150px]"
+                                autoFocus
+                            />
+                        </div>
+                    ) : (
+                        <button
+                            onClick={() => {
+                                setIsEditingName(true);
+                                setTimeout(() => nameInputRef.current?.focus(), 0);
+                            }}
+                            className="flex items-center gap-2 group"
+                        >
+                            <h1 className="font-semibold text-lg">
+                                {resumeData.name}
+                            </h1>
+                            <Pencil className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </button>
+                    )}
                     {jobTitle && (
                         <span className="text-sm text-muted-foreground">
                             — Targeting: {jobTitle}
