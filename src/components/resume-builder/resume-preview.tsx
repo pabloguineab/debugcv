@@ -12,6 +12,17 @@ interface ResumePreviewProps {
 export function ResumePreview({ data, onFieldClick, animate = false }: ResumePreviewProps) {
     const { personalInfo, summary, skills, experience, education, projects, certifications } = data;
 
+    // Helper to format date ranges (avoids "- 2023" when startDate is empty)
+    const formatDateRange = (startDate?: string, endDate?: string, current?: boolean) => {
+        const end = current ? "Present" : (endDate || "");
+        const start = startDate || "";
+        
+        if (start && end) return `${start} - ${end}`;
+        if (start) return start;
+        if (end) return end;
+        return "";
+    };
+
     // Himalayas-style resume template
     return (
         <div 
@@ -99,7 +110,7 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                                             </div>
                                             <div className="flex flex-col items-start text-[11px] text-gray-600" style={{direction: 'rtl'}}>
                                                 <div><span style={{direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block'}}><Typewriter text={edu.location || ""} /></span></div>
-                                                <div><span style={{direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block'}}><Typewriter text={`${edu.startDate} - ${edu.endDate}`} /></span></div>
+                                                <div><span style={{direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block'}}><Typewriter text={formatDateRange(edu.startDate, edu.endDate)} /></span></div>
                                             </div>
                                         </div>
                                     </div>
@@ -132,7 +143,7 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                                             </div>
                                             <div className="flex flex-col items-start text-[11px] text-gray-600" style={{direction: 'rtl'}}>
                                                 <div><span style={{direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block'}}><Typewriter text={exp.location || ""} /></span></div>
-                                                <div><span style={{direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block'}}><Typewriter text={`${exp.startDate} - ${exp.current ? "Present" : exp.endDate}`} /></span></div>
+                                                <div><span style={{direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block'}}><Typewriter text={formatDateRange(exp.startDate, exp.endDate, exp.current)} /></span></div>
                                             </div>
                                         </div>
                                         
