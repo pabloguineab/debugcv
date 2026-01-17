@@ -51,7 +51,8 @@ export default function ResumeBuilderPage() {
     const [isEditingName, setIsEditingName] = useState(false);
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
     const [isTailoring, setIsTailoring] = useState(false);
-    const [animatePreview, setAnimatePreview] = useState(false);
+    // Start with animate=true so it doesn't change after mount and cause restart
+    const [animatePreview, setAnimatePreview] = useState(true);
     const nameInputRef = useRef<HTMLInputElement>(null);
     
     // Job description from URL params (passed from the creation dialog)
@@ -214,13 +215,7 @@ export default function ResumeBuilderPage() {
                     }));
                 }
                 
-                // Trigger animation only once when data is ready
-                // Use a small delay to ensure React has fully processed the state update
-                setTimeout(() => {
-                    setAnimatePreview(true);
-                    // Disable animation after enough time for standard typing effect to complete
-                    setTimeout(() => setAnimatePreview(false), 15000);
-                }, 100);
+                // Animation is already set to true on mount, no need to change it
 
             } catch (error) {
                 console.error("Failed to load profile:", error);
@@ -234,8 +229,6 @@ export default function ResumeBuilderPage() {
 
     // Update resume data
     const handleUpdate = useCallback((updates: Partial<ResumeData>) => {
-        // If user manually updates, ensure animation is off
-        setAnimatePreview(false);
         setResumeData(prev => ({
             ...prev,
             ...updates,
