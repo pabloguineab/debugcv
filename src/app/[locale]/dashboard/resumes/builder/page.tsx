@@ -49,6 +49,8 @@ export default function ResumeBuilderPage() {
     const [activeSection, setActiveSection] = useState<string>();
     const [isSaving, setIsSaving] = useState(false);
     const [isEditingName, setIsEditingName] = useState(false);
+    const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+    const [isTailoring, setIsTailoring] = useState(false);
     const nameInputRef = useRef<HTMLInputElement>(null);
     
     // Job description from URL params (passed from the creation dialog)
@@ -57,9 +59,166 @@ export default function ResumeBuilderPage() {
 
     // Load user profile data to pre-fill resume
     useEffect(() => {
-        // TODO: Load user's profile data from the database
-        // For now, we'll start with empty data
-    }, []);
+        async function loadProfileAndTailor() {
+            setIsLoadingProfile(true);
+            
+            try {
+                // Fetch user profile data
+                const { fetchFullProfile } = await import("@/lib/actions/profile");
+                const profileData = await fetchFullProfile();
+                
+                if (!profileData || !profileData.profile) {
+                    // No profile, use empty resume
+                    setIsLoadingProfile(false);
+                    return;
+                }
+                
+                const { profile, experiences, educations, projects, certifications } = profileData;
+                
+                // Map profile data to ResumeData format
+                const mappedPersonalInfo = {
+                    fullName: profile.full_name || "",
+                    email: profile.user_email || "",
+                    phone: profile.phone_number || "",
+                    location: profile.location || "",
+                    profileUrl: profile.linkedin_user || profile.portfolio_url || ""
+                };
+                
+                const mappedExperience = experiences?.map((exp: any) => ({
+                    id: exp.id || crypto.randomUUID(),
+                    company: exp.company_name || "",
+                    title: exp.title || "",
+                    location: exp.location || exp.country || "",
+                    startDate: `${exp.start_month || ""} ${exp.start_year || ""}`.trim(),
+                    endDate: exp.is_current ? "" : `${exp.end_month || ""} ${exp.end_year || ""}`.trim(),
+                    current: exp.is_current || false,
+                    bullets: exp.description ? exp.description.split("\n").filter((b: string) => b.trim()) : []
+                })) || [];
+                
+                const mappedEducation = educations?.map((edu: any) => ({
+                    id: edu.id || crypto.randomUUID(),
+                    institution: edu.school || "",
+                    degree: edu.degree || "",
+                    field: edu.field_of_study || "",
+                    location: "",
+                    startDate: edu.start_year || "",
+                    endDate: edu.is_current ? "Present" : (edu.end_year || "")
+                })) || [];
+                
+                const mappedProjects = projects?.map((proj: any) => ({
+                    id: proj.id || crypto.randomUUID(),
+                    name: proj.name || "",
+                    description: proj.description || "",
+                    url: proj.project_url || "",
+                    technologies: proj.technologies || []
+                })) || [];
+                
+                const mappedCertifications = certifications?.map((cert: any) => ({
+                    id: cert.id || crypto.randomUUID(),
+                    name: cert.name || "",
+                    issuer: cert.issuing_org || "",
+                    issueDate: `${cert.issue_month || ""} ${cert.issue_year || ""}`.trim(),
+                    expiryDate: cert.no_expiration ? "" : `${cert.expiration_month || ""} ${cert.expiration_year || ""}`.trim(),
+                    credentialId: cert.credential_id || ""
+                })) || [];
+                
+                const baseSkills = profile.tech_stack || [];
+                
+                // If we have job details, tailor the resume with AI
+                if (jobTitle && jobDescription) {
+                    setIsTailoring(true);
+                    
+                    try {
+                        const response = await fetch("/api/resume/ai", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                action: "tailor-resume",
+                                data: {
+                                    profileData: {
+                                        personalInfo: mappedPersonalInfo,
+                                        bio: profile.bio,
+                                        skills: baseSkills,
+                                        experience: mappedExperience,
+                                        education: mappedEducation,
+                                        projects: mappedProjects,
+                                        certifications: mappedCertifications
+                                    },
+                                    jobTitle,
+                                    jobDescription
+                                }
+                            })
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success && result.data) {
+                            const tailored = result.data;
+                            
+                            setResumeData(prev => ({
+                                ...prev,
+                                name: `Resume for ${jobTitle}`,
+                                targetJob: jobTitle,
+                                personalInfo: mappedPersonalInfo,
+                                summary: tailored.summary || "",
+                                skills: tailored.skills || baseSkills,
+                                experience: tailored.experience || mappedExperience,
+                                education: tailored.education || mappedEducation,
+                                projects: tailored.projects || mappedProjects,
+                                certifications: tailored.certifications || mappedCertifications,
+                                updatedAt: new Date().toISOString()
+                            }));
+                        } else {
+                            // Fallback to non-tailored
+                            setResumeData(prev => ({
+                                ...prev,
+                                personalInfo: mappedPersonalInfo,
+                                skills: baseSkills,
+                                experience: mappedExperience,
+                                education: mappedEducation,
+                                projects: mappedProjects,
+                                certifications: mappedCertifications,
+                                updatedAt: new Date().toISOString()
+                            }));
+                        }
+                    } catch (error) {
+                        console.error("Failed to tailor resume:", error);
+                        // Use non-tailored data
+                        setResumeData(prev => ({
+                            ...prev,
+                            personalInfo: mappedPersonalInfo,
+                            skills: baseSkills,
+                            experience: mappedExperience,
+                            education: mappedEducation,
+                            projects: mappedProjects,
+                            certifications: mappedCertifications,
+                            updatedAt: new Date().toISOString()
+                        }));
+                    } finally {
+                        setIsTailoring(false);
+                    }
+                } else {
+                    // No job details, just use profile data directly
+                    setResumeData(prev => ({
+                        ...prev,
+                        personalInfo: mappedPersonalInfo,
+                        skills: baseSkills,
+                        experience: mappedExperience,
+                        education: mappedEducation,
+                        projects: mappedProjects,
+                        certifications: mappedCertifications,
+                        updatedAt: new Date().toISOString()
+                    }));
+                }
+            } catch (error) {
+                console.error("Failed to load profile:", error);
+            } finally {
+                setIsLoadingProfile(false);
+            }
+        }
+        
+        loadProfileAndTailor();
+    }, [jobTitle, jobDescription]);
 
     // Update resume data
     const handleUpdate = useCallback((updates: Partial<ResumeData>) => {
@@ -243,7 +402,24 @@ export default function ResumeBuilderPage() {
                 </div>
 
                 {/* Preview */}
-                <div className="flex-1 bg-gray-100 dark:bg-gray-900 overflow-auto p-6 flex items-start justify-center">
+                <div className="flex-1 bg-gray-100 dark:bg-gray-900 overflow-auto p-6 flex items-start justify-center relative">
+                    {(isLoadingProfile || isTailoring) && (
+                        <div className="absolute inset-0 bg-gray-100/80 dark:bg-gray-900/80 flex items-center justify-center z-10">
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center gap-4">
+                                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                                <div className="text-center">
+                                    <p className="font-semibold text-gray-900 dark:text-gray-100">
+                                        {isTailoring ? "Tailoring your resume..." : "Loading your profile..."}
+                                    </p>
+                                    <p className="text-sm text-muted-foreground mt-1">
+                                        {isTailoring 
+                                            ? "AI is optimizing your resume for the job" 
+                                            : "Please wait a moment"}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                     <div className="w-full h-fit">
                         <ResumePreview
                             data={resumeData}
