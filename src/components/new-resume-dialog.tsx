@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,7 @@ interface NewResumeDialogProps {
 type Step = "choice" | "job-details";
 
 export function NewResumeDialog({ open, onOpenChange }: NewResumeDialogProps) {
+    const router = useRouter();
     const overlayRef = useRef<HTMLDivElement>(null);
     const [step, setStep] = useState<Step>("choice");
     const [tailorToJob, setTailorToJob] = useState(true);
@@ -84,8 +86,18 @@ export function NewResumeDialog({ open, onOpenChange }: NewResumeDialogProps) {
     };
 
     const handleCreateResume = () => {
-        // TODO: Implement resume creation logic
-        console.log("Creating resume with:", { tailorToJob, jobTitle, jobDescription });
+        // Build query params
+        const params = new URLSearchParams();
+        if (tailorToJob && jobTitle) {
+            params.set("job", jobTitle);
+        }
+        if (tailorToJob && jobDescription) {
+            params.set("description", jobDescription);
+        }
+        
+        // Navigate to builder
+        const queryString = params.toString();
+        router.push(`/dashboard/resumes/builder${queryString ? `?${queryString}` : ""}`);
         onOpenChange(false);
     };
 
