@@ -132,7 +132,7 @@ export async function extractProfileFromCV(formData: FormData): Promise<ExtractR
                 end_month: "string - End month name, empty if current",
                 end_year: "string - End year, empty if current",
                 is_current: "boolean - true if this is current job",
-                description: "string - Job description and responsibilities",
+                description: "string - Job description formatted as BULLET POINTS. Each bullet point should start on a new line. If the original text is a paragraph, break it into logical bullet points (one responsibility/achievement per line). Format: 'First achievement or responsibility\\nSecond achievement or responsibility\\nThird achievement or responsibility'. Use \\n as separator between bullets. Do NOT include bullet symbols like • or -, just the text separated by newlines.",
                 skills: "array of strings - Skills used in this role"
             }],
             projects: [{
@@ -202,7 +202,8 @@ EXTRACTION RULES (only if document is a resume):
 6. For months, use full month names (e.g., "January", "February").
 7. For linkedin_user and github_user, extract ONLY the username, not the full URL.
 8. For company_url in experiences: If URL is in the CV, use it. If not, but it's a well-known company (Google, Microsoft, Amazon, Meta, Apple, etc.), provide the official website URL. For unknown companies, leave empty.
-9. Be thorough - capture every piece of information from the CV.
+9. CRITICAL - For experience descriptions: Format as BULLET POINTS separated by newlines (\\n). Break long paragraphs into separate achievements/responsibilities. Each line = one bullet point. Do NOT use bullet symbols (•, -, *), just text separated by \\n.
+10. Be thorough - capture every piece of information from the CV.
 
 Expected JSON structure:
 ${JSON.stringify(jsonSchema, null, 2)}
