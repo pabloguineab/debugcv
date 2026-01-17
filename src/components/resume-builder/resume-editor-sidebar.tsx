@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ResumeData, ResumeExperience, ResumeEducation } from "@/types/resume";
+import { ResumeData, ResumeExperience, ResumeEducation, ResumeProject, ResumeCertification } from "@/types/resume";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,6 +32,8 @@ export function ResumeEditorSidebar({
         skills: true,
         experience: false,
         education: false,
+        projects: false,
+        certifications: false,
         template: false
     });
 
@@ -93,6 +95,49 @@ export function ResumeEditorSidebar({
 
     const removeEducation = (index: number) => {
         onUpdate({ education: data.education.filter((_, i) => i !== index) });
+    };
+
+    const addProject = () => {
+        const newProject: ResumeProject = {
+            id: crypto.randomUUID(),
+            name: "",
+            description: "",
+            technologies: [],
+            url: ""
+        };
+        onUpdate({ projects: [...data.projects, newProject] });
+    };
+
+    const updateProject = (index: number, updates: Partial<ResumeProject>) => {
+        const newProjects = [...data.projects];
+        newProjects[index] = { ...newProjects[index], ...updates };
+        onUpdate({ projects: newProjects });
+    };
+
+    const removeProject = (index: number) => {
+        onUpdate({ projects: data.projects.filter((_, i) => i !== index) });
+    };
+
+    const addCertification = () => {
+        const newCert: ResumeCertification = {
+            id: crypto.randomUUID(),
+            name: "",
+            issuer: "",
+            issueDate: "",
+            credentialId: "",
+            url: ""
+        };
+        onUpdate({ certifications: [...data.certifications, newCert] });
+    };
+
+    const updateCertification = (index: number, updates: Partial<ResumeCertification>) => {
+        const newCertifications = [...data.certifications];
+        newCertifications[index] = { ...newCertifications[index], ...updates };
+        onUpdate({ certifications: newCertifications });
+    };
+
+    const removeCertification = (index: number) => {
+        onUpdate({ certifications: data.certifications.filter((_, i) => i !== index) });
     };
 
     const SectionHeader = ({ title, section }: { title: string; section: string }) => (
@@ -383,6 +428,172 @@ export function ResumeEditorSidebar({
                             >
                                 <Plus className="w-4 h-4 mr-1" />
                                 Add education
+                            </Button>
+                        </div>
+                    )}
+                </div>
+
+                {/* Projects */}
+                <div className={cn("border-b pb-4", activeSection === "projects" && "ring-2 ring-primary rounded-lg p-2")}>
+                    <SectionHeader title="Projects" section="projects" />
+                    {expandedSections.projects && (
+                        <div className="mt-3 space-y-3">
+                            <Label className="text-xs text-muted-foreground">Showcase relevant projects</Label>
+                            {data.projects.map((project, index) => (
+                                <div key={project.id} className="border rounded-lg p-3 bg-muted/30">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <div className="flex items-center gap-2">
+                                            <GripVertical className="w-4 h-4 text-muted-foreground cursor-grab" />
+                                            <span className="text-sm font-medium truncate max-w-[200px]">
+                                                {project.name || "New Project"}
+                                            </span>
+                                        </div>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-6 w-6 text-red-500 hover:text-red-600"
+                                            onClick={() => removeProject(index)}
+                                        >
+                                            <Trash2 className="w-3 h-3" />
+                                        </Button>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Input
+                                            value={project.name}
+                                            onChange={(e) => updateProject(index, { name: e.target.value })}
+                                            placeholder="Project name"
+                                            className="h-8 text-xs"
+                                        />
+                                        <Textarea
+                                            value={project.description}
+                                            onChange={(e) => updateProject(index, { description: e.target.value })}
+                                            placeholder="Brief description..."
+                                            className="h-16 text-xs resize-none"
+                                        />
+                                        <Input
+                                            value={project.url || ""}
+                                            onChange={(e) => updateProject(index, { url: e.target.value })}
+                                            placeholder="Project URL (optional)"
+                                            className="h-8 text-xs"
+                                        />
+                                        <div>
+                                            <Label className="text-xs text-muted-foreground">Technologies</Label>
+                                            <div className="flex flex-wrap gap-1 mt-1">
+                                                {project.technologies.map((tech, techIndex) => (
+                                                    <span
+                                                        key={techIndex}
+                                                        className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-primary/10 text-primary rounded text-[10px]"
+                                                    >
+                                                        {tech}
+                                                        <button
+                                                            onClick={() => {
+                                                                const newTechs = project.technologies.filter((_, i) => i !== techIndex);
+                                                                updateProject(index, { technologies: newTechs });
+                                                            }}
+                                                            className="hover:text-red-500"
+                                                        >
+                                                            ×
+                                                        </button>
+                                                    </span>
+                                                ))}
+                                            </div>
+                                            <Input
+                                                placeholder="Add technology..."
+                                                className="h-7 text-xs mt-1"
+                                                onKeyDown={(e) => {
+                                                    if (e.key === "Enter" && e.currentTarget.value) {
+                                                        updateProject(index, { 
+                                                            technologies: [...project.technologies, e.currentTarget.value] 
+                                                        });
+                                                        e.currentTarget.value = "";
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={addProject}
+                                className="w-full border-dashed border"
+                            >
+                                <Plus className="w-4 h-4 mr-1" />
+                                Add project
+                            </Button>
+                        </div>
+                    )}
+                </div>
+
+                {/* Certifications */}
+                <div className={cn("border-b pb-4", activeSection === "certifications" && "ring-2 ring-primary rounded-lg p-2")}>
+                    <SectionHeader title="Certifications" section="certifications" />
+                    {expandedSections.certifications && (
+                        <div className="mt-3 space-y-3">
+                            <Label className="text-xs text-muted-foreground">Add relevant certifications</Label>
+                            {data.certifications.map((cert, index) => (
+                                <div key={cert.id} className="border rounded-lg p-3 bg-muted/30">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <div className="flex items-center gap-2">
+                                            <GripVertical className="w-4 h-4 text-muted-foreground cursor-grab" />
+                                            <span className="text-sm font-medium truncate max-w-[200px]">
+                                                {cert.name || "New Certification"}
+                                            </span>
+                                        </div>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-6 w-6 text-red-500 hover:text-red-600"
+                                            onClick={() => removeCertification(index)}
+                                        >
+                                            <Trash2 className="w-3 h-3" />
+                                        </Button>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Input
+                                            value={cert.name}
+                                            onChange={(e) => updateCertification(index, { name: e.target.value })}
+                                            placeholder="Certification name"
+                                            className="h-8 text-xs"
+                                        />
+                                        <Input
+                                            value={cert.issuer}
+                                            onChange={(e) => updateCertification(index, { issuer: e.target.value })}
+                                            placeholder="Issuing organization"
+                                            className="h-8 text-xs"
+                                        />
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <Input
+                                                value={cert.issueDate}
+                                                onChange={(e) => updateCertification(index, { issueDate: e.target.value })}
+                                                placeholder="Issue date"
+                                                className="h-8 text-xs"
+                                            />
+                                            <Input
+                                                value={cert.expiryDate || ""}
+                                                onChange={(e) => updateCertification(index, { expiryDate: e.target.value })}
+                                                placeholder="Expiry (optional)"
+                                                className="h-8 text-xs"
+                                            />
+                                        </div>
+                                        <Input
+                                            value={cert.credentialId || ""}
+                                            onChange={(e) => updateCertification(index, { credentialId: e.target.value })}
+                                            placeholder="Credential ID (optional)"
+                                            className="h-8 text-xs"
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={addCertification}
+                                className="w-full border-dashed border"
+                            >
+                                <Plus className="w-4 h-4 mr-1" />
+                                Add certification
                             </Button>
                         </div>
                     )}

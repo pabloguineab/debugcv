@@ -27,6 +27,8 @@ const createEmptyResume = (targetJob?: string, jobDescription?: string): ResumeD
     skills: [],
     experience: [],
     education: [],
+    projects: [],
+    certifications: [],
     template: "harvard",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()

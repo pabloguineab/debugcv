@@ -29,6 +29,26 @@ export interface ResumeEducation {
     endDate: string;
 }
 
+export interface ResumeProject {
+    id: string;
+    name: string;
+    description: string;
+    technologies: string[];
+    url?: string;
+    startDate?: string;
+    endDate?: string;
+}
+
+export interface ResumeCertification {
+    id: string;
+    name: string;
+    issuer: string;
+    issueDate: string;
+    expiryDate?: string;
+    credentialId?: string;
+    url?: string;
+}
+
 export interface ResumeData {
     id: string;
     name: string;
@@ -39,6 +59,8 @@ export interface ResumeData {
     skills: string[];
     experience: ResumeExperience[];
     education: ResumeEducation[];
+    projects: ResumeProject[];
+    certifications: ResumeCertification[];
     template: "harvard" | "simple" | "modern";
     createdAt: string;
     updatedAt: string;
