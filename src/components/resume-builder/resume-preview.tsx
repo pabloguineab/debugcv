@@ -137,13 +137,13 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                                         </div>
                                         
                                         {exp.bullets.length > 0 && (
-                                            <ul className="list-disc list-outside ml-4 text-[11px] text-gray-700 space-y-1 mt-2">
+                                            <div className="ml-4 text-[11px] text-gray-700 space-y-1 mt-2">
                                                 {exp.bullets.map((bullet, bulletIndex) => (
-                                                    <li key={bulletIndex} className="leading-relaxed">
-                                                        <Typewriter text={bullet} speed={2} />
-                                                    </li>
+                                                    <div key={bulletIndex} className="leading-relaxed">
+                                                        <Typewriter text={`• ${bullet}`} speed={2} />
+                                                    </div>
                                                 ))}
-                                            </ul>
+                                            </div>
                                         )}
                                     </div>
                                 ))}
