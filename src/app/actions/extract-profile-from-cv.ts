@@ -113,7 +113,7 @@ export async function extractProfileFromCV(formData: FormData): Promise<ExtractR
             document_type: "string - REQUIRED: Analyze if this is a resume/CV or some other type of document. Must be exactly one of: 'resume' or 'other'. A resume/CV contains work experience, education, skills. If it's a letter, invoice, article, form, or any other non-CV document, set to 'other'.",
             industry: "string - REQUIRED: Identify the primary industry/field of the candidate based on their experience and skills. Must be exactly one of: 'tech', 'healthcare', 'legal', 'business', 'education', 'other'. Tech includes: software development, IT, data science, cybersecurity, DevOps, cloud engineering, QA, UX/UI design for digital products. Healthcare includes: nurses, doctors, medical. Legal includes: lawyers, paralegals. Business includes: marketing (non-digital), sales, HR, finance, consulting. Education includes: teachers, professors.",
             overview: {
-                bio: "string - Professional summary/about me section. Leave empty string if not found.",
+                bio: "string - IMPORTANT: Extract the Professional Summary, Profile, About Me, or Career Objective section from the CV. This is typically a 2-4 sentence paragraph at the top describing the candidate's experience and goals. If found, include the full text. Leave empty string ONLY if no such section exists.",
                 linkedin_user: "string - LinkedIn username only (not full URL). Leave empty if not found.",
                 github_user: "string - GitHub username only (not full URL). Leave empty if not found.",
                 location: "string - Current city and country (e.g., 'Madrid, Spain'). Leave empty if not found.",
@@ -203,7 +203,8 @@ EXTRACTION RULES (only if document is a resume):
 7. For linkedin_user and github_user, extract ONLY the username, not the full URL.
 8. For company_url in experiences: If URL is in the CV, use it. If not, but it's a well-known company (Google, Microsoft, Amazon, Meta, Apple, etc.), provide the official website URL. For unknown companies, leave empty.
 9. CRITICAL - For experience AND project descriptions: Format as BULLET POINTS separated by newlines (\\n). Break long paragraphs into separate achievements/responsibilities/features. Each line = one bullet point. Do NOT use bullet symbols (•, -, *), just text separated by \\n.
-10. Be thorough - capture every piece of information from the CV.
+10. CRITICAL - For overview.bio: Look for sections labeled "Summary", "Professional Summary", "Profile", "About Me", "Career Objective", or similar at the TOP of the resume. Extract the FULL TEXT of this section. This is essential - do NOT leave empty if such a section exists.
+11. Be thorough - capture every piece of information from the CV.
 
 Expected JSON structure:
 ${JSON.stringify(jsonSchema, null, 2)}
