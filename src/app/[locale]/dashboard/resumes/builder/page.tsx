@@ -215,10 +215,12 @@ export default function ResumeBuilderPage() {
                 }
                 
                 // Trigger animation only once when data is ready
-                setAnimatePreview(true);
-                // Disable animation after enough time for standard typing effect to complete
-                // so subsequent manual edits don't trigger it
-                setTimeout(() => setAnimatePreview(false), 15000);
+                // Use a small delay to ensure React has fully processed the state update
+                setTimeout(() => {
+                    setAnimatePreview(true);
+                    // Disable animation after enough time for standard typing effect to complete
+                    setTimeout(() => setAnimatePreview(false), 15000);
+                }, 100);
 
             } catch (error) {
                 console.error("Failed to load profile:", error);

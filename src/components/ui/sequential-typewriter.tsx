@@ -105,6 +105,8 @@ export function useSequentialWriter(text: string, speed: number = 20) {
     const [isDone, setIsDone] = useState(false);
     
     const hasRegistered = useRef(false);
+    // Lock the text when it's our turn to prevent restarts from prop changes
+    const lockedTextRef = useRef<string | null>(null);
 
     // Register once
     useEffect(() => {
@@ -134,32 +136,39 @@ export function useSequentialWriter(text: string, speed: number = 20) {
 
         // If it's our turn
         if (context.currentStep === stepIndex) {
+            // Lock the text on first animation start
+            if (lockedTextRef.current === null) {
+                lockedTextRef.current = text;
+            }
+            const textToAnimate = lockedTextRef.current;
+            
             setDisplayedText("");
             setIsDone(false);
             
             let i = 0;
             // Immediate start
             const interval = setInterval(() => {
-                setDisplayedText(text.slice(0, i + 1));
+                setDisplayedText(textToAnimate.slice(0, i + 1));
                 i++;
-                if (i >= text.length) {
+                if (i >= textToAnimate.length) {
                     clearInterval(interval);
                     setIsDone(true);
                     context.onComplete(stepIndex);
                 }
-            }, speed); // Fixed speed for now, can be random
+            }, speed);
 
             return () => clearInterval(interval);
         } else if (context.currentStep > stepIndex) {
-            // We are done
-            setDisplayedText(text);
+            // We are done - use locked text if available, otherwise current text
+            setDisplayedText(lockedTextRef.current || text);
             setIsDone(true);
         } else {
             // Not our turn
             setDisplayedText("");
             setIsDone(false);
         }
-    }, [context?.currentStep, context?.isAnimating, context?.onComplete, stepIndex, text, speed]);
+    // Remove 'text' from dependencies to prevent restarts when prop changes
+    }, [context?.currentStep, context?.isAnimating, context?.onComplete, stepIndex, speed]);
 
     return { displayedText, isDone, isActive: context?.currentStep === stepIndex };
 }
