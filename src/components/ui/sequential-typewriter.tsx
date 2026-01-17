@@ -26,13 +26,6 @@ export function SequentialAnimationProvider({
     // Use layout effect to ensure counter resets before children render passes
     // This is tricky in strict mode, so we might need a more robust registration if order matters critically
     // But for a linear document, render order usually matches visual order.
-    
-    // Reset when animate toggles
-    useEffect(() => {
-        if (animate) {
-            setCurrentStep(0);
-        }
-    }, [animate]);
 
     // We reset the counter on every render to re-assign IDs? No, that causes mismatches.
     // We only want to assign IDs once.

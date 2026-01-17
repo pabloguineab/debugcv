@@ -32,7 +32,7 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                 aspectRatio: "210 / 297"
             }}
         >
-            <SequentialAnimationProvider animate={animate} key={animate ? "animating" : "static"}>
+            <SequentialAnimationProvider animate={animate}>
                 {/* Resume Paper - Himalayas Style */}
                 <div 
                     className="px-10 py-8 text-gray-800 h-full overflow-auto"
