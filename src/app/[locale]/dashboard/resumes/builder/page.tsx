@@ -162,7 +162,7 @@ export default function ResumeBuilderPage() {
     };
 
     return (
-        <div className="h-[calc(100vh-64px)] flex flex-col">
+        <div className="h-[calc(100vh-64px)] flex flex-col -mx-4 -mt-2 -mb-4">
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b bg-background shrink-0">
                 <div className="flex items-center gap-3">
@@ -200,7 +200,7 @@ export default function ResumeBuilderPage() {
             {/* Main Content */}
             <div className="flex-1 flex overflow-hidden">
                 {/* Sidebar */}
-                <div className="w-[400px] shrink-0 border-r bg-background overflow-hidden">
+                <div className="w-[400px] shrink-0 bg-background overflow-hidden">
                     <ResumeEditorSidebar
                         data={resumeData}
                         score={score}
