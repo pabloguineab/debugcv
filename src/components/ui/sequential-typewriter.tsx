@@ -180,11 +180,14 @@ export const Typewriter = ({
 }) => {
     const { displayedText, isActive } = useSequentialWriter(text || "", speed);
     
+    // Cast to any to avoid TS issues with dynamic tags and children
+    const Component = Tag as any;
+
     // Add blinking cursor if active
     return (
-        <Tag className={className} {...props}>
+        <Component className={className} {...props}>
             {displayedText}
             {isActive && <span className="animate-pulse inline-block w-[1px] h-[1em] bg-black ml-[1px] align-middle">|</span>}
-        </Tag>
+        </Component>
     );
 };
