@@ -11,13 +11,12 @@ export function ResumePreview({ data, onFieldClick }: ResumePreviewProps) {
     const { personalInfo, summary, skills, experience, education, projects, certifications } = data;
 
     // A4 paper size ratio: 210mm x 297mm (1:1.414)
-    // Larger preview for better visibility
+    // Fill available space while maintaining aspect ratio
     return (
         <div 
-            className="bg-white shadow-2xl overflow-hidden rounded-lg"
+            className="bg-white shadow-2xl overflow-hidden rounded-lg mx-auto"
             style={{ 
                 width: "100%",
-                maxWidth: "650px",
                 aspectRatio: "210 / 297"
             }}
         >
