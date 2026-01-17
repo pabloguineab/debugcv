@@ -413,11 +413,21 @@ export default function ResumeBuilderPage() {
                 {/* Preview */}
                 <div className="flex-1 bg-gray-100 dark:bg-gray-900 overflow-auto p-6 flex items-start justify-center relative">
                     <div className="w-full h-fit">
-                        <ResumePreview
-                            data={resumeData}
-                            onFieldClick={handleFieldClick}
-                            animate={animatePreview}
-                        />
+                        {(isLoadingProfile || isTailoring) ? (
+                            <div 
+                                className="bg-white overflow-hidden rounded-lg mx-auto border border-gray-200 shadow-sm"
+                                style={{ 
+                                    width: "100%",
+                                    aspectRatio: "210 / 297"
+                                }}
+                            />
+                        ) : (
+                            <ResumePreview
+                                data={resumeData}
+                                onFieldClick={handleFieldClick}
+                                animate={animatePreview}
+                            />
+                        )}
                     </div>
                 </div>
             </div>
