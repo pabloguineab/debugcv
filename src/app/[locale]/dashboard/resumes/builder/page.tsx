@@ -243,8 +243,8 @@ export default function ResumeBuilderPage() {
                 </div>
 
                 {/* Preview */}
-                <div className="flex-1 bg-gray-100 dark:bg-gray-900 overflow-auto p-8 flex justify-center">
-                    <div className="max-w-[850px] w-full">
+                <div className="flex-1 bg-gray-100 dark:bg-gray-900 overflow-auto p-4 flex items-start justify-center">
+                    <div className="w-full max-w-[700px] py-4">
                         <ResumePreview
                             data={resumeData}
                             onFieldClick={handleFieldClick}

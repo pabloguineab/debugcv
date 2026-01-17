@@ -10,19 +10,19 @@ interface ResumePreviewProps {
 export function ResumePreview({ data, onFieldClick }: ResumePreviewProps) {
     const { personalInfo, summary, skills, experience, education, projects, certifications } = data;
 
-    // A4 paper size: 210mm x 297mm (ratio 1:1.414)
-    // At ~72dpi scale for web: 595px x 842px
+    // A4 paper size ratio: 210mm x 297mm (1:1.414)
+    // Larger preview for better visibility
     return (
         <div 
-            className="bg-white shadow-xl overflow-hidden mx-auto"
+            className="bg-white shadow-2xl overflow-hidden rounded-lg"
             style={{ 
-                width: "595px", 
-                minHeight: "842px",
+                width: "100%",
+                maxWidth: "650px",
                 aspectRatio: "210 / 297"
             }}
         >
             {/* Resume Paper */}
-            <div className="p-8 text-gray-900 text-[10px] leading-snug h-full" style={{ fontFamily: "Times New Roman, serif" }}>
+            <div className="p-6 text-gray-900 text-[11px] leading-snug h-full overflow-auto" style={{ fontFamily: "Times New Roman, serif" }}>
                 {/* Header */}
                 <div className="text-center border-b border-gray-300 pb-3 mb-4">
                     <h1 
