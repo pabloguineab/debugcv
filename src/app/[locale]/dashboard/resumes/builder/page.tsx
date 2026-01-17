@@ -173,6 +173,7 @@ export default function ResumeBuilderPage() {
                              setResumeData(prev => ({
                                 ...prev,
                                 personalInfo: mappedPersonalInfo,
+                                summary: profile.bio || "",
                                 skills: baseSkills,
                                 experience: mappedExperience,
                                 education: mappedEducation,
@@ -187,6 +188,7 @@ export default function ResumeBuilderPage() {
                         setResumeData(prev => ({
                             ...prev,
                             personalInfo: mappedPersonalInfo,
+                            summary: profile.bio || "",
                             skills: baseSkills,
                             experience: mappedExperience,
                             education: mappedEducation,
@@ -202,6 +204,7 @@ export default function ResumeBuilderPage() {
                     setResumeData(prev => ({
                         ...prev,
                         personalInfo: mappedPersonalInfo,
+                        summary: profile.bio || "",
                         skills: baseSkills,
                         experience: mappedExperience,
                         education: mappedEducation,
