@@ -10,57 +10,60 @@ interface ResumePreviewProps {
 export function ResumePreview({ data, onFieldClick }: ResumePreviewProps) {
     const { personalInfo, summary, skills, experience, education, projects, certifications } = data;
 
-    // A4 paper size ratio: 210mm x 297mm (1:1.414)
-    // Fill available space while maintaining aspect ratio
+    // Himalayas-style resume template
     return (
         <div 
-            className="bg-white shadow-2xl overflow-hidden rounded-lg mx-auto"
+            className="bg-white overflow-hidden rounded-lg mx-auto"
             style={{ 
                 width: "100%",
                 aspectRatio: "210 / 297"
             }}
         >
-            {/* Resume Paper */}
-            <div className="p-6 text-gray-900 text-[11px] leading-snug h-full overflow-auto" style={{ fontFamily: "Times New Roman, serif" }}>
-                {/* Header */}
-                <div className="text-center border-b border-gray-300 pb-3 mb-4">
+            {/* Resume Paper - Himalayas Style */}
+            <div 
+                className="px-10 py-8 text-gray-800 h-full overflow-auto"
+                style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+            >
+                {/* Header with line above name */}
+                <div className="text-center mb-6">
+                    <div className="w-48 h-px bg-gray-400 mx-auto mb-4" />
                     <h1 
-                        className="text-lg font-bold cursor-pointer hover:bg-primary/10 rounded px-1 transition-colors"
+                        className="text-[22px] font-normal tracking-wide cursor-pointer hover:bg-blue-50 rounded px-2 py-1 transition-colors inline-block"
                         onClick={() => onFieldClick?.("fullName")}
                     >
                         {personalInfo.fullName || "Your Name"}
                     </h1>
-                    <div className="text-[9px] text-gray-600 mt-1 flex items-center justify-center gap-2 flex-wrap">
+                    <p className="text-[11px] text-gray-600 mt-2">
                         <span 
-                            className="cursor-pointer hover:bg-primary/10 rounded px-1 transition-colors"
+                            className="cursor-pointer hover:underline"
                             onClick={() => onFieldClick?.("location")}
                         >
                             {personalInfo.location || "City, State"}
                         </span>
-                        <span>•</span>
+                        {" • "}
                         <span 
-                            className="cursor-pointer hover:bg-primary/10 rounded px-1 transition-colors text-primary"
+                            className="text-blue-600 cursor-pointer hover:underline"
                             onClick={() => onFieldClick?.("email")}
                         >
                             {personalInfo.email || "email@example.com"}
                         </span>
-                        <span>•</span>
+                        {" • "}
                         <span 
-                            className="cursor-pointer hover:bg-primary/10 rounded px-1 transition-colors"
+                            className="cursor-pointer hover:underline"
                             onClick={() => onFieldClick?.("phone")}
                         >
                             {personalInfo.phone || "+1 555-123-4567"}
                         </span>
-                    </div>
+                    </p>
                 </div>
 
                 {/* Professional Summary */}
-                <section className="mb-4">
-                    <h2 className="text-[11px] font-bold uppercase tracking-wide border-b border-gray-300 pb-0.5 mb-2">
-                        Professional Summary
+                <section className="mb-5">
+                    <h2 className="text-[13px] font-bold text-center mb-3">
+                        Professional summary
                     </h2>
                     <p 
-                        className="text-[10px] leading-snug cursor-pointer hover:bg-primary/10 rounded p-1 transition-colors"
+                        className="text-[11px] leading-relaxed text-gray-700 cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
                         onClick={() => onFieldClick?.("summary")}
                     >
                         {summary || "Click to add a professional summary highlighting your key qualifications, experience, and career goals."}
@@ -69,23 +72,23 @@ export function ResumePreview({ data, onFieldClick }: ResumePreviewProps) {
 
                 {/* Education */}
                 {education.length > 0 && (
-                    <section className="mb-4">
-                        <h2 className="text-[11px] font-bold uppercase tracking-wide border-b border-gray-300 pb-0.5 mb-2">
+                    <section className="mb-5">
+                        <h2 className="text-[13px] font-bold text-center mb-3">
                             Education
                         </h2>
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                             {education.map((edu, index) => (
                                 <div 
                                     key={edu.id} 
-                                    className="cursor-pointer hover:bg-primary/10 rounded p-0.5 transition-colors"
+                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
                                     onClick={() => onFieldClick?.("education", index)}
                                 >
                                     <div className="flex justify-between items-start">
                                         <div>
-                                            <div className="font-bold text-[10px] uppercase">{edu.institution}</div>
-                                            <div className="text-[10px] italic">{edu.degree} in {edu.field}</div>
+                                            <div className="text-[11px] font-bold uppercase tracking-wide">{edu.institution}</div>
+                                            <div className="text-[11px] text-gray-600">{edu.degree} in {edu.field}</div>
                                         </div>
-                                        <div className="text-right text-[9px]">
+                                        <div className="text-right text-[11px] text-gray-600">
                                             <div>{edu.location}</div>
                                             <div>{edu.startDate} - {edu.endDate}</div>
                                         </div>
@@ -98,32 +101,34 @@ export function ResumePreview({ data, onFieldClick }: ResumePreviewProps) {
 
                 {/* Experience */}
                 {experience.length > 0 && (
-                    <section className="mb-4">
-                        <h2 className="text-[11px] font-bold uppercase tracking-wide border-b border-gray-300 pb-0.5 mb-2">
+                    <section className="mb-5">
+                        <h2 className="text-[13px] font-bold text-center mb-3">
                             Experience
                         </h2>
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             {experience.map((exp, index) => (
                                 <div 
                                     key={exp.id}
-                                    className="cursor-pointer hover:bg-primary/10 rounded p-0.5 transition-colors"
+                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
                                     onClick={() => onFieldClick?.("experience", index)}
                                 >
-                                    <div className="flex justify-between items-start mb-0.5">
+                                    <div className="flex justify-between items-start mb-1">
                                         <div>
-                                            <div className="font-bold text-[10px] uppercase">{exp.company}</div>
-                                            <div className="text-[10px] italic">{exp.title}</div>
+                                            <div className="text-[11px] font-bold uppercase tracking-wide">{exp.company}</div>
+                                            <div className="text-[11px] text-gray-700">{exp.title}</div>
                                         </div>
-                                        <div className="text-right text-[9px]">
+                                        <div className="text-right text-[11px] text-gray-600">
                                             <div>{exp.location}</div>
                                             <div>{exp.startDate} - {exp.current ? "Present" : exp.endDate}</div>
                                         </div>
                                     </div>
-                                    <ul className="list-disc list-outside ml-3 text-[10px] space-y-0.5">
-                                        {exp.bullets.map((bullet, bulletIndex) => (
-                                            <li key={bulletIndex}>{bullet}</li>
-                                        ))}
-                                    </ul>
+                                    {exp.bullets.length > 0 && (
+                                        <ul className="list-disc list-outside ml-4 text-[11px] text-gray-700 space-y-1 mt-2">
+                                            {exp.bullets.map((bullet, bulletIndex) => (
+                                                <li key={bulletIndex} className="leading-relaxed">{bullet}</li>
+                                            ))}
+                                        </ul>
+                                    )}
                                 </div>
                             ))}
                         </div>
@@ -132,26 +137,26 @@ export function ResumePreview({ data, onFieldClick }: ResumePreviewProps) {
 
                 {/* Projects */}
                 {projects.length > 0 && (
-                    <section className="mb-4">
-                        <h2 className="text-[11px] font-bold uppercase tracking-wide border-b border-gray-300 pb-0.5 mb-2">
+                    <section className="mb-5">
+                        <h2 className="text-[13px] font-bold text-center mb-3">
                             Projects
                         </h2>
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                             {projects.map((project, index) => (
                                 <div 
                                     key={project.id}
-                                    className="cursor-pointer hover:bg-primary/10 rounded p-0.5 transition-colors"
+                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
                                     onClick={() => onFieldClick?.("projects", index)}
                                 >
-                                    <div className="flex justify-between items-start mb-0.5">
-                                        <div className="font-bold text-[10px] uppercase">{project.name}</div>
+                                    <div className="flex justify-between items-start mb-1">
+                                        <div className="text-[11px] font-bold uppercase tracking-wide">{project.name}</div>
                                         {project.url && (
-                                            <span className="text-[9px] text-primary">{project.url}</span>
+                                            <span className="text-[10px] text-blue-600">{project.url}</span>
                                         )}
                                     </div>
-                                    <p className="text-[10px] mb-0.5">{project.description}</p>
+                                    <p className="text-[11px] text-gray-700 leading-relaxed">{project.description}</p>
                                     {project.technologies.length > 0 && (
-                                        <p className="text-[9px] text-gray-600">
+                                        <p className="text-[10px] text-gray-500 mt-1">
                                             <span className="font-semibold">Technologies:</span> {project.technologies.join(", ")}
                                         </p>
                                     )}
@@ -163,23 +168,23 @@ export function ResumePreview({ data, onFieldClick }: ResumePreviewProps) {
 
                 {/* Certifications */}
                 {certifications.length > 0 && (
-                    <section className="mb-4">
-                        <h2 className="text-[11px] font-bold uppercase tracking-wide border-b border-gray-300 pb-0.5 mb-2">
+                    <section className="mb-5">
+                        <h2 className="text-[13px] font-bold text-center mb-3">
                             Certifications
                         </h2>
-                        <div className="space-y-1.5">
+                        <div className="space-y-2">
                             {certifications.map((cert, index) => (
                                 <div 
                                     key={cert.id}
-                                    className="cursor-pointer hover:bg-primary/10 rounded p-0.5 transition-colors"
+                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
                                     onClick={() => onFieldClick?.("certifications", index)}
                                 >
                                     <div className="flex justify-between items-start">
                                         <div>
-                                            <div className="font-bold text-[10px]">{cert.name}</div>
-                                            <div className="text-[9px] text-gray-600">{cert.issuer}</div>
+                                            <div className="text-[11px] font-bold">{cert.name}</div>
+                                            <div className="text-[10px] text-gray-600">{cert.issuer}</div>
                                         </div>
-                                        <div className="text-right text-[9px]">
+                                        <div className="text-right text-[10px] text-gray-600">
                                             <div>{cert.issueDate}{cert.expiryDate ? ` - ${cert.expiryDate}` : ""}</div>
                                             {cert.credentialId && (
                                                 <div className="text-gray-500">ID: {cert.credentialId}</div>
@@ -195,11 +200,11 @@ export function ResumePreview({ data, onFieldClick }: ResumePreviewProps) {
                 {/* Skills */}
                 {skills.length > 0 && (
                     <section>
-                        <h2 className="text-[11px] font-bold uppercase tracking-wide border-b border-gray-300 pb-0.5 mb-2">
+                        <h2 className="text-[13px] font-bold text-center mb-3">
                             Skills
                         </h2>
                         <p 
-                            className="text-[10px] cursor-pointer hover:bg-primary/10 rounded p-0.5 transition-colors"
+                            className="text-[11px] text-gray-700 cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors text-center"
                             onClick={() => onFieldClick?.("skills")}
                         >
                             {skills.join(" • ")}
@@ -210,4 +215,3 @@ export function ResumePreview({ data, onFieldClick }: ResumePreviewProps) {
         </div>
     );
 }
-
