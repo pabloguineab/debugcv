@@ -13,7 +13,7 @@ export function ResumePreview({ data, onFieldClick }: ResumePreviewProps) {
     // Himalayas-style resume template
     return (
         <div 
-            className="bg-white overflow-hidden rounded-lg mx-auto"
+            className="bg-white overflow-hidden rounded-lg mx-auto border border-gray-200"
             style={{ 
                 width: "100%",
                 aspectRatio: "210 / 297"
