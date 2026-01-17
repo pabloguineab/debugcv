@@ -97,7 +97,7 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                                                     <Typewriter text={`${edu.degree} in ${edu.field}`} />
                                                 </div>
                                             </div>
-                                            <div className="flex flex-col items-end text-[11px] text-gray-600 min-w-[140px]">
+                                            <div className="flex flex-col items-start text-[11px] text-gray-600 min-w-[140px]">
                                                 <div><Typewriter text={edu.location || ""} /></div>
                                                 <div><Typewriter text={`${edu.startDate} - ${edu.endDate}`} /></div>
                                             </div>
@@ -130,7 +130,7 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                                                     <Typewriter text={exp.title} />
                                                 </div>
                                             </div>
-                                            <div className="flex flex-col items-end text-[11px] text-gray-600 min-w-[140px]">
+                                            <div className="flex flex-col items-start text-[11px] text-gray-600 min-w-[140px]">
                                                 <div><Typewriter text={exp.location || ""} /></div>
                                                 <div><Typewriter text={`${exp.startDate} - ${exp.current ? "Present" : exp.endDate}`} /></div>
                                             </div>
@@ -211,7 +211,7 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                                                     <Typewriter text={cert.issuer} />
                                                 </div>
                                             </div>
-                                            <div className="flex flex-col items-end text-[10px] text-gray-600 min-w-[120px]">
+                                            <div className="flex flex-col items-start text-[10px] text-gray-600 min-w-[120px]">
                                                 <div>
                                                     <Typewriter text={`${cert.issueDate}${cert.expiryDate ? ` - ${cert.expiryDate}` : ""}`} />
                                                 </div>
