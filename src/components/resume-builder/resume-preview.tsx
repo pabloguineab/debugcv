@@ -1,8 +1,7 @@
 "use client";
 
+import { motion, Variants } from "framer-motion";
 import { ResumeData } from "@/types/resume";
-
-import { useTypewriter, useProgressiveReveal } from "@/hooks/use-typewriter";
 
 interface ResumePreviewProps {
     data: ResumeData;
@@ -13,52 +12,76 @@ interface ResumePreviewProps {
 export function ResumePreview({ data, onFieldClick, animate = false }: ResumePreviewProps) {
     const { personalInfo, summary, skills, experience, education, projects, certifications } = data;
 
-    // Typewriter effect for Summary
-    const { displayedText: animatedSummary } = useTypewriter({
-        text: summary,
-        speed: 10,
-        enabled: animate
-    });
+    // Animation Variants
+    // Container that orchestrates the sequence
+    const containerVariants: Variants = {
+        hidden: { opacity: 1 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.2
+            }
+        }
+    };
 
-    // Progressive reveal for list sections
-    const { visibleItems: visibleExperience } = useProgressiveReveal({
-        items: experience,
-        intervalMs: 400,
-        enabled: animate
-    });
+    // Sections also stagger their internal content (recursive effect)
+    const sectionVariants: Variants = {
+        hidden: { opacity: 1 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.05
+            }
+        }
+    };
 
-    const { visibleItems: visibleEducation } = useProgressiveReveal({
-        items: education,
-        intervalMs: 300,
-        enabled: animate
-    });
+    // The reveal effect for text/elements (Left to Right wipe)
+    const itemVariants: Variants = {
+        hidden: { 
+            opacity: 0,
+            clipPath: "inset(0 100% 0 0)",
+            y: 5 
+        },
+        visible: { 
+            opacity: 1,
+            clipPath: "inset(0 0 0 0)",
+            y: 0,
+            transition: { 
+                duration: 0.4,
+                ease: "easeOut"
+            }
+        }
+    };
 
-    const { visibleItems: visibleProjects } = useProgressiveReveal({
-        items: projects,
-        intervalMs: 350,
-        enabled: animate
-    });
+    // Helper wrapper to apply animation logic cleanly
+    const AnimatedSection = ({ children, className }: { children: React.ReactNode, className?: string }) => (
+        <motion.div 
+            variants={sectionVariants} 
+            className={className}
+        >
+            {children}
+        </motion.div>
+    );
 
-    const { visibleItems: visibleCertifications } = useProgressiveReveal({
-        items: certifications,
-        intervalMs: 200,
-        enabled: animate
-    });
+    const AnimatedItem = ({ children, className, onClick }: { children: React.ReactNode, className?: string, onClick?: () => void }) => (
+        <motion.div 
+            variants={itemVariants} 
+            className={className}
+            onClick={onClick}
+        >
+            {children}
+        </motion.div>
+    );
 
-    const { displayedText: animatedSkills } = useTypewriter({
-        text: skills.join(" • "),
-        speed: 20,
-        enabled: animate
-    });
-
-    // Using displayed data
+    // Using displayed data (direct data since animation handles the transition from empty to full visually)
     const displayValues = {
-        summary: animate ? animatedSummary : summary,
-        skills: animate ? animatedSkills : skills.join(" • "),
-        experience: animate ? visibleExperience : experience,
-        education: animate ? visibleEducation : education,
-        projects: animate ? visibleProjects : projects,
-        certifications: animate ? visibleCertifications : certifications
+        summary: summary,
+        skills: skills.join(" • "),
+        experience: experience,
+        education: education,
+        projects: projects,
+        certifications: certifications
     };
 
     // Himalayas-style resume template
@@ -71,20 +94,25 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
             }}
         >
             {/* Resume Paper - Himalayas Style */}
-            <div 
+            <motion.div 
                 className="px-10 py-8 text-gray-800 h-full overflow-auto"
                 style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+                initial={animate ? "hidden" : "visible"}
+                animate="visible"
+                variants={containerVariants}
             >
-                {/* Header with line above name */}
-                <div className="text-center mb-6">
-                    <div className="w-48 h-px bg-gray-400 mx-auto mb-4" />
-                    <h1 
+                {/* Header */}
+                <AnimatedSection className="text-center mb-6">
+                    <AnimatedItem>
+                         <div className="w-48 h-px bg-gray-400 mx-auto mb-4" />
+                    </AnimatedItem>
+                    <AnimatedItem 
                         className="text-[22px] font-normal tracking-wide cursor-pointer hover:bg-blue-50 rounded px-2 py-1 transition-colors inline-block"
                         onClick={() => onFieldClick?.("fullName")}
                     >
                         {personalInfo.fullName || "Your Name"}
-                    </h1>
-                    <p className="text-[11px] text-gray-600 mt-2">
+                    </AnimatedItem>
+                    <AnimatedItem className="text-[11px] text-gray-600 mt-2">
                         <span 
                             className="cursor-pointer hover:underline"
                             onClick={() => onFieldClick?.("location")}
@@ -105,36 +133,35 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                         >
                             {personalInfo.phone || "+1 555-123-4567"}
                         </span>
-                    </p>
-                </div>
+                    </AnimatedItem>
+                </AnimatedSection>
 
                 {/* Professional Summary */}
-                <section className="mb-5">
-                    <h2 className="text-[13px] font-bold text-center mb-3">
+                <AnimatedSection className="mb-5">
+                    <AnimatedItem className="text-[13px] font-bold text-center mb-3">
                         Professional summary
-                    </h2>
-                    <p 
+                    </AnimatedItem>
+                    <AnimatedItem 
                         className="text-[11px] leading-relaxed text-gray-700 cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors min-h-[3em]"
                         onClick={() => onFieldClick?.("summary")}
                     >
                         {displayValues.summary || (animate ? "" : "Click to add a professional summary highlighting your key qualifications, experience, and career goals.")}
-                    </p>
-                </section>
+                    </AnimatedItem>
+                </AnimatedSection>
 
                 {/* Education */}
                 {displayValues.education.length > 0 && (
-                    <section className="mb-5">
-                        <h2 className="text-[13px] font-bold text-center mb-3">
+                    <AnimatedSection className="mb-5">
+                        <AnimatedItem className="text-[13px] font-bold text-center mb-3">
                             Education
-                        </h2>
+                        </AnimatedItem>
                         <div className="space-y-3">
                             {displayValues.education.map((edu, index) => (
-                                <div 
+                                <AnimatedSection 
                                     key={edu.id} 
-                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors animate-in fade-in slide-in-from-bottom-2 duration-500"
-                                    onClick={() => onFieldClick?.("education", index)}
+                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
                                 >
-                                    <div className="flex justify-between items-start">
+                                    <AnimatedItem className="flex justify-between items-start" onClick={() => onFieldClick?.("education", index)}>
                                         <div>
                                             <div className="text-[11px] font-bold uppercase tracking-wide">{edu.institution}</div>
                                             <div className="text-[11px] text-gray-600">{edu.degree} in {edu.field}</div>
@@ -143,27 +170,26 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                                             <div>{edu.location}</div>
                                             <div>{edu.startDate} - {edu.endDate}</div>
                                         </div>
-                                    </div>
-                                </div>
+                                    </AnimatedItem>
+                                </AnimatedSection>
                             ))}
                         </div>
-                    </section>
+                    </AnimatedSection>
                 )}
 
                 {/* Experience */}
                 {displayValues.experience.length > 0 && (
-                    <section className="mb-5">
-                        <h2 className="text-[13px] font-bold text-center mb-3">
+                    <AnimatedSection className="mb-5">
+                        <AnimatedItem className="text-[13px] font-bold text-center mb-3">
                             Experience
-                        </h2>
+                        </AnimatedItem>
                         <div className="space-y-4">
                             {displayValues.experience.map((exp, index) => (
-                                <div 
+                                <AnimatedSection 
                                     key={exp.id}
-                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors animate-in fade-in slide-in-from-bottom-2 duration-500"
-                                    onClick={() => onFieldClick?.("experience", index)}
+                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
                                 >
-                                    <div className="flex justify-between items-start mb-1">
+                                    <AnimatedItem className="flex justify-between items-start mb-1" onClick={() => onFieldClick?.("experience", index)}>
                                         <div>
                                             <div className="text-[11px] font-bold uppercase tracking-wide">{exp.company}</div>
                                             <div className="text-[11px] text-gray-700">{exp.title}</div>
@@ -172,65 +198,74 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                                             <div>{exp.location}</div>
                                             <div>{exp.startDate} - {exp.current ? "Present" : exp.endDate}</div>
                                         </div>
-                                    </div>
+                                    </AnimatedItem>
+                                    
                                     {exp.bullets.length > 0 && (
-                                        <ul className="list-disc list-outside ml-4 text-[11px] text-gray-700 space-y-1 mt-2">
+                                        <AnimatedSection className="list-disc list-outside ml-4 text-[11px] text-gray-700 space-y-1 mt-2">
                                             {exp.bullets.map((bullet, bulletIndex) => (
-                                                <li key={bulletIndex} className="leading-relaxed">{bullet}</li>
+                                                <AnimatedItem key={bulletIndex} className="leading-relaxed">
+                                                    <li>{bullet}</li>
+                                                </AnimatedItem>
                                             ))}
-                                        </ul>
+                                        </AnimatedSection>
                                     )}
-                                </div>
+                                </AnimatedSection>
                             ))}
                         </div>
-                    </section>
+                    </AnimatedSection>
                 )}
 
                 {/* Projects */}
                 {displayValues.projects.length > 0 && (
-                    <section className="mb-5">
-                        <h2 className="text-[13px] font-bold text-center mb-3">
+                    <AnimatedSection className="mb-5">
+                        <AnimatedItem className="text-[13px] font-bold text-center mb-3">
                             Projects
-                        </h2>
+                        </AnimatedItem>
                         <div className="space-y-3">
                             {displayValues.projects.map((project, index) => (
-                                <div 
+                                <AnimatedSection 
                                     key={project.id}
-                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors animate-in fade-in slide-in-from-bottom-2 duration-500"
-                                    onClick={() => onFieldClick?.("projects", index)}
+                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
                                 >
-                                    <div className="flex justify-between items-start mb-1">
+                                    <AnimatedItem className="flex justify-between items-start mb-1" onClick={() => onFieldClick?.("projects", index)}>
                                         <div className="text-[11px] font-bold uppercase tracking-wide">{project.name}</div>
                                         {project.url && (
                                             <span className="text-[10px] text-blue-600">{project.url}</span>
                                         )}
-                                    </div>
-                                    <p className="text-[11px] text-gray-700 leading-relaxed">{project.description}</p>
+                                    </AnimatedItem>
+                                    <AnimatedItem 
+                                        className="text-[11px] text-gray-700 leading-relaxed"
+                                        onClick={() => onFieldClick?.("projects", index)}
+                                    >
+                                        {project.description}
+                                    </AnimatedItem>
                                     {project.technologies.length > 0 && (
-                                        <p className="text-[10px] text-gray-500 mt-1">
+                                        <AnimatedItem 
+                                            className="text-[10px] text-gray-500 mt-1"
+                                            onClick={() => onFieldClick?.("projects", index)}
+                                        >
                                             <span className="font-semibold">Technologies:</span> {project.technologies.join(", ")}
-                                        </p>
+                                        </AnimatedItem>
                                     )}
-                                </div>
+                                </AnimatedSection>
                             ))}
                         </div>
-                    </section>
+                    </AnimatedSection>
                 )}
 
                 {/* Certifications */}
                 {displayValues.certifications.length > 0 && (
-                    <section className="mb-5">
-                        <h2 className="text-[13px] font-bold text-center mb-3">
+                    <AnimatedSection className="mb-5">
+                        <AnimatedItem className="text-[13px] font-bold text-center mb-3">
                             Certifications
-                        </h2>
+                        </AnimatedItem>
                         <div className="space-y-2">
                             {displayValues.certifications.map((cert, index) => (
-                                <div 
+                                <AnimatedSection 
                                     key={cert.id}
-                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors animate-in fade-in slide-in-from-bottom-2 duration-500"
-                                    onClick={() => onFieldClick?.("certifications", index)}
+                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
                                 >
-                                    <div className="flex justify-between items-start">
+                                    <AnimatedItem className="flex justify-between items-start" onClick={() => onFieldClick?.("certifications", index)}>
                                         <div>
                                             <div className="text-[11px] font-bold">{cert.name}</div>
                                             <div className="text-[10px] text-gray-600">{cert.issuer}</div>
@@ -241,28 +276,28 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                                                 <div className="text-gray-500">ID: {cert.credentialId}</div>
                                             )}
                                         </div>
-                                    </div>
-                                </div>
+                                    </AnimatedItem>
+                                </AnimatedSection>
                             ))}
                         </div>
-                    </section>
+                    </AnimatedSection>
                 )}
 
                 {/* Skills */}
-                {skills.length > 0 && (
-                    <section>
-                        <h2 className="text-[13px] font-bold text-center mb-3">
+                {displayValues.skills.length > 0 && (
+                    <AnimatedSection>
+                        <AnimatedItem className="text-[13px] font-bold text-center mb-3">
                             Skills
-                        </h2>
-                        <p 
+                        </AnimatedItem>
+                        <AnimatedItem 
                             className="text-[11px] text-gray-700 cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors text-center"
                             onClick={() => onFieldClick?.("skills")}
                         >
                             {displayValues.skills}
-                        </p>
-                    </section>
+                        </AnimatedItem>
+                    </AnimatedSection>
                 )}
-            </div>
+            </motion.div>
         </div>
     );
 }
