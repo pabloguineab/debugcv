@@ -1031,6 +1031,11 @@ export default function ProfilePage() {
             // 1. Update Overview/Profile data
             if (data.overview) {
                 const { bio, linkedin_user, github_user, location, full_name, phone_number } = data.overview;
+                
+                // DEBUG: Log the extracted bio
+                console.log("=== CV IMPORT DEBUG ===");
+                console.log("Extracted bio:", bio);
+                console.log("Full overview data:", data.overview);
 
                 if (bio) setIntroduction(bio);
                 if (linkedin_user) setLinkedinUrl(linkedin_user);

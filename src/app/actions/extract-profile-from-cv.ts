@@ -230,6 +230,11 @@ Return ONLY valid JSON matching this structure. No explanations, no markdown for
 
         const data = JSON.parse(text) as ExtractedProfile;
         
+        // DEBUG: Log what Gemini extracted for bio
+        console.log("=== GEMINI EXTRACTION DEBUG ===");
+        console.log("Bio extracted:", data.overview?.bio);
+        console.log("Full overview:", JSON.stringify(data.overview, null, 2));
+        
         // Validate document type
         if (data.document_type !== 'resume') {
             return {
