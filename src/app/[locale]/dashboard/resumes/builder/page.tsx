@@ -191,8 +191,8 @@ export default function ResumeBuilderPage() {
                                         setIsEditingName(false);
                                     }
                                 }}
-                                className="font-semibold text-lg bg-transparent border-b-2 border-primary outline-none px-0.5"
-                                style={{ width: `${Math.max(resumeData.name.length * 0.65, 5)}em` }}
+                                className="font-semibold text-lg bg-transparent border-b-2 border-primary outline-none"
+                                style={{ width: `calc(${resumeData.name.length}ch + 0.5rem)` }}
                                 autoFocus
                             />
                         </div>
