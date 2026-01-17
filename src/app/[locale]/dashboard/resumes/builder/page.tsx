@@ -51,6 +51,7 @@ export default function ResumeBuilderPage() {
     const [isEditingName, setIsEditingName] = useState(false);
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
     const [isTailoring, setIsTailoring] = useState(false);
+    const [animatePreview, setAnimatePreview] = useState(false);
     const nameInputRef = useRef<HTMLInputElement>(null);
     
     // Job description from URL params (passed from the creation dialog)
@@ -68,7 +69,6 @@ export default function ResumeBuilderPage() {
                 const profileData = await fetchFullProfile();
                 
                 if (!profileData || !profileData.profile) {
-                    // No profile, use empty resume
                     setIsLoadingProfile(false);
                     return;
                 }
@@ -169,8 +169,8 @@ export default function ResumeBuilderPage() {
                                 updatedAt: new Date().toISOString()
                             }));
                         } else {
-                            // Fallback to non-tailored
-                            setResumeData(prev => ({
+                            // Fallback to non-tailored if AI fails
+                             setResumeData(prev => ({
                                 ...prev,
                                 personalInfo: mappedPersonalInfo,
                                 skills: baseSkills,
@@ -198,7 +198,7 @@ export default function ResumeBuilderPage() {
                         setIsTailoring(false);
                     }
                 } else {
-                    // No job details, just use profile data directly
+                    // No tailoring needed, set data immediately
                     setResumeData(prev => ({
                         ...prev,
                         personalInfo: mappedPersonalInfo,
@@ -210,6 +210,13 @@ export default function ResumeBuilderPage() {
                         updatedAt: new Date().toISOString()
                     }));
                 }
+                
+                // Trigger animation only once when data is ready
+                setAnimatePreview(true);
+                // Disable animation after enough time for standard typing effect to complete
+                // so subsequent manual edits don't trigger it
+                setTimeout(() => setAnimatePreview(false), 15000);
+
             } catch (error) {
                 console.error("Failed to load profile:", error);
             } finally {
@@ -222,6 +229,8 @@ export default function ResumeBuilderPage() {
 
     // Update resume data
     const handleUpdate = useCallback((updates: Partial<ResumeData>) => {
+        // If user manually updates, ensure animation is off
+        setAnimatePreview(false);
         setResumeData(prev => ({
             ...prev,
             ...updates,
@@ -403,27 +412,11 @@ export default function ResumeBuilderPage() {
 
                 {/* Preview */}
                 <div className="flex-1 bg-gray-100 dark:bg-gray-900 overflow-auto p-6 flex items-start justify-center relative">
-                    {(isLoadingProfile || isTailoring) && (
-                        <div className="absolute inset-0 bg-gray-100/80 dark:bg-gray-900/80 flex items-center justify-center z-10">
-                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center gap-4">
-                                <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                                <div className="text-center">
-                                    <p className="font-semibold text-gray-900 dark:text-gray-100">
-                                        {isTailoring ? "Tailoring your resume..." : "Loading your profile..."}
-                                    </p>
-                                    <p className="text-sm text-muted-foreground mt-1">
-                                        {isTailoring 
-                                            ? "AI is optimizing your resume for the job" 
-                                            : "Please wait a moment"}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    )}
                     <div className="w-full h-fit">
                         <ResumePreview
                             data={resumeData}
                             onFieldClick={handleFieldClick}
+                            animate={animatePreview}
                         />
                     </div>
                 </div>

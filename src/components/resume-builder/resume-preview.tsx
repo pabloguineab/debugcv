@@ -2,13 +2,64 @@
 
 import { ResumeData } from "@/types/resume";
 
+import { useTypewriter, useProgressiveReveal } from "@/hooks/use-typewriter";
+
 interface ResumePreviewProps {
     data: ResumeData;
     onFieldClick?: (field: string, index?: number) => void;
+    animate?: boolean;
 }
 
-export function ResumePreview({ data, onFieldClick }: ResumePreviewProps) {
+export function ResumePreview({ data, onFieldClick, animate = false }: ResumePreviewProps) {
     const { personalInfo, summary, skills, experience, education, projects, certifications } = data;
+
+    // Typewriter effect for Summary
+    const { displayedText: animatedSummary } = useTypewriter({
+        text: summary,
+        speed: 10,
+        enabled: animate
+    });
+
+    // Progressive reveal for list sections
+    const { visibleItems: visibleExperience } = useProgressiveReveal({
+        items: experience,
+        intervalMs: 400,
+        enabled: animate
+    });
+
+    const { visibleItems: visibleEducation } = useProgressiveReveal({
+        items: education,
+        intervalMs: 300,
+        enabled: animate
+    });
+
+    const { visibleItems: visibleProjects } = useProgressiveReveal({
+        items: projects,
+        intervalMs: 350,
+        enabled: animate
+    });
+
+    const { visibleItems: visibleCertifications } = useProgressiveReveal({
+        items: certifications,
+        intervalMs: 200,
+        enabled: animate
+    });
+
+    const { displayedText: animatedSkills } = useTypewriter({
+        text: skills.join(" • "),
+        speed: 20,
+        enabled: animate
+    });
+
+    // Using displayed data
+    const displayValues = {
+        summary: animate ? animatedSummary : summary,
+        skills: animate ? animatedSkills : skills.join(" • "),
+        experience: animate ? visibleExperience : experience,
+        education: animate ? visibleEducation : education,
+        projects: animate ? visibleProjects : projects,
+        certifications: animate ? visibleCertifications : certifications
+    };
 
     // Himalayas-style resume template
     return (
@@ -63,24 +114,24 @@ export function ResumePreview({ data, onFieldClick }: ResumePreviewProps) {
                         Professional summary
                     </h2>
                     <p 
-                        className="text-[11px] leading-relaxed text-gray-700 cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
+                        className="text-[11px] leading-relaxed text-gray-700 cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors min-h-[3em]"
                         onClick={() => onFieldClick?.("summary")}
                     >
-                        {summary || "Click to add a professional summary highlighting your key qualifications, experience, and career goals."}
+                        {displayValues.summary || (animate ? "" : "Click to add a professional summary highlighting your key qualifications, experience, and career goals.")}
                     </p>
                 </section>
 
                 {/* Education */}
-                {education.length > 0 && (
+                {displayValues.education.length > 0 && (
                     <section className="mb-5">
                         <h2 className="text-[13px] font-bold text-center mb-3">
                             Education
                         </h2>
                         <div className="space-y-3">
-                            {education.map((edu, index) => (
+                            {displayValues.education.map((edu, index) => (
                                 <div 
                                     key={edu.id} 
-                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
+                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors animate-in fade-in slide-in-from-bottom-2 duration-500"
                                     onClick={() => onFieldClick?.("education", index)}
                                 >
                                     <div className="flex justify-between items-start">
@@ -100,16 +151,16 @@ export function ResumePreview({ data, onFieldClick }: ResumePreviewProps) {
                 )}
 
                 {/* Experience */}
-                {experience.length > 0 && (
+                {displayValues.experience.length > 0 && (
                     <section className="mb-5">
                         <h2 className="text-[13px] font-bold text-center mb-3">
                             Experience
                         </h2>
                         <div className="space-y-4">
-                            {experience.map((exp, index) => (
+                            {displayValues.experience.map((exp, index) => (
                                 <div 
                                     key={exp.id}
-                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
+                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors animate-in fade-in slide-in-from-bottom-2 duration-500"
                                     onClick={() => onFieldClick?.("experience", index)}
                                 >
                                     <div className="flex justify-between items-start mb-1">
@@ -136,16 +187,16 @@ export function ResumePreview({ data, onFieldClick }: ResumePreviewProps) {
                 )}
 
                 {/* Projects */}
-                {projects.length > 0 && (
+                {displayValues.projects.length > 0 && (
                     <section className="mb-5">
                         <h2 className="text-[13px] font-bold text-center mb-3">
                             Projects
                         </h2>
                         <div className="space-y-3">
-                            {projects.map((project, index) => (
+                            {displayValues.projects.map((project, index) => (
                                 <div 
                                     key={project.id}
-                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
+                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors animate-in fade-in slide-in-from-bottom-2 duration-500"
                                     onClick={() => onFieldClick?.("projects", index)}
                                 >
                                     <div className="flex justify-between items-start mb-1">
@@ -167,16 +218,16 @@ export function ResumePreview({ data, onFieldClick }: ResumePreviewProps) {
                 )}
 
                 {/* Certifications */}
-                {certifications.length > 0 && (
+                {displayValues.certifications.length > 0 && (
                     <section className="mb-5">
                         <h2 className="text-[13px] font-bold text-center mb-3">
                             Certifications
                         </h2>
                         <div className="space-y-2">
-                            {certifications.map((cert, index) => (
+                            {displayValues.certifications.map((cert, index) => (
                                 <div 
                                     key={cert.id}
-                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
+                                    className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors animate-in fade-in slide-in-from-bottom-2 duration-500"
                                     onClick={() => onFieldClick?.("certifications", index)}
                                 >
                                     <div className="flex justify-between items-start">
@@ -207,7 +258,7 @@ export function ResumePreview({ data, onFieldClick }: ResumePreviewProps) {
                             className="text-[11px] text-gray-700 cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors text-center"
                             onClick={() => onFieldClick?.("skills")}
                         >
-                            {skills.join(" • ")}
+                            {displayValues.skills}
                         </p>
                     </section>
                 )}
