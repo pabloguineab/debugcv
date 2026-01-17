@@ -27,16 +27,18 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                     className="px-10 py-8 text-gray-800 h-full overflow-auto"
                     style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
                 >
-                    {/* Header */}
+                {/* Header */}
                     <div className="text-center mb-6">
-                        <div className="w-48 h-px bg-gray-400 mx-auto mb-4" />
                         <h1 
-                            className="text-[22px] font-normal tracking-wide cursor-pointer hover:bg-blue-50 rounded px-2 py-1 transition-colors inline-block"
+                            className="text-[26px] font-normal tracking-wide cursor-pointer hover:bg-blue-50 rounded px-2 py-1 transition-colors inline-block mb-2"
                             onClick={() => onFieldClick?.("fullName")}
                         >
                             <Typewriter text={personalInfo.fullName || "Your Name"} />
                         </h1>
-                        <p className="text-[11px] text-gray-600 mt-2 flex justify-center items-center flex-wrap gap-1">
+                        
+                        <div className="w-full h-px bg-gray-300 mx-auto mb-3" />
+
+                        <p className="text-[11px] text-gray-600 flex justify-center items-center flex-wrap gap-1">
                             <span 
                                 className="cursor-pointer hover:underline"
                                 onClick={() => onFieldClick?.("location")}
