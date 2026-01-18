@@ -74,95 +74,112 @@ export function Book({
                 >
                     {/* Paper/Back - Preview */}
                     <motion.div
-                        className="absolute inset-0 flex flex-col items-center overflow-hidden p-[10px]"
+                        className="absolute inset-0 flex flex-col items-center overflow-hidden bg-white"
                         style={{
-                            background: "linear-gradient(180deg, rgb(255, 255, 255) 0%, rgb(248, 250, 252) 100%)",
+                            background: "white",
                             zIndex: 0,
                         }}
                     >
-                        {/* Mini Preview Content */}
+                        {/* Mini Preview Content with Scale */}
                         {previewData ? (
-                            <div className="w-full h-full flex flex-col gap-1.5 opacity-60 text-[3px] select-none pointer-events-none" style={{ fontFamily: "Georgia, serif" }}>
-                                <div className="text-center font-bold text-[5px] text-gray-900 border-b border-gray-200 pb-1 mb-1">
-                                    {previewData.personalInfo.fullName}
-                                </div>
-                                {previewData.summary && (
-                                    <div className="text-justify leading-tight text-gray-600 line-clamp-3 mb-1">
-                                        {previewData.summary}
+                            <div 
+                                className="origin-top-left bg-white text-black overflow-hidden"
+                                style={{ 
+                                    width: "600px", // Virtual A4 width
+                                    height: "850px", // Virtual A4 height
+                                    padding: "40px",
+                                    transform: `scale(${width ? width / 600 : 0.3})`,
+                                    fontFamily: "Georgia, serif"
+                                }}
+                            >
+                                {/* Header */}
+                                <div className="text-center border-b pb-4 mb-4 border-gray-300">
+                                    <h1 className="text-3xl font-bold text-gray-900 mb-2">{previewData.personalInfo.fullName}</h1>
+                                    <div className="text-sm text-gray-500 flex justify-center gap-3">
+                                        <span>{previewData.personalInfo.location || "Madrid, Spain"}</span>
+                                        <span>•</span>
+                                        <span>{previewData.personalInfo.email}</span>
+                                        <span>•</span>
+                                        <span>{previewData.personalInfo.phone}</span>
                                     </div>
-                                )}
-                                
-                                {previewData.experience?.length > 0 && (
-                                    <div className="flex flex-col gap-1">
-                                        <div className="font-bold border-b border-gray-100 uppercase tracking-widest text-[3px]">Experience</div>
-                                        {previewData.experience.slice(0, 4).map((exp, i) => (
-                                            <div key={i} className="flex flex-col">
-                                                <div className="flex justify-between items-baseline">
-                                                    <div className="font-bold truncate max-w-[70%]">{exp.title}</div>
-                                                    <div className="text-[2px] text-gray-400">{exp.startDate} - {exp.current ? 'Pres' : exp.endDate}</div>
-                                                </div>
-                                                <div className="text-gray-500 truncate">{exp.company}</div>
-                                                <div className="line-clamp-2 text-gray-400 leading-[1.2] text-[2.5px]">
-                                                    {exp.bullets?.[0]}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                                
-                                {previewData.education?.length > 0 && (
-                                    <div className="flex flex-col gap-1 mt-1">
-                                        <div className="font-bold border-b border-gray-100 uppercase tracking-widest text-[3px]">Education</div>
-                                        {previewData.education.slice(0, 2).map((edu, i) => (
-                                            <div key={i} className="flex justify-between items-baseline">
-                                                <div className="truncate max-w-[80%]">
-                                                    <span className="font-bold">{edu.institution}</span>
-                                                    <span className="text-gray-500 mx-1">-</span>
-                                                    <span className="text-gray-500">{edu.degree}</span>
-                                                </div>
-                                                <div className="text-[2px] text-gray-400 whitespace-nowrap">{edu.endDate}</div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                                
-                                {previewData.skills?.length > 0 && (
-                                    <div className="flex flex-col gap-1 mt-auto pt-1">
-                                        <div className="font-bold border-b border-gray-100 uppercase tracking-widest text-[3px]">Skills</div>
-                                        <div className="flex flex-wrap gap-0.5 leading-none">
-                                            {previewData.skills.slice(0, 15).map((skill, i) => (
-                                                <span key={i} className="text-gray-500">{skill}{i < 14 ? " • " : ""}</span>
-                                            ))}
+                                    <h2 className="text-lg font-semibold mt-4 mb-2 text-gray-800">Professional Summary</h2>
+                                    {previewData.summary && (
+                                        <div className="text-justify text-xs text-gray-600 leading-relaxed px-4">
+                                            {previewData.summary}
                                         </div>
-                                    </div>
-                                )}
+                                    )}
+                                </div>
+
+                                {/* Content Sections */}
+                                <div className="flex flex-col gap-6">
+                                    
+                                    {/* Education (First as per user preference) */}
+                                    {previewData.education?.length > 0 && (
+                                        <div>
+                                            <h3 className="text-sm font-bold border-b border-gray-300 uppercase tracking-widest mb-3 text-gray-800 pb-1">Education</h3>
+                                            <div className="flex flex-col gap-3">
+                                                {previewData.education.map((edu, i) => (
+                                                    <div key={i} className="flex justify-between items-start">
+                                                        <div className="max-w-[75%]">
+                                                            <div className="font-bold text-xs text-gray-900">{edu.institution}</div>
+                                                            <div className="text-xs text-gray-600 italic">{edu.degree}</div>
+                                                        </div>
+                                                        <div className="text-xs text-gray-500 font-medium whitespace-nowrap">{edu.endDate}</div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Experience */}
+                                    {previewData.experience?.length > 0 && (
+                                        <div>
+                                            <h3 className="text-sm font-bold border-b border-gray-300 uppercase tracking-widest mb-3 text-gray-800 pb-1">Experience</h3>
+                                            <div className="flex flex-col gap-4">
+                                                {previewData.experience.slice(0, 3).map((exp, i) => (
+                                                    <div key={i}>
+                                                        <div className="flex justify-between items-baseline mb-1">
+                                                            <div className="font-bold text-xs text-gray-900">{exp.title} <span className="text-gray-500 font-normal">at {exp.company}</span></div>
+                                                            <div className="text-[10px] text-gray-500 font-medium">{exp.startDate} – {exp.current ? 'Present' : exp.endDate}</div>
+                                                        </div>
+                                                        {exp.bullets?.[0] && (
+                                                            <p className="text-[10px] leading-tight text-gray-600 text-justify">
+                                                                • {exp.bullets[0]}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Skills */}
+                                    {previewData.skills?.length > 0 && (
+                                        <div className="mt-auto">
+                                            <h3 className="text-sm font-bold border-b border-gray-300 uppercase tracking-widest mb-2 text-gray-800 pb-1">Skills</h3>
+                                            <div className="flex flex-wrap gap-x-1 gap-y-1 text-[10px] text-gray-600 text-center justify-center">
+                                                {previewData.skills.slice(0, 20).map((skill, i) => (
+                                                    <span key={i} className="bg-gray-100 px-1.5 py-0.5 rounded">{skill}</span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         ) : (
-                            <div className="w-full space-y-3">
-                                <div className="h-2 w-1/3 bg-gray-200 rounded" />
-                                <div className={`h-px w-full ${isResume ? 'bg-gray-100' : 'bg-transparent'}`} />
-                                <div className="space-y-1.5">
-                                    <div className="h-1.5 w-full bg-gray-100 rounded" />
-                                    <div className="h-1.5 w-full bg-gray-100 rounded" />
-                                    <div className="h-1.5 w-2/3 bg-gray-100 rounded" />
+                            // Skeleton for empty state
+                            <div className="w-full h-full p-4 space-y-4 opacity-50">
+                                <div className="h-4 w-1/2 bg-gray-200 mx-auto rounded" />
+                                <div className="space-y-2 pt-4">
+                                    <div className="h-2 w-full bg-gray-100 rounded" />
+                                    <div className="h-2 w-full bg-gray-100 rounded" />
+                                    <div className="h-2 w-3/4 bg-gray-100 rounded" />
                                 </div>
-                                {!isResume && (
-                                    <div className="space-y-1.5 mt-2">
-                                        <div className="h-1.5 w-full bg-gray-100 rounded" />
-                                        <div className="h-1.5 w-full bg-gray-100 rounded" />
-                                        <div className="h-1.5 w-5/6 bg-gray-100 rounded" />
-                                    </div>
-                                )}
-                                {isResume && (
-                                    <>
-                                        <div className="h-px w-full bg-gray-100 mt-2" />
-                                        <div className="space-y-1.5">
-                                            <div className="h-1.5 w-full bg-gray-100 rounded" />
-                                            <div className="h-1.5 w-full bg-gray-100 rounded" />
-                                            <div className="h-1.5 w-4/5 bg-gray-100 rounded" />
-                                        </div>
-                                    </>
-                                )}
+                                <div className="pt-4 space-y-3">
+                                    <div className="h-3 w-1/3 bg-gray-200 rounded" />
+                                    <div className="h-2 w-full bg-gray-100 rounded" />
+                                    <div className="h-2 w-full bg-gray-100 rounded" />
+                                </div>
                             </div>
                         )}
                     </motion.div>
