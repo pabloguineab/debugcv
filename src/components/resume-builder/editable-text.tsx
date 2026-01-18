@@ -21,6 +21,8 @@ export function EditableText({
 }: EditableTextProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [editValue, setEditValue] = useState(value);
+    // Track if user has manually edited - if so, don't show animation
+    const [hasBeenEdited, setHasBeenEdited] = useState(false);
     const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
 
     // Update local state when value prop changes
@@ -47,6 +49,8 @@ export function EditableText({
         setIsEditing(false);
         if (editValue !== value) {
             onChange(editValue);
+            // Mark as edited so we don't show typewriter animation anymore
+            setHasBeenEdited(true);
         }
     };
 
@@ -91,14 +95,18 @@ export function EditableText({
         return <input type="text" {...commonProps} />;
     }
 
-    // Display mode - show displayComponent (typewriter) or the value
+    // Display mode - show displayComponent (typewriter) only if not edited
+    // After user edits, show plain text instead of animation
     return (
         <span
             onClick={handleClick}
             className={`${className} cursor-pointer hover:bg-blue-50 rounded px-1 py-0.5 transition-colors inline-block`}
             title="Click to edit"
         >
-            {displayComponent || value || <span className="text-gray-400 italic">{placeholder}</span>}
+            {hasBeenEdited 
+                ? (value || <span className="text-gray-400 italic">{placeholder}</span>)
+                : (displayComponent || value || <span className="text-gray-400 italic">{placeholder}</span>)
+            }
         </span>
     );
 }
