@@ -76,3 +76,10 @@ export interface ResumeScore {
     };
     suggestions: string[];
 }
+
+// Type aliases for convenience
+export type Experience = ResumeExperience;
+export type Education = ResumeEducation;
+export type Project = ResumeProject;
+export type Certification = ResumeCertification;
+export type PersonalInfo = ResumePersonalInfo;

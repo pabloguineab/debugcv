@@ -544,6 +544,7 @@ export default function ResumeBuilderPage() {
                             <ResumePreview
                                 data={resumeData}
                                 onFieldClick={handleFieldClick}
+                                onUpdate={handleUpdate}
                                 animate={animatePreview}
                             />
                         )}

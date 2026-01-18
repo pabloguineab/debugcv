@@ -1,15 +1,17 @@
 "use client";
 
 import { Typewriter, SequentialAnimationProvider } from "@/components/ui/sequential-typewriter";
-import { ResumeData } from "@/types/resume";
+import { EditableText } from "./editable-text";
+import { ResumeData, Experience, Education, Project, Certification } from "@/types/resume";
 
 interface ResumePreviewProps {
     data: ResumeData;
     onFieldClick?: (field: string, index?: number) => void;
+    onUpdate?: (updates: Partial<ResumeData>) => void;
     animate?: boolean;
 }
 
-export function ResumePreview({ data, onFieldClick, animate = false }: ResumePreviewProps) {
+export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }: ResumePreviewProps) {
     const { personalInfo, summary, skills, experience, education, projects, certifications } = data;
 
     // Helper to format date ranges (avoids "- 2023" when startDate is empty)
@@ -21,6 +23,49 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
         if (start) return start;
         if (end) return end;
         return "";
+    };
+
+    // Update handlers for inline editing
+    const updatePersonalInfo = (field: string, value: string) => {
+        onUpdate?.({
+            personalInfo: { ...personalInfo, [field]: value }
+        });
+    };
+
+    const updateSummary = (value: string) => {
+        onUpdate?.({ summary: value });
+    };
+
+    const updateExperience = (index: number, updates: Partial<Experience>) => {
+        const newExperience = [...experience];
+        newExperience[index] = { ...newExperience[index], ...updates };
+        onUpdate?.({ experience: newExperience });
+    };
+
+    const updateEducation = (index: number, updates: Partial<Education>) => {
+        const newEducation = [...education];
+        newEducation[index] = { ...newEducation[index], ...updates };
+        onUpdate?.({ education: newEducation });
+    };
+
+    const updateProject = (index: number, updates: Partial<Project>) => {
+        const newProjects = [...projects];
+        newProjects[index] = { ...newProjects[index], ...updates };
+        onUpdate?.({ projects: newProjects });
+    };
+
+    const updateCertification = (index: number, updates: Partial<Certification>) => {
+        const newCertifications = [...certifications];
+        newCertifications[index] = { ...newCertifications[index], ...updates };
+        onUpdate?.({ certifications: newCertifications });
+    };
+
+    const updateBullet = (expIndex: number, bulletIndex: number, value: string) => {
+        const newExperience = [...experience];
+        const newBullets = [...newExperience[expIndex].bullets];
+        newBullets[bulletIndex] = value;
+        newExperience[expIndex] = { ...newExperience[expIndex], bullets: newBullets };
+        onUpdate?.({ experience: newExperience });
     };
 
     // Himalayas-style resume template
@@ -41,36 +86,40 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                 >
                 {/* Header */}
                     <div className="text-center mb-6">
-                        <h1 
-                            className="text-[26px] font-normal tracking-wide cursor-pointer hover:bg-blue-50 rounded px-2 py-1 transition-colors inline-block mb-2"
-                            onClick={() => onFieldClick?.("fullName")}
-                        >
-                            <Typewriter text={personalInfo.fullName || "Your Name"} />
+                        <h1 className="text-[26px] font-normal tracking-wide mb-2">
+                            <EditableText
+                                value={personalInfo.fullName}
+                                onChange={(v) => updatePersonalInfo("fullName", v)}
+                                placeholder="Your Name"
+                                displayComponent={<Typewriter text={personalInfo.fullName || "Your Name"} />}
+                            />
                         </h1>
                         
                         <div className="w-full h-px bg-gray-300 mx-auto mb-3" />
 
                         <p className="text-[11px] text-gray-600 flex justify-center items-center flex-wrap gap-1">
-                            <span 
-                                className="cursor-pointer hover:underline"
-                                onClick={() => onFieldClick?.("location")}
-                            >
-                                <Typewriter text={personalInfo.location || "City, State"} />
-                            </span>
+                            <EditableText
+                                value={personalInfo.location}
+                                onChange={(v) => updatePersonalInfo("location", v)}
+                                placeholder="City, State"
+                                displayComponent={<Typewriter text={personalInfo.location || "City, State"} />}
+                            />
                             {personalInfo.email && <span> • </span>}
-                            <span 
-                                className="text-blue-600 cursor-pointer hover:underline"
-                                onClick={() => onFieldClick?.("email")}
-                            >
-                                <Typewriter text={personalInfo.email || ""} />
+                            <span className="text-blue-600">
+                                <EditableText
+                                    value={personalInfo.email}
+                                    onChange={(v) => updatePersonalInfo("email", v)}
+                                    placeholder="email@example.com"
+                                    displayComponent={<Typewriter text={personalInfo.email || ""} />}
+                                />
                             </span>
                             {personalInfo.phone && <span> • </span>}
-                            <span 
-                                className="cursor-pointer hover:underline"
-                                onClick={() => onFieldClick?.("phone")}
-                            >
-                                <Typewriter text={personalInfo.phone || ""} />
-                            </span>
+                            <EditableText
+                                value={personalInfo.phone}
+                                onChange={(v) => updatePersonalInfo("phone", v)}
+                                placeholder="+1 234 567 890"
+                                displayComponent={<Typewriter text={personalInfo.phone || ""} />}
+                            />
                         </p>
                     </div>
 
@@ -79,11 +128,19 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                         <h2 className="text-[13px] font-bold text-center mb-3">
                             <Typewriter text="Professional summary" speed={5} />
                         </h2>
-                        <div 
-                            className="text-[11px] leading-relaxed text-gray-700 cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors min-h-[3em]"
-                            onClick={() => onFieldClick?.("summary")}
-                        >
-                            <Typewriter text={summary || (animate ? "" : "Click to add a professional summary highlighting your key qualifications, experience, and career goals.")} speed={3} />
+                        <div className="text-[11px] leading-relaxed text-gray-700 min-h-[3em]">
+                            <EditableText
+                                value={summary}
+                                onChange={updateSummary}
+                                placeholder="Click to add a professional summary..."
+                                multiline
+                                displayComponent={
+                                    <Typewriter 
+                                        text={summary || (animate ? "" : "Click to add a professional summary highlighting your key qualifications, experience, and career goals.")} 
+                                        speed={3} 
+                                    />
+                                }
+                            />
                         </div>
                     </div>
 
@@ -95,23 +152,45 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                             </h2>
                             <div className="space-y-3">
                                 {education.map((edu, index) => (
-                                    <div 
-                                        key={edu.id} 
-                                        className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
-                                        onClick={() => onFieldClick?.("education", index)}
-                                    >
+                                    <div key={edu.id} className="p-1">
                                         <div className="flex justify-between items-start">
                                             <div>
                                                 <div className="text-[11px] font-bold uppercase tracking-wide">
-                                                    <Typewriter text={edu.institution} />
+                                                    <EditableText
+                                                        value={edu.institution}
+                                                        onChange={(v) => updateEducation(index, { institution: v })}
+                                                        placeholder="Institution"
+                                                        displayComponent={<Typewriter text={edu.institution} />}
+                                                    />
                                                 </div>
                                                 <div className="text-[11px] text-gray-600">
-                                                    <Typewriter text={`${edu.degree} in ${edu.field}`} />
+                                                    <EditableText
+                                                        value={`${edu.degree} in ${edu.field}`}
+                                                        onChange={(v) => {
+                                                            // Parse "Degree in Field" format
+                                                            const parts = v.split(" in ");
+                                                            updateEducation(index, { 
+                                                                degree: parts[0] || "", 
+                                                                field: parts.slice(1).join(" in ") || "" 
+                                                            });
+                                                        }}
+                                                        placeholder="Degree in Field"
+                                                        displayComponent={<Typewriter text={`${edu.degree} in ${edu.field}`} />}
+                                                    />
                                                 </div>
                                             </div>
-                                            <div className="flex flex-col items-start text-[11px] text-gray-600" style={{direction: 'rtl'}}>
-                                                <div><span style={{direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block'}}><Typewriter text={edu.location || ""} /></span></div>
-                                                <div><span style={{direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block'}}><Typewriter text={formatDateRange(edu.startDate, edu.endDate)} /></span></div>
+                                            <div className="flex flex-col items-end text-[11px] text-gray-600">
+                                                <div>
+                                                    <EditableText
+                                                        value={edu.location || ""}
+                                                        onChange={(v) => updateEducation(index, { location: v })}
+                                                        placeholder="Location"
+                                                        displayComponent={<Typewriter text={edu.location || ""} />}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <Typewriter text={formatDateRange(edu.startDate, edu.endDate)} />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -128,31 +207,52 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                             </h2>
                             <div className="space-y-4">
                                 {experience.map((exp, index) => (
-                                    <div 
-                                        key={exp.id}
-                                        className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
-                                        onClick={() => onFieldClick?.("experience", index)}
-                                    >
+                                    <div key={exp.id} className="p-1">
                                         <div className="flex justify-between items-start mb-1">
                                             <div>
                                                 <div className="text-[11px] font-bold uppercase tracking-wide">
-                                                    <Typewriter text={exp.company} />
+                                                    <EditableText
+                                                        value={exp.company}
+                                                        onChange={(v) => updateExperience(index, { company: v })}
+                                                        placeholder="Company"
+                                                        displayComponent={<Typewriter text={exp.company} />}
+                                                    />
                                                 </div>
                                                 <div className="text-[11px] text-gray-700">
-                                                    <Typewriter text={exp.title} />
+                                                    <EditableText
+                                                        value={exp.title}
+                                                        onChange={(v) => updateExperience(index, { title: v })}
+                                                        placeholder="Job Title"
+                                                        displayComponent={<Typewriter text={exp.title} />}
+                                                    />
                                                 </div>
                                             </div>
-                                            <div className="flex flex-col items-start text-[11px] text-gray-600" style={{direction: 'rtl'}}>
-                                                <div><span style={{direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block'}}><Typewriter text={exp.location || ""} /></span></div>
-                                                <div><span style={{direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block'}}><Typewriter text={formatDateRange(exp.startDate, exp.endDate, exp.current)} /></span></div>
+                                            <div className="flex flex-col items-end text-[11px] text-gray-600">
+                                                <div>
+                                                    <EditableText
+                                                        value={exp.location || ""}
+                                                        onChange={(v) => updateExperience(index, { location: v })}
+                                                        placeholder="Location"
+                                                        displayComponent={<Typewriter text={exp.location || ""} />}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <Typewriter text={formatDateRange(exp.startDate, exp.endDate, exp.current)} />
+                                                </div>
                                             </div>
                                         </div>
                                         
                                         {exp.bullets.length > 0 && (
                                             <div className="ml-4 text-[11px] text-gray-700 space-y-1 mt-2">
                                                 {exp.bullets.map((bullet, bulletIndex) => (
-                                                    <div key={bulletIndex} className="leading-relaxed">
-                                                        <Typewriter text={`• ${bullet}`} speed={2} />
+                                                    <div key={bulletIndex} className="leading-relaxed flex">
+                                                        <span className="mr-1">•</span>
+                                                        <EditableText
+                                                            value={bullet}
+                                                            onChange={(v) => updateBullet(index, bulletIndex, v)}
+                                                            placeholder="Achievement or responsibility..."
+                                                            displayComponent={<Typewriter text={bullet} speed={2} />}
+                                                        />
                                                     </div>
                                                 ))}
                                             </div>
@@ -171,23 +271,35 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                             </h2>
                             <div className="space-y-3">
                                 {projects.map((project, index) => (
-                                    <div 
-                                        key={project.id}
-                                        className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
-                                        onClick={() => onFieldClick?.("projects", index)}
-                                    >
+                                    <div key={project.id} className="p-1">
                                         <div className="flex justify-between items-start mb-1">
                                             <div className="text-[11px] font-bold uppercase tracking-wide">
-                                                <Typewriter text={project.name} />
+                                                <EditableText
+                                                    value={project.name}
+                                                    onChange={(v) => updateProject(index, { name: v })}
+                                                    placeholder="Project Name"
+                                                    displayComponent={<Typewriter text={project.name} />}
+                                                />
                                             </div>
                                             {project.url && (
                                                 <span className="text-[10px] text-blue-600">
-                                                    <Typewriter text={project.url} />
+                                                    <EditableText
+                                                        value={project.url}
+                                                        onChange={(v) => updateProject(index, { url: v })}
+                                                        placeholder="URL"
+                                                        displayComponent={<Typewriter text={project.url} />}
+                                                    />
                                                 </span>
                                             )}
                                         </div>
                                         <div className="text-[11px] text-gray-700 leading-relaxed">
-                                            <Typewriter text={project.description} speed={2} />
+                                            <EditableText
+                                                value={project.description}
+                                                onChange={(v) => updateProject(index, { description: v })}
+                                                placeholder="Project description..."
+                                                multiline
+                                                displayComponent={<Typewriter text={project.description} speed={2} />}
+                                            />
                                         </div>
                                         {project.technologies.length > 0 && (
                                             <div className="text-[10px] text-gray-500 mt-1">
@@ -209,24 +321,34 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
                             </h2>
                             <div className="space-y-2">
                                 {certifications.map((cert, index) => (
-                                    <div 
-                                        key={cert.id}
-                                        className="cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors"
-                                        onClick={() => onFieldClick?.("certifications", index)}
-                                    >
+                                    <div key={cert.id} className="p-1">
                                         <div className="flex justify-between items-start">
                                             <div>
                                                 <div className="text-[11px] font-bold">
-                                                    <Typewriter text={cert.name} />
+                                                    <EditableText
+                                                        value={cert.name}
+                                                        onChange={(v) => updateCertification(index, { name: v })}
+                                                        placeholder="Certification Name"
+                                                        displayComponent={<Typewriter text={cert.name} />}
+                                                    />
                                                 </div>
                                                 <div className="text-[10px] text-gray-600">
-                                                    <Typewriter text={cert.issuer} />
+                                                    <EditableText
+                                                        value={cert.issuer}
+                                                        onChange={(v) => updateCertification(index, { issuer: v })}
+                                                        placeholder="Issuer"
+                                                        displayComponent={<Typewriter text={cert.issuer} />}
+                                                    />
                                                 </div>
                                             </div>
-                                            <div className="flex flex-col items-start text-[10px] text-gray-600" style={{direction: 'rtl'}}>
-                                                <div><span style={{direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block'}}><Typewriter text={`${cert.issueDate}${cert.expiryDate ? ` - ${cert.expiryDate}` : ""}`} /></span></div>
+                                            <div className="flex flex-col items-end text-[10px] text-gray-600">
+                                                <div>
+                                                    <Typewriter text={`${cert.issueDate}${cert.expiryDate ? ` - ${cert.expiryDate}` : ""}`} />
+                                                </div>
                                                 {cert.credentialId && (
-                                                    <div className="text-gray-500"><span style={{direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block'}}><Typewriter text={`ID: ${cert.credentialId}`} /></span></div>
+                                                    <div className="text-gray-500">
+                                                        <Typewriter text={`ID: ${cert.credentialId}`} />
+                                                    </div>
                                                 )}
                                             </div>
                                         </div>
