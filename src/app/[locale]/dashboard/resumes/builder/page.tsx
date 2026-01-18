@@ -352,26 +352,76 @@ export default function ResumeBuilderPage() {
         return sectionScore;
     }, [resumeData]);
 
-    // Update score progressively as sections are completed
+    // Animated score that gradually increases to target
+    const [displayedScore, setDisplayedScore] = useState(0);
+    const targetScoreRef = useRef(0);
+    const animationStartedRef = useRef(false);
+
+    // Update target score when sections complete
     useEffect(() => {
         const progressiveScore = calculateProgressiveScore();
-        // Only update if no AI score yet or sections changed
-        if (!isCalculatingScore) {
-            setScore(progressiveScore);
-        }
-    }, [calculateProgressiveScore, isCalculatingScore]);
+        targetScoreRef.current = progressiveScore;
+    }, [calculateProgressiveScore]);
 
-    // Recalculate AI score when resume is mostly complete (debounced)
+    // Animate score increase when data loads (after loading finishes)
     useEffect(() => {
-        const timer = setTimeout(() => {
-            const currentScore = calculateProgressiveScore();
-            // Only call AI when resume is fairly complete (60%+)
-            if (currentScore >= 60 && resumeData.personalInfo.fullName && resumeData.summary) {
-                calculateScore();
-            }
-        }, 2000);
-        return () => clearTimeout(timer);
-    }, [resumeData, calculateScore, calculateProgressiveScore]);
+        if (!isLoadingProfile && !isTailoring && !animationStartedRef.current) {
+            animationStartedRef.current = true;
+            
+            // Calculate target score
+            const targetScore = calculateProgressiveScore();
+            
+            // Animate from 0 to target score over ~12 seconds (matching typewriter duration)
+            const duration = 12000; // 12 seconds
+            const steps = 60; // Number of steps
+            const stepDuration = duration / steps;
+            const increment = targetScore / steps;
+            
+            let currentStep = 0;
+            const interval = setInterval(() => {
+                currentStep++;
+                const newScore = Math.min(Math.round(increment * currentStep), targetScore);
+                setDisplayedScore(newScore);
+                setScore(newScore);
+                
+                if (currentStep >= steps) {
+                    clearInterval(interval);
+                    // After animation completes, get AI score
+                    if (targetScore >= 60) {
+                        calculateScore();
+                    }
+                }
+            }, stepDuration);
+            
+            return () => clearInterval(interval);
+        }
+    }, [isLoadingProfile, isTailoring, calculateProgressiveScore, calculateScore]);
+
+    // When AI score comes back, animate to it
+    useEffect(() => {
+        if (score > displayedScore && score >= 90) {
+            // Animate from current to AI score
+            const start = displayedScore;
+            const end = score;
+            const duration = 2000;
+            const steps = 20;
+            const stepDuration = duration / steps;
+            const increment = (end - start) / steps;
+            
+            let currentStep = 0;
+            const interval = setInterval(() => {
+                currentStep++;
+                const newScore = Math.min(Math.round(start + increment * currentStep), end);
+                setDisplayedScore(newScore);
+                
+                if (currentStep >= steps) {
+                    clearInterval(interval);
+                }
+            }, stepDuration);
+            
+            return () => clearInterval(interval);
+        }
+    }, [score]);
 
     // Handle field click in preview
     const handleFieldClick = (field: string, index?: number) => {
@@ -470,7 +520,7 @@ export default function ResumeBuilderPage() {
                 <div className="w-[400px] shrink-0 bg-background overflow-hidden">
                     <ResumeEditorSidebar
                         data={resumeData}
-                        score={score}
+                        score={displayedScore}
                         onUpdate={handleUpdate}
                         onGenerateSummary={handleGenerateSummary}
                         isGenerating={isGenerating}
