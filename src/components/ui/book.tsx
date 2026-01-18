@@ -74,7 +74,7 @@ export function Book({
                 >
                     {/* Paper/Back - Preview */}
                     <motion.div
-                        className="absolute inset-0 flex flex-col items-center overflow-hidden bg-white"
+                        className="absolute inset-0 overflow-hidden bg-white"
                         style={{
                             background: "white",
                             zIndex: 0,
@@ -89,6 +89,7 @@ export function Book({
                                     height: "850px", // Virtual A4 height
                                     padding: "40px",
                                     transform: `scale(${width ? width / 600 : 0.3})`,
+                                    transformOrigin: "top left",
                                     fontFamily: "Georgia, serif"
                                 }}
                             >
