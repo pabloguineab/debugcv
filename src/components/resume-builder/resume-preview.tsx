@@ -68,6 +68,15 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
         onUpdate?.({ experience: newExperience });
     };
 
+    const updateSkills = (skillsString: string) => {
+        // Parse skills from bullet-separated string or comma-separated
+        const newSkills = skillsString
+            .split(/[•,]/)
+            .map(s => s.trim())
+            .filter(s => s.length > 0);
+        onUpdate?.({ skills: newSkills });
+    };
+
     // Himalayas-style resume template
     return (
         <div 
@@ -189,7 +198,18 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                                     />
                                                 </div>
                                                 <div>
-                                                    <Typewriter text={formatDateRange(edu.startDate, edu.endDate)} />
+                                                    <EditableText
+                                                        value={formatDateRange(edu.startDate, edu.endDate)}
+                                                        onChange={(v) => {
+                                                            // Parse "StartDate - EndDate" format
+                                                            const parts = v.split(" - ");
+                                                            const startDate = parts[0]?.trim() || "";
+                                                            const endDate = parts[1]?.trim() || "";
+                                                            updateEducation(index, { startDate, endDate });
+                                                        }}
+                                                        placeholder="Date Range"
+                                                        displayComponent={<Typewriter text={formatDateRange(edu.startDate, edu.endDate)} />}
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
@@ -237,7 +257,20 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                                     />
                                                 </div>
                                                 <div>
-                                                    <Typewriter text={formatDateRange(exp.startDate, exp.endDate, exp.current)} />
+                                                    <EditableText
+                                                        value={formatDateRange(exp.startDate, exp.endDate, exp.current)}
+                                                        onChange={(v) => {
+                                                            // Parse "StartDate - EndDate" or "StartDate - Present"
+                                                            const parts = v.split(" - ");
+                                                            const startDate = parts[0]?.trim() || "";
+                                                            const endPart = parts[1]?.trim() || "";
+                                                            const current = endPart.toLowerCase() === "present";
+                                                            const endDate = current ? "" : endPart;
+                                                            updateExperience(index, { startDate, endDate, current });
+                                                        }}
+                                                        placeholder="Date Range"
+                                                        displayComponent={<Typewriter text={formatDateRange(exp.startDate, exp.endDate, exp.current)} />}
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
@@ -364,11 +397,14 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                             <h2 className="text-[13px] font-bold text-center mb-3">
                                 <Typewriter text="Skills" speed={5} />
                             </h2>
-                            <div 
-                                className="text-[11px] text-gray-700 cursor-pointer hover:bg-blue-50 rounded p-1 transition-colors text-center"
-                                onClick={() => onFieldClick?.("skills")}
-                            >
-                                <Typewriter text={skills.join(" • ")} speed={10} />
+                            <div className="text-[11px] text-gray-700 text-center">
+                                <EditableText
+                                    value={skills.join(" • ")}
+                                    onChange={updateSkills}
+                                    placeholder="Add skills separated by commas..."
+                                    multiline
+                                    displayComponent={<Typewriter text={skills.join(" • ")} speed={10} />}
+                                />
                             </div>
                         </div>
                     )}

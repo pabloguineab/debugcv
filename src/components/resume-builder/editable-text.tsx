@@ -24,7 +24,8 @@ export function EditableText({
     // Track if user has manually edited - if so, don't show animation
     const [hasBeenEdited, setHasBeenEdited] = useState(false);
     const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
-    const containerRef = useRef<HTMLSpanElement>(null);
+    const measureRef = useRef<HTMLSpanElement>(null);
+    const [inputWidth, setInputWidth] = useState<number | undefined>(undefined);
 
     // Update local state when value prop changes
     useEffect(() => {
@@ -33,7 +34,7 @@ export function EditableText({
         }
     }, [value, isEditing]);
 
-    // Focus input when entering edit mode
+    // Focus input when entering edit mode and measure width
     useEffect(() => {
         if (isEditing && inputRef.current) {
             inputRef.current.focus();
@@ -44,6 +45,11 @@ export function EditableText({
     }, [isEditing]);
 
     const handleClick = () => {
+        // Measure the current text width before switching to edit mode
+        if (measureRef.current) {
+            const rect = measureRef.current.getBoundingClientRect();
+            setInputWidth(Math.max(rect.width + 20, 100)); // Add padding, minimum 100px
+        }
         setIsEditing(true);
         setEditValue(value);
     };
@@ -68,17 +74,22 @@ export function EditableText({
         }
     };
 
-    // Common input styles - full width to match text display
-    const inputStyle: React.CSSProperties = { 
-        fontFamily: "inherit", 
-        fontSize: "inherit",
-        fontWeight: "inherit",
-        lineHeight: "inherit",
-        width: "100%",
-        minWidth: "200px"
-    };
+    // Calculate dynamic width based on content for non-multiline
+    const dynamicWidth = multiline ? "100%" : inputWidth ? `${inputWidth}px` : "auto";
 
     if (isEditing) {
+        const baseInputClass = `${className} bg-white border border-blue-400 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-blue-300`;
+        
+        const inputStyle: React.CSSProperties = { 
+            fontFamily: "inherit", 
+            fontSize: "inherit",
+            fontWeight: "inherit",
+            lineHeight: "inherit",
+            width: dynamicWidth,
+            minWidth: multiline ? "100%" : "80px",
+            maxWidth: "100%"
+        };
+
         if (multiline) {
             return (
                 <textarea
@@ -87,10 +98,10 @@ export function EditableText({
                     onChange={(e) => setEditValue(e.target.value)}
                     onBlur={handleBlur}
                     onKeyDown={handleKeyDown}
-                    className={`${className} w-full bg-white border border-blue-400 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-blue-300 resize-none`}
+                    className={`${baseInputClass} w-full resize-none`}
                     placeholder={placeholder}
-                    style={inputStyle}
-                    rows={4}
+                    style={{ ...inputStyle, minHeight: "60px" }}
+                    rows={3}
                 />
             );
         }
@@ -103,7 +114,7 @@ export function EditableText({
                 onChange={(e) => setEditValue(e.target.value)}
                 onBlur={handleBlur}
                 onKeyDown={handleKeyDown}
-                className={`${className} bg-white border border-blue-400 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-blue-300`}
+                className={baseInputClass}
                 placeholder={placeholder}
                 style={inputStyle}
             />
@@ -114,10 +125,11 @@ export function EditableText({
     // After user edits, show plain text instead of animation
     return (
         <span
-            ref={containerRef}
+            ref={measureRef}
             onClick={handleClick}
-            className={`${className} cursor-pointer hover:bg-blue-50 rounded px-1 py-0.5 transition-colors inline`}
+            className={`${className} cursor-pointer hover:bg-blue-50 rounded px-1 py-0.5 transition-colors`}
             title="Click to edit"
+            style={{ display: "inline" }}
         >
             {hasBeenEdited 
                 ? (value || <span className="text-gray-400 italic">{placeholder}</span>)
