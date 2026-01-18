@@ -58,8 +58,8 @@ export default function ResumeBuilderPage() {
     const [isEditingName, setIsEditingName] = useState(false);
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
     const [isTailoring, setIsTailoring] = useState(false);
-    // Start with animate=true so it doesn't change after mount and cause restart
-    const [animatePreview, setAnimatePreview] = useState(true);
+    // Start with animate=true only if creating new resume (no ID in URL)
+    const [animatePreview, setAnimatePreview] = useState(() => !searchParams.get("id"));
     const [autoSaveStatus, setAutoSaveStatus] = useState<"saved" | "saving" | "unsaved">("saved");
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
     const nameInputRef = useRef<HTMLInputElement>(null);
@@ -71,10 +71,22 @@ export default function ResumeBuilderPage() {
 
     // Load user profile data to pre-fill resume
     useEffect(() => {
-        async function loadProfileAndTailor() {
+        async function loadData() {
             setIsLoadingProfile(true);
             
             try {
+                // First try to load existing resume by ID
+                const existingResume = await getResumeFromDb(resumeId);
+                
+                if (existingResume) {
+                    setResumeData(existingResume.data);
+                    // Disable animation for existing resumes
+                    setAnimatePreview(false); 
+                    setIsLoadingProfile(false);
+                    return; // Stop here, don't overwrite with profile data
+                }
+
+                // If loading from profile (New Resume flow)
                 // Fetch user profile data
                 const { fetchFullProfile } = await import("@/lib/actions/profile");
                 const profileData = await fetchFullProfile();
@@ -111,9 +123,9 @@ export default function ResumeBuilderPage() {
                     institution: edu.school || "",
                     degree: edu.degree || "",
                     field: edu.field_of_study || "",
-                    location: "",
-                    startDate: edu.start_year || "",
-                    endDate: edu.is_current ? "Present" : (edu.end_year || "")
+                    location: edu.location || "",
+                    startDate: `${edu.start_month || ""} ${edu.start_year || ""}`.trim(),
+                    endDate: `${edu.end_month || ""} ${edu.end_year || ""}`.trim()
                 })) || [];
                 
                 const mappedProjects = projects?.map((proj: any) => ({
@@ -161,24 +173,25 @@ export default function ResumeBuilderPage() {
                             })
                         });
                         
-                        const result = await response.json();
-                        
-                        if (result.success && result.data) {
-                            const tailored = result.data;
-                            
-                            setResumeData(prev => ({
-                                ...prev,
-                                name: `Resume for ${jobTitle}`,
-                                targetJob: jobTitle,
-                                personalInfo: mappedPersonalInfo,
-                                summary: tailored.summary || "",
-                                skills: tailored.skills || baseSkills,
-                                experience: tailored.experience || mappedExperience,
-                                education: tailored.education || mappedEducation,
-                                projects: tailored.projects || mappedProjects,
-                                certifications: tailored.certifications || mappedCertifications,
-                                updatedAt: new Date().toISOString()
-                            }));
+                        if (response.ok) {
+                            const result = await response.json();
+                            if (result.success && result.data) {
+                                setResumeData(prev => ({
+                                    ...prev,
+                                    name: `Resume for ${jobTitle}`,
+                                    targetJob: jobTitle,
+                                    personalInfo: mappedPersonalInfo,
+                                    summary: result.data.summary || "",
+                                    skills: result.data.skills || baseSkills,
+                                    experience: result.data.experience || mappedExperience,
+                                    education: result.data.education || mappedEducation,
+                                    projects: result.data.projects || mappedProjects,
+                                    certifications: result.data.certifications || mappedCertifications,
+                                    updatedAt: new Date().toISOString()
+                                }));
+                                // Ensure animation is on for new creation
+                                setAnimatePreview(true);
+                            }
                         } else {
                             // Fallback to non-tailored if AI fails
                              setResumeData(prev => ({
@@ -192,6 +205,7 @@ export default function ResumeBuilderPage() {
                                 certifications: mappedCertifications,
                                 updatedAt: new Date().toISOString()
                             }));
+                            setAnimatePreview(true);
                         }
                     } catch (error) {
                         console.error("Failed to tailor resume:", error);
@@ -207,6 +221,7 @@ export default function ResumeBuilderPage() {
                             certifications: mappedCertifications,
                             updatedAt: new Date().toISOString()
                         }));
+                        setAnimatePreview(true);
                     } finally {
                         setIsTailoring(false);
                     }
@@ -234,7 +249,7 @@ export default function ResumeBuilderPage() {
             }
         }
         
-        loadProfileAndTailor();
+        loadData();
     }, [jobTitle, jobDescription]);
 
     // Update resume data
