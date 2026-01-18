@@ -153,8 +153,8 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                             <div className="space-y-3">
                                 {education.map((edu, index) => (
                                     <div key={edu.id} className="p-1">
-                                        <div className="flex justify-between items-start">
-                                            <div>
+                                        <div className="flex justify-between items-start gap-4">
+                                            <div className="flex-1 min-w-0">
                                                 <div className="text-[11px] font-bold uppercase tracking-wide">
                                                     <EditableText
                                                         value={edu.institution}
@@ -179,7 +179,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                                     />
                                                 </div>
                                             </div>
-                                            <div className="flex flex-col items-end text-[11px] text-gray-600">
+                                            <div className="flex flex-col items-end text-[11px] text-gray-600 shrink-0">
                                                 <div>
                                                     <EditableText
                                                         value={edu.location || ""}
@@ -208,8 +208,8 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                             <div className="space-y-4">
                                 {experience.map((exp, index) => (
                                     <div key={exp.id} className="p-1">
-                                        <div className="flex justify-between items-start mb-1">
-                                            <div>
+                                        <div className="flex justify-between items-start mb-1 gap-4">
+                                            <div className="flex-1 min-w-0">
                                                 <div className="text-[11px] font-bold uppercase tracking-wide">
                                                     <EditableText
                                                         value={exp.company}
@@ -227,7 +227,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                                     />
                                                 </div>
                                             </div>
-                                            <div className="flex flex-col items-end text-[11px] text-gray-600">
+                                            <div className="flex flex-col items-end text-[11px] text-gray-600 shrink-0">
                                                 <div>
                                                     <EditableText
                                                         value={exp.location || ""}
@@ -245,11 +245,12 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                         {exp.bullets.length > 0 && (
                                             <div className="ml-4 text-[11px] text-gray-700 space-y-1 mt-2">
                                                 {exp.bullets.map((bullet, bulletIndex) => (
-                                                    <div key={bulletIndex} className="leading-relaxed">
+                                                    <div key={bulletIndex} className="leading-relaxed w-full">
                                                         <EditableText
                                                             value={bullet}
                                                             onChange={(v) => updateBullet(index, bulletIndex, v)}
                                                             placeholder="Achievement or responsibility..."
+                                                            multiline
                                                             displayComponent={<Typewriter text={`• ${bullet}`} speed={2} />}
                                                         />
                                                     </div>
