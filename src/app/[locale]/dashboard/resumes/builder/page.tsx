@@ -432,37 +432,60 @@ export default function ResumeBuilderPage() {
 
     // Animate score increase when data loads (after loading finishes)
     useEffect(() => {
-        if (!isLoadingProfile && !isTailoring && !animationStartedRef.current) {
-            animationStartedRef.current = true;
+        if (!isLoadingProfile && !isTailoring) {
             
-            // Calculate target score
             const targetScore = calculateProgressiveScore();
             
-            // Animate from 0 to target score over ~30 seconds (matching full typewriter duration)
-            const duration = 30000; // 30 seconds to cover full CV animation
-            const steps = 100; // More steps for smoother animation
-            const stepDuration = duration / steps;
-            const increment = targetScore / steps;
-            
-            let currentStep = 0;
-            const interval = setInterval(() => {
-                currentStep++;
-                const newScore = Math.min(Math.round(increment * currentStep), targetScore);
-                setDisplayedScore(newScore);
-                setScore(newScore);
+            // If checking existing resume (no animation needed)
+            if (!animatePreview) {
+                // Set immediately
+                setDisplayedScore(targetScore);
+                setScore(targetScore);
+                animationStartedRef.current = true;
                 
-                if (currentStep >= steps) {
-                    clearInterval(interval);
-                    // After animation completes, get AI score
-                    if (targetScore >= 60) {
-                        calculateScore();
-                    }
+                // Trigger AI score calculation if high enough
+                if (targetScore >= 60 && !isCalculatingScore) {
+                     // Debounce AI calculation? Or just let user trigger it manually?
+                     // For now let's keep it manual or on specific triggers to avoid spamming
                 }
-            }, stepDuration);
-            
-            return () => clearInterval(interval);
+                return;
+            }
+
+            // Only start the slow animation once for new resumes
+            if (!animationStartedRef.current) {
+                animationStartedRef.current = true;
+                
+                // Animate from 0 to target score over ~30 seconds (matching full typewriter duration)
+                const duration = 30000; // 30 seconds to cover full CV animation
+                const steps = 100; // More steps for smoother animation
+                const stepDuration = duration / steps;
+                const increment = targetScore / steps;
+                
+                let currentStep = 0;
+                const interval = setInterval(() => {
+                    currentStep++;
+                    const newScore = Math.min(Math.round(increment * currentStep), targetScore);
+                    setDisplayedScore(newScore);
+                    setScore(newScore);
+                    
+                    if (currentStep >= steps) {
+                        clearInterval(interval);
+                        // After animation completes, get AI score
+                        if (targetScore >= 60) {
+                            calculateScore();
+                        }
+                    }
+                }, stepDuration);
+                
+                return () => clearInterval(interval);
+            } else {
+                // If animation already finished but score changed due to edits, update immediately
+                // Or maybe smooth transition? For now immediate is better UX for editing
+                setDisplayedScore(targetScore);
+                setScore(targetScore);
+            }
         }
-    }, [isLoadingProfile, isTailoring, calculateProgressiveScore, calculateScore]);
+    }, [isLoadingProfile, isTailoring, calculateProgressiveScore, animatePreview, calculateScore]);
 
     // When AI score comes back, animate to it
     useEffect(() => {
