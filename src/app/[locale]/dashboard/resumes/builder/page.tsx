@@ -371,9 +371,9 @@ export default function ResumeBuilderPage() {
             // Calculate target score
             const targetScore = calculateProgressiveScore();
             
-            // Animate from 0 to target score over ~12 seconds (matching typewriter duration)
-            const duration = 12000; // 12 seconds
-            const steps = 60; // Number of steps
+            // Animate from 0 to target score over ~30 seconds (matching full typewriter duration)
+            const duration = 30000; // 30 seconds to cover full CV animation
+            const steps = 100; // More steps for smoother animation
             const stepDuration = duration / steps;
             const increment = targetScore / steps;
             
