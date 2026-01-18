@@ -716,84 +716,90 @@ function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
+            className="font-sans" // Explicitly enforce Poppins
         >
             <Card className={cn(
-                "h-full flex flex-col transition-all duration-300 group relative overflow-hidden bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800",
-                "hover:shadow-xl hover:-translate-y-1",
+                "h-full flex flex-col transition-all duration-300 group relative overflow-hidden bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 rounded-xl",
+                "hover:shadow-lg hover:-translate-y-1",
                 hoverBorderColor
             )}>
+                {/* Match Score Badge - Positioned Absolute Top Right */}
+                 <div className={cn(
+                    "absolute top-4 right-4 px-2.5 py-1 rounded-full text-xs font-bold border flex items-center gap-1 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-sm",
+                    scoreColor
+                )}>
+                    <Sparkles className="w-3 h-3" />
+                    {matchScore}% Match
+                </div>
 
-
-                <CardContent className="p-5 flex-grow">
-                    <div className="flex items-start gap-4 mb-3">
-                        <div className="shrink-0 mt-1">
-                            <CompanyLogo
-                                company={job.employer_name}
-                                logo={job.employer_logo || undefined}
-                                size="lg"
-                                className="bg-blue-50 dark:bg-blue-900/20 border-none shadow-none p-0"
-                                onLogoSuccess={() => setLogoStatus('valid')}
-                                onLogoFallback={() => setLogoStatus('invalid')}
-                            />
-                        </div>
-                        <div className="min-w-0 flex-1 pr-6">
-                            <h3 className="font-bold text-lg leading-tight line-clamp-2 mb-1 group-hover:text-blue-600 transition-colors tracking-tight text-slate-900 dark:text-slate-100">
-                                {job.job_title}
-                            </h3>
-                            <p className="text-sm text-blue-600 dark:text-blue-400 font-medium truncate">
-                                {job.employer_name}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2 mt-4 text-xs font-medium">
-                        <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
-                            <MapPin className="h-3 w-3 mr-1.5 text-slate-400" />
-                            <span className="truncate max-w-[150px]">
-                                {job.job_city ? `${job.job_city}, ${job.job_country}` : "Location not specified"}
-                            </span>
-                        </div>
-
-                        <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
-                            <Briefcase className="h-3 w-3 mr-1.5 text-slate-400" />
-                            <span className="capitalize">
-                                {job.job_employment_type?.toLowerCase().replace('_', ' ') || 'Full time'}
-                            </span>
-                        </div>
-
-                        {job.job_is_remote && (
-                            <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-100 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/50">
-                                <Globe className="h-3 w-3 mr-1.5" />
-                                Remote
+                <CardContent className="p-6 flex-grow">
+                    <div className="flex flex-col gap-4">
+                        {/* Header with Logo and Title */}
+                        <div className="flex items-start gap-4">
+                            <div className="shrink-0">
+                                <CompanyLogo
+                                    company={job.employer_name}
+                                    logo={job.employer_logo || undefined}
+                                    size="lg" // kept large for visibility
+                                    className="bg-white dark:bg-gray-800 rounded-lg shadow-sm w-12 h-12 object-contain p-1"
+                                    onLogoSuccess={() => setLogoStatus('valid')}
+                                    onLogoFallback={() => setLogoStatus('invalid')}
+                                />
                             </div>
-                        )}
+                            <div className="min-w-0 flex-1 pt-0.5 pr-16"> {/* pr-16 to avoid overlapping absolute match badge */}
+                                <h3 className="font-semibold text-lg leading-tight line-clamp-2 mb-1.5 group-hover:text-blue-600 transition-colors tracking-tight text-slate-900 dark:text-slate-100">
+                                    {job.job_title}
+                                </h3>
+                                <p className="text-sm text-slate-500 dark:text-slate-400 font-medium truncate flex items-center gap-1.5">
+                                    <Building2 className="w-3.5 h-3.5" />
+                                    {job.employer_name}
+                                </p>
+                            </div>
+                        </div>
 
-                        <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-slate-50 text-slate-500 border border-slate-100 dark:bg-slate-900 dark:border-slate-800">
-                            {formatJobDate(job.job_posted_at_timestamp)}
+                        {/* Badges / Meta Info */}
+                        <div className="flex flex-wrap gap-2 mt-2">
+                             <Badge variant="secondary" className="rounded-full px-3 font-normal bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">
+                                <MapPin className="h-3 w-3 mr-1.5 text-slate-400" />
+                                <span className="truncate max-w-[140px]">
+                                    {job.job_city ? `${job.job_city}, ${job.job_country}` : "Location n/a"}
+                                </span>
+                            </Badge>
+
+                            <Badge variant="secondary" className="rounded-full px-3 font-normal bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">
+                                <Briefcase className="h-3 w-3 mr-1.5 text-slate-400" />
+                                <span className="capitalize">
+                                    {job.job_employment_type?.toLowerCase().replace('_', ' ') || 'Full time'}
+                                </span>
+                            </Badge>
+
+                            {job.job_is_remote && (
+                                <Badge variant="outline" className="rounded-full px-3 font-medium bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/50">
+                                    <Globe className="h-3 w-3 mr-1.5" />
+                                    Remote
+                                </Badge>
+                            )}
+
+                             <span className="text-xs text-slate-400 flex items-center ml-auto pt-1">
+                                {formatJobDate(job.job_posted_at_timestamp)}
+                            </span>
                         </div>
                     </div>
                 </CardContent>
 
-                <CardFooter className="p-4 pt-4 mt-auto border-t bg-slate-50/50 dark:bg-slate-900/20 flex items-center gap-3">
+                <CardFooter className="p-4 pt-0 mt-auto">
                     <a
                         href={job.job_apply_link}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={cn(
                             buttonVariants({ variant: providerInfo.variant as any }),
-                            `h-11 rounded-lg font-bold shadow-sm transition-all hover:shadow-md flex-[2] ${providerInfo.buttonClass}`
+                            `w-full h-11 rounded-lg font-semibold shadow-sm transition-all hover:shadow-md hover:translate-y-[-1px] active:translate-y-[0px] ${providerInfo.buttonClass}`
                         )}
                     >
                         Apply on {providerInfo.name}
+                        <ArrowDown className="w-4 h-4 ml-2 -rotate-90" />
                     </a>
-
-                    <div className={cn(
-                        "flex flex-col items-center justify-center h-11 rounded-lg border text-center shrink-0 bg-white dark:bg-slate-800 shadow-sm flex-1",
-                        scoreColor
-                    )}>
-                        <span className="text-sm font-bold leading-none">{matchScore}%</span>
-                        <span className="text-[9px] uppercase font-bold opacity-80 leading-none mt-0.5">Match</span>
-                    </div>
                 </CardFooter>
             </Card>
         </motion.div>
