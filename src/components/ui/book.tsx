@@ -74,7 +74,7 @@ export function Book({
                 >
                     {/* Paper/Back - Preview */}
                     <motion.div
-                        className="absolute inset-0 overflow-hidden bg-white"
+                        className="absolute inset-0 overflow-hidden bg-white rounded-r-md rounded-l-[2px]"
                         style={{
                             background: "white",
                             zIndex: 0,
@@ -207,6 +207,11 @@ export function Book({
                                         </div>
                                     )}
                                 </div>
+                                
+                                {/* Fade out overlay with ellipsis */}
+                                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white via-white/80 to-transparent flex flex-col justify-end items-center pb-8">
+                                    <span className="text-3xl text-gray-400 tracking-widest leading-none">...</span>
+                                </div>
                             </div>
                         ) : (
                             // Skeleton for empty state
@@ -228,14 +233,14 @@ export function Book({
 
                     {/* Cover */}
                     <motion.div
-                        className="absolute inset-0 flex items-center justify-center overflow-hidden"
+                        className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-r-md rounded-l-[2px]"
                         style={{
                             zIndex: 1,
                             transformStyle: "preserve-3d",
                         }}
                         initial={{ rotateY: 0, z: 0, originX: 0 }}
                         animate={{
-                            rotateY: isHovered ? -70 : 0,
+                            rotateY: isHovered ? -120 : 0, // Increased rotation for better visibility
                             z: isHovered ? 10 : 0,
                             originX: 0,
                         }}
@@ -243,7 +248,7 @@ export function Book({
                     >
                         {/* Custom Cover Design */}
                         <div
-                            className="relative w-full h-full overflow-hidden"
+                            className="relative w-full h-full overflow-hidden rounded-r-md rounded-l-[2px]"
                             style={{
                                 background: "linear-gradient(180deg, #fafafa 0%, #f5f5f4 100%)",
                             }}
