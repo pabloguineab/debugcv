@@ -26,7 +26,7 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
     // Himalayas-style resume template
     return (
         <div 
-            className="bg-white overflow-hidden rounded-lg mx-auto border border-gray-200"
+            className="bg-white rounded-lg mx-auto border border-gray-200"
             style={{ 
                 width: "100%",
                 aspectRatio: "210 / 297"
@@ -35,7 +35,7 @@ export function ResumePreview({ data, onFieldClick, animate = false }: ResumePre
             <SequentialAnimationProvider animate={animate}>
                 {/* Resume Paper - Himalayas Style */}
                 <div 
-                    className="px-10 py-8 text-gray-800 h-full overflow-auto"
+                    className="px-10 py-8 text-gray-800 h-full"
                     style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
                 >
                 {/* Header */}
