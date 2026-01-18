@@ -6,7 +6,8 @@ import { ResumeData, ResumeScore } from "@/types/resume";
 import { ResumePreview } from "@/components/resume-builder/resume-preview";
 import { ResumeEditorSidebar } from "@/components/resume-builder/resume-editor-sidebar";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, MessageCircle, Download, Loader2, Pencil, Check } from "lucide-react";
+import { ArrowLeft, MessageCircle, Download, Loader2, Pencil, Check, Cloud, CloudOff } from "lucide-react";
+import { saveResumeData, getResume, generateResumeId } from "@/lib/resume-service";
 
 // Helper to generate unique IDs
 const generateId = () => crypto.randomUUID();
@@ -38,6 +39,11 @@ export default function ResumeBuilderPage() {
     const searchParams = useSearchParams();
     const router = useRouter();
     
+    // Resume ID for persistence (from URL or generate new)
+    const [resumeId] = useState(() => {
+        return searchParams.get("id") || generateResumeId();
+    });
+    
     const [resumeData, setResumeData] = useState<ResumeData>(() => {
         const targetJob = searchParams.get("job") || undefined;
         return createEmptyResume(targetJob);
@@ -54,7 +60,10 @@ export default function ResumeBuilderPage() {
     const [isTailoring, setIsTailoring] = useState(false);
     // Start with animate=true so it doesn't change after mount and cause restart
     const [animatePreview, setAnimatePreview] = useState(true);
+    const [autoSaveStatus, setAutoSaveStatus] = useState<"saved" | "saving" | "unsaved">("saved");
+    const [lastSaved, setLastSaved] = useState<Date | null>(null);
     const nameInputRef = useRef<HTMLInputElement>(null);
+    const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     
     // Job description from URL params (passed from the creation dialog)
     const jobDescription = searchParams.get("description") || "";
@@ -235,7 +244,45 @@ export default function ResumeBuilderPage() {
             ...updates,
             updatedAt: new Date().toISOString()
         }));
+        // Mark as unsaved when changes are made
+        setAutoSaveStatus("unsaved");
     }, []);
+
+    // Auto-save effect with debounce (save 1.5 seconds after last change)
+    useEffect(() => {
+        // Don't save while still loading profile
+        if (isLoadingProfile) return;
+        
+        // Clear existing timeout
+        if (saveTimeoutRef.current) {
+            clearTimeout(saveTimeoutRef.current);
+        }
+        
+        // Set new timeout for saving
+        saveTimeoutRef.current = setTimeout(() => {
+            setAutoSaveStatus("saving");
+            try {
+                saveResumeData(
+                    resumeId,
+                    resumeData.name,
+                    resumeData,
+                    resumeData.targetJob,
+                    resumeData.targetCompany
+                );
+                setAutoSaveStatus("saved");
+                setLastSaved(new Date());
+            } catch (error) {
+                console.error("Failed to save resume:", error);
+                setAutoSaveStatus("unsaved");
+            }
+        }, 1500);
+        
+        return () => {
+            if (saveTimeoutRef.current) {
+                clearTimeout(saveTimeoutRef.current);
+            }
+        };
+    }, [resumeData, resumeId, isLoadingProfile]);
 
     // Generate summary with AI
     const handleGenerateSummary = useCallback(async () => {
@@ -502,7 +549,28 @@ export default function ResumeBuilderPage() {
                         </span>
                     )}
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
+                    {/* Auto-save indicator */}
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        {autoSaveStatus === "saving" && (
+                            <>
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                <span>Saving...</span>
+                            </>
+                        )}
+                        {autoSaveStatus === "saved" && (
+                            <>
+                                <Cloud className="w-3.5 h-3.5 text-green-500" />
+                                <span className="text-green-600">Saved</span>
+                            </>
+                        )}
+                        {autoSaveStatus === "unsaved" && (
+                            <>
+                                <CloudOff className="w-3.5 h-3.5 text-amber-500" />
+                                <span className="text-amber-600">Unsaved</span>
+                            </>
+                        )}
+                    </div>
                     <Button variant="outline" size="sm" className="gap-1">
                         <MessageCircle className="w-4 h-4" />
                         Chat

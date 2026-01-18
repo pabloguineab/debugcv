@@ -1,12 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Book } from "@/components/ui/book";
-import { FileText } from "lucide-react";
+import { FileText, Trash2 } from "lucide-react";
 import { NewResumeDialog } from "@/components/new-resume-dialog";
+import { getResumes, deleteResume, SavedResume } from "@/lib/resume-service";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function ResumesPage() {
     const [isNewResumeDialogOpen, setIsNewResumeDialogOpen] = useState(false);
+    const [resumes, setResumes] = useState<SavedResume[]>([]);
+    const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+    const router = useRouter();
+
+    // Load resumes from localStorage
+    useEffect(() => {
+        setResumes(getResumes());
+    }, []);
+
+    const handleOpenResume = (resume: SavedResume) => {
+        router.push(`/dashboard/resumes/builder?id=${resume.id}`);
+    };
+
+    const handleDeleteResume = (id: string) => {
+        deleteResume(id);
+        setResumes(getResumes());
+        setDeleteConfirmId(null);
+    };
 
     return (
         <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
@@ -24,20 +54,35 @@ export default function ResumesPage() {
             </div>
 
             <div className="flex flex-wrap gap-4">
-                <Book
-                    title="Software Engineer"
-                    subtitle="Resume"
-                    target="Google"
-                    width={180}
-                    height={260}
-                />
-                <Book
-                    title="Frontend Lead"
-                    subtitle="Resume"
-                    target="Meta"
-                    width={180}
-                    height={260}
-                />
+                {/* Saved Resumes */}
+                {resumes.map((resume) => (
+                    <div key={resume.id} className="relative group">
+                        <div onClick={() => handleOpenResume(resume)} className="cursor-pointer">
+                            <Book
+                                title={resume.name || "Untitled Resume"}
+                                subtitle="Resume"
+                                target={resume.targetCompany || resume.targetJob || "General"}
+                                width={180}
+                                height={260}
+                            />
+                        </div>
+                        {/* Delete button */}
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setDeleteConfirmId(resume.id);
+                            }}
+                            className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                            title="Delete resume"
+                        >
+                            <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                        {/* Last updated */}
+                        <p className="text-[10px] text-muted-foreground text-center mt-1">
+                            {new Date(resume.updatedAt).toLocaleDateString()}
+                        </p>
+                    </div>
+                ))}
 
                 {/* Add New placeholder */}
                 <div
@@ -59,7 +104,27 @@ export default function ResumesPage() {
                 open={isNewResumeDialogOpen} 
                 onOpenChange={setIsNewResumeDialogOpen} 
             />
+
+            {/* Delete Confirmation Dialog */}
+            <AlertDialog open={!!deleteConfirmId} onOpenChange={() => setDeleteConfirmId(null)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Resume?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete your resume.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={() => deleteConfirmId && handleDeleteResume(deleteConfirmId)}
+                            className="bg-red-500 hover:bg-red-600"
+                        >
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
-
