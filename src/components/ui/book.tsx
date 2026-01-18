@@ -11,6 +11,7 @@ interface BookProps {
     height?: number;
     variant?: "resume" | "cover-letter";
     previewData?: ResumeData;
+    lastUpdated?: string;
 }
 
 import { useState } from "react";
@@ -22,7 +23,8 @@ export function Book({
     width = 200,
     height = 305,
     variant = "resume",
-    previewData
+    previewData,
+    lastUpdated
 }: BookProps) {
     const [isHovered, setIsHovered] = useState(false);
     const isResume = variant === "resume";
@@ -286,13 +288,19 @@ export function Book({
                                     <div className={`mt-3 h-px w-12 bg-gradient-to-r ${accentClasses.gradientLine} to-transparent`} />
                                 </div>
 
-                                <div className="space-y-0.5">
+                                <div className="space-y-0.5 relative">
                                     <p className="text-[8px] uppercase tracking-[0.15em] text-gray-400">
                                         Tailored for
                                     </p>
                                     <p className="text-sm font-medium text-gray-700">
                                         {target}
                                     </p>
+                                    
+                                    {lastUpdated && (
+                                        <div className="absolute right-[-10px] bottom-[-2px] text-[9px] text-gray-400 font-medium opacity-70">
+                                            {lastUpdated}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 

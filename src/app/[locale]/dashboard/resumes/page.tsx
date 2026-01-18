@@ -94,6 +94,7 @@ export default function ResumesPage() {
                                     width={180}
                                     height={260}
                                     previewData={resume.data}
+                                    lastUpdated={new Date(resume.updated_at).toLocaleDateString()}
                                 />
                             </div>
                             {/* Delete button */}
@@ -107,10 +108,6 @@ export default function ResumesPage() {
                             >
                                 <Trash2 className="w-3.5 h-3.5" />
                             </button>
-                            {/* Last updated */}
-                            <p className="text-[10px] text-muted-foreground text-center mt-1">
-                                {new Date(resume.updated_at).toLocaleDateString()}
-                            </p>
                         </div>
                     ))}
 
