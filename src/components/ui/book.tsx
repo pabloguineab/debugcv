@@ -87,33 +87,53 @@ export function Book({
                                     {previewData.personalInfo.fullName}
                                 </div>
                                 {previewData.summary && (
-                                    <div className="text-justify leading-tight text-gray-600 line-clamp-4">
+                                    <div className="text-justify leading-tight text-gray-600 line-clamp-3 mb-1">
                                         {previewData.summary}
                                     </div>
                                 )}
+                                
                                 {previewData.experience?.length > 0 && (
-                                    <div className="flex flex-col gap-1 mt-1">
+                                    <div className="flex flex-col gap-1">
                                         <div className="font-bold border-b border-gray-100 uppercase tracking-widest text-[3px]">Experience</div>
-                                        {previewData.experience.slice(0, 2).map((exp, i) => (
+                                        {previewData.experience.slice(0, 4).map((exp, i) => (
                                             <div key={i} className="flex flex-col">
-                                                <div className="font-bold">{exp.title}</div>
-                                                <div className="text-gray-500">{exp.company}</div>
-                                                <div className="line-clamp-2 text-gray-400 leading-[1.2]">
+                                                <div className="flex justify-between items-baseline">
+                                                    <div className="font-bold truncate max-w-[70%]">{exp.title}</div>
+                                                    <div className="text-[2px] text-gray-400">{exp.startDate} - {exp.current ? 'Pres' : exp.endDate}</div>
+                                                </div>
+                                                <div className="text-gray-500 truncate">{exp.company}</div>
+                                                <div className="line-clamp-2 text-gray-400 leading-[1.2] text-[2.5px]">
                                                     {exp.bullets?.[0]}
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
                                 )}
+                                
                                 {previewData.education?.length > 0 && (
                                     <div className="flex flex-col gap-1 mt-1">
                                         <div className="font-bold border-b border-gray-100 uppercase tracking-widest text-[3px]">Education</div>
-                                        {previewData.education.slice(0, 1).map((edu, i) => (
-                                            <div key={i}>
-                                                <div className="font-bold">{edu.institution}</div>
-                                                <div className="text-gray-500">{edu.degree}</div>
+                                        {previewData.education.slice(0, 2).map((edu, i) => (
+                                            <div key={i} className="flex justify-between items-baseline">
+                                                <div className="truncate max-w-[80%]">
+                                                    <span className="font-bold">{edu.institution}</span>
+                                                    <span className="text-gray-500 mx-1">-</span>
+                                                    <span className="text-gray-500">{edu.degree}</span>
+                                                </div>
+                                                <div className="text-[2px] text-gray-400 whitespace-nowrap">{edu.endDate}</div>
                                             </div>
                                         ))}
+                                    </div>
+                                )}
+                                
+                                {previewData.skills?.length > 0 && (
+                                    <div className="flex flex-col gap-1 mt-auto pt-1">
+                                        <div className="font-bold border-b border-gray-100 uppercase tracking-widest text-[3px]">Skills</div>
+                                        <div className="flex flex-wrap gap-0.5 leading-none">
+                                            {previewData.skills.slice(0, 15).map((skill, i) => (
+                                                <span key={i} className="text-gray-500">{skill}{i < 14 ? " • " : ""}</span>
+                                            ))}
+                                        </div>
                                     </div>
                                 )}
                             </div>
