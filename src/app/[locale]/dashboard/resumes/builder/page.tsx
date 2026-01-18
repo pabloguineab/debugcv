@@ -43,7 +43,8 @@ export default function ResumeBuilderPage() {
         return createEmptyResume(targetJob);
     });
     
-    const [score, setScore] = useState(65);
+    // Score starts at 0 and builds up progressively
+    const [score, setScore] = useState(0);
     const [isGenerating, setIsGenerating] = useState(false);
     const [isCalculatingScore, setIsCalculatingScore] = useState(false);
     const [activeSection, setActiveSection] = useState<string>();
@@ -293,15 +294,84 @@ export default function ResumeBuilderPage() {
         }
     }, [resumeData, jobDescription]);
 
-    // Recalculate score when resume changes (debounced)
+    // Calculate progressive score based on sections completed
+    const calculateProgressiveScore = useCallback(() => {
+        let sectionScore = 0;
+        const weights = {
+            personalInfo: 15, // name, email, phone, location
+            summary: 20,
+            experience: 25,
+            education: 15,
+            skills: 15,
+            projects: 5,
+            certifications: 5
+        };
+        
+        // Personal Info (15%)
+        const { personalInfo } = resumeData;
+        if (personalInfo.fullName) sectionScore += 4;
+        if (personalInfo.email) sectionScore += 4;
+        if (personalInfo.phone) sectionScore += 4;
+        if (personalInfo.location) sectionScore += 3;
+        
+        // Summary (20%)
+        if (resumeData.summary && resumeData.summary.length > 50) {
+            sectionScore += weights.summary;
+        } else if (resumeData.summary && resumeData.summary.length > 0) {
+            sectionScore += 10;
+        }
+        
+        // Experience (25%)
+        if (resumeData.experience.length > 0) {
+            const expScore = Math.min(resumeData.experience.length * 8, weights.experience);
+            sectionScore += expScore;
+        }
+        
+        // Education (15%)
+        if (resumeData.education.length > 0) {
+            sectionScore += weights.education;
+        }
+        
+        // Skills (15%)
+        if (resumeData.skills.length >= 5) {
+            sectionScore += weights.skills;
+        } else if (resumeData.skills.length > 0) {
+            sectionScore += Math.min(resumeData.skills.length * 3, weights.skills);
+        }
+        
+        // Projects (5%)
+        if (resumeData.projects.length > 0) {
+            sectionScore += weights.projects;
+        }
+        
+        // Certifications (5%)
+        if (resumeData.certifications.length > 0) {
+            sectionScore += weights.certifications;
+        }
+        
+        return sectionScore;
+    }, [resumeData]);
+
+    // Update score progressively as sections are completed
+    useEffect(() => {
+        const progressiveScore = calculateProgressiveScore();
+        // Only update if no AI score yet or sections changed
+        if (!isCalculatingScore) {
+            setScore(progressiveScore);
+        }
+    }, [calculateProgressiveScore, isCalculatingScore]);
+
+    // Recalculate AI score when resume is mostly complete (debounced)
     useEffect(() => {
         const timer = setTimeout(() => {
-            if (resumeData.personalInfo.fullName && resumeData.summary) {
+            const currentScore = calculateProgressiveScore();
+            // Only call AI when resume is fairly complete (60%+)
+            if (currentScore >= 60 && resumeData.personalInfo.fullName && resumeData.summary) {
                 calculateScore();
             }
         }, 2000);
         return () => clearTimeout(timer);
-    }, [resumeData, calculateScore]);
+    }, [resumeData, calculateScore, calculateProgressiveScore]);
 
     // Handle field click in preview
     const handleFieldClick = (field: string, index?: number) => {

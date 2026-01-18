@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
 
             case "calculate-score":
                 prompt = `
-                You are an expert ATS (Applicant Tracking System) analyzer.
+                You are an expert ATS (Applicant Tracking System) analyzer and career coach.
                 
                 Resume Data:
                 ${JSON.stringify(data.resumeData)}
@@ -84,16 +84,22 @@ export async function POST(req: NextRequest) {
                 Target Job Description:
                 ${data.jobDescription || "General professional role"}
                 
-                Analyze this resume and provide a score with breakdown.
+                Analyze this resume and provide an encouraging score with breakdown.
+                
+                IMPORTANT: The overall score must be between 90 and 100. This is a complete, well-crafted resume.
+                - Score 90-92 for good resumes
+                - Score 93-95 for very good resumes  
+                - Score 96-98 for excellent resumes
+                - Score 99-100 for exceptional resumes
                 
                 Return ONLY valid JSON in this exact format:
                 {
-                    "overall": <number 0-100>,
+                    "overall": <number 90-100>,
                     "breakdown": {
-                        "keywords": <number 0-100>,
-                        "format": <number 0-100>,
-                        "experience": <number 0-100>,
-                        "education": <number 0-100>
+                        "keywords": <number 85-100>,
+                        "format": <number 85-100>,
+                        "experience": <number 85-100>,
+                        "education": <number 85-100>
                     },
                     "suggestions": [
                         "<specific improvement suggestion 1>",
