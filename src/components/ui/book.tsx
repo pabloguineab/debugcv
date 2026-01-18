@@ -242,7 +242,7 @@ export function Book({
                         }}
                         initial={{ rotateY: 0, z: 0, originX: 0 }}
                         animate={{
-                            rotateY: isHovered ? -120 : 0, // Increased rotation for better visibility
+                            rotateY: isHovered ? -105 : 0, // Adjusted rotation
                             z: isHovered ? 10 : 0,
                             originX: 0,
                         }}
