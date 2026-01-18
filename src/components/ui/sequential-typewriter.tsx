@@ -93,77 +93,92 @@ function CounterResetter() {
 export function useSequentialWriter(text: string, speed: number = 20) {
     // Access context
     const context = useContext(SequenceContext);
-    const [stepIndex, setStepIndex] = useState<number | null>(null);
     const [displayedText, setDisplayedText] = useState("");
     const [isDone, setIsDone] = useState(false);
     
+    // Use refs to track state without triggering rerenders
     const hasRegistered = useRef(false);
-    // Lock the text when it's our turn to prevent restarts from prop changes
+    const stepIndexRef = useRef<number | null>(null);
+    const hasStartedAnimating = useRef(false);
+    const hasCompletedAnimation = useRef(false);
     const lockedTextRef = useRef<string | null>(null);
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Register once
+    // Register once on mount
     useEffect(() => {
         if (!context) return;
         if (!hasRegistered.current) {
-            const index = context.register();
-            setStepIndex(index);
+            stepIndexRef.current = context.register();
             hasRegistered.current = true;
         }
     }, [context]);
 
-    // Typing logic
+    // Typing logic - only run when it's our turn and we haven't completed
     useEffect(() => {
+        const stepIndex = stepIndexRef.current;
+        
         if (!context || stepIndex === null) {
-            // If no context, just show text
-            setDisplayedText(text);
-            setIsDone(true);
-            return;
-        }
-
-        // Context tells us if we are animating
-        if (!context.isAnimating) {
-            setDisplayedText(text);
-            setIsDone(true);
-            return;
-        }
-
-        // If it's our turn
-        if (context.currentStep === stepIndex) {
-            // Lock the text on first animation start
-            if (lockedTextRef.current === null) {
-                lockedTextRef.current = text;
+            // If no context, just show text immediately
+            if (!hasCompletedAnimation.current) {
+                setDisplayedText(text);
+                setIsDone(true);
+                hasCompletedAnimation.current = true;
             }
-            const textToAnimate = lockedTextRef.current;
+            return;
+        }
+
+        // If not animating, show text immediately
+        if (!context.isAnimating) {
+            if (!hasCompletedAnimation.current) {
+                setDisplayedText(text);
+                setIsDone(true);
+                hasCompletedAnimation.current = true;
+            }
+            return;
+        }
+
+        // If we've already completed our animation, never restart
+        if (hasCompletedAnimation.current) {
+            return;
+        }
+
+        // If it's our turn and we haven't started yet
+        if (context.currentStep === stepIndex && !hasStartedAnimating.current) {
+            hasStartedAnimating.current = true;
+            
+            // Lock the text for this animation
+            lockedTextRef.current = text;
+            const textToAnimate = text;
             
             setDisplayedText("");
             setIsDone(false);
             
             let i = 0;
-            // Immediate start
-            const interval = setInterval(() => {
+            intervalRef.current = setInterval(() => {
                 setDisplayedText(textToAnimate.slice(0, i + 1));
                 i++;
                 if (i >= textToAnimate.length) {
-                    clearInterval(interval);
+                    if (intervalRef.current) clearInterval(intervalRef.current);
                     setIsDone(true);
+                    hasCompletedAnimation.current = true;
                     context.onComplete(stepIndex);
                 }
             }, speed);
-
-            return () => clearInterval(interval);
-        } else if (context.currentStep > stepIndex) {
-            // We are done - use locked text if available, otherwise current text
-            setDisplayedText(lockedTextRef.current || text);
+        } else if (context.currentStep > stepIndex && !hasStartedAnimating.current) {
+            // We skipped this step somehow (fast forward) - just show text
+            setDisplayedText(text);
             setIsDone(true);
-        } else {
-            // Not our turn
-            setDisplayedText("");
-            setIsDone(false);
+            hasCompletedAnimation.current = true;
         }
-    // Remove 'text' from dependencies to prevent restarts when prop changes
-    }, [context?.currentStep, context?.isAnimating, context?.onComplete, stepIndex, speed]);
 
-    return { displayedText, isDone, isActive: context?.currentStep === stepIndex };
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        };
+    }, [context?.currentStep, context?.isAnimating, speed, text]);
+
+    return { displayedText, isDone, isActive: context?.currentStep === stepIndexRef.current };
 }
 
 // Component
