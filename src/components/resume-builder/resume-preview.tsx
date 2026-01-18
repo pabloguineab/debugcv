@@ -245,13 +245,12 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                         {exp.bullets.length > 0 && (
                                             <div className="ml-4 text-[11px] text-gray-700 space-y-1 mt-2">
                                                 {exp.bullets.map((bullet, bulletIndex) => (
-                                                    <div key={bulletIndex} className="leading-relaxed flex">
-                                                        <span className="mr-1">•</span>
+                                                    <div key={bulletIndex} className="leading-relaxed">
                                                         <EditableText
                                                             value={bullet}
                                                             onChange={(v) => updateBullet(index, bulletIndex, v)}
                                                             placeholder="Achievement or responsibility..."
-                                                            displayComponent={<Typewriter text={bullet} speed={2} />}
+                                                            displayComponent={<Typewriter text={`• ${bullet}`} speed={2} />}
                                                         />
                                                     </div>
                                                 ))}
