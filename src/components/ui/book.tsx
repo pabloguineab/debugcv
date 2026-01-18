@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { ResumeData } from "@/types/resume";
 
 interface BookProps {
     title?: string;
@@ -9,10 +10,10 @@ interface BookProps {
     width?: number;
     height?: number;
     variant?: "resume" | "cover-letter";
+    previewData?: ResumeData;
 }
 
 import { useState } from "react";
-// ... (imports are fine, but I need to make sure motion is imported usually)
 
 export function Book({
     title = "Software Engineer",
@@ -20,7 +21,8 @@ export function Book({
     target = "Google",
     width = 200,
     height = 305,
-    variant = "resume"
+    variant = "resume",
+    previewData
 }: BookProps) {
     const [isHovered, setIsHovered] = useState(false);
     const isResume = variant === "resume";
@@ -72,39 +74,77 @@ export function Book({
                 >
                     {/* Paper/Back - Preview */}
                     <motion.div
-                        className="absolute inset-0 flex flex-col items-center justify-center gap-2.5 overflow-hidden p-6"
+                        className="absolute inset-0 flex flex-col items-center overflow-hidden p-[10px]"
                         style={{
                             background: "linear-gradient(180deg, rgb(255, 255, 255) 0%, rgb(248, 250, 252) 100%)",
                             zIndex: 0,
                         }}
                     >
                         {/* Mini Preview Content */}
-                        <div className="w-full space-y-3">
-                            <div className="h-2 w-1/3 bg-gray-200 rounded" />
-                            <div className={`h-px w-full ${isResume ? 'bg-gray-100' : 'bg-transparent'}`} />
-                            <div className="space-y-1.5">
-                                <div className="h-1.5 w-full bg-gray-100 rounded" />
-                                <div className="h-1.5 w-full bg-gray-100 rounded" />
-                                <div className="h-1.5 w-2/3 bg-gray-100 rounded" />
-                            </div>
-                            {!isResume && (
-                                <div className="space-y-1.5 mt-2">
-                                    <div className="h-1.5 w-full bg-gray-100 rounded" />
-                                    <div className="h-1.5 w-full bg-gray-100 rounded" />
-                                    <div className="h-1.5 w-5/6 bg-gray-100 rounded" />
+                        {previewData ? (
+                            <div className="w-full h-full flex flex-col gap-1.5 opacity-60 text-[3px] select-none pointer-events-none" style={{ fontFamily: "Georgia, serif" }}>
+                                <div className="text-center font-bold text-[5px] text-gray-900 border-b border-gray-200 pb-1 mb-1">
+                                    {previewData.personalInfo.fullName}
                                 </div>
-                            )}
-                            {isResume && (
-                                <>
-                                    <div className="h-px w-full bg-gray-100 mt-2" />
-                                    <div className="space-y-1.5">
-                                        <div className="h-1.5 w-full bg-gray-100 rounded" />
-                                        <div className="h-1.5 w-full bg-gray-100 rounded" />
-                                        <div className="h-1.5 w-4/5 bg-gray-100 rounded" />
+                                {previewData.summary && (
+                                    <div className="text-justify leading-tight text-gray-600 line-clamp-4">
+                                        {previewData.summary}
                                     </div>
-                                </>
-                            )}
-                        </div>
+                                )}
+                                {previewData.experience?.length > 0 && (
+                                    <div className="flex flex-col gap-1 mt-1">
+                                        <div className="font-bold border-b border-gray-100 uppercase tracking-widest text-[3px]">Experience</div>
+                                        {previewData.experience.slice(0, 2).map((exp, i) => (
+                                            <div key={i} className="flex flex-col">
+                                                <div className="font-bold">{exp.title}</div>
+                                                <div className="text-gray-500">{exp.company}</div>
+                                                <div className="line-clamp-2 text-gray-400 leading-[1.2]">
+                                                    {exp.bullets?.[0]}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                                {previewData.education?.length > 0 && (
+                                    <div className="flex flex-col gap-1 mt-1">
+                                        <div className="font-bold border-b border-gray-100 uppercase tracking-widest text-[3px]">Education</div>
+                                        {previewData.education.slice(0, 1).map((edu, i) => (
+                                            <div key={i}>
+                                                <div className="font-bold">{edu.institution}</div>
+                                                <div className="text-gray-500">{edu.degree}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="w-full space-y-3">
+                                <div className="h-2 w-1/3 bg-gray-200 rounded" />
+                                <div className={`h-px w-full ${isResume ? 'bg-gray-100' : 'bg-transparent'}`} />
+                                <div className="space-y-1.5">
+                                    <div className="h-1.5 w-full bg-gray-100 rounded" />
+                                    <div className="h-1.5 w-full bg-gray-100 rounded" />
+                                    <div className="h-1.5 w-2/3 bg-gray-100 rounded" />
+                                </div>
+                                {!isResume && (
+                                    <div className="space-y-1.5 mt-2">
+                                        <div className="h-1.5 w-full bg-gray-100 rounded" />
+                                        <div className="h-1.5 w-full bg-gray-100 rounded" />
+                                        <div className="h-1.5 w-5/6 bg-gray-100 rounded" />
+                                    </div>
+                                )}
+                                {isResume && (
+                                    <>
+                                        <div className="h-px w-full bg-gray-100 mt-2" />
+                                        <div className="space-y-1.5">
+                                            <div className="h-1.5 w-full bg-gray-100 rounded" />
+                                            <div className="h-1.5 w-full bg-gray-100 rounded" />
+                                            <div className="h-1.5 w-4/5 bg-gray-100 rounded" />
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        )}
                     </motion.div>
 
                     {/* Cover */}

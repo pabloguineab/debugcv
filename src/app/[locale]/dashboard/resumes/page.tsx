@@ -93,6 +93,7 @@ export default function ResumesPage() {
                                     target={resume.target_company || resume.target_job || "General"}
                                     width={180}
                                     height={260}
+                                    previewData={resume.data}
                                 />
                             </div>
                             {/* Delete button */}
