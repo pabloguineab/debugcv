@@ -6,16 +6,7 @@ import { Book } from "@/components/ui/book";
 import { FileText, Trash2, Loader2 } from "lucide-react";
 import { NewResumeDialog } from "@/components/new-resume-dialog";
 import { getResumes, deleteResumeAction, SavedResume } from "@/lib/actions/resumes";
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+// AlertDialog imports removed as custom dialog is now used inline
 
 export default function ResumesPage() {
     const [isNewResumeDialogOpen, setIsNewResumeDialogOpen] = useState(false);
@@ -133,30 +124,43 @@ export default function ResumesPage() {
                 onOpenChange={setIsNewResumeDialogOpen} 
             />
 
-            {/* Delete Confirmation Dialog */}
-            <AlertDialog open={!!deleteConfirmId} onOpenChange={() => setDeleteConfirmId(null)}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Delete Resume?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            This action cannot be undone. This will permanently delete your resume.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={() => deleteConfirmId && handleDeleteResume(deleteConfirmId)}
-                            className="bg-red-500 hover:bg-red-600"
-                            disabled={isDeleting}
-                        >
-                            {isDeleting ? (
-                                <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                            ) : null}
-                            Delete
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            {/* Custom Delete Confirmation Dialog */}
+            {!!deleteConfirmId && (
+                <div 
+                    className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-md p-4 left-0 md:left-[255px] transition-all duration-200"
+                    onClick={() => !isDeleting && setDeleteConfirmId(null)}
+                >
+                    <div 
+                        className="bg-background border rounded-lg shadow-xl max-w-[400px] w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-200"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="space-y-2">
+                            <h3 className="font-semibold text-lg">Delete Resume?</h3>
+                            <p className="text-sm text-muted-foreground">
+                                This action cannot be undone. This will permanently delete your resume.
+                            </p>
+                        </div>
+                        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+                            <button 
+                                onClick={() => setDeleteConfirmId(null)}
+                                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                                disabled={isDeleting}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => deleteConfirmId && handleDeleteResume(deleteConfirmId)}
+                                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-red-600 text-destructive-foreground hover:bg-red-600/90 h-10 px-4 py-2 min-w-[90px]"
+                                disabled={isDeleting}
+                            >
+                                {isDeleting ? (
+                                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                                ) : "Delete"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
