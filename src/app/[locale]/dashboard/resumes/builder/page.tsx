@@ -413,10 +413,11 @@ export default function ResumeBuilderPage() {
                     <div className="w-full h-fit">
                         {(isLoadingProfile || isTailoring) ? (
                             <div 
-                                className="bg-white overflow-hidden rounded-lg mx-auto border border-gray-200 shadow-sm"
+                                className="bg-white rounded-lg mx-auto border border-gray-200 shadow-sm"
                                 style={{ 
                                     width: "100%",
-                                    aspectRatio: "210 / 297"
+                                    maxWidth: "800px",
+                                    minHeight: "1100px"
                                 }}
                             />
                         ) : (
