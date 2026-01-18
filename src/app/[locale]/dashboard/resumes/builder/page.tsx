@@ -8,6 +8,8 @@ import { ResumeEditorSidebar } from "@/components/resume-builder/resume-editor-s
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MessageCircle, Download, Loader2, Pencil, Check, Cloud, CloudOff } from "lucide-react";
 import { saveResume as saveResumeToDb, getResume as getResumeFromDb } from "@/lib/actions/resumes";
+import { ResumePreviewSkeleton } from "@/components/resume-builder/resume-preview-skeleton";
+import { ResumeSidebarSkeleton } from "@/components/resume-builder/resume-sidebar-skeleton";
 
 // Helper to generate unique IDs
 const generateId = () => crypto.randomUUID();
@@ -629,28 +631,25 @@ export default function ResumeBuilderPage() {
             <div className="flex-1 flex overflow-hidden">
                 {/* Sidebar */}
                 <div className="w-[400px] shrink-0 bg-background overflow-hidden">
-                    <ResumeEditorSidebar
-                        data={resumeData}
-                        score={displayedScore}
-                        onUpdate={handleUpdate}
-                        onGenerateSummary={handleGenerateSummary}
-                        isGenerating={isGenerating}
-                        activeSection={activeSection}
-                    />
+                    {(isLoadingProfile || isTailoring) ? (
+                        <ResumeSidebarSkeleton />
+                    ) : (
+                        <ResumeEditorSidebar
+                            data={resumeData}
+                            score={displayedScore}
+                            onUpdate={handleUpdate}
+                            onGenerateSummary={handleGenerateSummary}
+                            isGenerating={isGenerating}
+                            activeSection={activeSection}
+                        />
+                    )}
                 </div>
 
                 {/* Preview */}
                 <div className="flex-1 bg-gray-100 dark:bg-gray-900 overflow-auto p-6 flex items-start justify-center relative">
                     <div className="w-full h-fit">
                         {(isLoadingProfile || isTailoring) ? (
-                            <div 
-                                className="bg-white rounded-lg mx-auto border border-gray-200 shadow-sm"
-                                style={{ 
-                                    width: "100%",
-                                    maxWidth: "800px",
-                                    minHeight: "1100px"
-                                }}
-                            />
+                            <ResumePreviewSkeleton />
                         ) : (
                             <ResumePreview
                                 data={resumeData}
