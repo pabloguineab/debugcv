@@ -50,6 +50,8 @@ export function EditableText({
             const rect = measureRef.current.getBoundingClientRect();
             setInputWidth(Math.max(rect.width + 20, 100)); // Add padding, minimum 100px
         }
+        // Mark as edited immediately when clicked - don't show animation again
+        setHasBeenEdited(true);
         setIsEditing(true);
         setEditValue(value);
     };
@@ -58,8 +60,6 @@ export function EditableText({
         setIsEditing(false);
         if (editValue !== value) {
             onChange(editValue);
-            // Mark as edited so we don't show typewriter animation anymore
-            setHasBeenEdited(true);
         }
     };
 
