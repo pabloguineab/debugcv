@@ -7,7 +7,7 @@ import { ResumePreview } from "@/components/resume-builder/resume-preview";
 import { ResumeEditorSidebar } from "@/components/resume-builder/resume-editor-sidebar";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MessageCircle, Download, Loader2, Pencil, Check, Cloud, CloudOff } from "lucide-react";
-import { saveResumeData, getResume, generateResumeId } from "@/lib/resume-service";
+import { saveResume as saveResumeToDb, getResume as getResumeFromDb } from "@/lib/actions/resumes";
 
 // Helper to generate unique IDs
 const generateId = () => crypto.randomUUID();
@@ -41,7 +41,7 @@ export default function ResumeBuilderPage() {
     
     // Resume ID for persistence (from URL or generate new)
     const [resumeId] = useState(() => {
-        return searchParams.get("id") || generateResumeId();
+        return searchParams.get("id") || crypto.randomUUID();
     });
     
     const [resumeData, setResumeData] = useState<ResumeData>(() => {
@@ -259,18 +259,23 @@ export default function ResumeBuilderPage() {
         }
         
         // Set new timeout for saving
-        saveTimeoutRef.current = setTimeout(() => {
+        saveTimeoutRef.current = setTimeout(async () => {
             setAutoSaveStatus("saving");
             try {
-                saveResumeData(
+                const result = await saveResumeToDb(
                     resumeId,
                     resumeData.name,
                     resumeData,
                     resumeData.targetJob,
                     resumeData.targetCompany
                 );
-                setAutoSaveStatus("saved");
-                setLastSaved(new Date());
+                if (result.success) {
+                    setAutoSaveStatus("saved");
+                    setLastSaved(new Date());
+                } else {
+                    console.error("Failed to save resume:", result.error);
+                    setAutoSaveStatus("unsaved");
+                }
             } catch (error) {
                 console.error("Failed to save resume:", error);
                 setAutoSaveStatus("unsaved");
