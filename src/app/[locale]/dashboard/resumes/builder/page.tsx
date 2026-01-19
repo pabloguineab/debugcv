@@ -180,7 +180,7 @@ export default function ResumeBuilderPage() {
                             if (result.success && result.data) {
                                 setResumeData(prev => ({
                                     ...prev,
-                                    name: `Resume for ${jobTitle}`,
+                                    name: jobTitle,
                                     targetJob: jobTitle,
                                     targetCompany: result.data.companyName || undefined,
                                     personalInfo: mappedPersonalInfo,
