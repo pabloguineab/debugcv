@@ -52,15 +52,7 @@ export function ResumesList({ initialResumes }: ResumesListProps) {
                         <div className="p-4 rounded-full bg-blue-100 dark:bg-blue-900/50 group-hover:bg-blue-200 dark:group-hover:bg-blue-800/50 transition-colors">
                             <Plus className="w-8 h-8 text-blue-600 dark:text-blue-400" />
                         </div>
-                        <div className="text-center px-4">
-                            <p className="font-semibold text-gray-900 dark:text-gray-100">New Resume</p>
-                            <p className="text-xs text-muted-foreground mt-1">
-                                Tailored for
-                            </p>
-                            <p className="text-xs font-medium text-blue-600 dark:text-blue-400">
-                                General
-                            </p>
-                        </div>
+                        <p className="font-semibold text-gray-900 dark:text-gray-100">New Resume</p>
                     </div>
                 </button>
 
