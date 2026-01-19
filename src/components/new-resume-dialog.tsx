@@ -394,7 +394,7 @@ export function NewResumeDialog({ open, onOpenChange }: NewResumeDialogProps) {
                                                         className="h-8 text-xs"
                                                     />
                                                 </div>
-                                                <div className="space-y-2 flex-1 flex flex-col">
+                                                <div className="space-y-2">
                                                     <Label htmlFor="job-description" className="text-xs font-medium">
                                                         Job Description
                                                     </Label>
@@ -403,7 +403,7 @@ export function NewResumeDialog({ open, onOpenChange }: NewResumeDialogProps) {
                                                         value={jobDescription}
                                                         onChange={(e) => setJobDescription(e.target.value)}
                                                         placeholder="Paste or type the job description here..."
-                                                        className="resize-none flex-1 text-xs min-h-[150px]"
+                                                        className="resize-none text-xs h-[200px] max-h-[200px] overflow-y-auto"
                                                     />
                                                 </div>
                                             </CardContent>
