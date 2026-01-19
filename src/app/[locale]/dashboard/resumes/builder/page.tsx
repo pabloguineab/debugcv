@@ -182,6 +182,7 @@ export default function ResumeBuilderPage() {
                                     ...prev,
                                     name: `Resume for ${jobTitle}`,
                                     targetJob: jobTitle,
+                                    targetCompany: result.data.companyName || undefined,
                                     personalInfo: mappedPersonalInfo,
                                     summary: result.data.summary || "",
                                     skills: result.data.skills || baseSkills,
@@ -588,9 +589,9 @@ export default function ResumeBuilderPage() {
                             <Pencil className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                         </button>
                     )}
-                    {jobTitle && (
+                    {(resumeData.targetJob || resumeData.targetCompany) && (
                         <span className="text-sm text-muted-foreground">
-                            — Targeting: {jobTitle}
+                            — Targeting: {[resumeData.targetJob, resumeData.targetCompany].filter(Boolean).join(" at ")}
                         </span>
                     )}
                 </div>

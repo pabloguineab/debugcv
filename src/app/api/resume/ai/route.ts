@@ -124,15 +124,17 @@ export async function POST(req: NextRequest) {
                 Your task is to create a tailored resume from the user's profile data that is optimized for this specific job.
                 
                 Guidelines:
-                1. Write a compelling professional summary (2-3 sentences) tailored to the job
-                2. Extract and prioritize skills that match the job description keywords
-                3. Improve experience bullet points to highlight relevant achievements
-                4. Include quantifiable metrics where possible
-                5. Use action verbs that match the job requirements
-                6. Ensure ATS-friendly formatting and keywords
+                1. EXTRACT THE COMPANY NAME from the job description (look for company mentions, "About us", headers, etc.)
+                2. Write a compelling professional summary (2-3 sentences) tailored to the job
+                3. Extract and prioritize skills that match the job description keywords
+                4. Improve experience bullet points to highlight relevant achievements
+                5. Include quantifiable metrics where possible
+                6. Use action verbs that match the job requirements
+                7. Ensure ATS-friendly formatting and keywords
                 
                 Return ONLY valid JSON in this exact format:
                 {
+                    "companyName": "<extracted company name or empty string if not found>",
                     "summary": "<tailored professional summary>",
                     "skills": ["skill1", "skill2", ...],
                     "experience": [
