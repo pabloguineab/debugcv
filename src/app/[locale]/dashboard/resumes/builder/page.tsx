@@ -589,9 +589,9 @@ export default function ResumeBuilderPage() {
                             <Pencil className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                         </button>
                     )}
-                    {(resumeData.targetJob || resumeData.targetCompany) && (
+                    {resumeData.targetCompany && (
                         <span className="text-sm text-muted-foreground">
-                            — Targeting: {[resumeData.targetJob, resumeData.targetCompany].filter(Boolean).join(" at ")}
+                            — Targeting: {resumeData.targetCompany}
                         </span>
                     )}
                 </div>
