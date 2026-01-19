@@ -358,6 +358,51 @@ export function ResumeEditorSidebar({
                                                 disabled={exp.current}
                                             />
                                         </div>
+                                        
+                                        {/* Bullet Points */}
+                                        <div className="mt-2">
+                                            <Label className="text-xs text-muted-foreground">Achievements / Responsibilities</Label>
+                                            <div className="space-y-1 mt-1">
+                                                {(exp.bullets || []).map((bullet, bulletIndex) => (
+                                                    <div key={bulletIndex} className="flex items-start gap-1">
+                                                        <span className="text-xs text-muted-foreground mt-2">•</span>
+                                                        <Textarea
+                                                            value={bullet}
+                                                            onChange={(e) => {
+                                                                const newBullets = [...(exp.bullets || [])];
+                                                                newBullets[bulletIndex] = e.target.value;
+                                                                updateExperience(index, { bullets: newBullets });
+                                                            }}
+                                                            placeholder="Describe your achievement..."
+                                                            className="h-16 text-xs resize-none flex-1"
+                                                        />
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-6 w-6 text-red-500 hover:text-red-600 hover:bg-red-50 mt-1"
+                                                            onClick={() => {
+                                                                const newBullets = (exp.bullets || []).filter((_, i) => i !== bulletIndex);
+                                                                updateExperience(index, { bullets: newBullets });
+                                                            }}
+                                                        >
+                                                            <Trash2 className="w-3 h-3" />
+                                                        </Button>
+                                                    </div>
+                                                ))}
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => {
+                                                        const newBullets = [...(exp.bullets || []), ""];
+                                                        updateExperience(index, { bullets: newBullets });
+                                                    }}
+                                                    className="w-full h-7 text-xs border-dashed border mt-1"
+                                                >
+                                                    <Plus className="w-3 h-3 mr-1" />
+                                                    Add bullet point
+                                                </Button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             ))}

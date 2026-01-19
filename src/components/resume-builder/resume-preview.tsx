@@ -86,6 +86,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                 maxWidth: "800px",
                 minHeight: "1100px"
             }}
+            data-resume-preview="true"
         >
             <SequentialAnimationProvider animate={animate}>
                 {/* Resume Paper - Himalayas Style */}
