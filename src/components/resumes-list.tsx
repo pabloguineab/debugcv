@@ -71,7 +71,7 @@ export function ResumesList({ initialResumes }: ResumesListProps) {
                             <Book
                                 title={resume.name || "Untitled Resume"}
                                 subtitle="Resume"
-                                target={resume.target_company || resume.target_job || "General"}
+                                target={resume.target_company || resume.data?.targetCompany || resume.target_job || resume.data?.targetJob || "General"}
                                 width={180}
                                 height={260}
                                 previewData={resume.data}
