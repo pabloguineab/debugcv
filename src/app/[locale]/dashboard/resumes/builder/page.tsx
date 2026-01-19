@@ -364,62 +364,130 @@ export default function ResumeBuilderPage() {
         }
     }, [resumeData, jobDescription]);
 
-    // Calculate progressive score based on sections completed
+    // Calculate intelligent resume score based on quality criteria
     const calculateProgressiveScore = useCallback(() => {
-        let sectionScore = 0;
-        const weights = {
-            personalInfo: 15, // name, email, phone, location
-            summary: 20,
-            experience: 25,
-            education: 15,
-            skills: 15,
-            projects: 5,
-            certifications: 5
-        };
+        let totalScore = 0;
         
-        // Personal Info (15%)
+        // === PERSONAL INFO (15 points max) ===
         const { personalInfo } = resumeData;
-        if (personalInfo.fullName) sectionScore += 4;
-        if (personalInfo.email) sectionScore += 4;
-        if (personalInfo.phone) sectionScore += 4;
-        if (personalInfo.location) sectionScore += 3;
+        let personalScore = 0;
+        if (personalInfo.fullName) personalScore += 4;
+        if (personalInfo.email) personalScore += 4;
+        if (personalInfo.phone) personalScore += 3;
+        if (personalInfo.location) personalScore += 2;
+        if (personalInfo.profileUrl) personalScore += 2;
+        totalScore += Math.min(personalScore, 15);
         
-        // Summary (20%)
-        if (resumeData.summary && resumeData.summary.length > 50) {
-            sectionScore += weights.summary;
-        } else if (resumeData.summary && resumeData.summary.length > 0) {
-            sectionScore += 10;
+        // === PROFESSIONAL SUMMARY (15 points max) ===
+        let summaryScore = 0;
+        if (resumeData.summary) {
+            const wordCount = resumeData.summary.split(/\s+/).length;
+            if (wordCount >= 40 && wordCount <= 80) {
+                summaryScore = 15; // Ideal length
+            } else if (wordCount >= 25 && wordCount < 40) {
+                summaryScore = 12; // Good but could be longer
+            } else if (wordCount > 80 && wordCount <= 120) {
+                summaryScore = 12; // Good but could be shorter
+            } else if (wordCount >= 15 && wordCount < 25) {
+                summaryScore = 8; // Too short
+            } else if (wordCount > 120) {
+                summaryScore = 8; // Too long
+            } else if (wordCount > 0) {
+                summaryScore = 4; // Minimal
+            }
         }
+        totalScore += summaryScore;
         
-        // Experience (25%)
+        // === EXPERIENCE (30 points max) ===
+        let expScore = 0;
         if (resumeData.experience.length > 0) {
-            const expScore = Math.min(resumeData.experience.length * 8, weights.experience);
-            sectionScore += expScore;
+            // Base points for having experience
+            expScore += Math.min(resumeData.experience.length * 5, 15);
+            
+            // Quality points for bullet points
+            let totalBullets = 0;
+            let qualityBullets = 0;
+            resumeData.experience.forEach(exp => {
+                const bullets = exp.bullets || [];
+                totalBullets += bullets.length;
+                bullets.forEach(bullet => {
+                    // Quality bullet: 20-100 chars, starts with action verb
+                    if (bullet.length >= 20 && bullet.length <= 150) {
+                        qualityBullets++;
+                    }
+                });
+            });
+            
+            if (totalBullets >= 6) expScore += 10;
+            else if (totalBullets >= 3) expScore += 6;
+            else if (totalBullets > 0) expScore += 3;
+            
+            // Bonus for quality bullets
+            if (qualityBullets >= 4) expScore += 5;
+            else if (qualityBullets >= 2) expScore += 3;
         }
+        totalScore += Math.min(expScore, 30);
         
-        // Education (15%)
+        // === EDUCATION (10 points max) ===
+        let eduScore = 0;
         if (resumeData.education.length > 0) {
-            sectionScore += weights.education;
+            eduScore += 7;
+            
+            // Bonus for complete info
+            const hasCompleteEdu = resumeData.education.some(
+                edu => edu.institution && edu.degree && edu.field
+            );
+            if (hasCompleteEdu) eduScore += 3;
         }
+        totalScore += Math.min(eduScore, 10);
         
-        // Skills (15%)
-        if (resumeData.skills.length >= 5) {
-            sectionScore += weights.skills;
-        } else if (resumeData.skills.length > 0) {
-            sectionScore += Math.min(resumeData.skills.length * 3, weights.skills);
+        // === SKILLS (15 points max) ===
+        let skillScore = 0;
+        const skillCount = resumeData.skills.length;
+        if (skillCount >= 8 && skillCount <= 15) {
+            skillScore = 15; // Ideal range
+        } else if (skillCount >= 5 && skillCount < 8) {
+            skillScore = 12; // Good
+        } else if (skillCount > 15 && skillCount <= 20) {
+            skillScore = 12; // Slightly too many
+        } else if (skillCount >= 3 && skillCount < 5) {
+            skillScore = 8; // Too few
+        } else if (skillCount > 20) {
+            skillScore = 8; // Too many
+        } else if (skillCount > 0) {
+            skillScore = 4; // Minimal
         }
+        totalScore += skillScore;
         
-        // Projects (5%)
+        // === PROJECTS (8 points max) ===
+        let projScore = 0;
         if (resumeData.projects.length > 0) {
-            sectionScore += weights.projects;
+            projScore += Math.min(resumeData.projects.length * 3, 6);
+            
+            // Bonus for complete projects
+            const hasCompleteProj = resumeData.projects.some(
+                proj => proj.name && proj.description && proj.technologies?.length > 0
+            );
+            if (hasCompleteProj) projScore += 2;
         }
+        totalScore += Math.min(projScore, 8);
         
-        // Certifications (5%)
+        // === CERTIFICATIONS (7 points max) ===
+        let certScore = 0;
         if (resumeData.certifications.length > 0) {
-            sectionScore += weights.certifications;
+            certScore += Math.min(resumeData.certifications.length * 3, 5);
+            
+            // Bonus for complete certifications
+            const hasCompleteCert = resumeData.certifications.some(
+                cert => cert.name && cert.issuer && cert.issueDate
+            );
+            if (hasCompleteCert) certScore += 2;
         }
+        totalScore += Math.min(certScore, 7);
         
-        return sectionScore;
+        // Total possible: 100 points
+        // Return the actual score (no artificial inflation)
+        return Math.min(totalScore, 100);
     }, [resumeData]);
 
     // Animated score that gradually increases to target
@@ -473,10 +541,7 @@ export default function ResumeBuilderPage() {
                     
                     if (currentStep >= steps) {
                         clearInterval(interval);
-                        // After animation completes, get AI score
-                        if (targetScore >= 60) {
-                            calculateScore();
-                        }
+                        // Score animation complete - using local algorithm only
                     }
                 }, stepDuration);
                 
@@ -488,33 +553,7 @@ export default function ResumeBuilderPage() {
                 setScore(targetScore);
             }
         }
-    }, [isLoadingProfile, isTailoring, calculateProgressiveScore, animatePreview, calculateScore]);
-
-    // When AI score comes back, animate to it
-    useEffect(() => {
-        if (score > displayedScore && score >= 90) {
-            // Animate from current to AI score
-            const start = displayedScore;
-            const end = score;
-            const duration = 2000;
-            const steps = 20;
-            const stepDuration = duration / steps;
-            const increment = (end - start) / steps;
-            
-            let currentStep = 0;
-            const interval = setInterval(() => {
-                currentStep++;
-                const newScore = Math.min(Math.round(start + increment * currentStep), end);
-                setDisplayedScore(newScore);
-                
-                if (currentStep >= steps) {
-                    clearInterval(interval);
-                }
-            }, stepDuration);
-            
-            return () => clearInterval(interval);
-        }
-    }, [score]);
+    }, [isLoadingProfile, isTailoring, calculateProgressiveScore, animatePreview]);
 
     // Handle field click in preview
     const handleFieldClick = (field: string, index?: number) => {
