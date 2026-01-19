@@ -6,6 +6,7 @@ import { Book } from "@/components/ui/book";
 import { FileText, Trash2, Loader2 } from "lucide-react";
 import { NewResumeDialog } from "@/components/new-resume-dialog";
 import { getResumes, deleteResumeAction, SavedResume } from "@/lib/actions/resumes";
+import { ResumeListSkeleton } from "@/components/resume-list-skeleton";
 // AlertDialog imports removed as custom dialog is now used inline
 
 export default function ResumesPage() {
@@ -69,9 +70,7 @@ export default function ResumesPage() {
             </div>
 
             {isLoading ? (
-                <div className="flex items-center justify-center py-12">
-                    <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-                </div>
+                <ResumeListSkeleton />
             ) : (
                 <div className="flex flex-wrap gap-4">
                     {/* Saved Resumes */}
