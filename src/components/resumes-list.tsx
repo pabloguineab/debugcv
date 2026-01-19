@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Book } from "@/components/ui/book";
-import { Trash2, Loader2 } from "lucide-react";
+import { Trash2, Loader2, Plus } from "lucide-react";
 import { deleteResumeAction, SavedResume } from "@/lib/actions/resumes";
+import { NewResumeDialog } from "@/components/new-resume-dialog";
 
 interface ResumesListProps {
     initialResumes: SavedResume[];
@@ -14,6 +15,7 @@ export function ResumesList({ initialResumes }: ResumesListProps) {
     const [resumes, setResumes] = useState<SavedResume[]>(initialResumes);
     const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [isNewResumeDialogOpen, setIsNewResumeDialogOpen] = useState(false);
     const router = useRouter();
 
     const handleOpenResume = (resume: SavedResume) => {
@@ -40,6 +42,28 @@ export function ResumesList({ initialResumes }: ResumesListProps) {
     return (
         <>
             <div className="flex flex-wrap gap-4">
+                {/* New Resume Card */}
+                <button
+                    onClick={() => setIsNewResumeDialogOpen(true)}
+                    className="group relative"
+                    style={{ width: "180px", height: "260px" }}
+                >
+                    <div className="w-full h-full border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-md hover:border-blue-500 dark:hover:border-blue-400 transition-colors flex flex-col items-center justify-center gap-3 bg-gray-50/50 dark:bg-gray-900/50 hover:bg-blue-50/50 dark:hover:bg-blue-950/30">
+                        <div className="p-4 rounded-full bg-blue-100 dark:bg-blue-900/50 group-hover:bg-blue-200 dark:group-hover:bg-blue-800/50 transition-colors">
+                            <Plus className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <div className="text-center px-4">
+                            <p className="font-semibold text-gray-900 dark:text-gray-100">New Resume</p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Tailored for
+                            </p>
+                            <p className="text-xs font-medium text-blue-600 dark:text-blue-400">
+                                General
+                            </p>
+                        </div>
+                    </div>
+                </button>
+
                 {/* Saved Resumes */}
                 {resumes.map((resume) => (
                     <div key={resume.id} className="relative group">
@@ -68,6 +92,12 @@ export function ResumesList({ initialResumes }: ResumesListProps) {
                     </div>
                 ))}
             </div>
+
+            {/* New Resume Dialog */}
+            <NewResumeDialog
+                open={isNewResumeDialogOpen}
+                onOpenChange={setIsNewResumeDialogOpen}
+            />
 
             {/* Delete Confirmation Dialog */}
             {deleteConfirmId && (
