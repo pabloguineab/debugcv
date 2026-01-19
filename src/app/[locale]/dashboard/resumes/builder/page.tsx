@@ -364,131 +364,240 @@ export default function ResumeBuilderPage() {
         }
     }, [resumeData, jobDescription]);
 
-    // Calculate intelligent resume score based on quality criteria
+    // Extract keywords from job description for matching
+    const extractJobKeywords = useCallback((text: string): Set<string> => {
+        if (!text) return new Set();
+        
+        // Common tech keywords and skills patterns
+        const words = text.toLowerCase()
+            .replace(/[^\w\s+#.-]/g, ' ')
+            .split(/\s+/)
+            .filter(w => w.length > 2);
+        
+        // Also extract multi-word phrases (e.g., "machine learning", "data science")
+        const phrases: string[] = [];
+        const textLower = text.toLowerCase();
+        const commonPhrases = [
+            'machine learning', 'deep learning', 'data science', 'data engineering',
+            'software engineer', 'full stack', 'front end', 'back end', 'frontend', 'backend',
+            'project management', 'product management', 'agile', 'scrum',
+            'cloud computing', 'aws', 'azure', 'gcp', 'google cloud',
+            'ci/cd', 'devops', 'kubernetes', 'docker', 'microservices',
+            'python', 'javascript', 'typescript', 'react', 'node.js', 'nodejs',
+            'sql', 'nosql', 'mongodb', 'postgresql', 'mysql',
+            'api', 'rest', 'graphql', 'grpc',
+            'tensorflow', 'pytorch', 'keras', 'scikit-learn',
+            'nlp', 'computer vision', 'ai', 'artificial intelligence',
+            'data analysis', 'data visualization', 'tableau', 'power bi',
+            'excel', 'powerpoint', 'leadership', 'communication',
+            'problem solving', 'teamwork', 'collaboration'
+        ];
+        
+        commonPhrases.forEach(phrase => {
+            if (textLower.includes(phrase)) {
+                phrases.push(phrase);
+            }
+        });
+        
+        return new Set([...words, ...phrases]);
+    }, []);
+    
+    // Calculate intelligent resume score based on quality AND job matching
     const calculateProgressiveScore = useCallback(() => {
+        // Extract keywords from job description
+        const jobKeywords = extractJobKeywords(jobDescription || '');
+        const hasJobDescription = jobKeywords.size > 5;
+        
         let totalScore = 0;
         
-        // === PERSONAL INFO (15 points max) ===
+        // === PERSONAL INFO (10 points max) ===
         const { personalInfo } = resumeData;
         let personalScore = 0;
-        if (personalInfo.fullName) personalScore += 4;
-        if (personalInfo.email) personalScore += 4;
-        if (personalInfo.phone) personalScore += 3;
-        if (personalInfo.location) personalScore += 2;
-        if (personalInfo.profileUrl) personalScore += 2;
-        totalScore += Math.min(personalScore, 15);
+        if (personalInfo.fullName) personalScore += 3;
+        if (personalInfo.email) personalScore += 3;
+        if (personalInfo.phone) personalScore += 2;
+        if (personalInfo.location) personalScore += 1;
+        if (personalInfo.profileUrl) personalScore += 1;
+        totalScore += Math.min(personalScore, 10);
         
         // === PROFESSIONAL SUMMARY (15 points max) ===
         let summaryScore = 0;
         if (resumeData.summary) {
             const wordCount = resumeData.summary.split(/\s+/).length;
-            if (wordCount >= 40 && wordCount <= 80) {
-                summaryScore = 15; // Ideal length
-            } else if (wordCount >= 25 && wordCount < 40) {
-                summaryScore = 12; // Good but could be longer
-            } else if (wordCount > 80 && wordCount <= 120) {
-                summaryScore = 12; // Good but could be shorter
-            } else if (wordCount >= 15 && wordCount < 25) {
-                summaryScore = 8; // Too short
-            } else if (wordCount > 120) {
-                summaryScore = 8; // Too long
+            
+            // Length score (max 8 pts)
+            if (wordCount >= 30 && wordCount <= 60) {
+                summaryScore += 8; // Ideal length
+            } else if (wordCount >= 20 && wordCount < 30) {
+                summaryScore += 6;
+            } else if (wordCount > 60 && wordCount <= 100) {
+                summaryScore += 6;
+            } else if (wordCount >= 10) {
+                summaryScore += 4;
             } else if (wordCount > 0) {
-                summaryScore = 4; // Minimal
+                summaryScore += 2;
+            }
+            
+            // Job keyword matching in summary (max 7 pts)
+            if (hasJobDescription) {
+                const summaryLower = resumeData.summary.toLowerCase();
+                let matchCount = 0;
+                jobKeywords.forEach(keyword => {
+                    if (summaryLower.includes(keyword)) matchCount++;
+                });
+                const matchRatio = matchCount / Math.max(jobKeywords.size, 1);
+                summaryScore += Math.round(matchRatio * 7);
+            } else {
+                summaryScore += 5; // Default if no job desc
             }
         }
-        totalScore += summaryScore;
+        totalScore += Math.min(summaryScore, 15);
         
-        // === EXPERIENCE (30 points max) ===
+        // === SKILLS MATCHING (25 points max - most important for job matching) ===
+        let skillScore = 0;
+        const skillCount = resumeData.skills.length;
+        const skillsLower = resumeData.skills.map(s => s.toLowerCase());
+        
+        if (hasJobDescription && skillCount > 0) {
+            // Count how many job keywords are in skills
+            let skillMatches = 0;
+            jobKeywords.forEach(keyword => {
+                if (skillsLower.some(skill => skill.includes(keyword) || keyword.includes(skill))) {
+                    skillMatches++;
+                }
+            });
+            
+            // Matching score (max 20 pts)
+            const matchRatio = skillMatches / Math.min(jobKeywords.size, 20);
+            skillScore += Math.round(matchRatio * 20);
+            
+            // Quantity bonus (max 5 pts) - but only if skills are relevant
+            if (skillCount >= 8 && skillCount <= 15) {
+                skillScore += 5;
+            } else if (skillCount >= 5) {
+                skillScore += 3;
+            } else if (skillCount > 0) {
+                skillScore += 1;
+            }
+        } else if (skillCount > 0) {
+            // No job description - just score quantity
+            if (skillCount >= 8 && skillCount <= 15) {
+                skillScore = 20;
+            } else if (skillCount >= 5 && skillCount < 8) {
+                skillScore = 15;
+            } else if (skillCount >= 3) {
+                skillScore = 10;
+            } else {
+                skillScore = 5;
+            }
+        }
+        totalScore += Math.min(skillScore, 25);
+        
+        // === EXPERIENCE (25 points max) ===
         let expScore = 0;
         if (resumeData.experience.length > 0) {
-            // Base points for having experience
-            expScore += Math.min(resumeData.experience.length * 5, 15);
+            // Base points for having experience (max 10)
+            expScore += Math.min(resumeData.experience.length * 4, 10);
             
-            // Quality points for bullet points
+            // Bullet points quality and quantity (max 10)
             let totalBullets = 0;
             let qualityBullets = 0;
+            let jobMatchingBullets = 0;
+            
             resumeData.experience.forEach(exp => {
                 const bullets = exp.bullets || [];
                 totalBullets += bullets.length;
                 bullets.forEach(bullet => {
-                    // Quality bullet: 20-100 chars, starts with action verb
-                    if (bullet.length >= 20 && bullet.length <= 150) {
+                    const bulletLower = bullet.toLowerCase();
+                    
+                    // Quality check
+                    if (bullet.length >= 30 && bullet.length <= 150) {
                         qualityBullets++;
+                    }
+                    
+                    // Job matching check
+                    if (hasJobDescription) {
+                        let hasMatch = false;
+                        jobKeywords.forEach(keyword => {
+                            if (bulletLower.includes(keyword)) hasMatch = true;
+                        });
+                        if (hasMatch) jobMatchingBullets++;
                     }
                 });
             });
             
-            if (totalBullets >= 6) expScore += 10;
-            else if (totalBullets >= 3) expScore += 6;
-            else if (totalBullets > 0) expScore += 3;
+            if (totalBullets >= 8) expScore += 5;
+            else if (totalBullets >= 4) expScore += 3;
+            else if (totalBullets > 0) expScore += 1;
             
-            // Bonus for quality bullets
-            if (qualityBullets >= 4) expScore += 5;
-            else if (qualityBullets >= 2) expScore += 3;
+            if (qualityBullets >= 4) expScore += 3;
+            else if (qualityBullets >= 2) expScore += 2;
+            
+            // Job matching bonus (max 5)
+            if (hasJobDescription && totalBullets > 0) {
+                const bulletMatchRatio = jobMatchingBullets / totalBullets;
+                expScore += Math.round(bulletMatchRatio * 5);
+            } else {
+                expScore += 2; // Default
+            }
         }
-        totalScore += Math.min(expScore, 30);
+        totalScore += Math.min(expScore, 25);
         
         // === EDUCATION (10 points max) ===
         let eduScore = 0;
         if (resumeData.education.length > 0) {
-            eduScore += 7;
+            eduScore += 6;
             
-            // Bonus for complete info
             const hasCompleteEdu = resumeData.education.some(
                 edu => edu.institution && edu.degree && edu.field
             );
-            if (hasCompleteEdu) eduScore += 3;
+            if (hasCompleteEdu) eduScore += 4;
         }
         totalScore += Math.min(eduScore, 10);
         
-        // === SKILLS (15 points max) ===
-        let skillScore = 0;
-        const skillCount = resumeData.skills.length;
-        if (skillCount >= 8 && skillCount <= 15) {
-            skillScore = 15; // Ideal range
-        } else if (skillCount >= 5 && skillCount < 8) {
-            skillScore = 12; // Good
-        } else if (skillCount > 15 && skillCount <= 20) {
-            skillScore = 12; // Slightly too many
-        } else if (skillCount >= 3 && skillCount < 5) {
-            skillScore = 8; // Too few
-        } else if (skillCount > 20) {
-            skillScore = 8; // Too many
-        } else if (skillCount > 0) {
-            skillScore = 4; // Minimal
-        }
-        totalScore += skillScore;
-        
-        // === PROJECTS (8 points max) ===
+        // === PROJECTS (10 points max) ===
         let projScore = 0;
         if (resumeData.projects.length > 0) {
             projScore += Math.min(resumeData.projects.length * 3, 6);
             
-            // Bonus for complete projects
             const hasCompleteProj = resumeData.projects.some(
                 proj => proj.name && proj.description && proj.technologies?.length > 0
             );
             if (hasCompleteProj) projScore += 2;
+            
+            // Job matching in projects
+            if (hasJobDescription) {
+                let projectMatches = 0;
+                resumeData.projects.forEach(proj => {
+                    const techLower = (proj.technologies || []).map(t => t.toLowerCase());
+                    const descLower = (proj.description || '').toLowerCase();
+                    jobKeywords.forEach(keyword => {
+                        if (techLower.some(t => t.includes(keyword)) || descLower.includes(keyword)) {
+                            projectMatches++;
+                        }
+                    });
+                });
+                if (projectMatches >= 3) projScore += 2;
+                else if (projectMatches >= 1) projScore += 1;
+            }
         }
-        totalScore += Math.min(projScore, 8);
+        totalScore += Math.min(projScore, 10);
         
-        // === CERTIFICATIONS (7 points max) ===
+        // === CERTIFICATIONS (5 points max) ===
         let certScore = 0;
         if (resumeData.certifications.length > 0) {
-            certScore += Math.min(resumeData.certifications.length * 3, 5);
+            certScore += Math.min(resumeData.certifications.length * 2, 4);
             
-            // Bonus for complete certifications
             const hasCompleteCert = resumeData.certifications.some(
-                cert => cert.name && cert.issuer && cert.issueDate
+                cert => cert.name && cert.issuer
             );
-            if (hasCompleteCert) certScore += 2;
+            if (hasCompleteCert) certScore += 1;
         }
-        totalScore += Math.min(certScore, 7);
+        totalScore += Math.min(certScore, 5);
         
         // Total possible: 100 points
-        // Return the actual score (no artificial inflation)
         return Math.min(totalScore, 100);
-    }, [resumeData]);
+    }, [resumeData, jobDescription, extractJobKeywords]);
 
     // Animated score that gradually increases to target
     const [displayedScore, setDisplayedScore] = useState(0);
