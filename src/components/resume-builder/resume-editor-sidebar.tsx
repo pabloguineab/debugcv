@@ -14,6 +14,8 @@ interface ResumeEditorSidebarProps {
     score: number;
     onUpdate: (data: Partial<ResumeData>) => void;
     onGenerateSummary: () => void;
+    jobDescription?: string;
+    onJobDescriptionChange?: (value: string) => void;
     isGenerating: boolean;
     activeSection?: string;
 }
@@ -23,10 +25,13 @@ export function ResumeEditorSidebar({
     score,
     onUpdate,
     onGenerateSummary,
+    jobDescription,
+    onJobDescriptionChange,
     isGenerating,
     activeSection
 }: ResumeEditorSidebarProps) {
     const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+        targetJob: true,
         personal: true,
         summary: true,
         skills: true,
@@ -190,6 +195,44 @@ export function ResumeEditorSidebar({
             </div>
 
             <div className="p-4 space-y-4">
+                {/* Target Job Details */}
+                <div className={cn("border-b pb-4", activeSection === "targetJob" && "ring-2 ring-primary rounded-lg p-2")}>
+                    <SectionHeader title="Target Job Details" section="targetJob" />
+                    {expandedSections.targetJob && (
+                        <div className="space-y-3 mt-3">
+                            <div>
+                                <Label className="text-xs text-muted-foreground">Target Job Title</Label>
+                                <Input
+                                    value={data.targetJob || ""}
+                                    onChange={(e) => onUpdate({ targetJob: e.target.value })}
+                                    placeholder="e.g. Senior Frontend Engineer"
+                                    className="mt-1"
+                                />
+                            </div>
+                            <div>
+                                <Label className="text-xs text-muted-foreground">Target Company</Label>
+                                <Input
+                                    value={data.targetCompany || ""}
+                                    onChange={(e) => onUpdate({ targetCompany: e.target.value })}
+                                    placeholder="e.g. Acme Corp"
+                                    className="mt-1"
+                                />
+                            </div>
+                            {onJobDescriptionChange && (
+                                <div>
+                                    <Label className="text-xs text-muted-foreground">Job Description</Label>
+                                    <Textarea
+                                        value={jobDescription || ""}
+                                        onChange={(e) => onJobDescriptionChange(e.target.value)}
+                                        placeholder="Paste the job description here to improve AI suggestions..."
+                                        className="mt-1 min-h-[100px] resize-none text-xs"
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+
                 {/* Personal Info */}
                 <div className={cn("border-b pb-4", activeSection === "personal" && "ring-2 ring-primary rounded-lg p-2")}>
                     <SectionHeader title="Personal Information" section="personal" />
@@ -358,7 +401,7 @@ export function ResumeEditorSidebar({
                                                 disabled={exp.current}
                                             />
                                         </div>
-                                        
+
                                         {/* Bullet Points */}
                                         <div className="mt-2">
                                             <Label className="text-xs text-muted-foreground">Achievements / Responsibilities</Label>
@@ -547,8 +590,8 @@ export function ResumeEditorSidebar({
                                                 className="h-7 text-xs mt-1"
                                                 onKeyDown={(e) => {
                                                     if (e.key === "Enter" && e.currentTarget.value) {
-                                                        updateProject(index, { 
-                                                            technologies: [...project.technologies, e.currentTarget.value] 
+                                                        updateProject(index, {
+                                                            technologies: [...project.technologies, e.currentTarget.value]
                                                         });
                                                         e.currentTarget.value = "";
                                                     }

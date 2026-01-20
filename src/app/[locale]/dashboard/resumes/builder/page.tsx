@@ -70,7 +70,7 @@ export default function ResumeBuilderPage() {
     const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     // Job description from URL params (passed from the creation dialog)
-    const jobDescription = searchParams.get("description") || "";
+    const [jobDescription, setJobDescription] = useState(() => searchParams.get("description") || "");
     const jobTitle = searchParams.get("job") || "";
 
     // Load user profile data to pre-fill resume
@@ -84,6 +84,18 @@ export default function ResumeBuilderPage() {
 
                 if (existingResume) {
                     setResumeData(existingResume.data);
+                    // Load saved job description
+                    if (existingResume.job_description) {
+                        setJobDescription(existingResume.job_description);
+                    }
+
+                    // Load scores
+                    if (existingResume.data.atsScore) {
+                        setScore(existingResume.data.atsScore);
+                        setDisplayedScore(existingResume.data.atsScore);
+                        animationStartedRef.current = true;
+                    }
+
                     // Disable animation for existing resumes
                     setAnimatePreview(false);
                     setIsLoadingProfile(false);
@@ -807,6 +819,8 @@ export default function ResumeBuilderPage() {
                             score={displayedScore}
                             onUpdate={handleUpdate}
                             onGenerateSummary={handleGenerateSummary}
+                            jobDescription={jobDescription}
+                            onJobDescriptionChange={setJobDescription}
                             isGenerating={isGenerating}
                             activeSection={activeSection}
                         />
