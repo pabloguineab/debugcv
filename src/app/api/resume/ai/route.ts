@@ -183,6 +183,39 @@ export async function POST(req: NextRequest) {
                 `;
                 break;
 
+            case "generate-cover-letter":
+                prompt = `
+                You are an expert cover letter writer. Create a professional, compelling cover letter.
+                
+                Resume/Candidate Information:
+                ${JSON.stringify(data.resumeData, null, 2)}
+                
+                Target Job:
+                Title: ${data.jobTitle}
+                Company: ${data.companyName || "the company"}
+                
+                Job Description:
+                ${data.jobDescription}
+                
+                Write a professional cover letter that:
+                1. Has a strong opening paragraph that grabs attention
+                2. Highlights 2-3 key achievements from the resume that match the job requirements
+                3. Shows enthusiasm for the specific company and role
+                4. Demonstrates understanding of the company's needs
+                5. Includes a confident closing with a call to action
+                6. Is approximately 300-400 words
+                7. Uses a professional but personable tone
+                
+                Format the letter with proper paragraphs. Do NOT include placeholder text like [Your Name], [Date], etc.
+                Use the actual name from the resume data.
+                
+                Start directly with "Dear Hiring Manager," (or use company name if known)
+                End with "Sincerely," followed by the candidate's name.
+                
+                Return ONLY the cover letter text, properly formatted with line breaks between paragraphs.
+                `;
+                break;
+
             default:
                 return NextResponse.json({ error: "Invalid action" }, { status: 400 });
         }

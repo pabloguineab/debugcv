@@ -1,26 +1,37 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Check, FileText } from "lucide-react";
+import { X, Check, FileText, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getResumes, SavedResume } from "@/lib/actions/resumes";
 
 interface NewCoverLetterDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
-const MOCK_RESUMES = [
-    { id: "1", title: "Software Engineer", target: "Google", date: "Last edited 2 days ago" },
-    { id: "2", title: "Frontend Lead", target: "Meta", date: "Last edited 5 days ago" }
-];
-
 export function NewCoverLetterDialog({ open, onOpenChange }: NewCoverLetterDialogProps) {
+    const router = useRouter();
     const overlayRef = useRef<HTMLDivElement>(null);
     const [selectedResume, setSelectedResume] = useState<string | null>(null);
+    const [resumes, setResumes] = useState<SavedResume[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    // Reset state when opening/closing
+    // Load resumes when dialog opens
+    useEffect(() => {
+        if (open) {
+            setIsLoading(true);
+            getResumes().then((data) => {
+                setResumes(data);
+                setIsLoading(false);
+            });
+        }
+    }, [open]);
+
+    // Reset state when closing
     useEffect(() => {
         if (!open) {
             setTimeout(() => {
@@ -44,6 +55,25 @@ export function NewCoverLetterDialog({ open, onOpenChange }: NewCoverLetterDialo
         if (e.target === overlayRef.current) {
             onOpenChange(false);
         }
+    };
+
+    const handleCreateCoverLetter = () => {
+        if (selectedResume) {
+            onOpenChange(false);
+            router.push(`/dashboard/cover-letters/builder?resume=${selectedResume}`);
+        }
+    };
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffMs = now.getTime() - date.getTime();
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) return "Today";
+        if (diffDays === 1) return "Yesterday";
+        if (diffDays < 7) return `${diffDays} days ago`;
+        return date.toLocaleDateString();
     };
 
     return (
@@ -79,60 +109,93 @@ export function NewCoverLetterDialog({ open, onOpenChange }: NewCoverLetterDialo
                         <div className="flex flex-col space-y-1.5 p-6 pb-2">
                             <h3 className="font-semibold leading-none tracking-tight text-xl">Create New Cover Letter</h3>
                             <p className="text-sm text-muted-foreground">
-                                Select a base resume to tailor your cover letter.
+                                Select a resume to tailor your cover letter.
                             </p>
                         </div>
 
                         <div className="flex-1 overflow-y-auto px-6 py-4">
-                            <div className="grid gap-4">
-                                {MOCK_RESUMES.map((resume) => (
-                                    <div
-                                        key={resume.id}
-                                        onClick={() => setSelectedResume(resume.id)}
-                                        className={cn(
-                                            "relative flex items-center gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all hover:bg-accent",
-                                            selectedResume === resume.id
-                                                ? "border-primary bg-primary/10 dark:bg-primary/20"
-                                                : "border-gray-100 dark:border-gray-800 hover:border-primary/50"
-                                        )}
+                            {isLoading ? (
+                                <div className="flex items-center justify-center py-12">
+                                    <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                                </div>
+                            ) : resumes.length === 0 ? (
+                                <div className="flex flex-col items-center justify-center py-12 text-center">
+                                    <FileText className="w-12 h-12 text-muted-foreground mb-4" />
+                                    <h4 className="font-semibold mb-2">No resumes found</h4>
+                                    <p className="text-sm text-muted-foreground mb-4">
+                                        Create a resume first to generate a tailored cover letter.
+                                    </p>
+                                    <Button
+                                        onClick={() => {
+                                            onOpenChange(false);
+                                            router.push("/dashboard/resumes");
+                                        }}
                                     >
-                                        <div className={cn(
-                                            "w-12 h-12 rounded-lg flex items-center justify-center transition-colors",
-                                            selectedResume === resume.id
-                                                ? "bg-primary/20 dark:bg-primary/30 text-primary"
-                                                : "bg-gray-100 dark:bg-gray-800 text-gray-500"
-                                        )}>
-                                            <FileText className="w-6 h-6" />
-                                        </div>
-                                        
-                                        <div className="flex-1">
-                                            <h4 className="font-semibold text-gray-900 dark:text-gray-100">{resume.title}</h4>
-                                            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                                                <span className="font-medium text-gray-700 dark:text-gray-300">Target: {resume.target}</span>
-                                                <span>•</span>
-                                                <span>{resume.date}</span>
+                                        Create Resume
+                                    </Button>
+                                </div>
+                            ) : (
+                                <div className="grid gap-4">
+                                    {resumes.map((resume) => (
+                                        <div
+                                            key={resume.id}
+                                            onClick={() => setSelectedResume(resume.id)}
+                                            className={cn(
+                                                "relative flex items-center gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all hover:bg-accent",
+                                                selectedResume === resume.id
+                                                    ? "border-primary bg-primary/10 dark:bg-primary/20"
+                                                    : "border-gray-100 dark:border-gray-800 hover:border-primary/50"
+                                            )}
+                                        >
+                                            <div className={cn(
+                                                "w-12 h-12 rounded-lg flex items-center justify-center transition-colors",
+                                                selectedResume === resume.id
+                                                    ? "bg-primary/20 dark:bg-primary/30 text-primary"
+                                                    : "bg-gray-100 dark:bg-gray-800 text-gray-500"
+                                            )}>
+                                                <FileText className="w-6 h-6" />
+                                            </div>
+
+                                            <div className="flex-1">
+                                                <h4 className="font-semibold text-gray-900 dark:text-gray-100">
+                                                    {resume.name || "Untitled Resume"}
+                                                </h4>
+                                                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                                                    {(resume.target_company || resume.target_job) && (
+                                                        <>
+                                                            <span className="font-medium text-gray-700 dark:text-gray-300">
+                                                                {resume.target_company || resume.target_job}
+                                                            </span>
+                                                            <span>•</span>
+                                                        </>
+                                                    )}
+                                                    <span>Updated {formatDate(resume.updated_at)}</span>
+                                                </div>
+                                            </div>
+
+                                            <div className={cn(
+                                                "w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all",
+                                                selectedResume === resume.id
+                                                    ? "border-primary bg-primary text-primary-foreground"
+                                                    : "border-gray-300 dark:border-gray-600"
+                                            )}>
+                                                {selectedResume === resume.id && <Check className="w-3.5 h-3.5" />}
                                             </div>
                                         </div>
-
-                                        <div className={cn(
-                                            "w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all",
-                                            selectedResume === resume.id
-                                                ? "border-primary bg-primary text-primary-foreground"
-                                                : "border-gray-300 dark:border-gray-600"
-                                        )}>
-                                            {selectedResume === resume.id && <Check className="w-3.5 h-3.5" />}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         <div className="flex justify-end gap-2 p-6 pt-2 border-t mt-auto">
                             <Button variant="outline" onClick={() => onOpenChange(false)}>
                                 Cancel
                             </Button>
-                            <Button disabled={!selectedResume}>
-                                Create This Cover Letter
+                            <Button
+                                disabled={!selectedResume}
+                                onClick={handleCreateCoverLetter}
+                            >
+                                Create Cover Letter
                             </Button>
                         </div>
                     </motion.div>
