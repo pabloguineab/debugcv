@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Send, Flame, Target, TrendingUp, Calendar, Bot, FileText, Mail, ArrowRight, Clock, Briefcase, Loader2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -137,6 +138,7 @@ function getActionButton(app: typeof recentApplications[0]) {
 }
 
 export default function DashboardPage() {
+    const { data: session } = useSession();
     const { status: profileStatus, isLoading: isProfileLoading } = useProfileCompletion();
     const [hasResumes, setHasResumes] = useState(false);
     const [hasCoverLetters, setHasCoverLetters] = useState(false);
@@ -181,6 +183,7 @@ export default function DashboardPage() {
     }
 
     if (showOnboarding) {
+        const userName = session?.user?.name?.split(" ")[0] || "Friend";
         return (
             <div className="flex flex-1 flex-col gap-4 p-4 md:p-6">
                 <DashboardOnboarding
@@ -188,6 +191,7 @@ export default function DashboardPage() {
                     hasResumes={hasResumes}
                     hasCoverLetters={hasCoverLetters}
                     hasApplications={hasApplications}
+                    userName={userName}
                 />
             </div>
         );

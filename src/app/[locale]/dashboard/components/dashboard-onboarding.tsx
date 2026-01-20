@@ -22,11 +22,13 @@ interface OnboardingStep {
 interface DashboardOnboardingProps {
     profileProgress: number;
     hasResumes: boolean;
+
     hasCoverLetters: boolean;
     hasApplications: boolean;
+    userName?: string;
 }
 
-export function DashboardOnboarding({ profileProgress, hasResumes, hasCoverLetters, hasApplications }: DashboardOnboardingProps) {
+export function DashboardOnboarding({ profileProgress, hasResumes, hasCoverLetters, hasApplications, userName = "Friend" }: DashboardOnboardingProps) {
     // Define steps logic
     const isProfileComplete = profileProgress >= 80; // Consider 80% good enough for onboarding styling
 
@@ -103,7 +105,7 @@ export function DashboardOnboarding({ profileProgress, hasResumes, hasCoverLette
         <div className="flex flex-col gap-6">
             {/* Welcome Header */}
             <div>
-                <h1 className="text-2xl font-semibold tracking-tight">Welcome to DebugCV! 🚀</h1>
+                <h1 className="text-2xl font-semibold tracking-tight">Welcome, {userName}! 🚀</h1>
                 <p className="text-sm text-muted-foreground mt-1">
                     Let's get you set up to land your dream job. Follow these steps to unlock the full power of the dashboard.
                 </p>
