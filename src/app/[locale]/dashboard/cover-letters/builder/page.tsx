@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Download, Loader2, Sparkles, Check, Cloud, Copy, Pencil } from "lucide-react";
 import { saveCoverLetter, getCoverLetter } from "@/lib/actions/cover-letters";
 import { getResume } from "@/lib/actions/resumes";
+import { downloadCoverLetterPDF } from "@/components/cover-letter-pdf";
 import { ResumeData } from "@/types/resume";
 
 export default function CoverLetterBuilderPage() {
@@ -234,18 +235,17 @@ export default function CoverLetterBuilderPage() {
         }
     };
 
-    // Download as text file
-    const downloadAsText = () => {
+    // Download as PDF
+    const downloadAsPDF = async () => {
         const textContent = content || displayedContent;
-        const blob = new Blob([textContent], { type: "text/plain" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `${name.replace(/[^a-zA-Z0-9]/g, "_")}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        if (!textContent) return;
+
+        try {
+            await downloadCoverLetterPDF(textContent, name);
+        } catch (error) {
+            console.error("Failed to download PDF:", error);
+            alert("Failed to generate PDF. Please try again.");
+        }
     };
 
     // Switch to edit mode
@@ -324,11 +324,11 @@ export default function CoverLetterBuilderPage() {
 
                     <Button
                         size="sm"
-                        onClick={downloadAsText}
+                        onClick={downloadAsPDF}
                         disabled={!content && !displayedContent}
                     >
                         <Download className="w-4 h-4 mr-2" />
-                        Download
+                        Download PDF
                     </Button>
                 </div>
             </div>

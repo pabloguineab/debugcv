@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { ResumeData, ResumeScore } from "@/types/resume";
 import { ResumePreview } from "@/components/resume-builder/resume-preview";
 import { ResumeEditorSidebar } from "@/components/resume-builder/resume-editor-sidebar";
+import { downloadResumePDF } from "@/components/resume-builder/resume-pdf";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MessageCircle, Download, Loader2, Pencil, Check, Cloud, CloudOff } from "lucide-react";
 import { saveResume as saveResumeToDb, getResume as getResumeFromDb } from "@/lib/actions/resumes";
@@ -672,80 +673,11 @@ export default function ResumeBuilderPage() {
         // Scroll to section in sidebar
     };
 
-    // Download resume as PDF
+    // Download resume as PDF using react-pdf
     const handleDownload = async () => {
         setIsDownloading(true);
         try {
-            // Dynamically import libraries to avoid SSR issues
-            const html2canvas = (await import('html2canvas')).default;
-            const jsPDF = (await import('jspdf')).default;
-
-            // Find the resume preview element
-            const previewElement = document.querySelector('[data-resume-preview]') as HTMLElement;
-            if (!previewElement) {
-                alert("Could not find resume preview. Please try again.");
-                setIsDownloading(false);
-                return;
-            }
-
-            // Store original styles and scroll position
-            const scrollContainer = previewElement.closest('.overflow-y-auto') as HTMLElement;
-            const originalScrollTop = scrollContainer?.scrollTop || 0;
-
-            // Scroll to top for complete capture
-            if (scrollContainer) {
-                scrollContainer.scrollTop = 0;
-            }
-
-            // Wait a bit for scroll to settle
-            await new Promise(resolve => setTimeout(resolve, 100));
-
-            // Capture the resume preview as canvas
-            const canvas = await html2canvas(previewElement, {
-                scale: 2,
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: '#ffffff',
-                logging: false,
-                windowWidth: previewElement.scrollWidth,
-                windowHeight: previewElement.scrollHeight,
-            });
-
-            // Restore scroll position
-            if (scrollContainer) {
-                scrollContainer.scrollTop = originalScrollTop;
-            }
-
-            // Calculate dimensions for A4 paper (210mm x 297mm)
-            const imgWidth = 210;
-            const pageHeight = 297;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-            // Create PDF
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            let heightLeft = imgHeight;
-            let position = 0;
-
-            // Add first page
-            const imgData = canvas.toDataURL('image/png');
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-
-            // Add additional pages if needed
-            while (heightLeft > 0) {
-                position = heightLeft - imgHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-            }
-
-            // Generate filename
-            const fileName = `${resumeData.personalInfo.fullName || 'Resume'}_${resumeData.name || 'CV'}.pdf`
-                .replace(/[^a-zA-Z0-9_-]/g, '_');
-
-            // Download the PDF
-            pdf.save(fileName);
-
+            await downloadResumePDF(resumeData);
         } catch (error) {
             console.error("Failed to generate PDF:", error);
             alert("Failed to generate PDF. Please try again.");
