@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, Circle, ArrowRight, UserCircle, FileText, Mail, Sparkles, type LucideIcon } from "lucide-react";
+import { CheckCircle2, Circle, ArrowRight, UserCircle, FileText, Mail, Sparkles, type LucideIcon, Search, Layout } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -23,9 +23,10 @@ interface DashboardOnboardingProps {
     profileProgress: number;
     hasResumes: boolean;
     hasCoverLetters: boolean;
+    hasApplications: boolean;
 }
 
-export function DashboardOnboarding({ profileProgress, hasResumes, hasCoverLetters }: DashboardOnboardingProps) {
+export function DashboardOnboarding({ profileProgress, hasResumes, hasCoverLetters, hasApplications }: DashboardOnboardingProps) {
     // Define steps logic
     const isProfileComplete = profileProgress >= 80; // Consider 80% good enough for onboarding styling
 
@@ -60,21 +61,42 @@ export function DashboardOnboarding({ profileProgress, hasResumes, hasCoverLette
             isCurrent: isProfileComplete && hasResumes && !hasCoverLetters,
             cta: "Create Cover Letter",
         },
+        {
+            id: "job-search",
+            title: "Find Opportunities",
+            description: "Search for jobs and save them to your board instantly.",
+            icon: Search,
+            href: "/dashboard/job-search",
+            isCompleted: hasApplications, // Completed if at least 1 app exists
+            isCurrent: isProfileComplete && hasResumes && hasCoverLetters && !hasApplications,
+            cta: "Search Jobs",
+        },
+        {
+            id: "application-board",
+            title: "Track Applications",
+            description: "Organize your job hunt with our Kanban board.",
+            icon: Layout,
+            href: "/dashboard/application-board",
+            isCompleted: hasApplications, // Initially mark complete if they have apps, or we could require >1
+            isCurrent: false, // Never "current" alone in this flow, it unlocks with Job Search
+            cta: "View Board",
+        },
     ];
 
     // Calculate overall onboarding progress
-    // We treat profile (0-100) as 33%, resume as 33%, cover letter as 33% roughly
-    // Or just count completed steps
     const completedStepsCount = steps.filter(s => s.isCompleted).length;
     const totalSteps = steps.length;
     const overallProgress = (completedStepsCount / totalSteps) * 100;
 
     // Find current active step
     const currentStepIndex = steps.findIndex(s => s.isCurrent);
-    const activeStep = steps[currentStepIndex] || (completedStepsCount === totalSteps ? null : steps[0]);
+    // If no specific step is current but flow is not done, maybe show last logic (handled by isCurrent above)
+    // If we are at the "Track Applications" stage (hasApplications is true), then everything is done.
+
+    // Safety: If somehow hasApplications is true but hasCoverLetters is false, earlier steps handle "Current".
 
     if (completedStepsCount === totalSteps) {
-        return null; // Should not render if all done (parent handles this, but safety check)
+        return null;
     }
 
     return (
@@ -99,11 +121,10 @@ export function DashboardOnboarding({ profileProgress, hasResumes, hasCoverLette
             </Card>
 
             {/* Steps Grid */}
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5">
                 {steps.map((step, index) => {
                     const isActive = step.isCurrent;
                     const isDone = step.isCompleted;
-                    const isLocked = !isActive && !isDone;
 
                     return (
                         <motion.div
@@ -112,12 +133,12 @@ export function DashboardOnboarding({ profileProgress, hasResumes, hasCoverLette
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.1 }}
                         >
-                            <Card className={`h-full flex flex-col relative overflow-hidden transition-all duration-300 ${isActive
-                                ? "border-blue-500 shadow-md ring-1 ring-blue-500 bg-white dark:bg-slate-900"
-                                : isDone
-                                    ? "bg-slate-50 dark:bg-slate-900/50 opacity-80"
-                                    : "opacity-60 bg-slate-50/50 dark:bg-slate-900/30"
-                                }`}>
+                            <Card className={cn(
+                                "h-full flex flex-col relative overflow-hidden transition-all duration-300",
+                                isActive ? "border-blue-500 shadow-md ring-1 ring-blue-500 bg-white dark:bg-slate-900"
+                                    : isDone ? "bg-slate-50 dark:bg-slate-900/50 opacity-80"
+                                        : "opacity-60 bg-slate-50/50 dark:bg-slate-900/30"
+                            )}>
                                 {isActive && (
                                     <div className="absolute top-0 right-0 p-3">
                                         <span className="relative flex h-3 w-3">
@@ -143,27 +164,27 @@ export function DashboardOnboarding({ profileProgress, hasResumes, hasCoverLette
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="flex-1 flex flex-col justify-between pt-0">
-                                    <CardDescription className="mb-4">
+                                    <CardDescription className="mb-4 text-xs">
                                         {step.description}
                                     </CardDescription>
 
                                     <div className="mt-auto">
                                         {isDone ? (
-                                            <div className="flex items-center text-green-600 font-medium text-sm bg-green-50 p-2 rounded-md w-fit">
-                                                <CheckCircle2 className="w-4 h-4 mr-2" />
-                                                Completed
+                                            <div className="flex items-center text-green-600 font-medium text-xs bg-green-50 p-2 rounded-md w-fit">
+                                                <CheckCircle2 className="w-3 h-3 mr-1.5" />
+                                                Done
                                             </div>
                                         ) : isActive ? (
                                             <Link href={step.href} className="w-full">
-                                                <Button className="w-full bg-blue-600 hover:bg-blue-700 shadow-sm group">
+                                                <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700 shadow-sm group text-xs">
                                                     {step.cta}
-                                                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                                                    <ArrowRight className="w-3 h-3 ml-1.5 group-hover:translate-x-1 transition-transform" />
                                                 </Button>
                                             </Link>
                                         ) : (
-                                            <Button variant="outline" disabled className="w-full opacity-50 cursor-not-allowed">
-                                                Locked
-                                            </Button>
+                                            <span className="text-xs text-muted-foreground font-medium flex items-center gap-1">
+                                                <Circle className="w-3 h-3" /> Locked
+                                            </span>
                                         )}
                                     </div>
                                 </CardContent>
@@ -171,11 +192,9 @@ export function DashboardOnboarding({ profileProgress, hasResumes, hasCoverLette
                         </motion.div>
                     );
                 })}
-
-
             </div>
-            {/* Quick Actions for Completed Tasks */}
-            {completedStepsCount > 0 && completedStepsCount < 3 && (
+            {/* Tip/Footer */}
+            {completedStepsCount > 0 && completedStepsCount < 5 && (
                 <div className="mt-4 p-4 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
                     <p className="text-sm text-center text-muted-foreground flex items-center justify-center gap-2">
                         <Sparkles className="w-4 h-4 text-amber-500" />

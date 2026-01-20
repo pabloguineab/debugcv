@@ -12,6 +12,7 @@ import { CompanyLogo } from "@/components/company-logo";
 import { useProfileCompletion } from "@/contexts/profile-completion-context";
 import { getResumes } from "@/lib/actions/resumes";
 import { getCoverLetters } from "@/lib/actions/cover-letters";
+import { getApplications } from "@/lib/actions/applications";
 import { DashboardOnboarding } from "./components/dashboard-onboarding";
 
 // Mock data for recent applications
@@ -139,17 +140,20 @@ export default function DashboardPage() {
     const { status: profileStatus, isLoading: isProfileLoading } = useProfileCompletion();
     const [hasResumes, setHasResumes] = useState(false);
     const [hasCoverLetters, setHasCoverLetters] = useState(false);
+    const [hasApplications, setHasApplications] = useState(false);
     const [isCheckingData, setIsCheckingData] = useState(true);
 
     useEffect(() => {
         const checkData = async () => {
             try {
-                const [resumes, coverLetters] = await Promise.all([
+                const [resumes, coverLetters, applications] = await Promise.all([
                     getResumes(),
-                    getCoverLetters()
+                    getCoverLetters(),
+                    getApplications()
                 ]);
                 setHasResumes(resumes && resumes.length > 0);
                 setHasCoverLetters(coverLetters && coverLetters.length > 0);
+                setHasApplications(applications && applications.length > 0);
             } catch (error) {
                 console.error("Error checking user data:", error);
             } finally {
@@ -166,7 +170,7 @@ export default function DashboardPage() {
     // Determine if onboarding should be shown
     // Show onboarding if profile is not complete OR no resume OR no cover letter
     // You can adjust the threshold for profile completion as needed
-    const showOnboarding = !isLoading && (profileProgress < 80 || !hasResumes || !hasCoverLetters);
+    const showOnboarding = !isLoading && (profileProgress < 80 || !hasResumes || !hasCoverLetters || !hasApplications);
 
     if (isLoading) {
         return (
@@ -183,6 +187,7 @@ export default function DashboardPage() {
                     profileProgress={profileProgress}
                     hasResumes={hasResumes}
                     hasCoverLetters={hasCoverLetters}
+                    hasApplications={hasApplications}
                 />
             </div>
         );
