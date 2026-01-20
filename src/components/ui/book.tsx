@@ -11,6 +11,7 @@ interface BookProps {
     height?: number;
     variant?: "resume" | "cover-letter";
     previewData?: ResumeData;
+    previewContent?: string;
     lastUpdated?: string;
 }
 
@@ -24,10 +25,195 @@ export function Book({
     height = 305,
     variant = "resume",
     previewData,
+    previewContent,
     lastUpdated
 }: BookProps) {
     const [isHovered, setIsHovered] = useState(false);
     const isResume = variant === "resume";
+
+    // ... (rest of the component)
+
+    // Render Preview Logic
+    const renderPreview = () => {
+        if (previewData) {
+            return (
+                <div
+                    className="origin-top-left bg-white text-black overflow-hidden"
+                    style={{
+                        width: "600px", // Virtual A4 width
+                        height: "850px", // Virtual A4 height
+                        padding: "30px 40px", // Reduced top padding
+                        transform: `scale(${width ? width / 600 : 0.3})`,
+                        transformOrigin: "top left",
+                        fontFamily: "Georgia, serif"
+                    }}
+                >
+                    {/* Header */}
+                    <div className="text-center mb-5">
+                        <h1 className="text-3xl font-normal text-gray-900 mb-2">{previewData.personalInfo.fullName}</h1>
+                        <div className="text-[11px] text-gray-600 flex justify-center gap-3 mb-4">
+                            {previewData.personalInfo.location && <span>{previewData.personalInfo.location}</span>}
+                            {previewData.personalInfo.email && (
+                                <>
+                                    <span>•</span>
+                                    <span>{previewData.personalInfo.email}</span>
+                                </>
+                            )}
+                            {previewData.personalInfo.phone && (
+                                <>
+                                    <span>•</span>
+                                    <span>{previewData.personalInfo.phone}</span>
+                                </>
+                            )}
+                        </div>
+
+                        {previewData.summary && (
+                            <div className="mb-4">
+                                <h2 className="text-sm font-bold text-gray-900 uppercase tracking-widest mb-2">Professional Summary</h2>
+                                <div className="text-justify text-[11px] leading-relaxed text-gray-800">
+                                    {previewData.summary}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Content Sections */}
+                    <div className="flex flex-col gap-5">
+                        {/* Education */}
+                        {previewData.education?.length > 0 && (
+                            <div>
+                                <h3 className="text-center text-sm font-bold text-gray-900 uppercase tracking-widest mb-3">Education</h3>
+                                <div className="flex flex-col gap-3">
+                                    {previewData.education.map((edu, i) => (
+                                        <div key={i} className="flex justify-between items-start text-[11px]">
+                                            <div className="max-w-[80%]">
+                                                <div className="font-bold text-gray-900 uppercase">{edu.institution}</div>
+                                                <div className="text-gray-700 italic">{edu.degree}</div>
+                                            </div>
+                                            <div className="text-gray-600 font-medium whitespace-nowrap">{edu.endDate}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Experience */}
+                        {previewData.experience?.length > 0 && (
+                            <div>
+                                <h3 className="text-center text-sm font-bold text-gray-900 uppercase tracking-widest mb-3 pt-2">Experience</h3>
+                                <div className="flex flex-col gap-4">
+                                    {previewData.experience.slice(0, 3).map((exp, i) => (
+                                        <div key={i} className="text-[11px]">
+                                            <div className="flex justify-between items-baseline mb-1">
+                                                <div className="font-bold text-gray-900 uppercase">{exp.company}</div>
+                                                <div className="text-gray-600 text-[10px]">{exp.startDate} – {exp.current ? 'Present' : exp.endDate}</div>
+                                            </div>
+                                            <div className="italic text-gray-800 mb-1">{exp.title}</div>
+                                            {exp.bullets?.map((bullet, idx) => (
+                                                <div key={idx} className="flex gap-2 mb-0.5 pl-1">
+                                                    <span className="text-gray-500">•</span>
+                                                    <span className="text-gray-700 text-justify leading-tight flex-1">{bullet}</span>
+                                                </div>
+                                            )).slice(0, 2)}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Projects */}
+                        {previewData.projects?.length > 0 && (
+                            <div>
+                                <h3 className="text-center text-sm font-bold text-gray-900 uppercase tracking-widest mb-3 pt-2">Projects</h3>
+                                <div className="flex flex-col gap-3">
+                                    {previewData.projects.slice(0, 2).map((proj, i) => (
+                                        <div key={i} className="text-[11px]">
+                                            <div className="font-bold text-gray-900">{proj.name}</div>
+                                            <div className="text-gray-700 text-justify leading-tight">{proj.description}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Certifications */}
+                        {previewData.certifications?.length > 0 && (
+                            <div>
+                                <h3 className="text-center text-sm font-bold text-gray-900 uppercase tracking-widest mb-2 pt-1">Certifications</h3>
+                                <div className="flex flex-wrap gap-x-4 gap-y-1 justify-center text-[10px]">
+                                    {previewData.certifications.slice(0, 4).map((cert, i) => (
+                                        <div key={i} className="flex gap-1 items-center bg-gray-50 px-2 py-0.5 rounded border border-gray-100">
+                                            <span className="font-semibold text-gray-800">{cert.name}</span>
+                                            <span className="text-gray-500 text-[9px]">({cert.issueDate})</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Skills */}
+                        {previewData.skills?.length > 0 && (
+                            <div className="mt-2">
+                                <h3 className="text-center text-sm font-bold text-gray-900 uppercase tracking-widest mb-2 pt-1">Skills</h3>
+                                <div className="text-center text-[10px] text-gray-700 leading-relaxed px-4">
+                                    {previewData.skills.slice(0, 30).join(" • ")}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Fade out overlay with ellipsis */}
+                    <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white via-white/80 to-transparent flex flex-col justify-end items-center pb-8">
+                        <span className="text-3xl text-gray-400 tracking-widest leading-none">...</span>
+                    </div>
+                </div>
+            );
+        }
+
+        if (previewContent) {
+            return (
+                <div
+                    className="origin-top-left bg-white text-black overflow-hidden"
+                    style={{
+                        width: "600px", // Virtual A4 width
+                        height: "850px", // Virtual A4 height
+                        padding: "60px 50px", // Comfortable padding for letter
+                        transform: `scale(${width ? width / 600 : 0.3})`,
+                        transformOrigin: "top left",
+                        fontFamily: "Times New Roman, serif",
+                        fontSize: "14px",
+                        lineHeight: "1.6"
+                    }}
+                >
+                    <div className="text-justify text-gray-800 whitespace-pre-wrap">
+                        {previewContent}
+                    </div>
+
+                    {/* Fade out overlay with ellipsis */}
+                    <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white via-white/80 to-transparent flex flex-col justify-end items-center pb-8">
+                        <span className="text-3xl text-gray-400 tracking-widest leading-none">...</span>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            // Skeleton for empty state
+            <div className="w-full h-full p-4 space-y-4 opacity-50">
+                <div className="h-4 w-1/2 bg-gray-200 mx-auto rounded" />
+                <div className="space-y-2 pt-4">
+                    <div className="h-2 w-full bg-gray-100 rounded" />
+                    <div className="h-2 w-full bg-gray-100 rounded" />
+                    <div className="h-2 w-3/4 bg-gray-100 rounded" />
+                </div>
+                <div className="pt-4 space-y-3">
+                    <div className="h-3 w-1/3 bg-gray-200 rounded" />
+                    <div className="h-2 w-full bg-gray-100 rounded" />
+                    <div className="h-2 w-full bg-gray-100 rounded" />
+                </div>
+            </div>
+        );
+    };
 
     // Tailwind classes need to be full strings
     const accentClasses = {
@@ -83,154 +269,7 @@ export function Book({
                         }}
                     >
                         {/* Mini Preview Content with Scale */}
-                        {previewData ? (
-                            <div
-                                className="origin-top-left bg-white text-black overflow-hidden"
-                                style={{
-                                    width: "600px", // Virtual A4 width
-                                    height: "850px", // Virtual A4 height
-                                    padding: "30px 40px", // Reduced top padding
-                                    transform: `scale(${width ? width / 600 : 0.3})`,
-                                    transformOrigin: "top left",
-                                    fontFamily: "Georgia, serif"
-                                }}
-                            >
-                                {/* Header */}
-                                <div className="text-center mb-5">
-                                    <h1 className="text-3xl font-normal text-gray-900 mb-2">{previewData.personalInfo.fullName}</h1>
-                                    <div className="text-[11px] text-gray-600 flex justify-center gap-3 mb-4">
-                                        {previewData.personalInfo.location && <span>{previewData.personalInfo.location}</span>}
-                                        {previewData.personalInfo.email && (
-                                            <>
-                                                <span>•</span>
-                                                <span>{previewData.personalInfo.email}</span>
-                                            </>
-                                        )}
-                                        {previewData.personalInfo.phone && (
-                                            <>
-                                                <span>•</span>
-                                                <span>{previewData.personalInfo.phone}</span>
-                                            </>
-                                        )}
-                                    </div>
-
-                                    {previewData.summary && (
-                                        <div className="mb-4">
-                                            <h2 className="text-sm font-bold text-gray-900 uppercase tracking-widest mb-2">Professional Summary</h2>
-                                            <div className="text-justify text-[11px] leading-relaxed text-gray-800">
-                                                {previewData.summary}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Content Sections */}
-                                <div className="flex flex-col gap-5">
-
-                                    {/* Education */}
-                                    {previewData.education?.length > 0 && (
-                                        <div>
-                                            <h3 className="text-center text-sm font-bold text-gray-900 uppercase tracking-widest mb-3">Education</h3>
-                                            <div className="flex flex-col gap-3">
-                                                {previewData.education.map((edu, i) => (
-                                                    <div key={i} className="flex justify-between items-start text-[11px]">
-                                                        <div className="max-w-[80%]">
-                                                            <div className="font-bold text-gray-900 uppercase">{edu.institution}</div>
-                                                            <div className="text-gray-700 italic">{edu.degree}</div>
-                                                        </div>
-                                                        <div className="text-gray-600 font-medium whitespace-nowrap">{edu.endDate}</div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* Experience */}
-                                    {previewData.experience?.length > 0 && (
-                                        <div>
-                                            <h3 className="text-center text-sm font-bold text-gray-900 uppercase tracking-widest mb-3 pt-2">Experience</h3>
-                                            <div className="flex flex-col gap-4">
-                                                {previewData.experience.slice(0, 3).map((exp, i) => (
-                                                    <div key={i} className="text-[11px]">
-                                                        <div className="flex justify-between items-baseline mb-1">
-                                                            <div className="font-bold text-gray-900 uppercase">{exp.company}</div>
-                                                            <div className="text-gray-600 text-[10px]">{exp.startDate} – {exp.current ? 'Present' : exp.endDate}</div>
-                                                        </div>
-                                                        <div className="italic text-gray-800 mb-1">{exp.title}</div>
-                                                        {exp.bullets?.map((bullet, idx) => (
-                                                            <div key={idx} className="flex gap-2 mb-0.5 pl-1">
-                                                                <span className="text-gray-500">•</span>
-                                                                <span className="text-gray-700 text-justify leading-tight flex-1">{bullet}</span>
-                                                            </div>
-                                                        )).slice(0, 2)}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* Projects */}
-                                    {previewData.projects?.length > 0 && (
-                                        <div>
-                                            <h3 className="text-center text-sm font-bold text-gray-900 uppercase tracking-widest mb-3 pt-2">Projects</h3>
-                                            <div className="flex flex-col gap-3">
-                                                {previewData.projects.slice(0, 2).map((proj, i) => (
-                                                    <div key={i} className="text-[11px]">
-                                                        <div className="font-bold text-gray-900">{proj.name}</div>
-                                                        <div className="text-gray-700 text-justify leading-tight">{proj.description}</div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* Certifications */}
-                                    {previewData.certifications?.length > 0 && (
-                                        <div>
-                                            <h3 className="text-center text-sm font-bold text-gray-900 uppercase tracking-widest mb-2 pt-1">Certifications</h3>
-                                            <div className="flex flex-wrap gap-x-4 gap-y-1 justify-center text-[10px]">
-                                                {previewData.certifications.slice(0, 4).map((cert, i) => (
-                                                    <div key={i} className="flex gap-1 items-center bg-gray-50 px-2 py-0.5 rounded border border-gray-100">
-                                                        <span className="font-semibold text-gray-800">{cert.name}</span>
-                                                        <span className="text-gray-500 text-[9px]">({cert.issueDate})</span>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* Skills */}
-                                    {previewData.skills?.length > 0 && (
-                                        <div className="mt-2">
-                                            <h3 className="text-center text-sm font-bold text-gray-900 uppercase tracking-widest mb-2 pt-1">Skills</h3>
-                                            <div className="text-center text-[10px] text-gray-700 leading-relaxed px-4">
-                                                {previewData.skills.slice(0, 30).join(" • ")}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Fade out overlay with ellipsis */}
-                                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white via-white/80 to-transparent flex flex-col justify-end items-center pb-8">
-                                    <span className="text-3xl text-gray-400 tracking-widest leading-none">...</span>
-                                </div>
-                            </div>
-                        ) : (
-                            // Skeleton for empty state
-                            <div className="w-full h-full p-4 space-y-4 opacity-50">
-                                <div className="h-4 w-1/2 bg-gray-200 mx-auto rounded" />
-                                <div className="space-y-2 pt-4">
-                                    <div className="h-2 w-full bg-gray-100 rounded" />
-                                    <div className="h-2 w-full bg-gray-100 rounded" />
-                                    <div className="h-2 w-3/4 bg-gray-100 rounded" />
-                                </div>
-                                <div className="pt-4 space-y-3">
-                                    <div className="h-3 w-1/3 bg-gray-200 rounded" />
-                                    <div className="h-2 w-full bg-gray-100 rounded" />
-                                    <div className="h-2 w-full bg-gray-100 rounded" />
-                                </div>
-                            </div>
-                        )}
+                        {renderPreview()}
                     </motion.div>
 
                     {/* Cover */}
