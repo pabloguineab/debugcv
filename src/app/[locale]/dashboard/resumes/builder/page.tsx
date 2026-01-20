@@ -38,6 +38,199 @@ const createEmptyResume = (targetJob?: string, jobDescription?: string): ResumeD
     updatedAt: new Date().toISOString()
 });
 
+// Pure function to extract keywords from job description
+function extractJobKeywordsPure(text: string): Set<string> {
+    if (!text) return new Set();
+
+    const words = text.toLowerCase()
+        .replace(/[^\w\s+#.-]/g, ' ')
+        .split(/\s+/)
+        .filter(w => w.length > 2);
+
+    const phrases: string[] = [];
+    const textLower = text.toLowerCase();
+    const commonPhrases = [
+        'machine learning', 'deep learning', 'data science', 'data engineering',
+        'software engineer', 'full stack', 'front end', 'back end', 'frontend', 'backend',
+        'project management', 'product management', 'agile', 'scrum',
+        'cloud computing', 'aws', 'azure', 'gcp', 'google cloud',
+        'ci/cd', 'devops', 'kubernetes', 'docker', 'microservices',
+        'python', 'javascript', 'typescript', 'react', 'node.js', 'nodejs',
+        'sql', 'nosql', 'mongodb', 'postgresql', 'mysql',
+        'api', 'rest', 'graphql', 'grpc',
+        'tensorflow', 'pytorch', 'keras', 'scikit-learn',
+        'nlp', 'computer vision', 'ai', 'artificial intelligence',
+        'data analysis', 'data visualization', 'tableau', 'power bi',
+        'excel', 'powerpoint', 'leadership', 'communication',
+        'problem solving', 'teamwork', 'collaboration'
+    ];
+
+    commonPhrases.forEach(phrase => {
+        if (textLower.includes(phrase)) {
+            phrases.push(phrase);
+        }
+    });
+
+    return new Set([...words, ...phrases]);
+}
+
+// Pure function to calculate resume score - can be used during load and in component
+function calculateResumeScorePure(data: ResumeData, jobDesc: string): number {
+    const jobKeywords = extractJobKeywordsPure(jobDesc || '');
+    const hasJobDescription = jobKeywords.size > 5;
+
+    let totalScore = 0;
+
+    // === PERSONAL INFO (10 points max) ===
+    const { personalInfo } = data;
+    let personalScore = 0;
+    if (personalInfo.fullName) personalScore += 3;
+    if (personalInfo.email) personalScore += 3;
+    if (personalInfo.phone) personalScore += 2;
+    if (personalInfo.location) personalScore += 1;
+    if (personalInfo.profileUrl) personalScore += 1;
+    totalScore += Math.min(personalScore, 10);
+
+    // === PROFESSIONAL SUMMARY (15 points max) ===
+    let summaryScore = 0;
+    if (data.summary) {
+        const wordCount = data.summary.split(/\s+/).length;
+        if (wordCount >= 30 && wordCount <= 60) summaryScore += 8;
+        else if (wordCount >= 20 && wordCount < 30) summaryScore += 6;
+        else if (wordCount > 60 && wordCount <= 100) summaryScore += 6;
+        else if (wordCount >= 10) summaryScore += 4;
+        else if (wordCount > 0) summaryScore += 2;
+
+        if (hasJobDescription) {
+            const summaryLower = data.summary.toLowerCase();
+            let matchCount = 0;
+            jobKeywords.forEach(keyword => {
+                if (summaryLower.includes(keyword)) matchCount++;
+            });
+            const matchRatio = matchCount / Math.max(jobKeywords.size, 1);
+            summaryScore += Math.round(matchRatio * 7);
+        } else {
+            summaryScore += 5;
+        }
+    }
+    totalScore += Math.min(summaryScore, 15);
+
+    // === SKILLS MATCHING (25 points max) ===
+    let skillScore = 0;
+    const skillCount = data.skills.length;
+    const skillsLower = data.skills.map(s => s.toLowerCase());
+
+    if (hasJobDescription && skillCount > 0) {
+        let skillMatches = 0;
+        jobKeywords.forEach(keyword => {
+            if (skillsLower.some(skill => skill.includes(keyword) || keyword.includes(skill))) {
+                skillMatches++;
+            }
+        });
+        const matchRatio = skillMatches / Math.min(jobKeywords.size, 20);
+        skillScore += Math.round(matchRatio * 20);
+        if (skillCount >= 8 && skillCount <= 15) skillScore += 5;
+        else if (skillCount >= 5) skillScore += 3;
+        else if (skillCount > 0) skillScore += 1;
+    } else if (skillCount > 0) {
+        if (skillCount >= 8 && skillCount <= 15) skillScore = 20;
+        else if (skillCount >= 5 && skillCount < 8) skillScore = 15;
+        else if (skillCount >= 3) skillScore = 10;
+        else skillScore = 5;
+    }
+    totalScore += Math.min(skillScore, 25);
+
+    // === EXPERIENCE (25 points max) ===
+    let expScore = 0;
+    if (data.experience.length > 0) {
+        expScore += Math.min(data.experience.length * 4, 10);
+        let totalBullets = 0;
+        let qualityBullets = 0;
+        let jobMatchingBullets = 0;
+
+        data.experience.forEach(exp => {
+            const bullets = exp.bullets || [];
+            totalBullets += bullets.length;
+            bullets.forEach(bullet => {
+                const bulletLower = bullet.toLowerCase();
+                if (bullet.length >= 30 && bullet.length <= 150) qualityBullets++;
+                if (hasJobDescription) {
+                    let hasMatch = false;
+                    jobKeywords.forEach(keyword => {
+                        if (bulletLower.includes(keyword)) hasMatch = true;
+                    });
+                    if (hasMatch) jobMatchingBullets++;
+                }
+            });
+        });
+
+        if (totalBullets >= 8) expScore += 5;
+        else if (totalBullets >= 4) expScore += 3;
+        else if (totalBullets > 0) expScore += 1;
+
+        if (qualityBullets >= 4) expScore += 3;
+        else if (qualityBullets >= 2) expScore += 2;
+
+        if (hasJobDescription && totalBullets > 0) {
+            const bulletMatchRatio = jobMatchingBullets / totalBullets;
+            expScore += Math.round(bulletMatchRatio * 5);
+        } else {
+            expScore += 2;
+        }
+    }
+    totalScore += Math.min(expScore, 25);
+
+    // === EDUCATION (10 points max) ===
+    let eduScore = 0;
+    if (data.education.length > 0) {
+        eduScore += 6;
+        const hasCompleteEdu = data.education.some(
+            edu => edu.institution && edu.degree && edu.field
+        );
+        if (hasCompleteEdu) eduScore += 4;
+    }
+    totalScore += Math.min(eduScore, 10);
+
+    // === PROJECTS (10 points max) ===
+    let projScore = 0;
+    if (data.projects.length > 0) {
+        projScore += Math.min(data.projects.length * 3, 6);
+        const hasCompleteProj = data.projects.some(
+            proj => proj.name && proj.description && proj.technologies?.length > 0
+        );
+        if (hasCompleteProj) projScore += 2;
+
+        if (hasJobDescription) {
+            let projectMatches = 0;
+            data.projects.forEach(proj => {
+                const techLower = (proj.technologies || []).map(t => t.toLowerCase());
+                const descLower = (proj.description || '').toLowerCase();
+                jobKeywords.forEach(keyword => {
+                    if (techLower.some(t => t.includes(keyword)) || descLower.includes(keyword)) {
+                        projectMatches++;
+                    }
+                });
+            });
+            if (projectMatches >= 3) projScore += 2;
+            else if (projectMatches >= 1) projScore += 1;
+        }
+    }
+    totalScore += Math.min(projScore, 10);
+
+    // === CERTIFICATIONS (5 points max) ===
+    let certScore = 0;
+    if (data.certifications.length > 0) {
+        certScore += Math.min(data.certifications.length * 2, 4);
+        const hasCompleteCert = data.certifications.some(
+            cert => cert.name && cert.issuer
+        );
+        if (hasCompleteCert) certScore += 1;
+    }
+    totalScore += Math.min(certScore, 5);
+
+    return Math.min(totalScore, 100);
+}
+
 export default function ResumeBuilderPage() {
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -96,25 +289,15 @@ export default function ResumeBuilderPage() {
                         setDisplayedScore(existingResume.data.atsScore);
                         animationStartedRef.current = true;
                     } else {
-                        // Calculate heuristic score for resumes that don't have one saved
-                        // This ensures Dashboard consistency
-                        const data = existingResume.data;
-                        let heuristicScore = 0;
-                        if (data.personalInfo?.fullName && data.personalInfo?.email) heuristicScore += 10;
-                        if (data.summary && data.summary.length > 30) heuristicScore += 15;
-                        if (data.experience && data.experience.length > 0) {
-                            heuristicScore += 15;
-                            if (data.experience.length > 1 || (data.experience[0]?.bullets?.length || 0) > 2) heuristicScore += 15;
-                        }
-                        if (data.education && data.education.length > 0) heuristicScore += 15;
-                        if (data.skills && data.skills.length >= 3) heuristicScore += 15;
-                        if ((data.projects && data.projects.length > 0) || (data.certifications && data.certifications.length > 0)) heuristicScore += 15;
-                        heuristicScore = Math.min(heuristicScore, 100);
+                        // Calculate proper score for resumes that don't have one saved
+                        // Use the same algorithm as calculateProgressiveScore for consistency
+                        const jobDesc = existingResume.job_description || '';
+                        const calculatedScore = calculateResumeScorePure(existingResume.data, jobDesc);
 
                         // Inject the score into the data so it gets saved by auto-save
-                        dataToLoad = { ...existingResume.data, atsScore: heuristicScore };
-                        setScore(heuristicScore);
-                        setDisplayedScore(heuristicScore);
+                        dataToLoad = { ...existingResume.data, atsScore: calculatedScore };
+                        setScore(calculatedScore);
+                        setDisplayedScore(calculatedScore);
                         animationStartedRef.current = true;
                     }
 
@@ -406,238 +589,16 @@ export default function ResumeBuilderPage() {
 
     // Extract keywords from job description for matching
     const extractJobKeywords = useCallback((text: string): Set<string> => {
-        if (!text) return new Set();
-
-        // Common tech keywords and skills patterns
-        const words = text.toLowerCase()
-            .replace(/[^\w\s+#.-]/g, ' ')
-            .split(/\s+/)
-            .filter(w => w.length > 2);
-
-        // Also extract multi-word phrases (e.g., "machine learning", "data science")
-        const phrases: string[] = [];
-        const textLower = text.toLowerCase();
-        const commonPhrases = [
-            'machine learning', 'deep learning', 'data science', 'data engineering',
-            'software engineer', 'full stack', 'front end', 'back end', 'frontend', 'backend',
-            'project management', 'product management', 'agile', 'scrum',
-            'cloud computing', 'aws', 'azure', 'gcp', 'google cloud',
-            'ci/cd', 'devops', 'kubernetes', 'docker', 'microservices',
-            'python', 'javascript', 'typescript', 'react', 'node.js', 'nodejs',
-            'sql', 'nosql', 'mongodb', 'postgresql', 'mysql',
-            'api', 'rest', 'graphql', 'grpc',
-            'tensorflow', 'pytorch', 'keras', 'scikit-learn',
-            'nlp', 'computer vision', 'ai', 'artificial intelligence',
-            'data analysis', 'data visualization', 'tableau', 'power bi',
-            'excel', 'powerpoint', 'leadership', 'communication',
-            'problem solving', 'teamwork', 'collaboration'
-        ];
-
-        commonPhrases.forEach(phrase => {
-            if (textLower.includes(phrase)) {
-                phrases.push(phrase);
-            }
-        });
-
-        return new Set([...words, ...phrases]);
+        return extractJobKeywordsPure(text);
     }, []);
 
     // Calculate intelligent resume score based on quality AND job matching
     const calculateProgressiveScore = useCallback(() => {
-        // Extract keywords from job description
-        const jobKeywords = extractJobKeywords(jobDescription || '');
-        const hasJobDescription = jobKeywords.size > 5;
+        return calculateResumeScorePure(resumeData, jobDescription || '');
+    }, [resumeData, jobDescription]);
 
-        let totalScore = 0;
 
-        // === PERSONAL INFO (10 points max) ===
-        const { personalInfo } = resumeData;
-        let personalScore = 0;
-        if (personalInfo.fullName) personalScore += 3;
-        if (personalInfo.email) personalScore += 3;
-        if (personalInfo.phone) personalScore += 2;
-        if (personalInfo.location) personalScore += 1;
-        if (personalInfo.profileUrl) personalScore += 1;
-        totalScore += Math.min(personalScore, 10);
 
-        // === PROFESSIONAL SUMMARY (15 points max) ===
-        let summaryScore = 0;
-        if (resumeData.summary) {
-            const wordCount = resumeData.summary.split(/\s+/).length;
-
-            // Length score (max 8 pts)
-            if (wordCount >= 30 && wordCount <= 60) {
-                summaryScore += 8; // Ideal length
-            } else if (wordCount >= 20 && wordCount < 30) {
-                summaryScore += 6;
-            } else if (wordCount > 60 && wordCount <= 100) {
-                summaryScore += 6;
-            } else if (wordCount >= 10) {
-                summaryScore += 4;
-            } else if (wordCount > 0) {
-                summaryScore += 2;
-            }
-
-            // Job keyword matching in summary (max 7 pts)
-            if (hasJobDescription) {
-                const summaryLower = resumeData.summary.toLowerCase();
-                let matchCount = 0;
-                jobKeywords.forEach(keyword => {
-                    if (summaryLower.includes(keyword)) matchCount++;
-                });
-                const matchRatio = matchCount / Math.max(jobKeywords.size, 1);
-                summaryScore += Math.round(matchRatio * 7);
-            } else {
-                summaryScore += 5; // Default if no job desc
-            }
-        }
-        totalScore += Math.min(summaryScore, 15);
-
-        // === SKILLS MATCHING (25 points max - most important for job matching) ===
-        let skillScore = 0;
-        const skillCount = resumeData.skills.length;
-        const skillsLower = resumeData.skills.map(s => s.toLowerCase());
-
-        if (hasJobDescription && skillCount > 0) {
-            // Count how many job keywords are in skills
-            let skillMatches = 0;
-            jobKeywords.forEach(keyword => {
-                if (skillsLower.some(skill => skill.includes(keyword) || keyword.includes(skill))) {
-                    skillMatches++;
-                }
-            });
-
-            // Matching score (max 20 pts)
-            const matchRatio = skillMatches / Math.min(jobKeywords.size, 20);
-            skillScore += Math.round(matchRatio * 20);
-
-            // Quantity bonus (max 5 pts) - but only if skills are relevant
-            if (skillCount >= 8 && skillCount <= 15) {
-                skillScore += 5;
-            } else if (skillCount >= 5) {
-                skillScore += 3;
-            } else if (skillCount > 0) {
-                skillScore += 1;
-            }
-        } else if (skillCount > 0) {
-            // No job description - just score quantity
-            if (skillCount >= 8 && skillCount <= 15) {
-                skillScore = 20;
-            } else if (skillCount >= 5 && skillCount < 8) {
-                skillScore = 15;
-            } else if (skillCount >= 3) {
-                skillScore = 10;
-            } else {
-                skillScore = 5;
-            }
-        }
-        totalScore += Math.min(skillScore, 25);
-
-        // === EXPERIENCE (25 points max) ===
-        let expScore = 0;
-        if (resumeData.experience.length > 0) {
-            // Base points for having experience (max 10)
-            expScore += Math.min(resumeData.experience.length * 4, 10);
-
-            // Bullet points quality and quantity (max 10)
-            let totalBullets = 0;
-            let qualityBullets = 0;
-            let jobMatchingBullets = 0;
-
-            resumeData.experience.forEach(exp => {
-                const bullets = exp.bullets || [];
-                totalBullets += bullets.length;
-                bullets.forEach(bullet => {
-                    const bulletLower = bullet.toLowerCase();
-
-                    // Quality check
-                    if (bullet.length >= 30 && bullet.length <= 150) {
-                        qualityBullets++;
-                    }
-
-                    // Job matching check
-                    if (hasJobDescription) {
-                        let hasMatch = false;
-                        jobKeywords.forEach(keyword => {
-                            if (bulletLower.includes(keyword)) hasMatch = true;
-                        });
-                        if (hasMatch) jobMatchingBullets++;
-                    }
-                });
-            });
-
-            if (totalBullets >= 8) expScore += 5;
-            else if (totalBullets >= 4) expScore += 3;
-            else if (totalBullets > 0) expScore += 1;
-
-            if (qualityBullets >= 4) expScore += 3;
-            else if (qualityBullets >= 2) expScore += 2;
-
-            // Job matching bonus (max 5)
-            if (hasJobDescription && totalBullets > 0) {
-                const bulletMatchRatio = jobMatchingBullets / totalBullets;
-                expScore += Math.round(bulletMatchRatio * 5);
-            } else {
-                expScore += 2; // Default
-            }
-        }
-        totalScore += Math.min(expScore, 25);
-
-        // === EDUCATION (10 points max) ===
-        let eduScore = 0;
-        if (resumeData.education.length > 0) {
-            eduScore += 6;
-
-            const hasCompleteEdu = resumeData.education.some(
-                edu => edu.institution && edu.degree && edu.field
-            );
-            if (hasCompleteEdu) eduScore += 4;
-        }
-        totalScore += Math.min(eduScore, 10);
-
-        // === PROJECTS (10 points max) ===
-        let projScore = 0;
-        if (resumeData.projects.length > 0) {
-            projScore += Math.min(resumeData.projects.length * 3, 6);
-
-            const hasCompleteProj = resumeData.projects.some(
-                proj => proj.name && proj.description && proj.technologies?.length > 0
-            );
-            if (hasCompleteProj) projScore += 2;
-
-            // Job matching in projects
-            if (hasJobDescription) {
-                let projectMatches = 0;
-                resumeData.projects.forEach(proj => {
-                    const techLower = (proj.technologies || []).map(t => t.toLowerCase());
-                    const descLower = (proj.description || '').toLowerCase();
-                    jobKeywords.forEach(keyword => {
-                        if (techLower.some(t => t.includes(keyword)) || descLower.includes(keyword)) {
-                            projectMatches++;
-                        }
-                    });
-                });
-                if (projectMatches >= 3) projScore += 2;
-                else if (projectMatches >= 1) projScore += 1;
-            }
-        }
-        totalScore += Math.min(projScore, 10);
-
-        // === CERTIFICATIONS (5 points max) ===
-        let certScore = 0;
-        if (resumeData.certifications.length > 0) {
-            certScore += Math.min(resumeData.certifications.length * 2, 4);
-
-            const hasCompleteCert = resumeData.certifications.some(
-                cert => cert.name && cert.issuer
-            );
-            if (hasCompleteCert) certScore += 1;
-        }
-        totalScore += Math.min(certScore, 5);
-
-        // Total possible: 100 points
-        return Math.min(totalScore, 100);
-    }, [resumeData, jobDescription, extractJobKeywords]);
 
     // Animated score that gradually increases to target
     const [displayedScore, setDisplayedScore] = useState(0);
