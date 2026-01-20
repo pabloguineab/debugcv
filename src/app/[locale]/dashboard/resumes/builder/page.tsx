@@ -83,18 +83,42 @@ export default function ResumeBuilderPage() {
                 const existingResume = await getResumeFromDb(resumeId);
 
                 if (existingResume) {
-                    setResumeData(existingResume.data);
+                    let dataToLoad = existingResume.data;
+
                     // Load saved job description
                     if (existingResume.job_description) {
                         setJobDescription(existingResume.job_description);
                     }
 
-                    // Load scores
+                    // Load scores - or calculate heuristic if missing
                     if (existingResume.data.atsScore) {
                         setScore(existingResume.data.atsScore);
                         setDisplayedScore(existingResume.data.atsScore);
                         animationStartedRef.current = true;
+                    } else {
+                        // Calculate heuristic score for resumes that don't have one saved
+                        // This ensures Dashboard consistency
+                        const data = existingResume.data;
+                        let heuristicScore = 0;
+                        if (data.personalInfo?.fullName && data.personalInfo?.email) heuristicScore += 10;
+                        if (data.summary && data.summary.length > 30) heuristicScore += 15;
+                        if (data.experience && data.experience.length > 0) {
+                            heuristicScore += 15;
+                            if (data.experience.length > 1 || (data.experience[0]?.bullets?.length || 0) > 2) heuristicScore += 15;
+                        }
+                        if (data.education && data.education.length > 0) heuristicScore += 15;
+                        if (data.skills && data.skills.length >= 3) heuristicScore += 15;
+                        if ((data.projects && data.projects.length > 0) || (data.certifications && data.certifications.length > 0)) heuristicScore += 15;
+                        heuristicScore = Math.min(heuristicScore, 100);
+
+                        // Inject the score into the data so it gets saved by auto-save
+                        dataToLoad = { ...existingResume.data, atsScore: heuristicScore };
+                        setScore(heuristicScore);
+                        setDisplayedScore(heuristicScore);
+                        animationStartedRef.current = true;
                     }
+
+                    setResumeData(dataToLoad);
 
                     // Disable animation for existing resumes
                     setAnimatePreview(false);
