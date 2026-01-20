@@ -20,18 +20,19 @@ import {
 
 // Logos flotantes (burbujas visuales solamente - estáticas para decoración)
 const displayedCompanies = [
-    { name: 'Google', domain: 'google.com', angle: 0, localLogo: '/logos/google.png' },
+    // Bottom Arc (5 logos)
     { name: 'Meta', domain: 'meta.com', angle: 30, localLogo: '/logos/meta.png' },
     { name: 'LinkedIn', domain: 'linkedin.com', angle: 60, localLogo: '/logos/linkedin.png' },
     { name: 'Microsoft', domain: 'microsoft.com', angle: 90, localLogo: '/logos/microsoft.png' },
     { name: 'Netflix', domain: 'netflix.com', angle: 120, localLogo: '/logos/netflix.png' },
     { name: 'Apple', domain: 'apple.com', angle: 150, localLogo: '/logos/apple.png' },
-    { name: 'Amazon', domain: 'amazon.com', angle: 180, localLogo: '/logos/amazon.png' },
+
+    // Top Arc (5 logos)
     { name: 'Tesla', domain: 'tesla.com', angle: 210, localLogo: '/logos/tesla.png' },
     { name: 'Spotify', domain: 'spotify.com', angle: 240, localLogo: '/logos/spotify.png' },
     { name: 'Uber', domain: 'uber.com', angle: 270, localLogo: '/logos/uber.png' },
     { name: 'Airbnb', domain: 'airbnb.com', angle: 300, localLogo: '/logos/airbnb.png' },
-    { name: 'Stripe', domain: 'stripe.com', angle: 330, localLogo: '/logos/stripe.png' },
+    { name: 'Google', domain: 'google.com', angle: 330, localLogo: '/logos/google.png' }, // Moved from 0 to 330 (replacing Stripe)
 ];
 
 const roles = rolesData;
