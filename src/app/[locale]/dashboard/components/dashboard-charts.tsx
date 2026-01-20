@@ -103,9 +103,7 @@ export function DashboardRadarChart() {
 }
 
 // --- 2. RADIAL CHART: Average ATS Score ---
-const radialData = [
-    { score: "ats", value: 72, fill: BLUE_PRIMARY },
-]
+// Data will be dynamic
 
 const radialConfig = {
     value: {
@@ -117,7 +115,15 @@ const radialConfig = {
     },
 } satisfies ChartConfig
 
-export function DashboardRadialChart() {
+interface DashboardRadialChartProps {
+    score: number;
+}
+
+export function DashboardRadialChart({ score }: DashboardRadialChartProps) {
+    const radialData = [
+        { score: "ats", value: score, fill: BLUE_PRIMARY },
+    ]
+
     return (
         <Card className="flex flex-col">
             <CardHeader className="items-center pb-2">
@@ -131,7 +137,7 @@ export function DashboardRadialChart() {
                 >
                     <RadialBarChart
                         data={radialData}
-                        endAngle={(72 / 100) * 360}
+                        endAngle={(score / 100) * 360}
                         innerRadius={55}
                         outerRadius={85}
                         startAngle={0}
@@ -161,7 +167,7 @@ export function DashboardRadialChart() {
                                                     y={viewBox.cy}
                                                     className="fill-foreground text-2xl font-bold"
                                                 >
-                                                    72
+                                                    {score}
                                                 </tspan>
                                                 <tspan
                                                     x={viewBox.cx}
@@ -181,10 +187,10 @@ export function DashboardRadialChart() {
             </CardContent>
             <CardFooter className="flex-col gap-1 text-xs pt-2 items-center justify-center text-center">
                 <div className="flex items-center gap-2 font-medium leading-none justify-center">
-                    Good progress <TrendingUp className="h-3 w-3 text-green-500" />
+                    {score >= 80 ? "Great progress" : "Room for improvement"} <TrendingUp className={`h-3 w-3 ${score >= 80 ? "text-green-500" : "text-yellow-500"}`} />
                 </div>
                 <div className="leading-none text-muted-foreground text-center">
-                    Optimize "Backend CV" to reach 85%+
+                    {score >= 80 ? "Keep optimizing your CVs" : "Optimize resumes to reach 85%+"}
                 </div>
             </CardFooter>
         </Card>

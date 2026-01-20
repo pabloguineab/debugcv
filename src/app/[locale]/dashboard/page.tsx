@@ -4,6 +4,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import type { Application } from "@/types/application";
+import type { SavedResume } from "@/lib/actions/resumes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Send, Flame, Target, TrendingUp, Calendar, Bot, FileText, Mail, ArrowRight, Clock, Briefcase, Loader2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -31,6 +32,37 @@ function timeAgo(dateString?: string) {
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
     if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
     return date.toLocaleDateString();
+}
+
+// Calculate resume completeness
+function calculateResumeCompleteness(resume: SavedResume): number {
+    const data = resume.data;
+    if (!data) return 0;
+
+    let score = 0;
+
+    // Basic Info: 10
+    if (data.personalInfo?.fullName && data.personalInfo?.email) score += 10;
+
+    // Summary: 15
+    if (data.summary && data.summary.length > 30) score += 15;
+
+    // Experience: 30 (15 for first, 15 for more)
+    if (data.experience && data.experience.length > 0) {
+        score += 15;
+        if (data.experience.length > 1 || (data.experience[0]?.bullets?.length || 0) > 2) score += 15;
+    }
+
+    // Education: 15
+    if (data.education && data.education.length > 0) score += 15;
+
+    // Skills: 15 (needs at least 3)
+    if (data.skills && data.skills.length >= 3) score += 15;
+
+    // Projects/Certs: 15
+    if ((data.projects && data.projects.length > 0) || (data.certifications && data.certifications.length > 0)) score += 15;
+
+    return Math.min(score, 100);
 }
 
 
@@ -105,6 +137,7 @@ export default function DashboardPage() {
     const [hasCoverLetters, setHasCoverLetters] = useState(false);
     const [hasApplications, setHasApplications] = useState(false);
     const [applications, setApplications] = useState<Application[]>([]);
+    const [resumesList, setResumesList] = useState<SavedResume[]>([]);
     const [isCheckingData, setIsCheckingData] = useState(true);
 
     useEffect(() => {
@@ -119,6 +152,7 @@ export default function DashboardPage() {
                 setHasCoverLetters(coverLetters && coverLetters.length > 0);
                 setHasApplications(apps && apps.length > 0);
                 setApplications(apps || []);
+                setResumesList(resumes || []);
             } catch (error) {
                 console.error("Error checking user data:", error);
             } finally {
@@ -155,10 +189,17 @@ export default function DashboardPage() {
                 scoredApps++;
             }
         });
-        const avgScore = scoredApps > 0 ? Math.round(totalScore / scoredApps) : 0;
+        const matchScore = scoredApps > 0 ? Math.round(totalScore / scoredApps) : 0;
 
-        return { total, active, interviewRate, avgScore };
-    }, [applications]);
+        // Calculate Resume Score (based on completeness)
+        let totalResumeScore = 0;
+        resumesList.forEach(r => {
+            totalResumeScore += calculateResumeCompleteness(r);
+        });
+        const avgResumeScore = resumesList.length > 0 ? Math.round(totalResumeScore / resumesList.length) : 0;
+
+        return { total, active, interviewRate, matchScore, avgResumeScore };
+    }, [applications, resumesList]);
 
     const isLoading = isProfileLoading || isCheckingData;
     const profileProgress = profileStatus?.totalProgress || 0;
@@ -274,7 +315,7 @@ export default function DashboardPage() {
                         <Target className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent className="pb-1.5 px-3 pt-0">
-                        <div className="text-2xl font-bold">{stats.avgScore}<span className="text-lg text-muted-foreground">/100</span></div>
+                        <div className="text-2xl font-bold">{stats.avgResumeScore}<span className="text-lg text-muted-foreground">/100</span></div>
                         <p className="text-xs text-muted-foreground">
                             Goal: 85+
                         </p>
@@ -298,7 +339,7 @@ export default function DashboardPage() {
             {/* Charts Section - 3 Charts Horizontal */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <DashboardRadarChart />
-                <DashboardRadialChart />
+                <DashboardRadialChart score={stats.avgResumeScore} />
                 <DashboardLineChart />
             </div>
 
