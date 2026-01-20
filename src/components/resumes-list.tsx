@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Book } from "@/components/ui/book";
 import { Trash2, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { deleteResumeAction, SavedResume } from "@/lib/actions/resumes";
 import { NewResumeDialog } from "@/components/new-resume-dialog";
 
@@ -57,16 +58,18 @@ export function ResumesList({ initialResumes }: ResumesListProps) {
                             />
                         </div>
                         {/* Delete button */}
-                        <button
+                        {/* Delete button */}
+                        <Button
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity h-7 w-7 rounded-full"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setDeleteConfirmId(resume.id);
                             }}
-                            className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
-                            title="Delete resume"
                         >
                             <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        </Button>
                     </div>
                 ))}
 
