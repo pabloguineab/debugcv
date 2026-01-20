@@ -60,15 +60,17 @@ export default function CoverLetterBuilderPage() {
                 // If creating from resume
                 else if (resumeId) {
                     const resume = await getResume(resumeId);
-                    if (resume?.data) {
+                    if (resume) {
                         const data = resume.data as ResumeData;
                         setResumeData(data);
-                        setTargetJob(data.targetJob || data.name || "");
-                        setTargetCompany(data.targetCompany || "");
-                        setName(`Cover Letter for ${data.targetCompany || data.targetJob || "Position"}`);
+                        setTargetJob(resume.target_job || data.targetJob || data.name || "");
+                        setTargetCompany(resume.target_company || data.targetCompany || "");
+                        setName(`Cover Letter for ${resume.target_company || data.targetCompany || resume.target_job || data.targetJob || "Position"}`);
 
-                        // If resume has job description stored, use it
-                        // This would need to be added to resume data if not present
+                        // Load job description from resume if it was tailored
+                        if (resume.job_description) {
+                            setJobDescription(resume.job_description);
+                        }
                     }
                 }
             } catch (error) {
