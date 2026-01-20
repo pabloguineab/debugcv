@@ -84,9 +84,9 @@ export function Book({
                     >
                         {/* Mini Preview Content with Scale */}
                         {previewData ? (
-                            <div 
+                            <div
                                 className="origin-top-left bg-white text-black overflow-hidden"
-                                style={{ 
+                                style={{
                                     width: "600px", // Virtual A4 width
                                     height: "850px", // Virtual A4 height
                                     padding: "30px 40px", // Reduced top padding
@@ -113,7 +113,7 @@ export function Book({
                                             </>
                                         )}
                                     </div>
-                                    
+
                                     {previewData.summary && (
                                         <div className="mb-4">
                                             <h2 className="text-sm font-bold text-gray-900 uppercase tracking-widest mb-2">Professional Summary</h2>
@@ -126,7 +126,7 @@ export function Book({
 
                                 {/* Content Sections */}
                                 <div className="flex flex-col gap-5">
-                                    
+
                                     {/* Education */}
                                     {previewData.education?.length > 0 && (
                                         <div>
@@ -209,7 +209,7 @@ export function Book({
                                         </div>
                                     )}
                                 </div>
-                                
+
                                 {/* Fade out overlay with ellipsis */}
                                 <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white via-white/80 to-transparent flex flex-col justify-end items-center pb-8">
                                     <span className="text-3xl text-gray-400 tracking-widest leading-none">...</span>
@@ -271,11 +271,18 @@ export function Book({
 
                             {/* Content */}
                             <div className="relative h-full flex flex-col justify-between p-5">
-                                <div className="flex items-center gap-2">
-                                    <div className={`w-1 h-4 ${accentClasses.bar} rounded-full`} />
-                                    <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-gray-400">
-                                        {subtitle}
-                                    </span>
+                                <div>
+                                    <div className="flex items-center gap-2">
+                                        <div className={`w-1 h-4 ${accentClasses.bar} rounded-full`} />
+                                        <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-gray-400">
+                                            {subtitle}
+                                        </span>
+                                    </div>
+                                    {lastUpdated && (
+                                        <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-gray-400 mt-2 ml-3">
+                                            {lastUpdated}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="flex-1 flex flex-col justify-center py-4">
@@ -295,12 +302,6 @@ export function Book({
                                     <p className="text-sm font-medium text-gray-700">
                                         {target}
                                     </p>
-                                    
-                                    {lastUpdated && (
-                                        <div className="absolute right-[-10px] bottom-[-2px] text-[9px] text-gray-400 font-medium opacity-70">
-                                            {lastUpdated}
-                                        </div>
-                                    )}
                                 </div>
                             </div>
 

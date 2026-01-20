@@ -78,6 +78,7 @@ export default function CoverLettersPage() {
                                     width={180}
                                     height={260}
                                     variant="cover-letter"
+                                    lastUpdated={new Date(coverLetter.updated_at).toLocaleDateString()}
                                 />
                             </div>
                             <Button
