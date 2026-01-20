@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+
+import { useState, useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
+import type { Application } from "@/types/application";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Send, Flame, Target, TrendingUp, Calendar, Bot, FileText, Mail, ArrowRight, Clock, Briefcase, Loader2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -16,67 +18,64 @@ import { getCoverLetters } from "@/lib/actions/cover-letters";
 import { getApplications } from "@/lib/actions/applications";
 import { DashboardOnboarding } from "./components/dashboard-onboarding";
 
-// Mock data for recent applications
-const recentApplications = [
-    {
-        id: "1",
-        company: "Spotify",
-        role: "Frontend Developer",
-        logo: "https://logo.clearbit.com/spotify.com",
-        stage: "interview",
-        atsScore: 92,
-        lastAction: "Interview scheduled",
-        lastActionDate: "Tomorrow, 10:00 AM",
-        isUrgent: true,
-    },
-    {
-        id: "2",
-        company: "Stripe",
-        role: "Full Stack Engineer",
-        logo: "https://logo.clearbit.com/stripe.com",
-        stage: "applied",
-        atsScore: 88,
-        lastAction: "CV sent",
-        lastActionDate: "2 days ago",
-        isUrgent: false,
-    },
-    {
-        id: "3",
-        company: "Figma",
-        role: "React Developer",
-        logo: "https://logo.clearbit.com/figma.com",
-        stage: "applied",
-        atsScore: 76,
-        lastAction: "Applied",
-        lastActionDate: "5 days ago",
-        isUrgent: false,
-    },
-    {
-        id: "4",
-        company: "Linear",
-        role: "Software Engineer",
-        logo: "https://logo.clearbit.com/linear.app",
-        stage: "offer",
-        atsScore: 94,
-        lastAction: "Offer received",
-        lastActionDate: "1 day ago",
-        isUrgent: true,
-    },
-    {
-        id: "5",
-        company: "Notion",
-        role: "Backend Developer",
-        logo: "https://logo.clearbit.com/notion.so",
-        stage: "applied",
-        atsScore: 65,
-        lastAction: "No response",
-        lastActionDate: "12 days ago",
-        isUrgent: false,
-    },
-];
+
+// Helper to calculate time ago
+function timeAgo(dateString?: string) {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    if (diffInSeconds < 60) return "Just now";
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+    return date.toLocaleDateString();
+}
+
 
 // Get the next upcoming interview
-const upcomingInterview = recentApplications.find(app => app.stage === "interview" && app.isUrgent);
+
+function getActionButton(app: Application) {
+    if (app.status === "interview") {
+        return (
+            <Link href="/dashboard/interview-coach">
+                <Button size="sm" variant="outline" className="gap-1.5 text-xs h-7 border-purple-300 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-400 dark:hover:bg-purple-900/30">
+                    <Bot className="w-3 h-3" />
+                    Prep with AI
+                </Button>
+            </Link>
+        );
+    }
+    if (app.status === "offer") {
+        return (
+            <Button size="sm" variant="outline" className="gap-1.5 text-xs h-7 border-green-300 text-green-700 hover:bg-green-50 dark:border-green-700 dark:text-green-400 dark:hover:bg-green-900/30">
+                <Briefcase className="w-3 h-3" />
+                Review Offer
+            </Button>
+        );
+    }
+    // Simple logic: if updated more than 7 days ago and no response, suggest follow up
+    const lastUpdate = new Date(app.date); // or updated_at
+    const daysSinceUpdate = (new Date().getTime() - lastUpdate.getTime()) / (1000 * 3600 * 24);
+
+    if (daysSinceUpdate > 7 && app.status === 'applied') {
+        return (
+            <Button size="sm" variant="outline" className="gap-1.5 text-xs h-7 border-orange-300 text-orange-700 hover:bg-orange-50 dark:border-orange-700 dark:text-orange-400 dark:hover:bg-orange-900/30">
+                <Mail className="w-3 h-3" />
+                Follow Up
+            </Button>
+        );
+    }
+    return (
+        <Link href={`/dashboard/application-board?id=${app.id}`}>
+            <Button size="sm" variant="outline" className="gap-1.5 text-xs h-7">
+                <FileText className="w-3 h-3" />
+                View Details
+            </Button>
+        </Link>
+    );
+}
 
 function getStageConfig(stage: string) {
     switch (stage) {
@@ -86,6 +85,8 @@ function getStageConfig(stage: string) {
             return { label: "Offer", className: "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300 border-green-200 dark:border-green-800" };
         case "rejected":
             return { label: "Rejected", className: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300 border-red-200 dark:border-red-800" };
+        case "wishlist":
+            return { label: "Wishlist", className: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700" };
         default:
             return { label: "Applied", className: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 border-blue-200 dark:border-blue-800" };
     }
@@ -97,65 +98,27 @@ function getScoreColor(score: number) {
     return "text-red-600 dark:text-red-400";
 }
 
-function getActionButton(app: typeof recentApplications[0]) {
-    if (app.stage === "interview") {
-        return (
-            <Link href="/dashboard/interview-coach">
-                <Button size="sm" variant="outline" className="gap-1.5 text-xs h-7 border-purple-300 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-400 dark:hover:bg-purple-900/30">
-                    <Bot className="w-3 h-3" />
-                    Prep with AI
-                </Button>
-            </Link>
-        );
-    }
-    if (app.stage === "offer") {
-        return (
-            <Button size="sm" variant="outline" className="gap-1.5 text-xs h-7 border-green-300 text-green-700 hover:bg-green-50 dark:border-green-700 dark:text-green-400 dark:hover:bg-green-900/30">
-                <Briefcase className="w-3 h-3" />
-                Review Offer
-            </Button>
-        );
-    }
-    if (app.lastActionDate.includes("days ago")) {
-        const daysAgo = parseInt(app.lastActionDate);
-        if (daysAgo >= 7 || app.lastActionDate.includes("12")) {
-            return (
-                <Button size="sm" variant="outline" className="gap-1.5 text-xs h-7 border-orange-300 text-orange-700 hover:bg-orange-50 dark:border-orange-700 dark:text-orange-400 dark:hover:bg-orange-900/30">
-                    <Mail className="w-3 h-3" />
-                    Follow Up
-                </Button>
-            );
-        }
-    }
-    return (
-        <Link href="/dashboard/resumes">
-            <Button size="sm" variant="outline" className="gap-1.5 text-xs h-7">
-                <FileText className="w-3 h-3" />
-                View CV
-            </Button>
-        </Link>
-    );
-}
-
 export default function DashboardPage() {
     const { data: session } = useSession();
     const { status: profileStatus, isLoading: isProfileLoading } = useProfileCompletion();
     const [hasResumes, setHasResumes] = useState(false);
     const [hasCoverLetters, setHasCoverLetters] = useState(false);
     const [hasApplications, setHasApplications] = useState(false);
+    const [applications, setApplications] = useState<Application[]>([]);
     const [isCheckingData, setIsCheckingData] = useState(true);
 
     useEffect(() => {
         const checkData = async () => {
             try {
-                const [resumes, coverLetters, applications] = await Promise.all([
+                const [resumes, coverLetters, apps] = await Promise.all([
                     getResumes(),
                     getCoverLetters(),
                     getApplications()
                 ]);
                 setHasResumes(resumes && resumes.length > 0);
                 setHasCoverLetters(coverLetters && coverLetters.length > 0);
-                setHasApplications(applications && applications.length > 0);
+                setHasApplications(apps && apps.length > 0);
+                setApplications(apps || []);
             } catch (error) {
                 console.error("Error checking user data:", error);
             } finally {
@@ -165,6 +128,37 @@ export default function DashboardPage() {
 
         checkData();
     }, []);
+
+    const upcomingInterview = useMemo(() => {
+        // Find next interview based on date
+        return applications
+            .filter(app => app.status === 'interview')
+            .sort((a, b) => {
+                const dateA = new Date(a.interviewDate || a.date).getTime();
+                const dateB = new Date(b.interviewDate || b.date).getTime();
+                return dateA - dateB;
+            })[0];
+    }, [applications]);
+
+    const stats = useMemo(() => {
+        const total = applications.length;
+        // Active = applied, interview, offer (everything except wishlist/rejected)
+        const active = applications.filter(a => !['rejected', 'wishlist'].includes(a.status)).length;
+        const interviews = applications.filter(a => ['interview', 'offer'].includes(a.status)).length;
+        const interviewRate = total > 0 ? ((interviews / total) * 100).toFixed(1) : "0";
+
+        let totalScore = 0;
+        let scoredApps = 0;
+        applications.forEach(app => {
+            if (app.matchAnalysis?.score) {
+                totalScore += app.matchAnalysis.score;
+                scoredApps++;
+            }
+        });
+        const avgScore = scoredApps > 0 ? Math.round(totalScore / scoredApps) : 0;
+
+        return { total, active, interviewRate, avgScore };
+    }, [applications]);
 
     const isLoading = isProfileLoading || isCheckingData;
     const profileProgress = profileStatus?.totalProgress || 0;
@@ -217,9 +211,11 @@ export default function DashboardPage() {
                                         </Badge>
                                     </div>
                                     <p className="font-bold text-base">
-                                        {upcomingInterview.role} @ {upcomingInterview.company}
+                                        {upcomingInterview.title} @ {upcomingInterview.company}
                                     </p>
-                                    <p className="text-xs text-muted-foreground">{upcomingInterview.lastActionDate}</p>
+                                    <p className="text-xs text-muted-foreground">
+                                        {upcomingInterview.interviewDate ? new Date(upcomingInterview.interviewDate).toLocaleDateString() : 'Scheduled'}
+                                    </p>
                                 </div>
                             </div>
                             <div className="flex items-center">
@@ -250,9 +246,9 @@ export default function DashboardPage() {
                         <Send className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent className="pb-1.5 px-3 pt-0">
-                        <div className="text-2xl font-bold">42</div>
+                        <div className="text-2xl font-bold">{stats.total}</div>
                         <p className="text-xs text-muted-foreground">
-                            <span className="text-green-500">+5</span> this week
+                            Target: 50
                         </p>
                     </CardContent>
                 </Card>
@@ -264,9 +260,9 @@ export default function DashboardPage() {
                         <Flame className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent className="pb-1.5 px-3 pt-0">
-                        <div className="text-2xl font-bold">8</div>
+                        <div className="text-2xl font-bold">{stats.active}</div>
                         <p className="text-xs text-muted-foreground">
-                            3 waiting for reply
+                            Ongoing
                         </p>
                     </CardContent>
                 </Card>
@@ -278,9 +274,9 @@ export default function DashboardPage() {
                         <Target className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent className="pb-1.5 px-3 pt-0">
-                        <div className="text-2xl font-bold">85<span className="text-lg text-muted-foreground">/100</span></div>
+                        <div className="text-2xl font-bold">{stats.avgScore}<span className="text-lg text-muted-foreground">/100</span></div>
                         <p className="text-xs text-muted-foreground">
-                            <span className="text-green-500">+12%</span> vs last month
+                            Goal: 85+
                         </p>
                     </CardContent>
                 </Card>
@@ -292,9 +288,9 @@ export default function DashboardPage() {
                         <TrendingUp className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent className="pb-1.5 px-3 pt-0">
-                        <div className="text-2xl font-bold">14.5%</div>
+                        <div className="text-2xl font-bold">{stats.interviewRate}%</div>
                         <p className="text-xs text-muted-foreground">
-                            <span className="text-green-500">Top 10%</span> market avg
+                            Conversion
                         </p>
                     </CardContent>
                 </Card>
@@ -335,15 +331,16 @@ export default function DashboardPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {recentApplications.map((app) => {
-                                const stageConfig = getStageConfig(app.stage);
+                            {applications.slice(0, 5).map((app) => {
+                                const stageConfig = getStageConfig(app.status);
+                                const score = app.matchAnalysis?.score || 0;
                                 return (
-                                    <TableRow key={app.id} className={app.isUrgent ? "bg-purple-50/50 dark:bg-purple-950/20" : ""}>
+                                    <TableRow key={app.id}>
                                         <TableCell>
                                             <div className="flex items-center gap-3">
-                                                <CompanyLogo company={app.company} logo={app.logo} size="sm" />
+                                                <CompanyLogo company={app.company} logo={app.logo || ''} size="sm" />
                                                 <div>
-                                                    <p className="font-medium">{app.role}</p>
+                                                    <p className="font-medium">{app.title}</p>
                                                     <p className="text-xs text-muted-foreground">@ {app.company}</p>
                                                 </div>
                                             </div>
@@ -354,14 +351,14 @@ export default function DashboardPage() {
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            <span className={`font-bold ${getScoreColor(app.atsScore)}`}>
-                                                {app.atsScore}%
+                                            <span className={`font-bold ${getScoreColor(score)}`}>
+                                                {score > 0 ? `${score}%` : '-'}
                                             </span>
                                         </TableCell>
                                         <TableCell>
                                             <div>
-                                                <p className="text-sm">{app.lastAction}</p>
-                                                <p className="text-xs text-muted-foreground">{app.lastActionDate}</p>
+                                                <p className="text-sm">{app.status === 'interview' ? 'Interview' : 'Updated'}</p>
+                                                <p className="text-xs text-muted-foreground">{timeAgo(app.date)}</p>
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-right">
