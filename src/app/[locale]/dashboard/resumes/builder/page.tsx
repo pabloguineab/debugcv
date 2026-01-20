@@ -57,6 +57,7 @@ export default function ResumeBuilderPage() {
     const [isCalculatingScore, setIsCalculatingScore] = useState(false);
     const [activeSection, setActiveSection] = useState<string>();
     const [isSaving, setIsSaving] = useState(false);
+    const [isDownloading, setIsDownloading] = useState(false);
     const [isEditingName, setIsEditingName] = useState(false);
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
     const [isTailoring, setIsTailoring] = useState(false);
@@ -673,6 +674,7 @@ export default function ResumeBuilderPage() {
 
     // Download resume as PDF
     const handleDownload = async () => {
+        setIsDownloading(true);
         try {
             // Dynamically import libraries to avoid SSR issues
             const html2canvas = (await import('html2canvas')).default;
@@ -682,25 +684,37 @@ export default function ResumeBuilderPage() {
             const previewElement = document.querySelector('[data-resume-preview]') as HTMLElement;
             if (!previewElement) {
                 alert("Could not find resume preview. Please try again.");
+                setIsDownloading(false);
                 return;
             }
 
-            // Show loading state
-            const downloadButton = document.activeElement as HTMLButtonElement;
-            const originalText = downloadButton?.textContent;
-            if (downloadButton) {
-                downloadButton.textContent = "Generating PDF...";
-                downloadButton.disabled = true;
+            // Store original styles and scroll position
+            const scrollContainer = previewElement.closest('.overflow-y-auto') as HTMLElement;
+            const originalScrollTop = scrollContainer?.scrollTop || 0;
+
+            // Scroll to top for complete capture
+            if (scrollContainer) {
+                scrollContainer.scrollTop = 0;
             }
+
+            // Wait a bit for scroll to settle
+            await new Promise(resolve => setTimeout(resolve, 100));
 
             // Capture the resume preview as canvas
             const canvas = await html2canvas(previewElement, {
-                scale: 2.5, // Higher quality
+                scale: 2,
                 useCORS: true,
                 allowTaint: true,
                 backgroundColor: '#ffffff',
                 logging: false,
+                windowWidth: previewElement.scrollWidth,
+                windowHeight: previewElement.scrollHeight,
             });
+
+            // Restore scroll position
+            if (scrollContainer) {
+                scrollContainer.scrollTop = originalScrollTop;
+            }
 
             // Calculate dimensions for A4 paper (210mm x 297mm)
             const imgWidth = 210;
@@ -732,14 +746,11 @@ export default function ResumeBuilderPage() {
             // Download the PDF
             pdf.save(fileName);
 
-            // Restore button state
-            if (downloadButton) {
-                downloadButton.textContent = originalText || "Download resume";
-                downloadButton.disabled = false;
-            }
         } catch (error) {
             console.error("Failed to generate PDF:", error);
             alert("Failed to generate PDF. Please try again.");
+        } finally {
+            setIsDownloading(false);
         }
     };
 
@@ -834,9 +845,18 @@ export default function ResumeBuilderPage() {
                         <MessageCircle className="w-4 h-4" />
                         Chat
                     </Button>
-                    <Button onClick={handleDownload} className="gap-1">
-                        <Download className="w-4 h-4" />
-                        Download resume
+                    <Button onClick={handleDownload} className="gap-1" disabled={isDownloading}>
+                        {isDownloading ? (
+                            <>
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                Generating PDF...
+                            </>
+                        ) : (
+                            <>
+                                <Download className="w-4 h-4" />
+                                Download resume
+                            </>
+                        )}
                     </Button>
                 </div>
             </div>
