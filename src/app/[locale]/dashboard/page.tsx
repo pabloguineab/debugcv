@@ -192,9 +192,16 @@ export default function DashboardPage() {
         const matchScore = scoredApps > 0 ? Math.round(totalScore / scoredApps) : 0;
 
         // Calculate Resume Score (based on completeness)
+        // Calculate Resume Score (based on saved ATS score or completeness fallback)
         let totalResumeScore = 0;
         resumesList.forEach(r => {
-            totalResumeScore += calculateResumeCompleteness(r);
+            // Prioritize the actual AI/ATS score if saved
+            if (r.data && r.data.atsScore) {
+                totalResumeScore += r.data.atsScore;
+            } else {
+                // Fallback to completeness heuristic
+                totalResumeScore += calculateResumeCompleteness(r);
+            }
         });
         const avgResumeScore = resumesList.length > 0 ? Math.round(totalResumeScore / resumesList.length) : 0;
 
