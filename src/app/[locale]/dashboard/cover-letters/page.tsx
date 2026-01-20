@@ -13,6 +13,8 @@ export default function CoverLettersPage() {
     const [isNewCoverLetterDialogOpen, setIsNewCoverLetterDialogOpen] = useState(false);
     const [coverLetters, setCoverLetters] = useState<SavedCoverLetter[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     // Load cover letters
     useEffect(() => {
@@ -31,13 +33,18 @@ export default function CoverLettersPage() {
         loadCoverLetters();
     }, []);
 
-    const handleDelete = async (id: string, e: React.MouseEvent) => {
-        e.stopPropagation();
-        if (confirm("Are you sure you want to delete this cover letter?")) {
+    const confirmDelete = async (id: string) => {
+        setIsDeleting(true);
+        try {
             const result = await deleteCoverLetter(id);
             if (result.success) {
                 setCoverLetters(prev => prev.filter(cl => cl.id !== id));
             }
+        } catch (error) {
+            console.error("Error deleting cover letter:", error);
+        } finally {
+            setIsDeleting(false);
+            setDeleteConfirmId(null);
         }
     };
 
@@ -84,10 +91,13 @@ export default function CoverLettersPage() {
                             <Button
                                 variant="destructive"
                                 size="icon"
-                                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity h-7 w-7"
-                                onClick={(e) => handleDelete(coverLetter.id, e)}
+                                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity h-7 w-7 rounded-full"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setDeleteConfirmId(coverLetter.id);
+                                }}
                             >
-                                <Trash2 className="w-4 h-4" />
+                                <Trash2 className="w-3.5 h-3.5" />
                             </Button>
                         </div>
                     ))}
@@ -105,6 +115,44 @@ export default function CoverLettersPage() {
                             </svg>
                         </div>
                         <span className="font-medium text-gray-900 dark:text-gray-100">New Cover Letter</span>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Confirmation Dialog */}
+            {deleteConfirmId && (
+                <div
+                    className="fixed inset-y-0 right-0 z-50 bg-white/20 dark:bg-black/20 backdrop-blur-md flex items-center justify-center left-0 md:left-[255px]"
+                    onClick={() => !isDeleting && setDeleteConfirmId(null)}
+                >
+                    <div
+                        className="bg-background border rounded-lg shadow-xl max-w-[400px] w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-200"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="space-y-2">
+                            <h3 className="font-semibold text-lg">Delete Cover Letter?</h3>
+                            <p className="text-sm text-muted-foreground">
+                                This action cannot be undone. This will permanently delete your cover letter.
+                            </p>
+                        </div>
+                        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+                            <button
+                                onClick={() => setDeleteConfirmId(null)}
+                                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                                disabled={isDeleting}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => deleteConfirmId && confirmDelete(deleteConfirmId)}
+                                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-red-600 text-white hover:bg-red-600/90 h-10 px-4 py-2 min-w-[90px]"
+                                disabled={isDeleting}
+                            >
+                                {isDeleting ? (
+                                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                                ) : "Delete"}
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
