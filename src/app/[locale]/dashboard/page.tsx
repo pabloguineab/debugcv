@@ -1,13 +1,18 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Send, Flame, Target, TrendingUp, Calendar, Bot, FileText, Mail, ArrowRight, Clock, Briefcase } from "lucide-react";
+import { Send, Flame, Target, TrendingUp, Calendar, Bot, FileText, Mail, ArrowRight, Clock, Briefcase, Loader2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DashboardLineChart, DashboardRadarChart, DashboardRadialChart } from "./components/dashboard-charts";
 import { Link } from "@/i18n/routing";
 import { CompanyLogo } from "@/components/company-logo";
+import { useProfileCompletion } from "@/contexts/profile-completion-context";
+import { getResumes } from "@/lib/actions/resumes";
+import { getCoverLetters } from "@/lib/actions/cover-letters";
+import { DashboardOnboarding } from "./components/dashboard-onboarding";
 
 // Mock data for recent applications
 const recentApplications = [
@@ -131,8 +136,60 @@ function getActionButton(app: typeof recentApplications[0]) {
 }
 
 export default function DashboardPage() {
+    const { status: profileStatus, isLoading: isProfileLoading } = useProfileCompletion();
+    const [hasResumes, setHasResumes] = useState(false);
+    const [hasCoverLetters, setHasCoverLetters] = useState(false);
+    const [isCheckingData, setIsCheckingData] = useState(true);
+
+    useEffect(() => {
+        const checkData = async () => {
+            try {
+                const [resumes, coverLetters] = await Promise.all([
+                    getResumes(),
+                    getCoverLetters()
+                ]);
+                setHasResumes(resumes && resumes.length > 0);
+                setHasCoverLetters(coverLetters && coverLetters.length > 0);
+            } catch (error) {
+                console.error("Error checking user data:", error);
+            } finally {
+                setIsCheckingData(false);
+            }
+        };
+
+        checkData();
+    }, []);
+
+    const isLoading = isProfileLoading || isCheckingData;
+    const profileProgress = profileStatus?.totalProgress || 0;
+
+    // Determine if onboarding should be shown
+    // Show onboarding if profile is not complete OR no resume OR no cover letter
+    // You can adjust the threshold for profile completion as needed
+    const showOnboarding = !isLoading && (profileProgress < 80 || !hasResumes || !hasCoverLetters);
+
+    if (isLoading) {
+        return (
+            <div className="flex flex-1 items-center justify-center min-h-[400px]">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        );
+    }
+
+    if (showOnboarding) {
+        return (
+            <div className="flex flex-1 flex-col gap-4 p-4 md:p-6">
+                <DashboardOnboarding
+                    profileProgress={profileProgress}
+                    hasResumes={hasResumes}
+                    hasCoverLetters={hasCoverLetters}
+                />
+            </div>
+        );
+    }
+
     return (
-        <div className="flex flex-1 flex-col gap-4">
+        <div className="flex flex-1 flex-col gap-4 p-4 md:p-6">
             {/* Upcoming Interview Alert Banner */}
             {upcomingInterview && (
                 <Card className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/40 dark:to-blue-950/40 border-purple-200 dark:border-purple-800 overflow-hidden">
