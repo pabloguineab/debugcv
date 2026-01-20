@@ -102,9 +102,9 @@ export function DashboardOnboarding({ profileProgress, hasResumes, hasCoverLette
     return (
         <div className="flex flex-col gap-6">
             {/* Welcome Header */}
-            <div className="flex flex-col gap-2 mb-2">
-                <h1 className="text-3xl font-bold tracking-tight">Welcome to DebugCV! 🚀</h1>
-                <p className="text-muted-foreground text-lg">
+            <div>
+                <h1 className="text-2xl font-semibold tracking-tight">Welcome to DebugCV! 🚀</h1>
+                <p className="text-sm text-muted-foreground mt-1">
                     Let's get you set up to land your dream job. Follow these steps to unlock the full power of the dashboard.
                 </p>
             </div>
