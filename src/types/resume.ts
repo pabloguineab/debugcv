@@ -62,6 +62,7 @@ export interface ResumeData {
     projects: ResumeProject[];
     certifications: ResumeCertification[];
     template: "harvard" | "simple" | "modern";
+    atsScore?: number;
     createdAt: string;
     updatedAt: string;
 }

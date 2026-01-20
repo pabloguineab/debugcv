@@ -359,6 +359,7 @@ export default function ResumeBuilderPage() {
             const result = await response.json();
             if (result.success && result.data.overall) {
                 setScore(result.data.overall);
+                handleUpdate({ atsScore: result.data.overall });
             }
         } catch (error) {
             console.error("Failed to calculate score:", error);
@@ -621,9 +622,10 @@ export default function ResumeBuilderPage() {
 
             // If checking existing resume (no animation needed)
             if (!animatePreview) {
-                // Set immediately
-                setDisplayedScore(targetScore);
-                setScore(targetScore);
+                // Set immediately - prefer saved score if available
+                const finalScore = resumeData.atsScore || targetScore;
+                setDisplayedScore(finalScore);
+                setScore(finalScore);
                 animationStartedRef.current = true;
 
                 // Trigger AI score calculation if high enough
