@@ -324,7 +324,7 @@ export default function CoverLetterBuilderPage() {
                                 value={jobDescription}
                                 onChange={(e) => setJobDescription(e.target.value)}
                                 placeholder="Paste the job description here..."
-                                className="min-h-[300px] text-sm"
+                                className="h-[200px] max-h-[200px] text-sm resize-none overflow-y-auto"
                             />
                         </div>
 
