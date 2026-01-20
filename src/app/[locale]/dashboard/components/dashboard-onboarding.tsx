@@ -153,14 +153,16 @@ export function DashboardOnboarding({ profileProgress, hasResumes, hasCoverLette
                                 <CardHeader className="pb-2">
                                     <div className={cn(
                                         "w-10 h-10 rounded-lg flex items-center justify-center mb-3",
-                                        isDone ? "bg-green-100 text-green-600" : isActive ? "bg-blue-100 text-blue-600" : "bg-slate-100 text-slate-500"
+                                        isDone ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
+                                            : isActive ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
+                                                : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
                                     )}>
                                         <step.icon className="w-6 h-6" />
                                     </div>
                                     <CardTitle className={cn(
                                         "text-lg",
-                                        isDone && "text-green-700",
-                                        isActive && "text-blue-700"
+                                        isDone && "text-green-700 dark:text-green-500",
+                                        isActive && "text-blue-700 dark:text-blue-400"
                                     )}>
                                         {step.title}
                                     </CardTitle>
@@ -172,13 +174,13 @@ export function DashboardOnboarding({ profileProgress, hasResumes, hasCoverLette
 
                                     <div className="mt-auto">
                                         {isDone ? (
-                                            <div className="flex items-center text-green-600 font-medium text-xs bg-green-50 p-2 rounded-md w-fit">
+                                            <div className="flex items-center text-green-600 dark:text-green-400 font-medium text-xs bg-green-50 dark:bg-green-900/30 p-2 rounded-md w-fit">
                                                 <CheckCircle2 className="w-3 h-3 mr-1.5" />
                                                 Done
                                             </div>
                                         ) : isActive ? (
                                             <Link href={step.href} className="w-full">
-                                                <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700 shadow-sm group text-xs">
+                                                <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700 shadow-sm group text-xs dark:bg-blue-600 dark:text-white dark:hover:bg-blue-500">
                                                     {step.cta}
                                                     <ArrowRight className="w-3 h-3 ml-1.5 group-hover:translate-x-1 transition-transform" />
                                                 </Button>
