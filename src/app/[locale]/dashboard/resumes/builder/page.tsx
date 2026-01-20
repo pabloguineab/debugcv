@@ -640,6 +640,12 @@ export default function ResumeBuilderPage() {
                 setScore(finalScore);
                 animationStartedRef.current = true;
 
+                // Sync: If we are displaying a heuristic score that isn't saved yet, save it
+                // This ensures the Dashboard shows the same score as the Builder
+                if (!resumeData.atsScore && targetScore > 0) {
+                    handleUpdate({ atsScore: targetScore });
+                }
+
                 // Trigger AI score calculation if high enough
                 if (targetScore >= 60 && !isCalculatingScore) {
                     // Debounce AI calculation? Or just let user trigger it manually?
