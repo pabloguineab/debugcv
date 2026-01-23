@@ -1,0 +1,61 @@
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import { Code2 } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+interface TechIconProps {
+    iconPath: string;
+    name: string;
+    size?: number;
+    priority?: boolean;
+    className?: string;
+}
+
+export function TechIcon({ iconPath, name, size = 40, priority = false, className }: TechIconProps) {
+    const [isLoading, setIsLoading] = useState(true);
+    const [hasError, setHasError] = useState(false);
+
+    if (hasError) {
+        return (
+            <div
+                className={cn(
+                    "flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-md",
+                    className
+                )}
+                style={{ width: size, height: size }}
+            >
+                <Code2 className="size-5 text-gray-400" />
+            </div>
+        );
+    }
+
+    return (
+        <div className={cn("relative", className)} style={{ width: size, height: size }}>
+            {/* Loading skeleton */}
+            {isLoading && (
+                <div
+                    className="absolute inset-0 bg-gray-100 dark:bg-gray-800 rounded-md animate-pulse"
+                />
+            )}
+            <Image
+                src={iconPath}
+                alt={name}
+                width={size}
+                height={size}
+                priority={priority}
+                loading={priority ? "eager" : "lazy"}
+                className={cn(
+                    "w-full h-full object-contain transition-opacity duration-200",
+                    isLoading ? "opacity-0" : "opacity-100"
+                )}
+                onLoad={() => setIsLoading(false)}
+                onError={() => {
+                    setIsLoading(false);
+                    setHasError(true);
+                }}
+            />
+        </div>
+    );
+}

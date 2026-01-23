@@ -44,6 +44,7 @@ import { type ExtractedProfile } from "@/app/actions/extract-profile-from-cv";
 import { InstitutionLogo } from "@/components/institution-logo";
 import { CompanyLogo } from "@/components/company-logo";
 import { PhoneInput } from "@/components/ui/phone-input";
+import { TechIcon } from "@/components/tech-icon";
 
 // Helper: Convert month name to number for sorting
 const monthToNumber = (month: string): number => {
@@ -55,11 +56,11 @@ const monthToNumber = (month: string): number => {
 };
 
 // Helper: Sort by date (most recent first, "Present/Current" always on top)
-const sortByDateDesc = <T extends { 
-    startYear?: string; 
+const sortByDateDesc = <T extends {
+    startYear?: string;
     startMonth?: string;
     endYear?: string;
-    isCurrentRole?: boolean; 
+    isCurrentRole?: boolean;
     isCurrentlyStudying?: boolean;
     isOngoing?: boolean;
     issueYear?: string;
@@ -69,20 +70,20 @@ const sortByDateDesc = <T extends {
         // Current/Present items always come first
         const aIsCurrent = a.isCurrentRole || a.isCurrentlyStudying || a.isOngoing;
         const bIsCurrent = b.isCurrentRole || b.isCurrentlyStudying || b.isOngoing;
-        
+
         if (aIsCurrent && !bIsCurrent) return -1;
         if (!aIsCurrent && bIsCurrent) return 1;
-        
+
         // Sort by start year (or issue year for certifications)
         const aYear = parseInt(a.startYear || a.issueYear || '0');
         const bYear = parseInt(b.startYear || b.issueYear || '0');
-        
+
         if (aYear !== bYear) return bYear - aYear; // Descending
-        
+
         // If same year, sort by month
         const aMonth = monthToNumber(a.startMonth || a.issueMonth || '');
         const bMonth = monthToNumber(b.startMonth || b.issueMonth || '');
-        
+
         return bMonth - aMonth; // Descending
     });
 };
@@ -1031,7 +1032,7 @@ export default function ProfilePage() {
             // 1. Update Overview/Profile data
             if (data.overview) {
                 const { bio, linkedin_user, github_user, location, full_name, phone_number } = data.overview;
-                
+
                 // DEBUG: Log the extracted bio
                 console.log("=== CV IMPORT DEBUG ===");
                 console.log("Extracted bio:", bio);
@@ -1762,7 +1763,12 @@ export default function ProfilePage() {
                                                 )}
                                             >
                                                 <div className="size-12 rounded-md flex items-center justify-center shrink-0">
-                                                    <Image src={tech.iconPath} alt={tech.name} width={40} height={40} className="w-full h-full object-contain" />
+                                                    <TechIcon
+                                                        iconPath={tech.iconPath}
+                                                        name={tech.name}
+                                                        size={40}
+                                                        priority={displayedTechs.indexOf(tech) < 8}
+                                                    />
                                                 </div>
                                                 <span className="text-sm font-medium truncate">{tech.name}</span>
                                                 {selectedTechs.includes(tech.id) && (
@@ -1796,7 +1802,11 @@ export default function ProfilePage() {
                                                         className="flex items-center gap-3 px-4 py-2 rounded-lg border-2 border-primary bg-primary/10 dark:bg-primary/20 cursor-pointer transition-all select-none relative min-w-0"
                                                     >
                                                         <div className="size-12 rounded-md flex items-center justify-center shrink-0">
-                                                            <Image src={tech.iconPath} alt={tech.name} width={40} height={40} className="w-full h-full object-contain" />
+                                                            <TechIcon
+                                                                iconPath={tech.iconPath}
+                                                                name={tech.name}
+                                                                size={40}
+                                                            />
                                                         </div>
                                                         <span className="text-sm font-medium truncate">{tech.name}</span>
                                                         <div className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground p-0.5 rounded-full">
