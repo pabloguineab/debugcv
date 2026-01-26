@@ -14,7 +14,6 @@ interface TechIconProps {
 }
 
 export function TechIcon({ iconPath, name, size = 40, priority = false, className }: TechIconProps) {
-    const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
 
     if (hasError) {
@@ -32,30 +31,15 @@ export function TechIcon({ iconPath, name, size = 40, priority = false, classNam
     }
 
     return (
-        <div className={cn("relative", className)} style={{ width: size, height: size }}>
-            {/* Loading skeleton */}
-            {isLoading && (
-                <div
-                    className="absolute inset-0 bg-gray-100 dark:bg-gray-800 rounded-md animate-pulse"
-                />
-            )}
-            <Image
-                src={iconPath}
-                alt={name}
-                width={size}
-                height={size}
-                priority={priority}
-                loading={priority ? "eager" : "lazy"}
-                className={cn(
-                    "w-full h-full object-contain transition-opacity duration-200",
-                    isLoading ? "opacity-0" : "opacity-100"
-                )}
-                onLoad={() => setIsLoading(false)}
-                onError={() => {
-                    setIsLoading(false);
-                    setHasError(true);
-                }}
-            />
-        </div>
+        <Image
+            src={iconPath}
+            alt={name}
+            width={size}
+            height={size}
+            priority={priority}
+            loading={priority ? "eager" : "lazy"}
+            className={cn("object-contain", className)}
+            onError={() => setHasError(true)}
+        />
     );
 }
