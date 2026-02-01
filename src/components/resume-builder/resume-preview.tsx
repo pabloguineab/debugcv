@@ -18,7 +18,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
     const formatDateRange = (startDate?: string, endDate?: string, current?: boolean) => {
         const end = current ? "Present" : (endDate || "");
         const start = startDate || "";
-        
+
         if (start && end) return `${start} - ${end}`;
         if (start) return start;
         if (end) return end;
@@ -79,9 +79,9 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
 
     // Himalayas-style resume template
     return (
-        <div 
+        <div
             className="bg-white rounded-lg mx-auto border border-gray-200 shadow-sm"
-            style={{ 
+            style={{
                 width: "100%",
                 maxWidth: "800px",
                 minHeight: "1100px"
@@ -90,11 +90,11 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
         >
             <SequentialAnimationProvider animate={animate}>
                 {/* Resume Paper - Himalayas Style */}
-                <div 
+                <div
                     className="px-10 py-8 text-gray-800"
                     style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
                 >
-                {/* Header */}
+                    {/* Header */}
                     <div className="text-center mb-6">
                         <h1 className="text-[26px] font-normal tracking-wide mb-2">
                             <EditableText
@@ -104,7 +104,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                 displayComponent={<Typewriter text={personalInfo.fullName || "Your Name"} />}
                             />
                         </h1>
-                        
+
                         <div className="w-full h-px bg-gray-300 mx-auto mb-3" />
 
                         <p className="text-[11px] text-gray-600 flex justify-center items-center flex-wrap gap-1">
@@ -130,6 +130,32 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                 placeholder="+1 234 567 890"
                                 displayComponent={<Typewriter text={personalInfo.phone || ""} />}
                             />
+                            {personalInfo.linkedin && (
+                                <>
+                                    <span> • </span>
+                                    <a
+                                        href={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:underline"
+                                    >
+                                        <Typewriter text="LinkedIn" />
+                                    </a>
+                                </>
+                            )}
+                            {personalInfo.github && (
+                                <>
+                                    <span> • </span>
+                                    <a
+                                        href={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:underline"
+                                    >
+                                        <Typewriter text="GitHub" />
+                                    </a>
+                                </>
+                            )}
                         </p>
                     </div>
 
@@ -145,9 +171,9 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                 placeholder="Click to add a professional summary..."
                                 multiline
                                 displayComponent={
-                                    <Typewriter 
-                                        text={summary || (animate ? "" : "Click to add a professional summary highlighting your key qualifications, experience, and career goals.")} 
-                                        speed={3} 
+                                    <Typewriter
+                                        text={summary || (animate ? "" : "Click to add a professional summary highlighting your key qualifications, experience, and career goals.")}
+                                        speed={3}
                                     />
                                 }
                             />
@@ -179,9 +205,9 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                                         onChange={(v) => {
                                                             // Parse "Degree in Field" format
                                                             const parts = v.split(" in ");
-                                                            updateEducation(index, { 
-                                                                degree: parts[0] || "", 
-                                                                field: parts.slice(1).join(" in ") || "" 
+                                                            updateEducation(index, {
+                                                                degree: parts[0] || "",
+                                                                field: parts.slice(1).join(" in ") || ""
                                                             });
                                                         }}
                                                         placeholder="Degree in Field"
@@ -231,13 +257,29 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                     <div key={exp.id} className="p-1">
                                         <div className="flex justify-between items-start mb-1 gap-4">
                                             <div className="flex-1 min-w-0">
-                                                <div className="text-[11px] font-bold uppercase tracking-wide">
-                                                    <EditableText
-                                                        value={exp.company}
-                                                        onChange={(v) => updateExperience(index, { company: v })}
-                                                        placeholder="Company"
-                                                        displayComponent={<Typewriter text={exp.company} />}
-                                                    />
+                                                <div className={`text-[11px] font-bold uppercase tracking-wide ${exp.companyUrl ? 'text-blue-600' : ''}`}>
+                                                    {exp.companyUrl ? (
+                                                        <a
+                                                            href={exp.companyUrl.startsWith("http") ? exp.companyUrl : `https://${exp.companyUrl}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="hover:underline"
+                                                        >
+                                                            <EditableText
+                                                                value={exp.company}
+                                                                onChange={(v) => updateExperience(index, { company: v })}
+                                                                placeholder="Company"
+                                                                displayComponent={<Typewriter text={exp.company} />}
+                                                            />
+                                                        </a>
+                                                    ) : (
+                                                        <EditableText
+                                                            value={exp.company}
+                                                            onChange={(v) => updateExperience(index, { company: v })}
+                                                            placeholder="Company"
+                                                            displayComponent={<Typewriter text={exp.company} />}
+                                                        />
+                                                    )}
                                                 </div>
                                                 <div className="text-[11px] text-gray-700">
                                                     <EditableText
@@ -275,7 +317,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         {exp.bullets.length > 0 && (
                                             <div className="ml-4 text-[11px] text-gray-700 space-y-1 mt-2">
                                                 {exp.bullets.map((bullet, bulletIndex) => (
@@ -337,7 +379,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                         </div>
                                         {project.technologies.length > 0 && (
                                             <div className="text-[10px] text-gray-500 mt-1">
-                                                <span className="font-semibold"><Typewriter text="Technologies: " /></span> 
+                                                <span className="font-semibold"><Typewriter text="Technologies: " /></span>
                                                 <Typewriter text={project.technologies.join(", ")} />
                                             </div>
                                         )}
