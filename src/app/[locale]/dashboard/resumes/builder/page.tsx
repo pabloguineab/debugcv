@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Country } from "country-state-city";
 import { ResumeData, ResumeScore } from "@/types/resume";
 import { ResumePreview } from "@/components/resume-builder/resume-preview";
 import { ResumeEditorSidebar } from "@/components/resume-builder/resume-editor-sidebar";
@@ -15,43 +14,74 @@ import { ResumeSidebarSkeleton } from "@/components/resume-builder/resume-sideba
 
 // Helper function to normalize location format from "City, StateCode" to "City, CountryName"
 // This handles legacy data where location was stored as "Madrid, MD" instead of "Madrid, Spain"
-function normalizeLocation(location: string, countryCode?: string): string {
+function normalizeLocation(location: string): string {
     if (!location) return "";
 
-    // If the location already looks correct (contains a full country name), return as is
+    // If the location already looks correct, return as is
     const parts = location.split(",").map(p => p.trim());
     if (parts.length !== 2) return location;
 
     const [city, suffix] = parts;
 
-    // If suffix is a 2-letter code (like "MD" for Madrid region in Spain), try to fix it
+    // If suffix is longer than 2-3 characters, it's probably already a country name
+    if (suffix && suffix.length > 3) return location;
+
+    // If suffix is a 2-letter code, check if it's a known region code first
     if (suffix && suffix.length === 2) {
-        // If we have a country code, use that country's name
-        if (countryCode) {
-            const country = Country.getCountryByCode(countryCode);
-            if (country) {
-                return `${city}, ${country.name}`;
-            }
-        }
-
-        // If the 2-letter code matches a country code, use the country name
-        const countryByCode = Country.getCountryByCode(suffix);
-        if (countryByCode) {
-            return `${city}, ${countryByCode.name}`;
-        }
-
-        // Common state code to country name mappings for known cases
-        const stateToCountry: Record<string, string> = {
-            "MD": "Spain",  // Madrid region in Spain
-            "CT": "Spain",  // Catalonia
-            "AN": "Spain",  // Andalusia
-            "CA": "USA",    // California (if context suggests US)
-            "NY": "USA",    // New York
-            "TX": "USA",    // Texas
+        // Spanish region codes (ISO 3166-2:ES) - check these BEFORE country codes
+        // because some overlap with country codes (MD = Moldova, but also Madrid region)
+        const spanishRegionCodes: Record<string, boolean> = {
+            "MD": true,  // Madrid
+            "CT": true,  // Catalonia
+            "AN": true,  // Andalusia
+            "AR": true,  // Aragón
+            "AS": true,  // Asturias
+            "IB": true,  // Balearic Islands
+            "CN": true,  // Canary Islands
+            "CB": true,  // Cantabria
+            "CL": true,  // Castile and León
+            "CM": true,  // Castile-La Mancha
+            "EX": true,  // Extremadura
+            "GA": true,  // Galicia
+            "RI": true,  // La Rioja
+            "MC": true,  // Murcia
+            "NC": true,  // Navarra
+            "PV": true,  // Basque Country
+            "VC": true,  // Valencia
         };
 
-        if (stateToCountry[suffix]) {
-            return `${city}, ${stateToCountry[suffix]}`;
+        // Spanish cities commonly associated with region codes
+        const spanishCities = ["madrid", "barcelona", "valencia", "sevilla", "seville", "bilbao", "málaga", "malaga", "zaragoza", "murcia", "palma", "las palmas", "alicante", "córdoba", "cordoba", "valladolid", "vigo", "gijón", "gijon", "hospitalet", "granada", "elche", "oviedo", "santa cruz", "badalona", "cartagena", "jerez", "sabadell", "móstoles", "alcalá", "pamplona", "almería", "santander"];
+
+        const cityLower = city.toLowerCase();
+        const isSpanishCity = spanishCities.some(sc => cityLower.includes(sc));
+        const isSpanishRegionCode = spanishRegionCodes[suffix];
+
+        if (isSpanishCity || isSpanishRegionCode) {
+            return `${city}, Spain`;
+        }
+
+        // US state codes
+        const usStateCodes: Record<string, boolean> = {
+            "AL": true, "AK": true, "AZ": true, "CA": true, "CO": true, "CT": true,
+            "DE": true, "FL": true, "GA": true, "HI": true, "ID": true, "IL": true,
+            "IN": true, "IA": true, "KS": true, "KY": true, "LA": true, "ME": true,
+            "MA": true, "MI": true, "MN": true, "MS": true, "MO": true, "MT": true,
+            "NE": true, "NV": true, "NH": true, "NJ": true, "NM": true, "NY": true,
+            "NC": true, "ND": true, "OH": true, "OK": true, "OR": true, "PA": true,
+            "RI": true, "SC": true, "SD": true, "TN": true, "TX": true, "UT": true,
+            "VT": true, "VA": true, "WA": true, "WV": true, "WI": true, "WY": true,
+            "DC": true,
+        };
+
+        const usCities = ["new york", "los angeles", "chicago", "houston", "phoenix", "philadelphia", "san antonio", "san diego", "dallas", "san jose", "austin", "jacksonville", "san francisco", "columbus", "seattle", "denver", "boston", "detroit", "nashville", "portland", "las vegas", "oklahoma", "milwaukee", "albuquerque", "tucson", "fresno", "sacramento", "mesa", "atlanta", "kansas city", "miami", "raleigh", "omaha", "cleveland", "tulsa", "minneapolis", "wichita", "arlington", "bakersfield", "aurora", "tampa", "honolulu", "anaheim", "pittsburgh", "lexington", "anchorage", "stockton", "corpus christi", "cincinnati", "saint paul", "greensboro", "newark", "plano", "henderson", "lincoln", "buffalo", "fort wayne", "jersey city", "chula vista", "orlando", "chandler", "riverside", "scottsdale", "reno", "gilbert", "boise", "orlando", "memphis", "louisville", "baltimore", "washington"];
+
+        const cityLowerUS = city.toLowerCase();
+        const isUSCity = usCities.some(uc => cityLowerUS.includes(uc));
+        const isUSStateCode = usStateCodes[suffix];
+
+        if (isUSCity || isUSStateCode) {
+            return `${city}, USA`;
         }
     }
 
