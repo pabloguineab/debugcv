@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { Country } from "country-state-city";
 import { ResumeData, ResumeScore } from "@/types/resume";
 import { ResumePreview } from "@/components/resume-builder/resume-preview";
 import { ResumeEditorSidebar } from "@/components/resume-builder/resume-editor-sidebar";
@@ -11,6 +12,51 @@ import { ArrowLeft, MessageCircle, Download, Loader2, Pencil, Check, Cloud, Clou
 import { saveResume as saveResumeToDb, getResume as getResumeFromDb } from "@/lib/actions/resumes";
 import { ResumePreviewSkeleton } from "@/components/resume-builder/resume-preview-skeleton";
 import { ResumeSidebarSkeleton } from "@/components/resume-builder/resume-sidebar-skeleton";
+
+// Helper function to normalize location format from "City, StateCode" to "City, CountryName"
+// This handles legacy data where location was stored as "Madrid, MD" instead of "Madrid, Spain"
+function normalizeLocation(location: string, countryCode?: string): string {
+    if (!location) return "";
+
+    // If the location already looks correct (contains a full country name), return as is
+    const parts = location.split(",").map(p => p.trim());
+    if (parts.length !== 2) return location;
+
+    const [city, suffix] = parts;
+
+    // If suffix is a 2-letter code (like "MD" for Madrid region in Spain), try to fix it
+    if (suffix && suffix.length === 2) {
+        // If we have a country code, use that country's name
+        if (countryCode) {
+            const country = Country.getCountryByCode(countryCode);
+            if (country) {
+                return `${city}, ${country.name}`;
+            }
+        }
+
+        // If the 2-letter code matches a country code, use the country name
+        const countryByCode = Country.getCountryByCode(suffix);
+        if (countryByCode) {
+            return `${city}, ${countryByCode.name}`;
+        }
+
+        // Common state code to country name mappings for known cases
+        const stateToCountry: Record<string, string> = {
+            "MD": "Spain",  // Madrid region in Spain
+            "CT": "Spain",  // Catalonia
+            "AN": "Spain",  // Andalusia
+            "CA": "USA",    // California (if context suggests US)
+            "NY": "USA",    // New York
+            "TX": "USA",    // Texas
+        };
+
+        if (stateToCountry[suffix]) {
+            return `${city}, ${stateToCountry[suffix]}`;
+        }
+    }
+
+    return location;
+}
 
 // Helper to generate unique IDs
 const generateId = () => crypto.randomUUID();
@@ -326,7 +372,7 @@ export default function ResumeBuilderPage() {
                     fullName: profile.full_name || "",
                     email: profile.user_email || "",
                     phone: profile.phone_number || "",
-                    location: profile.location || "",
+                    location: normalizeLocation(profile.location || ""),
                     profileUrl: profile.portfolio_url || "",
                     linkedin: profile.linkedin_user ? `https://linkedin.com/in/${profile.linkedin_user}` : "",
                     github: profile.github_user ? `https://github.com/${profile.github_user}` : ""
