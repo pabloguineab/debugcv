@@ -284,17 +284,24 @@ export default function ProfilePage() {
         }
     }, [session, isLoadingData]);
 
+    // Get country name from code
+    const getCountryName = (countryCode: string): string => {
+        const country = Country.getCountryByCode(countryCode);
+        return country?.name || countryCode;
+    };
+
     // Auto-save location
     useEffect(() => {
-        if (!isLoadingData && selectedCity && selectedRegion) {
+        if (!isLoadingData && selectedCity && selectedCountry) {
             const timer = setTimeout(() => {
-                updateProfile({ location: `${selectedCity}, ${selectedRegion}` })
+                const countryName = getCountryName(selectedCountry);
+                updateProfile({ location: `${selectedCity}, ${countryName}` })
                     .then(() => refreshCompletionStatus())
                     .catch(err => console.error("Auto-save location error", err));
             }, 1000);
             return () => clearTimeout(timer);
         }
-    }, [selectedCity, selectedRegion, isLoadingData]);
+    }, [selectedCity, selectedCountry, isLoadingData]);
 
     // Tab subtitles mapping
     const tabSubtitles: Record<string, string> = {
@@ -991,7 +998,7 @@ export default function ProfilePage() {
                 linkedin_user: linkedinUrl,
                 github_user: githubUrl,
                 bio: introduction,
-                location: selectedCity ? `${selectedCity}, ${selectedRegion}` : (selectedRegion || undefined)
+                location: selectedCity ? `${selectedCity}, ${getCountryName(selectedCountry)}` : (getCountryName(selectedCountry) || undefined)
             });
             await refreshCompletionStatus();
         } catch (err) {
