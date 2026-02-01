@@ -327,12 +327,15 @@ export default function ResumeBuilderPage() {
                     email: profile.user_email || "",
                     phone: profile.phone_number || "",
                     location: profile.location || "",
-                    profileUrl: profile.linkedin_user || profile.portfolio_url || ""
+                    profileUrl: profile.portfolio_url || "",
+                    linkedin: profile.linkedin_user ? `https://linkedin.com/in/${profile.linkedin_user}` : "",
+                    github: profile.github_user ? `https://github.com/${profile.github_user}` : ""
                 };
 
                 const mappedExperience = experiences?.map((exp: any) => ({
                     id: exp.id || crypto.randomUUID(),
                     company: exp.company_name || "",
+                    companyUrl: exp.company_url || "",
                     title: exp.title || "",
                     location: exp.location || exp.country || "",
                     startDate: `${exp.start_month || ""} ${exp.start_year || ""}`.trim(),

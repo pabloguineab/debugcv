@@ -6,11 +6,14 @@ export interface ResumePersonalInfo {
     phone: string;
     location: string;
     profileUrl?: string;
+    linkedin?: string;
+    github?: string;
 }
 
 export interface ResumeExperience {
     id: string;
     company: string;
+    companyUrl?: string;
     title: string;
     location: string;
     startDate: string;

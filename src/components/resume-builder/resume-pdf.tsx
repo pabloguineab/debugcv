@@ -1,6 +1,6 @@
 "use client";
 
-import { Document, Page, Text, View, StyleSheet, Font, pdf } from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet, Font, pdf, Link } from "@react-pdf/renderer";
 import { ResumeData } from "@/types/resume";
 
 // Register fonts for a professional look
@@ -71,12 +71,20 @@ const styles = StyleSheet.create({
     entryHeader: {
         flexDirection: "row",
         justifyContent: "space-between",
+        alignItems: "flex-start",
         marginBottom: 2,
     },
     entryTitle: {
         fontSize: 10,
         fontWeight: "bold",
         textTransform: "uppercase",
+    },
+    entryTitleLink: {
+        fontSize: 10,
+        fontWeight: "bold",
+        textTransform: "uppercase",
+        color: "#2563eb",
+        textDecoration: "none",
     },
     entrySubtitle: {
         fontSize: 9,
@@ -87,6 +95,8 @@ const styles = StyleSheet.create({
         textAlign: "right",
         fontSize: 9,
         color: "#666",
+        flexShrink: 0,
+        marginLeft: 10,
     },
     entryLocation: {
         fontSize: 9,
@@ -168,9 +178,26 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
                     <View style={styles.contactRow}>
                         {personalInfo.location && <Text>{personalInfo.location}</Text>}
                         {personalInfo.location && personalInfo.email && <Text style={styles.separator}>•</Text>}
-                        {personalInfo.email && <Text style={styles.link}>{personalInfo.email}</Text>}
+                        {personalInfo.email && (
+                            <Link src={`mailto:${personalInfo.email}`} style={styles.link}>
+                                {personalInfo.email}
+                            </Link>
+                        )}
                         {personalInfo.email && personalInfo.phone && <Text style={styles.separator}>•</Text>}
                         {personalInfo.phone && <Text>{personalInfo.phone}</Text>}
+                        {personalInfo.phone && personalInfo.linkedin && <Text style={styles.separator}>•</Text>}
+                        {personalInfo.linkedin && (
+                            <Link src={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`} style={styles.link}>
+                                LinkedIn
+                            </Link>
+                        )}
+                        {personalInfo.linkedin && personalInfo.github && <Text style={styles.separator}>•</Text>}
+                        {!personalInfo.linkedin && personalInfo.phone && personalInfo.github && <Text style={styles.separator}>•</Text>}
+                        {personalInfo.github && (
+                            <Link src={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`} style={styles.link}>
+                                GitHub
+                            </Link>
+                        )}
                     </View>
                 </View>
 
@@ -189,7 +216,7 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
                         {education.map((edu, index) => (
                             <View key={index} style={styles.entryContainer}>
                                 <View style={styles.entryHeader}>
-                                    <View>
+                                    <View style={{ flex: 1 }}>
                                         <Text style={styles.entryTitle}>{edu.institution}</Text>
                                         <Text style={styles.entrySubtitle}>{edu.degree} in {edu.field}</Text>
                                     </View>
@@ -210,8 +237,14 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
                         {experience.map((exp, index) => (
                             <View key={index} style={styles.entryContainer}>
                                 <View style={styles.entryHeader}>
-                                    <View>
-                                        <Text style={styles.entryTitle}>{exp.company}</Text>
+                                    <View style={{ flex: 1 }}>
+                                        {exp.companyUrl ? (
+                                            <Link src={exp.companyUrl.startsWith("http") ? exp.companyUrl : `https://${exp.companyUrl}`} style={styles.entryTitleLink}>
+                                                {exp.company}
+                                            </Link>
+                                        ) : (
+                                            <Text style={styles.entryTitle}>{exp.company}</Text>
+                                        )}
                                         <Text style={styles.entrySubtitle}>{exp.title}</Text>
                                     </View>
                                     <View style={styles.entryRight}>
