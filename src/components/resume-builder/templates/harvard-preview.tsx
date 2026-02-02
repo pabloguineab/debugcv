@@ -23,23 +23,24 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
     // Calculate dynamic styles based on content density
     const styleConfig = useMemo(() => calculateStyleConfig(data), [data]);
 
-    // Scale factor for web preview (PDF uses pt, we use px with scale)
-    const scale = 1.3;
+    // Scale factor for web preview
+    const scale = 1.25;
 
-    // Dynamic styles based on content
+    // Dynamic styles based on content - LARGER base sizes
     const styles = useMemo(() => ({
         container: {
             padding: `${styleConfig.pagePaddingTop * scale}px ${styleConfig.pagePadding * scale}px ${styleConfig.pagePaddingBottom * scale}px`,
         },
         name: {
-            fontSize: `${styleConfig.nameFontSize * scale * 1.2}px`,
+            fontSize: `${styleConfig.nameFontSize * scale}px`,
+            lineHeight: 1.1,
         },
         headline: {
-            fontSize: `${styleConfig.detailFontSize * scale * 1.1}px`,
+            fontSize: `${styleConfig.detailFontSize * scale * 1.15}px`,
         },
         sectionTitle: {
-            fontSize: `${styleConfig.sectionTitleSize * scale * 0.9}px`,
-            marginBottom: `${styleConfig.sectionMarginBottom * scale * 0.8}px`,
+            fontSize: `${styleConfig.sectionTitleSize * scale}px`,
+            marginBottom: `${styleConfig.sectionMarginBottom * scale * 0.6}px`,
         },
         entryTitle: {
             fontSize: `${styleConfig.entryTitleSize * scale}px`,
@@ -62,11 +63,11 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
             marginBottom: `${styleConfig.bulletMarginBottom * scale}px`,
         },
         contactFontSize: {
-            fontSize: `${(styleConfig.detailFontSize - 0.5) * scale}px`,
+            fontSize: `${styleConfig.detailFontSize * scale * 0.95}px`,
         },
         skillTag: {
-            fontSize: `${(styleConfig.detailFontSize - 1) * scale}px`,
-            padding: `${2 * scale}px ${6 * scale}px`,
+            fontSize: `${(styleConfig.detailFontSize - 0.5) * scale}px`,
+            padding: `${3 * scale}px ${8 * scale}px`,
         },
     }), [styleConfig, scale]);
 
@@ -124,9 +125,9 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
         onUpdate?.({ experience: newExperience });
     }, [onUpdate, experience]);
 
-    // Categorize skills - more inclusive keywords
+    // Categorize skills - expanded keywords
     const categorizedSkills = useMemo(() => {
-        const techKeywords = ['python', 'javascript', 'react', 'sql', 'tensorflow', 'pytorch', 'aws', 'docker', 'git', 'numpy', 'pandas', 'matplotlib', 'tableau', 'excel', 'r', 'matlab', 'spark', 'hadoop', 'llm', 'nlp', 'api', 'mongodb', 'postgresql', 'nosql', 'flask', 'fastapi', 'streamlit', 'langchain', 'keras', 'scikit', 'java', 'c++', 'typescript', 'node', 'vue', 'angular', 'html', 'css', 'linux', 'azure', 'gcp', 'kubernetes', 'jenkins', 'ci/cd', 'power bi', 'd3', 'plotly', 'scipy', 'pyspark', 'qdrant', 'chromadb', 'pinecone', 'hugging', 'transformers', 'openai', 'anthropic', 'gradio', 'chainlit', 'dialogflow', 'sagemaker', 'lambda', 'ec2', 's3'];
+        const techKeywords = ['python', 'javascript', 'react', 'sql', 'tensorflow', 'pytorch', 'aws', 'docker', 'git', 'numpy', 'pandas', 'matplotlib', 'tableau', 'excel', 'r', 'matlab', 'spark', 'hadoop', 'llm', 'nlp', 'api', 'mongodb', 'postgresql', 'nosql', 'flask', 'fastapi', 'streamlit', 'langchain', 'keras', 'scikit', 'java', 'c++', 'typescript', 'node', 'vue', 'angular', 'html', 'css', 'linux', 'azure', 'gcp', 'kubernetes', 'jenkins', 'ci/cd', 'power bi', 'd3', 'plotly', 'scipy', 'pyspark', 'qdrant', 'chromadb', 'pinecone', 'hugging', 'transformers', 'openai', 'anthropic', 'gradio', 'chainlit', 'dialogflow', 'sagemaker', 'lambda', 'ec2', 's3', 'bash', 'shell', 'scripting', 'google-cloud', 'langgraph', 'qdrant', 'chromadb'];
 
         const technical = skills.filter(skill =>
             techKeywords.some(k => skill.toLowerCase().includes(k))
@@ -160,7 +161,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
         return function SkillTagInner({ skill }: { skill: string }) {
             return (
                 <span
-                    className="inline-block font-medium rounded mr-1 mb-1"
+                    className="inline-block font-medium rounded mr-1.5 mb-1.5"
                     style={{
                         ...styles.skillTag,
                         backgroundColor: `${ACCENT_COLOR}15`,
@@ -186,7 +187,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
             <SequentialAnimationProvider animate={animate}>
                 <div style={styles.container}>
                     {/* Header - Full Width */}
-                    <div className="pb-3">
+                    <div className="pb-4">
                         {/* Name */}
                         <h1
                             className="font-bold tracking-wide"
@@ -202,7 +203,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
 
                         {/* Headline/Title */}
                         {generatedHeadline && (
-                            <p className="text-gray-600 mt-0.5" style={styles.headline}>
+                            <p className="text-gray-600 mt-1" style={styles.headline}>
                                 <EditableText
                                     value={generatedHeadline}
                                     onChange={(v) => onUpdate?.({ targetJob: v })}
@@ -213,13 +214,13 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                         )}
 
                         {/* Divider */}
-                        <div className="h-[3px] mt-2" style={{ backgroundColor: ACCENT_COLOR }} />
+                        <div className="h-[3px] mt-3" style={{ backgroundColor: ACCENT_COLOR }} />
 
                         {/* Contact Info Row */}
-                        <div className="flex flex-wrap items-center gap-3 mt-2 text-gray-600" style={styles.contactFontSize}>
+                        <div className="flex flex-wrap items-center gap-4 mt-3 text-gray-600" style={styles.contactFontSize}>
                             {personalInfo.phone && (
-                                <span className="flex items-center gap-1">
-                                    <Phone className="w-3 h-3" style={{ color: ACCENT_COLOR }} />
+                                <span className="flex items-center gap-1.5">
+                                    <Phone className="w-3.5 h-3.5" style={{ color: ACCENT_COLOR }} />
                                     <EditableText
                                         value={personalInfo.phone}
                                         onChange={(v) => updatePersonalInfo("phone", v)}
@@ -229,8 +230,8 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                 </span>
                             )}
                             {personalInfo.email && (
-                                <span className="flex items-center gap-1">
-                                    <Mail className="w-3 h-3" style={{ color: ACCENT_COLOR }} />
+                                <span className="flex items-center gap-1.5">
+                                    <Mail className="w-3.5 h-3.5" style={{ color: ACCENT_COLOR }} />
                                     <span style={{ color: ACCENT_COLOR }}>
                                         <EditableText
                                             value={personalInfo.email}
@@ -242,8 +243,8 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                 </span>
                             )}
                             {personalInfo.linkedin && (
-                                <span className="flex items-center gap-1">
-                                    <Linkedin className="w-3 h-3" style={{ color: ACCENT_COLOR }} />
+                                <span className="flex items-center gap-1.5">
+                                    <Linkedin className="w-3.5 h-3.5" style={{ color: ACCENT_COLOR }} />
                                     <a
                                         href={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`}
                                         target="_blank"
@@ -256,8 +257,8 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                 </span>
                             )}
                             {personalInfo.github && (
-                                <span className="flex items-center gap-1">
-                                    <Github className="w-3 h-3" style={{ color: ACCENT_COLOR }} />
+                                <span className="flex items-center gap-1.5">
+                                    <Github className="w-3.5 h-3.5" style={{ color: ACCENT_COLOR }} />
                                     <a
                                         href={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`}
                                         target="_blank"
@@ -270,8 +271,8 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                 </span>
                             )}
                             {personalInfo.location && (
-                                <span className="flex items-center gap-1">
-                                    <MapPin className="w-3 h-3" style={{ color: ACCENT_COLOR }} />
+                                <span className="flex items-center gap-1.5">
+                                    <MapPin className="w-3.5 h-3.5" style={{ color: ACCENT_COLOR }} />
                                     <EditableText
                                         value={personalInfo.location}
                                         onChange={(v) => updatePersonalInfo("location", v)}
@@ -284,9 +285,9 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                     </div>
 
                     {/* Two Column Layout */}
-                    <div className="flex gap-4">
-                        {/* Left Column - 60% */}
-                        <div className="w-[60%] pr-3 border-r border-gray-200">
+                    <div className="flex gap-5">
+                        {/* Left Column - 58% - Summary & Experience ONLY */}
+                        <div className="w-[58%] pr-4 border-r border-gray-200">
                             {/* Summary */}
                             {summary && (
                                 <div>
@@ -311,7 +312,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                         <div key={exp.id} style={styles.entryMargin}>
                                             {/* Company & Title Row */}
                                             <div className="flex justify-between items-start">
-                                                <div>
+                                                <div className="flex-1">
                                                     <span className="font-bold text-gray-900" style={styles.entryTitle}>
                                                         <EditableText
                                                             value={exp.title}
@@ -320,7 +321,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                                             displayComponent={<Typewriter text={exp.title} />}
                                                         />
                                                     </span>
-                                                    <span className="text-gray-500 mx-1" style={styles.detail}>|</span>
+                                                    <span className="text-gray-500 mx-1.5" style={styles.detail}>|</span>
                                                     {exp.companyUrl ? (
                                                         <a
                                                             href={exp.companyUrl.startsWith("http") ? exp.companyUrl : `https://${exp.companyUrl}`}
@@ -347,7 +348,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                                         </span>
                                                     )}
                                                 </div>
-                                                <span className="text-gray-500 shrink-0 ml-2" style={styles.smallDetail}>
+                                                <span className="text-gray-500 shrink-0 ml-3" style={styles.smallDetail}>
                                                     {exp.location && <>{exp.location} | </>}
                                                     <Typewriter text={formatDateRange(exp.startDate, exp.endDate, exp.current)} />
                                                 </span>
@@ -355,11 +356,11 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
 
                                             {/* Bullet Points */}
                                             {exp.bullets.length > 0 && (
-                                                <ul className="mt-1 ml-2 space-y-0.5">
+                                                <ul className="mt-2 ml-3 space-y-1">
                                                     {exp.bullets.filter(b => b.trim()).map((bullet, bulletIndex) => (
                                                         <li key={bulletIndex} className="flex items-start text-gray-700" style={styles.bulletMargin}>
                                                             <CheckCircle2
-                                                                className="w-2.5 h-2.5 mr-1.5 mt-0.5 shrink-0"
+                                                                className="w-3 h-3 mr-2 mt-0.5 shrink-0"
                                                                 style={{ color: ACCENT_COLOR }}
                                                             />
                                                             <span className="leading-relaxed" style={styles.detail}>
@@ -379,53 +380,109 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                     ))}
                                 </div>
                             )}
+                        </div>
 
-                            {/* Education */}
+                        {/* Right Column - 42% - Skills, Projects, Education, Certs, Languages */}
+                        <div className="w-[42%]">
+                            {/* Technical Skills */}
+                            {categorizedSkills.technical.length > 0 && (
+                                <div>
+                                    <SectionHeader title="Technical Skills" />
+                                    <div className="flex flex-wrap">
+                                        {categorizedSkills.technical.map((skill, index) => (
+                                            <SkillTag key={index} skill={skill} />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Projects */}
+                            {projects.length > 0 && (
+                                <div>
+                                    <SectionHeader title="Projects" />
+                                    {projects.map((project, index) => (
+                                        <div key={project.id} style={styles.entryMargin}>
+                                            {/* Project Name */}
+                                            <div>
+                                                {project.url ? (
+                                                    <a
+                                                        href={project.url.startsWith("http") ? project.url : `https://${project.url}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="font-bold hover:underline"
+                                                        style={{ ...styles.entryTitle, color: ACCENT_COLOR }}
+                                                    >
+                                                        <Typewriter text={project.name} />
+                                                    </a>
+                                                ) : (
+                                                    <span className="font-bold" style={{ ...styles.entryTitle, color: ACCENT_COLOR }}>
+                                                        <Typewriter text={project.name} />
+                                                    </span>
+                                                )}
+                                                {project.technologies.length > 0 && (
+                                                    <span className="text-gray-500 ml-1.5" style={styles.smallDetail}>
+                                                        ({project.technologies.slice(0, 4).join(", ")})
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            {/* Description */}
+                                            <p className="text-gray-700 mt-1 leading-relaxed" style={styles.detail}>
+                                                <EditableText
+                                                    value={project.description}
+                                                    onChange={(v) => updateProject(index, { description: v })}
+                                                    placeholder="Project description..."
+                                                    multiline
+                                                    displayComponent={<Typewriter text={project.description} speed={2} />}
+                                                />
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            {/* Education - Now on right column */}
                             {education.length > 0 && (
                                 <div>
                                     <SectionHeader title="Education" />
                                     {education.map((edu, index) => (
                                         <div key={edu.id} style={styles.entryMargin}>
-                                            <div className="flex justify-between items-start">
-                                                <div>
-                                                    <div className="font-bold text-gray-900" style={styles.entryTitle}>
-                                                        <EditableText
-                                                            value={edu.institution}
-                                                            onChange={(v) => updateEducation(index, { institution: v })}
-                                                            placeholder="Institution"
-                                                            displayComponent={<Typewriter text={edu.institution} />}
-                                                        />
-                                                    </div>
-                                                    <div className="text-gray-600 italic" style={styles.detail}>
-                                                        <EditableText
-                                                            value={`${edu.degree}${edu.field ? ` in ${edu.field}` : ''}`}
-                                                            onChange={(v) => {
-                                                                const parts = v.split(" in ");
-                                                                updateEducation(index, {
-                                                                    degree: parts[0] || "",
-                                                                    field: parts.slice(1).join(" in ") || ""
-                                                                });
-                                                            }}
-                                                            placeholder="Degree in Field"
-                                                            displayComponent={<Typewriter text={`${edu.degree}${edu.field ? ` in ${edu.field}` : ''}`} />}
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <span className="text-gray-500 shrink-0 ml-2" style={styles.smallDetail}>
-                                                    <Typewriter text={formatDateRange(edu.startDate, edu.endDate)} />
-                                                </span>
+                                            <div className="font-bold text-gray-900" style={styles.entryTitle}>
+                                                <EditableText
+                                                    value={edu.institution}
+                                                    onChange={(v) => updateEducation(index, { institution: v })}
+                                                    placeholder="Institution"
+                                                    displayComponent={<Typewriter text={edu.institution} />}
+                                                />
+                                            </div>
+                                            <div className="text-gray-600 italic" style={styles.detail}>
+                                                <EditableText
+                                                    value={`${edu.degree}${edu.field ? ` in ${edu.field}` : ''}`}
+                                                    onChange={(v) => {
+                                                        const parts = v.split(" in ");
+                                                        updateEducation(index, {
+                                                            degree: parts[0] || "",
+                                                            field: parts.slice(1).join(" in ") || ""
+                                                        });
+                                                    }}
+                                                    placeholder="Degree in Field"
+                                                    displayComponent={<Typewriter text={`${edu.degree}${edu.field ? ` in ${edu.field}` : ''}`} />}
+                                                />
+                                            </div>
+                                            <div className="text-gray-500" style={styles.smallDetail}>
+                                                <Typewriter text={formatDateRange(edu.startDate, edu.endDate)} />
                                             </div>
                                         </div>
                                     ))}
                                 </div>
                             )}
 
-                            {/* Certifications */}
+                            {/* Certifications - Bottom of right column */}
                             {certifications.length > 0 && (
                                 <div>
-                                    <SectionHeader title="Certification" />
+                                    <SectionHeader title="Certifications" />
                                     {certifications.map((cert) => (
-                                        <div key={cert.id} className="text-gray-700" style={{ ...styles.detail, marginBottom: `${styleConfig.bulletMarginBottom * scale}px` }}>
+                                        <div key={cert.id} className="text-gray-700" style={{ ...styles.detail, marginBottom: `${styleConfig.bulletMarginBottom * scale * 1.5}px` }}>
                                             <span className="font-semibold" style={{ color: ACCENT_COLOR }}>
                                                 <Typewriter text={cert.name} />
                                             </span>
@@ -440,125 +497,18 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                 </div>
                             )}
 
-                            {/* Languages */}
+                            {/* Languages - Very bottom of right column */}
                             {languages && languages.length > 0 && (
                                 <div>
                                     <SectionHeader title="Languages" />
-                                    <div className="flex flex-wrap gap-2">
+                                    <div className="flex flex-wrap gap-x-4 gap-y-1">
                                         {languages.map((lang, index) => (
                                             <div key={index} style={styles.detail}>
                                                 <span className="font-semibold text-gray-800">{lang.language}</span>
-                                                <span className="text-gray-500 ml-1">{lang.level}</span>
+                                                <span className="text-gray-500 ml-1.5">{lang.level}</span>
                                             </div>
                                         ))}
                                     </div>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Right Column - 40% */}
-                        <div className="w-[40%]">
-                            {/* Technical Skills */}
-                            {categorizedSkills.technical.length > 0 && (
-                                <div>
-                                    <SectionHeader title="Technical Skills" />
-                                    <div className="flex flex-wrap">
-                                        {categorizedSkills.technical.map((skill, index) => (
-                                            <SkillTag key={index} skill={skill} />
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* General/Other Skills */}
-                            {categorizedSkills.general.length > 0 && (
-                                <div>
-                                    <SectionHeader title="Other Skills" />
-                                    <div className="flex flex-wrap">
-                                        {categorizedSkills.general.map((skill, index) => (
-                                            <SkillTag key={index} skill={skill} />
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Show all skills if no categorization */}
-                            {categorizedSkills.technical.length === 0 && categorizedSkills.general.length === 0 && skills.length > 0 && (
-                                <div>
-                                    <SectionHeader title="Skills" />
-                                    <div className="flex flex-wrap">
-                                        {skills.map((skill, index) => (
-                                            <SkillTag key={index} skill={skill} />
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Projects */}
-                            {projects.length > 0 && (
-                                <div>
-                                    <SectionHeader title="Projects" />
-                                    {projects.map((project, index) => (
-                                        <div key={project.id} style={styles.entryMargin}>
-                                            {/* Project Name & Date */}
-                                            <div className="flex justify-between items-start">
-                                                <div>
-                                                    {project.url ? (
-                                                        <a
-                                                            href={project.url.startsWith("http") ? project.url : `https://${project.url}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="font-bold hover:underline"
-                                                            style={{ ...styles.entryTitle, color: ACCENT_COLOR }}
-                                                        >
-                                                            <Typewriter text={project.name} />
-                                                        </a>
-                                                    ) : (
-                                                        <span className="font-bold" style={{ ...styles.entryTitle, color: ACCENT_COLOR }}>
-                                                            <Typewriter text={project.name} />
-                                                        </span>
-                                                    )}
-                                                    {project.technologies.length > 0 && (
-                                                        <span className="text-gray-500 ml-1" style={styles.smallDetail}>
-                                                            ({project.technologies.slice(0, 3).join(", ")})
-                                                        </span>
-                                                    )}
-                                                </div>
-                                                {(project.startDate || project.endDate) && (
-                                                    <span className="text-gray-400 shrink-0 ml-1" style={styles.smallDetail}>
-                                                        <Typewriter text={formatDateRange(project.startDate, project.endDate)} />
-                                                    </span>
-                                                )}
-                                            </div>
-
-                                            {/* Project URL */}
-                                            {project.url && (
-                                                <div className="flex items-center gap-1 mt-0.5">
-                                                    <Link2 className="w-2 h-2" style={{ color: ACCENT_COLOR }} />
-                                                    <a
-                                                        href={project.url.startsWith("http") ? project.url : `https://${project.url}`}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="hover:underline truncate"
-                                                        style={{ ...styles.smallDetail, color: ACCENT_COLOR }}
-                                                    >
-                                                        {project.url.replace(/^https?:\/\/(www\.)?/, '')}
-                                                    </a>
-                                                </div>
-                                            )}
-
-                                            {/* Description */}
-                                            <p className="text-gray-700 mt-1 leading-relaxed" style={styles.detail}>
-                                                <EditableText
-                                                    value={project.description}
-                                                    onChange={(v) => updateProject(index, { description: v })}
-                                                    placeholder="Project description..."
-                                                    multiline
-                                                    displayComponent={<Typewriter text={project.description} speed={2} />}
-                                                />
-                                            </p>
-                                        </div>
-                                    ))}
                                 </div>
                             )}
                         </div>
