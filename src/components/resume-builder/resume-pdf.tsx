@@ -54,8 +54,8 @@ const styles = StyleSheet.create({
         fontSize: 11,
         fontWeight: "bold",
         textAlign: "center",
-        marginBottom: 6,
-        marginTop: 10,
+        marginBottom: 5,
+        marginTop: 6,
         textTransform: "uppercase",
         letterSpacing: 1,
     },
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         textAlign: "justify",
     },
     entryContainer: {
-        marginBottom: 6,
+        marginBottom: 4,
     },
     entryHeader: {
         flexDirection: "row",
@@ -176,35 +176,35 @@ function calculateContentLimits(data: ResumeData): {
     const totalUnits = expUnits + eduUnits + projUnits + certUnits;
 
     // If we have a lot of content, be more aggressive with limits
-    if (totalUnits > 30) {
-        // Lots of content - be very restrictive
+    if (totalUnits > 25) {
+        // Lots of content - be VERY restrictive
         return {
             maxExperiences: 3,
             maxBulletsPerExperience: 2,
             maxEducation: 2,
             maxProjects: 1,
             maxCertifications: 2,
+            maxSkills: 10,
+        };
+    } else if (totalUnits > 15) {
+        // Medium content
+        return {
+            maxExperiences: 3,
+            maxBulletsPerExperience: 3,
+            maxEducation: 2,
+            maxProjects: 1,
+            maxCertifications: 2,
             maxSkills: 12,
         };
-    } else if (totalUnits > 20) {
-        // Medium content
+    } else {
+        // Light content - show more but still limited
         return {
             maxExperiences: 4,
             maxBulletsPerExperience: 3,
             maxEducation: 2,
             maxProjects: 1,
             maxCertifications: 2,
-            maxSkills: 15,
-        };
-    } else {
-        // Light content - show more
-        return {
-            maxExperiences: 4,
-            maxBulletsPerExperience: 3,
-            maxEducation: 2,
-            maxProjects: 2,
-            maxCertifications: 3,
-            maxSkills: 18,
+            maxSkills: 14,
         };
     }
 }
