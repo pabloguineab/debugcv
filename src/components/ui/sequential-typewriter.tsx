@@ -12,11 +12,11 @@ interface SequenceContextType {
 const SequenceContext = createContext<SequenceContextType | null>(null);
 
 // Provider to manage the global sequence
-export function SequentialAnimationProvider({ 
-    children, 
+export function SequentialAnimationProvider({
+    children,
     animate = true,
     speedMultiplier = 1
-}: { 
+}: {
     children: React.ReactNode;
     animate?: boolean;
     speedMultiplier?: number;
@@ -30,7 +30,7 @@ export function SequentialAnimationProvider({
     // We reset the counter on every render to re-assign IDs? No, that causes mismatches.
     // We only want to assign IDs once.
     // Using a ref to track total registered items.
-    
+
     const register = () => {
         const id = counterRef.current;
         counterRef.current += 1;
@@ -48,18 +48,18 @@ export function SequentialAnimationProvider({
     // Reset counter when children unmount/remount is hard. 
     // Instead of auto-registration, let's just assume pure sequential rendering is hard to guarantee 
     // without manual indices or a recursive traverser.
-    
+
     // ALTERNATIVE:
     // We just render children normally. Each Typewriter checks if "previous sibling" is done? No.
-    
+
     // Let's stick to simple registration. For this specific resume use-case, components mount typically in order.
     // To ensure stability, we will reset counterRef only on full re-mounts or explicit reset.
     // Actually, React refs persist. 
-    
+
     return (
-        <SequenceContext.Provider value={{ 
-            currentStep: effectiveStep, 
-            register, 
+        <SequenceContext.Provider value={{
+            currentStep: effectiveStep,
+            register,
             onComplete: handleComplete,
             isAnimating: animate
         }}>
@@ -71,11 +71,11 @@ export function SequentialAnimationProvider({
 
 // Helper to reset counter on re-renders of the provider
 function CounterResetter() {
-   const context = useContext(SequenceContext);
-   // We actually can't easily reset the counter for *children* during parent render.
-   // So we usually rely on children calling "register" inside useEffect? No, that's async.
-   // Inside useMemo/useRef init? Yes.
-   return null;
+    const context = useContext(SequenceContext);
+    // We actually can't easily reset the counter for *children* during parent render.
+    // So we usually rely on children calling "register" inside useEffect? No, that's async.
+    // Inside useMemo/useRef init? Yes.
+    return null;
 }
 
 
@@ -95,7 +95,7 @@ export function useSequentialWriter(text: string, speed: number = 20) {
     const context = useContext(SequenceContext);
     const [displayedText, setDisplayedText] = useState("");
     const [isDone, setIsDone] = useState(false);
-    
+
     // Use refs to track state without triggering rerenders
     const hasRegistered = useRef(false);
     const stepIndexRef = useRef<number | null>(null);
@@ -116,7 +116,7 @@ export function useSequentialWriter(text: string, speed: number = 20) {
     // Typing logic - only run when it's our turn and we haven't completed
     useEffect(() => {
         const stepIndex = stepIndexRef.current;
-        
+
         if (!context || stepIndex === null) {
             // If no context, just show text immediately
             if (!hasCompletedAnimation.current) {
@@ -127,13 +127,10 @@ export function useSequentialWriter(text: string, speed: number = 20) {
             return;
         }
 
-        // If not animating, show text immediately
+        // If not animating, show text immediately and keep syncing with prop changes
         if (!context.isAnimating) {
-            if (!hasCompletedAnimation.current) {
-                setDisplayedText(text);
-                setIsDone(true);
-                hasCompletedAnimation.current = true;
-            }
+            setDisplayedText(text);
+            if (!isDone) setIsDone(true);
             return;
         }
 
@@ -145,14 +142,14 @@ export function useSequentialWriter(text: string, speed: number = 20) {
         // If it's our turn and we haven't started yet
         if (context.currentStep === stepIndex && !hasStartedAnimating.current) {
             hasStartedAnimating.current = true;
-            
+
             // Lock the text for this animation
             lockedTextRef.current = text;
             const textToAnimate = text;
-            
+
             setDisplayedText("");
             setIsDone(false);
-            
+
             let i = 0;
             intervalRef.current = setInterval(() => {
                 setDisplayedText(textToAnimate.slice(0, i + 1));
@@ -182,21 +179,21 @@ export function useSequentialWriter(text: string, speed: number = 20) {
 }
 
 // Component
-export const Typewriter = ({ 
-    text, 
-    speed = 15, 
-    className, 
+export const Typewriter = ({
+    text,
+    speed = 15,
+    className,
     tag: Tag = "span",
-    ...props 
-}: { 
-    text: string; 
-    speed?: number; 
+    ...props
+}: {
+    text: string;
+    speed?: number;
     className?: string;
     tag?: React.ElementType;
     [key: string]: any;
 }) => {
     const { displayedText, isActive } = useSequentialWriter(text || "", speed);
-    
+
     // Cast to any to avoid TS issues with dynamic tags and children
     const Component = Tag as any;
 
