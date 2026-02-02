@@ -78,25 +78,26 @@ export function calculateStyleConfig(data: ResumeData): StyleConfig {
 
     // Interpolate all values between sparse (max) and dense (min)
     // Format: lerp(sparseValue, denseValue, t)
+    // IMPORTANT: Sparse values are conservative to avoid page overflow
     return {
-        // Page padding: sparse=55pt, dense=22pt
-        pagePadding: lerp(55, 22, t),
-        pagePaddingTop: lerp(50, 18, t),
-        pagePaddingBottom: lerp(45, 14, t),
+        // Page padding: sparse=40pt, dense=20pt
+        pagePadding: lerp(40, 20, t),
+        pagePaddingTop: lerp(36, 16, t),
+        pagePaddingBottom: lerp(32, 12, t),
 
-        // Typography: sparse=larger, dense=smaller
-        baseFontSize: lerp(11, 7.5, t),
-        nameFontSize: lerp(26, 15, t),
-        sectionTitleSize: lerp(13, 9, t),
-        entryTitleSize: lerp(11.5, 8, t),
-        detailFontSize: lerp(10.5, 7, t),
+        // Typography: sparse=moderate, dense=smaller
+        baseFontSize: lerp(9.5, 7.5, t),
+        nameFontSize: lerp(20, 14, t),
+        sectionTitleSize: lerp(11, 8.5, t),
+        entryTitleSize: lerp(10, 8, t),
+        detailFontSize: lerp(9, 7, t),
 
-        // Spacing: sparse=generous, dense=tight
-        sectionMarginTop: lerp(16, 3, t),
-        sectionMarginBottom: lerp(12, 2, t),
-        entryMarginBottom: lerp(12, 2, t),
-        bulletMarginBottom: lerp(4, 0.5, t),
-        lineHeight: lerp(1.6, 1.15, t),
+        // Spacing: sparse=moderate, dense=tight
+        sectionMarginTop: lerp(10, 3, t),
+        sectionMarginBottom: lerp(7, 2, t),
+        entryMarginBottom: lerp(7, 2, t),
+        bulletMarginBottom: lerp(2.5, 0.5, t),
+        lineHeight: lerp(1.4, 1.15, t),
 
         tier,
         contentScore,
