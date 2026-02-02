@@ -371,13 +371,17 @@ export async function downloadResumePDF(data: ResumeData): Promise<void> {
     let pdfBlob: Blob;
     let fileNameSuffix = "Simple";
 
-    // Import Modern PDF dynamically to avoid circular dependencies
+    // Import PDF templates dynamically to avoid circular dependencies
     if (data.template === "modern") {
         const { ModernPDFDocument } = await import("./templates/modern-pdf");
         pdfBlob = await pdf(<ModernPDFDocument data={data} />).toBlob();
         fileNameSuffix = "Modern";
+    } else if (data.template === "harvard") {
+        const { HarvardPDFDocument } = await import("./templates/harvard-pdf");
+        pdfBlob = await pdf(<HarvardPDFDocument data={data} />).toBlob();
+        fileNameSuffix = "Harvard";
     } else {
-        // Simple or Harvard (fallback to Simple for now)
+        // Simple template
         pdfBlob = await pdf(<ResumePDFDocument data={data} />).toBlob();
     }
 

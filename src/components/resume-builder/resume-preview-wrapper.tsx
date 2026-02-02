@@ -3,6 +3,7 @@
 import { ResumeData } from "@/types/resume";
 import { ResumePreview as SimplePreview } from "./resume-preview";
 import { ModernPreview } from "./templates/modern-preview";
+import { HarvardPreview } from "./templates/harvard-preview";
 
 interface ResumePreviewWrapperProps {
     data: ResumeData;
@@ -21,8 +22,7 @@ export function ResumePreviewWrapper(props: ResumePreviewWrapperProps) {
         case "modern":
             return <ModernPreview {...props} />;
         case "harvard":
-            // TODO: Implement Harvard template
-            return <SimplePreview {...props} />;
+            return <HarvardPreview {...props} />;
         case "simple":
         default:
             return <SimplePreview {...props} />;
