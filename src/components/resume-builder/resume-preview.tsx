@@ -2,7 +2,7 @@
 
 import { Typewriter, SequentialAnimationProvider } from "@/components/ui/sequential-typewriter";
 import { EditableText } from "./editable-text";
-import { ResumeData, Experience, Education, Project, Certification } from "@/types/resume";
+import { ResumeData, Experience, Education, Project, Certification, ResumeLanguage } from "@/types/resume";
 
 interface ResumePreviewProps {
     data: ResumeData;
@@ -12,7 +12,7 @@ interface ResumePreviewProps {
 }
 
 export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }: ResumePreviewProps) {
-    const { personalInfo, summary, skills, experience, education, projects, certifications } = data;
+    const { personalInfo, summary, skills, experience, education, projects, certifications, languages } = data;
 
     // Helper to format date ranges (avoids "- 2023" when startDate is empty)
     const formatDateRange = (startDate?: string, endDate?: string, current?: boolean) => {
@@ -447,6 +447,21 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                     placeholder="Add skills separated by commas..."
                                     multiline
                                     displayComponent={<Typewriter text={skills.join(" • ")} speed={10} />}
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Languages */}
+                    {languages && languages.length > 0 && (
+                        <div className="mb-5">
+                            <h2 className="text-[13px] font-bold text-center mb-3">
+                                <Typewriter text="Languages" speed={5} />
+                            </h2>
+                            <div className="text-[11px] text-gray-700 text-center">
+                                <Typewriter
+                                    text={languages.map(lang => `${lang.language} (${lang.level})`).join(" • ")}
+                                    speed={10}
                                 />
                             </div>
                         </div>
