@@ -1,8 +1,10 @@
 "use client";
 
+import { useMemo } from "react";
 import { Typewriter, SequentialAnimationProvider } from "@/components/ui/sequential-typewriter";
 import { EditableText } from "./editable-text";
 import { ResumeData, Experience, Education, Project, Certification, ResumeLanguage } from "@/types/resume";
+import { calculateStyleConfig, StyleConfig } from "@/lib/resume-styles";
 
 interface ResumePreviewProps {
     data: ResumeData;
@@ -13,6 +15,41 @@ interface ResumePreviewProps {
 
 export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }: ResumePreviewProps) {
     const { personalInfo, summary, skills, experience, education, projects, certifications, languages } = data;
+
+    // Calculate dynamic styles based on content density
+    const styleConfig = useMemo(() => calculateStyleConfig(data), [data]);
+
+    // Scale factor for web (PDF uses pt, we use px with 1.25x scale for readability)
+    const scale = 1.25;
+    const styles = useMemo(() => ({
+        container: {
+            padding: `${styleConfig.pagePaddingTop * scale}px ${styleConfig.pagePadding * scale}px ${styleConfig.pagePaddingBottom * scale}px`,
+        },
+        name: {
+            fontSize: `${styleConfig.nameFontSize * scale}px`,
+        },
+        sectionTitle: {
+            fontSize: `${styleConfig.sectionTitleSize * scale}px`,
+            marginTop: `${styleConfig.sectionMarginTop * scale}px`,
+            marginBottom: `${styleConfig.sectionMarginBottom * scale}px`,
+        },
+        entryTitle: {
+            fontSize: `${styleConfig.entryTitleSize * scale}px`,
+        },
+        detail: {
+            fontSize: `${styleConfig.detailFontSize * scale}px`,
+            lineHeight: styleConfig.lineHeight,
+        },
+        entryMargin: {
+            marginBottom: `${styleConfig.entryMarginBottom * scale}px`,
+        },
+        bulletMargin: {
+            marginBottom: `${styleConfig.bulletMarginBottom * scale}px`,
+        },
+        sectionMargin: {
+            marginBottom: `${styleConfig.sectionMarginBottom * scale}px`,
+        },
+    }), [styleConfig, scale]);
 
     // Helper to format date ranges (avoids "- 2023" when startDate is empty)
     const formatDateRange = (startDate?: string, endDate?: string, current?: boolean) => {
@@ -77,7 +114,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
         onUpdate?.({ skills: newSkills });
     };
 
-    // Himalayas-style resume template
+    // Himalayas-style resume template with dynamic styling
     return (
         <div
             className="bg-white rounded-lg mx-auto border border-gray-200 shadow-sm"
@@ -89,14 +126,17 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
             data-resume-preview="true"
         >
             <SequentialAnimationProvider animate={animate}>
-                {/* Resume Paper - Himalayas Style */}
+                {/* Resume Paper - Dynamic Styles */}
                 <div
-                    className="px-10 py-8 text-gray-800"
-                    style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+                    className="text-gray-800"
+                    style={{
+                        fontFamily: "Georgia, 'Times New Roman', serif",
+                        ...styles.container
+                    }}
                 >
                     {/* Header */}
-                    <div className="text-center mb-6">
-                        <h1 className="text-[26px] font-normal tracking-wide mb-2">
+                    <div className="text-center" style={styles.sectionMargin}>
+                        <h1 className="font-normal tracking-wide mb-2" style={styles.name}>
                             <EditableText
                                 value={personalInfo.fullName}
                                 onChange={(v) => updatePersonalInfo("fullName", v)}
@@ -107,7 +147,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
 
                         <div className="w-full h-px bg-gray-300 mx-auto mb-3" />
 
-                        <p className="text-[11px] text-gray-600 flex justify-center items-center flex-wrap gap-1">
+                        <p className="text-gray-600 flex justify-center items-center flex-wrap gap-1" style={styles.detail}>
                             <EditableText
                                 value={personalInfo.location}
                                 onChange={(v) => updatePersonalInfo("location", v)}
@@ -160,11 +200,11 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                     </div>
 
                     {/* Professional Summary */}
-                    <div className="mb-5">
-                        <h2 className="text-[13px] font-bold text-center mb-3">
+                    <div style={styles.sectionMargin}>
+                        <h2 className="font-bold text-center uppercase tracking-wide" style={styles.sectionTitle}>
                             <Typewriter text="Professional summary" speed={5} />
                         </h2>
-                        <div className="text-[11px] leading-relaxed text-gray-700 min-h-[3em]">
+                        <div className="leading-relaxed text-gray-700 min-h-[3em]" style={styles.detail}>
                             <EditableText
                                 value={summary}
                                 onChange={updateSummary}
@@ -182,16 +222,16 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
 
                     {/* Education */}
                     {education.length > 0 && (
-                        <div className="mb-5">
-                            <h2 className="text-[13px] font-bold text-center mb-3">
+                        <div style={styles.sectionMargin}>
+                            <h2 className="font-bold text-center uppercase tracking-wide" style={styles.sectionTitle}>
                                 <Typewriter text="Education" speed={5} />
                             </h2>
-                            <div className="space-y-3">
+                            <div>
                                 {education.map((edu, index) => (
-                                    <div key={edu.id} className="p-1">
+                                    <div key={edu.id} style={styles.entryMargin}>
                                         <div className="flex justify-between items-start gap-4">
                                             <div className="flex-1 min-w-0">
-                                                <div className="text-[11px] font-bold uppercase tracking-wide">
+                                                <div className="font-bold uppercase tracking-wide" style={styles.entryTitle}>
                                                     <EditableText
                                                         value={edu.institution}
                                                         onChange={(v) => updateEducation(index, { institution: v })}
@@ -199,7 +239,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                                         displayComponent={<Typewriter text={edu.institution} />}
                                                     />
                                                 </div>
-                                                <div className="text-[11px] text-gray-600">
+                                                <div className="text-gray-600" style={styles.detail}>
                                                     <EditableText
                                                         value={`${edu.degree} in ${edu.field}`}
                                                         onChange={(v) => {
@@ -215,7 +255,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                                     />
                                                 </div>
                                             </div>
-                                            <div className="flex flex-col items-end text-[11px] text-gray-600 shrink-0">
+                                            <div className="flex flex-col items-end text-gray-600 shrink-0" style={styles.detail}>
                                                 <div>
                                                     <EditableText
                                                         value={edu.location || ""}
@@ -248,16 +288,16 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
 
                     {/* Experience */}
                     {experience.length > 0 && (
-                        <div className="mb-5">
-                            <h2 className="text-[13px] font-bold text-center mb-3">
+                        <div style={styles.sectionMargin}>
+                            <h2 className="font-bold text-center uppercase tracking-wide" style={styles.sectionTitle}>
                                 <Typewriter text="Experience" speed={5} />
                             </h2>
-                            <div className="space-y-4">
+                            <div>
                                 {experience.map((exp, index) => (
-                                    <div key={exp.id} className="p-1">
+                                    <div key={exp.id} style={styles.entryMargin}>
                                         <div className="flex justify-between items-start mb-1 gap-4">
                                             <div className="flex-1 min-w-0">
-                                                <div className={`text-[11px] font-bold uppercase tracking-wide ${exp.companyUrl ? 'text-blue-600' : ''}`}>
+                                                <div className={`font-bold uppercase tracking-wide ${exp.companyUrl ? 'text-blue-600' : ''}`} style={styles.entryTitle}>
                                                     {exp.companyUrl ? (
                                                         <a
                                                             href={exp.companyUrl.startsWith("http") ? exp.companyUrl : `https://${exp.companyUrl}`}
@@ -281,7 +321,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                                         />
                                                     )}
                                                 </div>
-                                                <div className="text-[11px] text-gray-700">
+                                                <div className="text-gray-700" style={styles.detail}>
                                                     <EditableText
                                                         value={exp.title}
                                                         onChange={(v) => updateExperience(index, { title: v })}
@@ -290,7 +330,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                                     />
                                                 </div>
                                             </div>
-                                            <div className="flex flex-col items-end text-[11px] text-gray-600 shrink-0">
+                                            <div className="flex flex-col items-end text-gray-600 shrink-0" style={styles.detail}>
                                                 <div>
                                                     <EditableText
                                                         value={exp.location || ""}
@@ -319,9 +359,9 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                         </div>
 
                                         {exp.bullets.length > 0 && (
-                                            <div className="ml-4 text-[11px] text-gray-700 space-y-1 mt-2">
+                                            <div className="ml-4 text-gray-700 mt-2" style={styles.detail}>
                                                 {exp.bullets.map((bullet, bulletIndex) => (
-                                                    <div key={bulletIndex} className="leading-relaxed w-full">
+                                                    <div key={bulletIndex} className="leading-relaxed w-full" style={styles.bulletMargin}>
                                                         <EditableText
                                                             value={bullet}
                                                             onChange={(v) => updateBullet(index, bulletIndex, v)}
@@ -341,15 +381,15 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
 
                     {/* Projects */}
                     {projects.length > 0 && (
-                        <div className="mb-5">
-                            <h2 className="text-[13px] font-bold text-center mb-3">
+                        <div style={styles.sectionMargin}>
+                            <h2 className="font-bold text-center uppercase tracking-wide" style={styles.sectionTitle}>
                                 <Typewriter text="Projects" speed={5} />
                             </h2>
-                            <div className="space-y-3">
+                            <div>
                                 {projects.map((project, index) => (
-                                    <div key={project.id} className="p-1">
+                                    <div key={project.id} style={styles.entryMargin}>
                                         <div className="flex justify-between items-start mb-1">
-                                            <div className="text-[11px] font-bold uppercase tracking-wide">
+                                            <div className="font-bold uppercase tracking-wide" style={styles.entryTitle}>
                                                 <EditableText
                                                     value={project.name}
                                                     onChange={(v) => updateProject(index, { name: v })}
@@ -368,7 +408,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                                 </span>
                                             )}
                                         </div>
-                                        <div className="text-[11px] text-gray-700 leading-relaxed">
+                                        <div className="text-gray-700 leading-relaxed" style={styles.detail}>
                                             <EditableText
                                                 value={project.description}
                                                 onChange={(v) => updateProject(index, { description: v })}
@@ -391,16 +431,16 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
 
                     {/* Certifications */}
                     {certifications.length > 0 && (
-                        <div className="mb-5">
-                            <h2 className="text-[13px] font-bold text-center mb-3">
+                        <div style={styles.sectionMargin}>
+                            <h2 className="font-bold text-center uppercase tracking-wide" style={styles.sectionTitle}>
                                 <Typewriter text="Certifications" speed={5} />
                             </h2>
-                            <div className="space-y-2">
+                            <div>
                                 {certifications.map((cert, index) => (
-                                    <div key={cert.id} className="p-1">
+                                    <div key={cert.id} style={styles.entryMargin}>
                                         <div className="flex justify-between items-start">
                                             <div>
-                                                <div className="text-[11px] font-bold">
+                                                <div className="font-bold" style={styles.detail}>
                                                     <EditableText
                                                         value={cert.name}
                                                         onChange={(v) => updateCertification(index, { name: v })}
@@ -408,7 +448,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                                         displayComponent={<Typewriter text={cert.name} />}
                                                     />
                                                 </div>
-                                                <div className="text-[10px] text-gray-600">
+                                                <div className="text-gray-600" style={styles.detail}>
                                                     <EditableText
                                                         value={cert.issuer}
                                                         onChange={(v) => updateCertification(index, { issuer: v })}
@@ -417,7 +457,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                                     />
                                                 </div>
                                             </div>
-                                            <div className="flex flex-col items-end text-[10px] text-gray-600">
+                                            <div className="flex flex-col items-end text-gray-600" style={styles.detail}>
                                                 <div>
                                                     <Typewriter text={`${cert.issueDate}${cert.expiryDate ? ` - ${cert.expiryDate}` : ""}`} />
                                                 </div>
@@ -436,11 +476,11 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
 
                     {/* Skills */}
                     {skills.length > 0 && (
-                        <div>
-                            <h2 className="text-[13px] font-bold text-center mb-3">
+                        <div style={styles.sectionMargin}>
+                            <h2 className="font-bold text-center uppercase tracking-wide" style={styles.sectionTitle}>
                                 <Typewriter text="Skills" speed={5} />
                             </h2>
-                            <div className="text-[11px] text-gray-700 text-center">
+                            <div className="text-gray-700 text-center" style={styles.detail}>
                                 <EditableText
                                     value={skills.join(" • ")}
                                     onChange={updateSkills}
@@ -454,11 +494,11 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
 
                     {/* Languages */}
                     {languages && languages.length > 0 && (
-                        <div className="mb-5">
-                            <h2 className="text-[13px] font-bold text-center mb-3">
+                        <div style={styles.sectionMargin}>
+                            <h2 className="font-bold text-center uppercase tracking-wide" style={styles.sectionTitle}>
                                 <Typewriter text="Languages" speed={5} />
                             </h2>
-                            <div className="text-[11px] text-gray-700 text-center">
+                            <div className="text-gray-700 text-center" style={styles.detail}>
                                 <Typewriter
                                     text={languages.map(lang => `${lang.language} (${lang.level})`).join(" • ")}
                                     speed={10}

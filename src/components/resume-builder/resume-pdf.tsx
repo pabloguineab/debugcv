@@ -2,6 +2,7 @@
 
 import { Document, Page, Text, View, StyleSheet, Font, pdf, Link } from "@react-pdf/renderer";
 import { ResumeData } from "@/types/resume";
+import { calculateStyleConfig, StyleConfig } from "@/lib/resume-styles";
 
 // Register fonts for a professional look
 Font.register({
@@ -11,137 +12,25 @@ Font.register({
     ]
 });
 
-// Dynamic style configuration based on content density
-interface StyleConfig {
-    pagePadding: number;
-    baseFontSize: number;
-    nameFontSize: number;
-    sectionTitleSize: number;
-    entryTitleSize: number;
-    detailFontSize: number;
-    sectionMarginTop: number;
-    sectionMarginBottom: number;
-    entryMarginBottom: number;
-    bulletMarginBottom: number;
-    lineHeight: number;
-}
-
-// Calculate content density and return appropriate style config
-function calculateStyleConfig(data: ResumeData): StyleConfig {
-    // Count all content items
-    const totalBullets = data.experience.reduce((sum, exp) => sum + exp.bullets.length, 0);
-    const totalDescriptionLength = data.projects.reduce((sum, p) => sum + (p.description?.length || 0), 0)
-        + (data.summary?.length || 0);
-
-    // Calculate content score (higher = more content)
-    const contentScore =
-        data.experience.length * 8 +
-        totalBullets * 3 +
-        data.education.length * 4 +
-        data.projects.length * 6 +
-        data.certifications.length * 2 +
-        (data.languages?.length || 0) * 2 +
-        Math.floor(data.skills.length / 3) +
-        Math.floor(totalDescriptionLength / 100);
-
-    // Determine style tier based on content score
-    if (contentScore > 60) {
-        // Very dense content - compact everything
-        return {
-            pagePadding: 28,
-            baseFontSize: 8.5,
-            nameFontSize: 18,
-            sectionTitleSize: 10,
-            entryTitleSize: 9,
-            detailFontSize: 8,
-            sectionMarginTop: 5,
-            sectionMarginBottom: 3,
-            entryMarginBottom: 3,
-            bulletMarginBottom: 1,
-            lineHeight: 1.25,
-        };
-    } else if (contentScore > 45) {
-        // Medium-high content
-        return {
-            pagePadding: 32,
-            baseFontSize: 9,
-            nameFontSize: 19,
-            sectionTitleSize: 10.5,
-            entryTitleSize: 9.5,
-            detailFontSize: 8.5,
-            sectionMarginTop: 6,
-            sectionMarginBottom: 4,
-            entryMarginBottom: 4,
-            bulletMarginBottom: 1.5,
-            lineHeight: 1.3,
-        };
-    } else if (contentScore > 30) {
-        // Medium content - balanced
-        return {
-            pagePadding: 35,
-            baseFontSize: 9.5,
-            nameFontSize: 20,
-            sectionTitleSize: 11,
-            entryTitleSize: 10,
-            detailFontSize: 9,
-            sectionMarginTop: 8,
-            sectionMarginBottom: 5,
-            entryMarginBottom: 5,
-            bulletMarginBottom: 2,
-            lineHeight: 1.35,
-        };
-    } else if (contentScore > 18) {
-        // Light content - more spacious
-        return {
-            pagePadding: 40,
-            baseFontSize: 10,
-            nameFontSize: 22,
-            sectionTitleSize: 12,
-            entryTitleSize: 10.5,
-            detailFontSize: 9.5,
-            sectionMarginTop: 10,
-            sectionMarginBottom: 6,
-            entryMarginBottom: 6,
-            bulletMarginBottom: 2.5,
-            lineHeight: 1.4,
-        };
-    } else {
-        // Very light content - maximize spacing to fill page
-        return {
-            pagePadding: 45,
-            baseFontSize: 10.5,
-            nameFontSize: 24,
-            sectionTitleSize: 13,
-            entryTitleSize: 11,
-            detailFontSize: 10,
-            sectionMarginTop: 14,
-            sectionMarginBottom: 8,
-            entryMarginBottom: 8,
-            bulletMarginBottom: 3,
-            lineHeight: 1.5,
-        };
-    }
-}
-
 // Create dynamic styles based on config
 function createDynamicStyles(config: StyleConfig) {
     return StyleSheet.create({
         page: {
             padding: config.pagePadding,
-            paddingTop: config.pagePadding - 5,
-            paddingBottom: config.pagePadding - 10,
+            paddingTop: config.pagePaddingTop,
+            paddingBottom: config.pagePaddingBottom,
             fontFamily: "Helvetica",
             fontSize: config.baseFontSize,
             color: "#333",
         },
         header: {
             textAlign: "center",
-            marginBottom: config.sectionMarginBottom + 4,
+            marginBottom: config.sectionMarginBottom + 2,
         },
         name: {
             fontSize: config.nameFontSize,
             fontWeight: "bold",
-            marginBottom: 4,
+            marginBottom: 3,
             color: "#1a1a1a",
         },
         divider: {
@@ -153,12 +42,12 @@ function createDynamicStyles(config: StyleConfig) {
             flexDirection: "row",
             justifyContent: "center",
             flexWrap: "wrap",
-            gap: 8,
+            gap: 6,
             fontSize: config.detailFontSize,
             color: "#666",
         },
         separator: {
-            marginHorizontal: 4,
+            marginHorizontal: 3,
         },
         link: {
             color: "#2563eb",
@@ -209,7 +98,7 @@ function createDynamicStyles(config: StyleConfig) {
             fontSize: config.detailFontSize,
             color: "#666",
             flexShrink: 0,
-            marginLeft: 10,
+            marginLeft: 8,
         },
         entryLocation: {
             fontSize: config.detailFontSize,
@@ -220,15 +109,15 @@ function createDynamicStyles(config: StyleConfig) {
             color: "#666",
         },
         bulletList: {
-            marginLeft: 10,
-            marginTop: 2,
+            marginLeft: 8,
+            marginTop: 1,
         },
         bulletItem: {
             flexDirection: "row",
             marginBottom: config.bulletMarginBottom,
         },
         bullet: {
-            marginRight: 5,
+            marginRight: 4,
             color: "#666",
         },
         bulletText: {
@@ -255,22 +144,22 @@ function createDynamicStyles(config: StyleConfig) {
             fontWeight: "bold",
         },
         certIssuer: {
-            fontSize: config.detailFontSize - 1,
+            fontSize: config.detailFontSize - 0.5,
             color: "#666",
         },
         certDate: {
-            fontSize: config.detailFontSize - 1,
+            fontSize: config.detailFontSize - 0.5,
             color: "#666",
         },
         projectTech: {
-            fontSize: config.detailFontSize - 1,
+            fontSize: config.detailFontSize - 0.5,
             color: "#666",
         },
         languagesContainer: {
             flexDirection: "row",
             justifyContent: "center",
             flexWrap: "wrap",
-            gap: 6,
+            gap: 4,
         },
         languageItem: {
             flexDirection: "row",
@@ -287,6 +176,7 @@ function createDynamicStyles(config: StyleConfig) {
         },
     });
 }
+
 
 interface ResumePDFDocumentProps {
     data: ResumeData;
