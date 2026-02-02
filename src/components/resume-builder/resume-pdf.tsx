@@ -11,145 +11,201 @@ Font.register({
     ]
 });
 
-// Create styles
+// Create styles - optimized for single page
 const styles = StyleSheet.create({
     page: {
-        padding: 40,
+        padding: 30,
         fontFamily: "Helvetica",
-        fontSize: 10,
+        fontSize: 9,
         color: "#333",
     },
     header: {
         textAlign: "center",
-        marginBottom: 15,
+        marginBottom: 10,
     },
     name: {
-        fontSize: 22,
+        fontSize: 18,
         fontWeight: "bold",
-        marginBottom: 5,
+        marginBottom: 4,
         color: "#1a1a1a",
     },
     divider: {
         height: 1,
         backgroundColor: "#ccc",
-        marginVertical: 8,
+        marginVertical: 6,
     },
     contactRow: {
         flexDirection: "row",
         justifyContent: "center",
-        gap: 10,
-        fontSize: 9,
+        flexWrap: "wrap",
+        gap: 6,
+        fontSize: 8,
         color: "#666",
     },
     contactItem: {
         flexDirection: "row",
     },
     separator: {
-        marginHorizontal: 5,
+        marginHorizontal: 4,
     },
     link: {
         color: "#2563eb",
     },
     sectionTitle: {
-        fontSize: 11,
+        fontSize: 10,
         fontWeight: "bold",
         textAlign: "center",
-        marginBottom: 8,
-        marginTop: 12,
+        marginBottom: 6,
+        marginTop: 8,
         textTransform: "uppercase",
         letterSpacing: 1,
     },
     summary: {
-        fontSize: 9,
-        lineHeight: 1.5,
+        fontSize: 8,
+        lineHeight: 1.4,
         color: "#444",
         textAlign: "justify",
     },
     entryContainer: {
-        marginBottom: 8,
+        marginBottom: 6,
     },
     entryHeader: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "flex-start",
-        marginBottom: 2,
+        marginBottom: 1,
     },
     entryTitle: {
-        fontSize: 10,
+        fontSize: 9,
         fontWeight: "bold",
         textTransform: "uppercase",
     },
     entryTitleLink: {
-        fontSize: 10,
+        fontSize: 9,
         fontWeight: "bold",
         textTransform: "uppercase",
         color: "#2563eb",
         textDecoration: "none",
     },
     entrySubtitle: {
-        fontSize: 9,
+        fontSize: 8,
         color: "#555",
         fontStyle: "italic",
     },
     entryRight: {
         textAlign: "right",
-        fontSize: 9,
+        fontSize: 8,
         color: "#666",
         flexShrink: 0,
-        marginLeft: 10,
+        marginLeft: 8,
     },
     entryLocation: {
-        fontSize: 9,
+        fontSize: 8,
         color: "#666",
     },
     entryDate: {
-        fontSize: 9,
+        fontSize: 8,
         color: "#666",
     },
     bulletList: {
-        marginLeft: 10,
-        marginTop: 4,
+        marginLeft: 8,
+        marginTop: 2,
     },
     bulletItem: {
         flexDirection: "row",
-        marginBottom: 2,
+        marginBottom: 1,
     },
     bullet: {
-        marginRight: 5,
+        marginRight: 4,
         color: "#666",
     },
     bulletText: {
         flex: 1,
-        fontSize: 9,
-        lineHeight: 1.4,
+        fontSize: 8,
+        lineHeight: 1.3,
         color: "#444",
     },
     skillsContainer: {
         textAlign: "center",
     },
     skillsText: {
-        fontSize: 9,
-        lineHeight: 1.5,
+        fontSize: 8,
+        lineHeight: 1.4,
         color: "#444",
     },
     certContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
-        marginBottom: 4,
+        marginBottom: 3,
     },
     certName: {
-        fontSize: 9,
+        fontSize: 8,
         fontWeight: "bold",
     },
     certIssuer: {
-        fontSize: 8,
+        fontSize: 7,
         color: "#666",
     },
     certDate: {
-        fontSize: 8,
+        fontSize: 7,
         color: "#666",
     },
 });
+
+// Content limits to ensure single page
+const LIMITS = {
+    MAX_EXPERIENCES: 4,
+    MAX_BULLETS_PER_EXPERIENCE: 3,
+    MAX_BULLET_LENGTH: 150,
+    MAX_EDUCATION: 2,
+    MAX_PROJECTS: 2,
+    MAX_CERTIFICATIONS: 3,
+    MAX_SKILLS: 15,
+    MAX_SUMMARY_LENGTH: 350,
+};
+
+// Truncate text to a maximum length
+function truncateText(text: string, maxLength: number): string {
+    if (!text || text.length <= maxLength) return text;
+    return text.slice(0, maxLength - 3).trim() + "...";
+}
+
+// Function to fit resume data within single page limits
+function fitToSinglePage(data: ResumeData): ResumeData {
+    const fitted = { ...data };
+
+    // Truncate summary
+    if (fitted.summary) {
+        fitted.summary = truncateText(fitted.summary, LIMITS.MAX_SUMMARY_LENGTH);
+    }
+
+    // Limit and truncate experience
+    fitted.experience = data.experience.slice(0, LIMITS.MAX_EXPERIENCES).map(exp => ({
+        ...exp,
+        bullets: exp.bullets
+            .slice(0, LIMITS.MAX_BULLETS_PER_EXPERIENCE)
+            .map(bullet => truncateText(bullet, LIMITS.MAX_BULLET_LENGTH))
+    }));
+
+    // Limit education
+    fitted.education = data.education.slice(0, LIMITS.MAX_EDUCATION);
+
+    // Limit projects (reduce if we have lots of experience)
+    const projectLimit = fitted.experience.length >= 3 ? 1 : LIMITS.MAX_PROJECTS;
+    fitted.projects = data.projects.slice(0, projectLimit).map(proj => ({
+        ...proj,
+        description: truncateText(proj.description, 120)
+    }));
+
+    // Limit certifications (skip if we have lots of other content)
+    const certLimit = (fitted.experience.length >= 3 && fitted.projects.length > 0) ? 2 : LIMITS.MAX_CERTIFICATIONS;
+    fitted.certifications = data.certifications.slice(0, certLimit);
+
+    // Limit skills
+    fitted.skills = data.skills.slice(0, LIMITS.MAX_SKILLS);
+
+    return fitted;
+}
 
 interface ResumePDFDocumentProps {
     data: ResumeData;
@@ -157,7 +213,9 @@ interface ResumePDFDocumentProps {
 
 // The PDF Document component
 function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
-    const { personalInfo, summary, skills, experience, education, projects, certifications } = data;
+    // Apply single-page fitting
+    const fittedData = fitToSinglePage(data);
+    const { personalInfo, summary, skills, experience, education, projects, certifications } = fittedData;
 
     const formatDateRange = (startDate?: string, endDate?: string, current?: boolean) => {
         const end = current ? "Present" : (endDate || "");
@@ -218,10 +276,9 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
                                 <View style={styles.entryHeader}>
                                     <View style={{ flex: 1 }}>
                                         <Text style={styles.entryTitle}>{edu.institution}</Text>
-                                        <Text style={styles.entrySubtitle}>{edu.degree} in {edu.field}</Text>
+                                        <Text style={styles.entrySubtitle}>{edu.degree}{edu.field ? ` in ${edu.field}` : ""}</Text>
                                     </View>
                                     <View style={styles.entryRight}>
-                                        {edu.location && <Text style={styles.entryLocation}>{edu.location}</Text>}
                                         <Text style={styles.entryDate}>{formatDateRange(edu.startDate, edu.endDate)}</Text>
                                     </View>
                                 </View>
@@ -267,7 +324,7 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
                     </View>
                 )}
 
-                {/* Projects */}
+                {/* Projects - only show if we have room */}
                 {projects.length > 0 && (
                     <View>
                         <Text style={styles.sectionTitle}>Projects</Text>
@@ -275,14 +332,13 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
                             <View key={index} style={styles.entryContainer}>
                                 <View style={styles.entryHeader}>
                                     <Text style={styles.entryTitle}>{project.name}</Text>
-                                    {project.url && <Text style={styles.link}>{project.url}</Text>}
+                                    {project.technologies.length > 0 && (
+                                        <Text style={{ fontSize: 7, color: "#666" }}>
+                                            {project.technologies.slice(0, 5).join(", ")}
+                                        </Text>
+                                    )}
                                 </View>
                                 <Text style={styles.summary}>{project.description}</Text>
-                                {project.technologies.length > 0 && (
-                                    <Text style={{ fontSize: 8, color: "#666", marginTop: 2 }}>
-                                        Technologies: {project.technologies.join(", ")}
-                                    </Text>
-                                )}
                             </View>
                         ))}
                     </View>
@@ -299,7 +355,7 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
                                     <Text style={styles.certIssuer}>{cert.issuer}</Text>
                                 </View>
                                 <Text style={styles.certDate}>
-                                    {cert.issueDate}{cert.expiryDate ? ` - ${cert.expiryDate}` : ""}
+                                    {cert.issueDate}
                                 </Text>
                             </View>
                         ))}
