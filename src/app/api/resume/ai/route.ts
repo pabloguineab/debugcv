@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
                 Rewrite this bullet point to:
                 1. Start with a strong action verb
                 2. Include quantifiable results if possible
-                3. Be concise (under 20 words)
+                3. Be VERY concise - MAXIMUM 15 words (this is critical for fitting on one page)
                 4. Focus on impact and achievements
                 
                 Return ONLY the improved bullet point, no quotes or formatting.
@@ -63,11 +63,12 @@ export async function POST(req: NextRequest) {
                 Company: ${data.company}
                 Target Job Description: ${data.jobDescription || "Not specified"}
                 
-                Generate 3-4 strong bullet points that:
+                Generate 2-3 strong bullet points that:
                 1. Start with action verbs (Led, Developed, Implemented, etc.)
                 2. Include quantifiable metrics where possible
                 3. Show impact and results
                 4. Are relevant to the target job if specified
+                5. CRITICAL: Each bullet must be MAXIMUM 15 words for one-page resume formatting
                 
                 Return ONLY a JSON array of strings with the bullet points.
                 Example: ["Led team of 5...", "Developed new system..."]
@@ -123,19 +124,29 @@ export async function POST(req: NextRequest) {
                 
                 Your task is to create a tailored resume from the user's profile data that is optimized for this specific job.
                 
+                CRITICAL CONSTRAINT - ONE PAGE RESUME:
+                The resume MUST fit on a single page. To achieve this:
+                - Keep bullet points concise: maximum 15 words each, focus on impact
+                - Include only the 3 most relevant experiences
+                - Each experience should have 2-3 bullet points maximum
+                - Summary should be 2 sentences maximum
+                - Project descriptions should be 1 sentence maximum
+                - Prioritize quality over quantity
+                
                 Guidelines:
                 1. EXTRACT THE COMPANY NAME from the job description (look for company mentions, "About us", headers, etc.)
-                2. Write a compelling professional summary (2-3 sentences) tailored to the job
-                3. Extract and prioritize skills that match the job description keywords
-                4. Improve experience bullet points to highlight relevant achievements
+                2. Write a compelling professional summary (2 sentences MAX) tailored to the job
+                3. Extract and prioritize skills that match the job description keywords (max 12 skills)
+                4. Improve experience bullet points to highlight relevant achievements - keep them SHORT and impactful
                 5. Include quantifiable metrics where possible
                 6. Use action verbs that match the job requirements
                 7. Ensure ATS-friendly formatting and keywords
+                8. Include only the most impactful and relevant projects (max 2)
                 
                 Return ONLY valid JSON in this exact format:
                 {
                     "companyName": "<extracted company name or empty string if not found>",
-                    "summary": "<tailored professional summary>",
+                    "summary": "<tailored professional summary - MAX 2 sentences>",
                     "skills": ["skill1", "skill2", ...],
                     "experience": [
                         {
@@ -146,7 +157,7 @@ export async function POST(req: NextRequest) {
                             "startDate": "<start date>",
                             "endDate": "<end date or empty>",
                             "current": <boolean>,
-                            "bullets": ["<improved bullet 1>", "<improved bullet 2>", ...]
+                            "bullets": ["<concise bullet MAX 15 words>", "<concise bullet MAX 15 words>", ...]
                         }
                     ],
                     "education": [
@@ -164,7 +175,7 @@ export async function POST(req: NextRequest) {
                         {
                             "id": "<uuid>",
                             "name": "<project name>",
-                            "description": "<improved description>",
+                            "description": "<1 sentence description MAX>",
                             "url": "<project url or empty>",
                             "technologies": ["tech1", "tech2"]
                         }

@@ -176,18 +176,28 @@ function calculateContentLimits(data: ResumeData): {
     const totalUnits = expUnits + eduUnits + projUnits + certUnits;
 
     // If we have a lot of content, be more aggressive with limits
-    if (totalUnits > 35) {
-        // Lots of content - be restrictive
+    if (totalUnits > 30) {
+        // Lots of content - be very restrictive
         return {
             maxExperiences: 3,
+            maxBulletsPerExperience: 2,
+            maxEducation: 2,
+            maxProjects: 1,
+            maxCertifications: 2,
+            maxSkills: 12,
+        };
+    } else if (totalUnits > 20) {
+        // Medium content
+        return {
+            maxExperiences: 4,
             maxBulletsPerExperience: 3,
             maxEducation: 2,
             maxProjects: 1,
             maxCertifications: 2,
             maxSkills: 15,
         };
-    } else if (totalUnits > 25) {
-        // Medium content
+    } else {
+        // Light content - show more
         return {
             maxExperiences: 4,
             maxBulletsPerExperience: 3,
@@ -195,16 +205,6 @@ function calculateContentLimits(data: ResumeData): {
             maxProjects: 2,
             maxCertifications: 3,
             maxSkills: 18,
-        };
-    } else {
-        // Light content - show everything
-        return {
-            maxExperiences: 5,
-            maxBulletsPerExperience: 4,
-            maxEducation: 3,
-            maxProjects: 3,
-            maxCertifications: 4,
-            maxSkills: 20,
         };
     }
 }
