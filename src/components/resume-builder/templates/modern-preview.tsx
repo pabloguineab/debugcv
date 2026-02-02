@@ -5,6 +5,7 @@ import { Typewriter, SequentialAnimationProvider } from "@/components/ui/sequent
 import { EditableText } from "../editable-text";
 import { ResumeData, Experience, Education, Project, Certification } from "@/types/resume";
 import { calculateStyleConfig } from "@/lib/resume-styles";
+import { formatSkillName } from "@/lib/skill-formatter";
 
 interface ModernPreviewProps {
     data: ResumeData;
@@ -468,7 +469,7 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
                                 {groupedSkills.map(([category, categorySkills]) => (
                                     <div key={category} className="mb-1">
                                         <span className="font-semibold text-gray-900">{category}: </span>
-                                        <span className="text-gray-700">{categorySkills.join(", ")}</span>
+                                        <span className="text-gray-700">{categorySkills.map(s => formatSkillName(s)).join(", ")}</span>
                                     </div>
                                 ))}
                             </div>

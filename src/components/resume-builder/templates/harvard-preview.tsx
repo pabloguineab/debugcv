@@ -6,6 +6,7 @@ import { EditableText } from "../editable-text";
 import { ResumeData, Experience, Education, Project, Certification } from "@/types/resume";
 import { Mail, Phone, MapPin, Linkedin, Link2, CheckCircle2, Github } from "lucide-react";
 import { calculateStyleConfig } from "@/lib/resume-styles";
+import { formatSkillName } from "@/lib/skill-formatter";
 
 interface HarvardPreviewProps {
     data: ResumeData;
@@ -16,44 +17,6 @@ interface HarvardPreviewProps {
 
 // Primary accent color - professional blue
 const ACCENT_COLOR = "#2563eb";
-
-// Format skill name - proper capitalization
-const ACRONYMS = new Set(['aws', 'sql', 'api', 'nlp', 'llm', 'css', 'html', 'gcp', 'ci/cd', 'ec2', 's3', 'nosql', 'bert', 'rag', 'gpu', 'cpu', 'sdk', 'ide', 'rest', 'graphql', 'json', 'xml', 'yaml', 'npm', 'pip', 'cli', 'ssh', 'ssl', 'tls', 'http', 'https', 'tcp', 'ip', 'dns', 'cdn', 'vm', 'os', 'ui', 'ux', 'ai', 'ml', 'dl', 'cv', 'ocr', 'ner', 'rnn', 'cnn', 'lstm', 'gan', 'vae', 'svm', 'knn', 'pca', 'etl', 'olap']);
-const LOWERCASE_WORDS = new Set(['in', 'of', 'for', 'and', 'or', 'the', 'a', 'an', 'with']);
-
-function formatSkillName(skill: string): string {
-    // Handle compound words (e.g. "google-cloud-platform-(gcp)")
-    return skill.split(/([\s\-_\/]+)/).map(part => {
-        // Skip separators
-        if (/^[\s\-_\/]+$/.test(part)) return part;
-
-        // Remove parentheses for matching but keep for display
-        const cleanPart = part.replace(/[()]/g, '').toLowerCase();
-
-        // Check if it's an acronym
-        if (ACRONYMS.has(cleanPart)) {
-            // Preserve parentheses
-            if (part.startsWith('(')) return `(${cleanPart.toUpperCase()})`;
-            if (part.endsWith(')')) return `${cleanPart.toUpperCase()})`;
-            return cleanPart.toUpperCase();
-        }
-
-        // Check for compound acronym patterns like "d3js", "html5", "vue3"
-        const acronymMatch = cleanPart.match(/^([a-z]+)(\d+)?$/);
-        if (acronymMatch) {
-            const [, word, number] = acronymMatch;
-            if (ACRONYMS.has(word)) {
-                return word.toUpperCase() + (number || '');
-            }
-        }
-
-        // Capitalize first letter for regular words
-        if (part.length > 0) {
-            return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
-        }
-        return part;
-    }).join('');
-}
 
 export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }: HarvardPreviewProps) {
     const { personalInfo, summary, skills, experience, education, projects, certifications, languages } = data;
@@ -324,8 +287,8 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
 
                     {/* Two Column Layout */}
                     <div className="flex gap-5">
-                        {/* Left Column - 58% - Summary & Experience ONLY */}
-                        <div className="w-[58%] pr-4 border-r border-gray-200">
+                        {/* Left Column - 60% - Summary, Experience & Education */}
+                        <div className="w-[60%] pr-4 border-r border-gray-200">
                             {/* Summary */}
                             {summary && (
                                 <div>
@@ -418,16 +381,68 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                     ))}
                                 </div>
                             )}
+
+                            {/* Education - Now on left column with Experience */}
+                            {education.length > 0 && (
+                                <div>
+                                    <SectionHeader title="Education" />
+                                    {education.map((edu, index) => (
+                                        <div key={edu.id} style={styles.entryMargin}>
+                                            <div className="flex justify-between items-start">
+                                                <div className="flex-1">
+                                                    <span className="font-bold text-gray-900" style={styles.entryTitle}>
+                                                        <EditableText
+                                                            value={edu.institution}
+                                                            onChange={(v) => updateEducation(index, { institution: v })}
+                                                            placeholder="Institution"
+                                                            displayComponent={<Typewriter text={edu.institution} />}
+                                                        />
+                                                    </span>
+                                                </div>
+                                                <span className="text-gray-500 shrink-0 ml-3" style={styles.smallDetail}>
+                                                    <Typewriter text={formatDateRange(edu.startDate, edu.endDate)} />
+                                                </span>
+                                            </div>
+                                            <div className="text-gray-600 italic" style={styles.detail}>
+                                                <EditableText
+                                                    value={`${edu.degree}${edu.field ? ` in ${edu.field}` : ''}`}
+                                                    onChange={(v) => {
+                                                        const parts = v.split(" in ");
+                                                        updateEducation(index, {
+                                                            degree: parts[0] || "",
+                                                            field: parts.slice(1).join(" in ") || ""
+                                                        });
+                                                    }}
+                                                    placeholder="Degree in Field"
+                                                    displayComponent={<Typewriter text={`${edu.degree}${edu.field ? ` in ${edu.field}` : ''}`} />}
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
-                        {/* Right Column - 42% - Skills, Projects, Education, Certs, Languages */}
-                        <div className="w-[42%]">
+                        {/* Right Column - 40% - Skills, Projects, Certs, Languages */}
+                        <div className="w-[40%]">
                             {/* Technical Skills */}
                             {categorizedSkills.technical.length > 0 && (
                                 <div>
                                     <SectionHeader title="Technical Skills" />
                                     <div className="flex flex-wrap">
                                         {categorizedSkills.technical.map((skill, index) => (
+                                            <SkillTag key={index} skill={skill} />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Other Skills */}
+                            {categorizedSkills.general.length > 0 && (
+                                <div>
+                                    <SectionHeader title="Other Skills" />
+                                    <div className="flex flex-wrap">
+                                        {categorizedSkills.general.map((skill, index) => (
                                             <SkillTag key={index} skill={skill} />
                                         ))}
                                     </div>
@@ -459,7 +474,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                                 )}
                                                 {project.technologies.length > 0 && (
                                                     <span className="text-gray-500 ml-1.5" style={styles.smallDetail}>
-                                                        ({project.technologies.slice(0, 4).join(", ")})
+                                                        ({project.technologies.slice(0, 3).join(", ")})
                                                     </span>
                                                 )}
                                             </div>
@@ -479,43 +494,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                 </div>
                             )}
 
-                            {/* Education - Now on right column */}
-                            {education.length > 0 && (
-                                <div>
-                                    <SectionHeader title="Education" />
-                                    {education.map((edu, index) => (
-                                        <div key={edu.id} style={styles.entryMargin}>
-                                            <div className="font-bold text-gray-900" style={styles.entryTitle}>
-                                                <EditableText
-                                                    value={edu.institution}
-                                                    onChange={(v) => updateEducation(index, { institution: v })}
-                                                    placeholder="Institution"
-                                                    displayComponent={<Typewriter text={edu.institution} />}
-                                                />
-                                            </div>
-                                            <div className="text-gray-600 italic" style={styles.detail}>
-                                                <EditableText
-                                                    value={`${edu.degree}${edu.field ? ` in ${edu.field}` : ''}`}
-                                                    onChange={(v) => {
-                                                        const parts = v.split(" in ");
-                                                        updateEducation(index, {
-                                                            degree: parts[0] || "",
-                                                            field: parts.slice(1).join(" in ") || ""
-                                                        });
-                                                    }}
-                                                    placeholder="Degree in Field"
-                                                    displayComponent={<Typewriter text={`${edu.degree}${edu.field ? ` in ${edu.field}` : ''}`} />}
-                                                />
-                                            </div>
-                                            <div className="text-gray-500" style={styles.smallDetail}>
-                                                <Typewriter text={formatDateRange(edu.startDate, edu.endDate)} />
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-
-                            {/* Certifications - Bottom of right column */}
+                            {/* Certifications */}
                             {certifications.length > 0 && (
                                 <div>
                                     <SectionHeader title="Certifications" />
@@ -535,7 +514,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                 </div>
                             )}
 
-                            {/* Languages - Very bottom of right column */}
+                            {/* Languages */}
                             {languages && languages.length > 0 && (
                                 <div>
                                     <SectionHeader title="Languages" />

@@ -14,35 +14,10 @@ import {
 } from "@react-pdf/renderer";
 import { ResumeData } from "@/types/resume";
 import { calculateStyleConfig } from "@/lib/resume-styles";
+import { formatSkillName } from "@/lib/skill-formatter";
 
 // Accent color matching your PDF
 const ACCENT_COLOR = "#2563eb";
-
-// Format skill name - proper capitalization
-const ACRONYMS = new Set(['aws', 'sql', 'api', 'nlp', 'llm', 'css', 'html', 'gcp', 'ci/cd', 'ec2', 's3', 'nosql', 'bert', 'rag', 'gpu', 'cpu', 'sdk', 'ide', 'rest', 'graphql', 'json', 'xml', 'yaml', 'npm', 'pip', 'cli', 'ssh', 'ssl', 'tls', 'http', 'https', 'tcp', 'ip', 'dns', 'cdn', 'vm', 'os', 'ui', 'ux', 'ai', 'ml', 'dl', 'cv', 'ocr', 'ner', 'rnn', 'cnn', 'lstm', 'gan', 'vae', 'svm', 'knn', 'pca', 'etl', 'olap']);
-
-function formatSkillName(skill: string): string {
-    return skill.split(/([\s\-_\/]+)/).map(part => {
-        if (/^[\s\-_\/]+$/.test(part)) return part;
-        const cleanPart = part.replace(/[()]/g, '').toLowerCase();
-        if (ACRONYMS.has(cleanPart)) {
-            if (part.startsWith('(')) return `(${cleanPart.toUpperCase()})`;
-            if (part.endsWith(')')) return `${cleanPart.toUpperCase()})`;
-            return cleanPart.toUpperCase();
-        }
-        const acronymMatch = cleanPart.match(/^([a-z]+)(\d+)?$/);
-        if (acronymMatch) {
-            const [, word, number] = acronymMatch;
-            if (ACRONYMS.has(word)) {
-                return word.toUpperCase() + (number || '');
-            }
-        }
-        if (part.length > 0) {
-            return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
-        }
-        return part;
-    }).join('');
-}
 
 // Check icon SVG
 function CheckIcon({ size = 7 }: { size?: number }) {
@@ -96,7 +71,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
     const generatedHeadline = data.targetJob
         || (experience.length > 0 && experience[0].title ? experience[0].title : "");
 
-    const { technical: technicalSkills } = categorizeSkills(skills);
+    const { technical: technicalSkills, general: generalSkills } = categorizeSkills(skills);
 
     // Dynamic styles based on content density
     const styles = StyleSheet.create({
@@ -146,13 +121,13 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             paddingBottom: styleConfig.pagePaddingBottom,
         },
         leftColumn: {
-            width: "58%",
+            width: "60%",
             paddingRight: 12,
             borderRightWidth: 1,
             borderRightColor: "#e0e0e0",
         },
         rightColumn: {
-            width: "42%",
+            width: "40%",
             paddingLeft: 12,
         },
         sectionHeader: {
@@ -231,6 +206,11 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             fontSize: styleConfig.detailFontSize,
             lineHeight: styleConfig.lineHeight,
             color: "#444",
+        },
+        eduHeader: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
         },
         eduTitle: {
             fontSize: styleConfig.entryTitleSize,
@@ -370,7 +350,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
 
                 {/* Two Column Layout */}
                 <View style={styles.columnsContainer}>
-                    {/* Left Column - Summary & Experience ONLY */}
+                    {/* Left Column - Summary, Experience & Education */}
                     <View style={styles.leftColumn}>
                         {/* Summary */}
                         {summary && (
@@ -422,9 +402,29 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                 ))}
                             </View>
                         )}
+
+                        {/* Education - Now on left column with Experience */}
+                        {education.length > 0 && (
+                            <View>
+                                <SectionHeader title="Education" />
+                                {education.map((edu) => (
+                                    <View key={edu.id} style={styles.entryContainer}>
+                                        <View style={styles.eduHeader}>
+                                            <Text style={styles.eduTitle}>{edu.institution}</Text>
+                                            <Text style={styles.eduDate}>
+                                                {formatDateRange(edu.startDate, edu.endDate)}
+                                            </Text>
+                                        </View>
+                                        <Text style={styles.eduSubtitle}>
+                                            {edu.degree}{edu.field ? ` in ${edu.field}` : ""}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                        )}
                     </View>
 
-                    {/* Right Column - Skills, Projects, Education, Certifications, Languages */}
+                    {/* Right Column - Skills, Projects, Certifications, Languages */}
                     <View style={styles.rightColumn}>
                         {/* Technical Skills */}
                         {technicalSkills.length > 0 && (
@@ -438,8 +438,20 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                             </View>
                         )}
 
+                        {/* Other Skills */}
+                        {generalSkills.length > 0 && (
+                            <View>
+                                <SectionHeader title="Other Skills" />
+                                <View style={styles.skillTagsContainer}>
+                                    {generalSkills.map((skill, index) => (
+                                        <Text key={index} style={styles.skillTag}>{formatSkillName(skill)}</Text>
+                                    ))}
+                                </View>
+                            </View>
+                        )}
+
                         {/* All skills if no categorization */}
-                        {technicalSkills.length === 0 && skills.length > 0 && (
+                        {technicalSkills.length === 0 && generalSkills.length === 0 && skills.length > 0 && (
                             <View>
                                 <SectionHeader title="Skills" />
                                 <View style={styles.skillTagsContainer}>
@@ -469,7 +481,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                             )}
                                             {project.technologies.length > 0 && (
                                                 <Text style={styles.projectTech}>
-                                                    ({project.technologies.slice(0, 4).join(", ")})
+                                                    ({project.technologies.slice(0, 3).join(", ")})
                                                 </Text>
                                             )}
                                         </View>
@@ -479,25 +491,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                             </View>
                         )}
 
-                        {/* Education - Now on right column */}
-                        {education.length > 0 && (
-                            <View>
-                                <SectionHeader title="Education" />
-                                {education.map((edu) => (
-                                    <View key={edu.id} style={styles.entryContainer}>
-                                        <Text style={styles.eduTitle}>{edu.institution}</Text>
-                                        <Text style={styles.eduSubtitle}>
-                                            {edu.degree}{edu.field ? ` in ${edu.field}` : ""}
-                                        </Text>
-                                        <Text style={styles.eduDate}>
-                                            {formatDateRange(edu.startDate, edu.endDate)}
-                                        </Text>
-                                    </View>
-                                ))}
-                            </View>
-                        )}
-
-                        {/* Certifications - Bottom of right column */}
+                        {/* Certifications */}
                         {certifications.length > 0 && (
                             <View>
                                 <SectionHeader title="Certifications" />
@@ -513,7 +507,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                             </View>
                         )}
 
-                        {/* Languages - Very bottom of right column */}
+                        {/* Languages */}
                         {languages && languages.length > 0 && (
                             <View>
                                 <SectionHeader title="Languages" />

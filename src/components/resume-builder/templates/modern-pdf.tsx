@@ -12,6 +12,7 @@ import {
 } from "@react-pdf/renderer";
 import { ResumeData } from "@/types/resume";
 import { calculateStyleConfig, StyleConfig } from "@/lib/resume-styles";
+import { formatSkillName } from "@/lib/skill-formatter";
 
 // Accent color
 const ACCENT_COLOR = "#1e40af";
@@ -438,7 +439,7 @@ export function ModernPDFDocument({ data }: { data: ResumeData }) {
                         {groupedSkills.map(([category, categorySkills]) => (
                             <View key={category} style={styles.skillRow}>
                                 <Text style={styles.skillCategory}>{category}: </Text>
-                                <Text style={styles.skillItems}>{categorySkills.join(", ")}</Text>
+                                <Text style={styles.skillItems}>{categorySkills.map(s => formatSkillName(s)).join(", ")}</Text>
                             </View>
                         ))}
                     </View>
