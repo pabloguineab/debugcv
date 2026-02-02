@@ -18,6 +18,32 @@ import { calculateStyleConfig } from "@/lib/resume-styles";
 // Accent color matching your PDF
 const ACCENT_COLOR = "#2563eb";
 
+// Format skill name - proper capitalization
+const ACRONYMS = new Set(['aws', 'sql', 'api', 'nlp', 'llm', 'css', 'html', 'gcp', 'ci/cd', 'ec2', 's3', 'nosql', 'bert', 'rag', 'gpu', 'cpu', 'sdk', 'ide', 'rest', 'graphql', 'json', 'xml', 'yaml', 'npm', 'pip', 'cli', 'ssh', 'ssl', 'tls', 'http', 'https', 'tcp', 'ip', 'dns', 'cdn', 'vm', 'os', 'ui', 'ux', 'ai', 'ml', 'dl', 'cv', 'ocr', 'ner', 'rnn', 'cnn', 'lstm', 'gan', 'vae', 'svm', 'knn', 'pca', 'etl', 'olap']);
+
+function formatSkillName(skill: string): string {
+    return skill.split(/([\s\-_\/]+)/).map(part => {
+        if (/^[\s\-_\/]+$/.test(part)) return part;
+        const cleanPart = part.replace(/[()]/g, '').toLowerCase();
+        if (ACRONYMS.has(cleanPart)) {
+            if (part.startsWith('(')) return `(${cleanPart.toUpperCase()})`;
+            if (part.endsWith(')')) return `${cleanPart.toUpperCase()})`;
+            return cleanPart.toUpperCase();
+        }
+        const acronymMatch = cleanPart.match(/^([a-z]+)(\d+)?$/);
+        if (acronymMatch) {
+            const [, word, number] = acronymMatch;
+            if (ACRONYMS.has(word)) {
+                return word.toUpperCase() + (number || '');
+            }
+        }
+        if (part.length > 0) {
+            return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+        }
+        return part;
+    }).join('');
+}
+
 // Check icon SVG
 function CheckIcon({ size = 7 }: { size?: number }) {
     return (
@@ -406,7 +432,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                 <SectionHeader title="Technical Skills" />
                                 <View style={styles.skillTagsContainer}>
                                     {technicalSkills.map((skill, index) => (
-                                        <Text key={index} style={styles.skillTag}>{skill}</Text>
+                                        <Text key={index} style={styles.skillTag}>{formatSkillName(skill)}</Text>
                                     ))}
                                 </View>
                             </View>
@@ -418,7 +444,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                 <SectionHeader title="Skills" />
                                 <View style={styles.skillTagsContainer}>
                                     {skills.map((skill, index) => (
-                                        <Text key={index} style={styles.skillTag}>{skill}</Text>
+                                        <Text key={index} style={styles.skillTag}>{formatSkillName(skill)}</Text>
                                     ))}
                                 </View>
                             </View>
