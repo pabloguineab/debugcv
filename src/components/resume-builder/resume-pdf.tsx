@@ -11,243 +11,275 @@ Font.register({
     ]
 });
 
-// Create styles - balanced for readability and fitting on one page
-const styles = StyleSheet.create({
-    page: {
-        padding: 35,
-        paddingTop: 30,
-        paddingBottom: 25,
-        fontFamily: "Helvetica",
-        fontSize: 10,
-        color: "#333",
-    },
-    header: {
-        textAlign: "center",
-        marginBottom: 12,
-    },
-    name: {
-        fontSize: 20,
-        fontWeight: "bold",
-        marginBottom: 4,
-        color: "#1a1a1a",
-    },
-    divider: {
-        height: 1,
-        backgroundColor: "#ccc",
-        marginVertical: 6,
-    },
-    contactRow: {
-        flexDirection: "row",
-        justifyContent: "center",
-        flexWrap: "wrap",
-        gap: 8,
-        fontSize: 9,
-        color: "#666",
-    },
-    separator: {
-        marginHorizontal: 4,
-    },
-    link: {
-        color: "#2563eb",
-    },
-    sectionTitle: {
-        fontSize: 11,
-        fontWeight: "bold",
-        textAlign: "center",
-        marginBottom: 5,
-        marginTop: 6,
-        textTransform: "uppercase",
-        letterSpacing: 1,
-    },
-    summary: {
-        fontSize: 9,
-        lineHeight: 1.4,
-        color: "#444",
-        textAlign: "justify",
-    },
-    entryContainer: {
-        marginBottom: 4,
-    },
-    entryHeader: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-        marginBottom: 1,
-    },
-    entryTitle: {
-        fontSize: 10,
-        fontWeight: "bold",
-        textTransform: "uppercase",
-    },
-    entryTitleLink: {
-        fontSize: 10,
-        fontWeight: "bold",
-        textTransform: "uppercase",
-        color: "#2563eb",
-        textDecoration: "none",
-    },
-    entrySubtitle: {
-        fontSize: 9,
-        color: "#555",
-        fontStyle: "italic",
-    },
-    entryRight: {
-        textAlign: "right",
-        fontSize: 9,
-        color: "#666",
-        flexShrink: 0,
-        marginLeft: 10,
-    },
-    entryLocation: {
-        fontSize: 9,
-        color: "#666",
-    },
-    entryDate: {
-        fontSize: 9,
-        color: "#666",
-    },
-    bulletList: {
-        marginLeft: 10,
-        marginTop: 3,
-    },
-    bulletItem: {
-        flexDirection: "row",
-        marginBottom: 2,
-    },
-    bullet: {
-        marginRight: 5,
-        color: "#666",
-    },
-    bulletText: {
-        flex: 1,
-        fontSize: 9,
-        lineHeight: 1.35,
-        color: "#444",
-    },
-    skillsContainer: {
-        textAlign: "center",
-    },
-    skillsText: {
-        fontSize: 9,
-        lineHeight: 1.4,
-        color: "#444",
-    },
-    certContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginBottom: 4,
-    },
-    certName: {
-        fontSize: 9,
-        fontWeight: "bold",
-    },
-    certIssuer: {
-        fontSize: 8,
-        color: "#666",
-    },
-    certDate: {
-        fontSize: 8,
-        color: "#666",
-    },
-});
+// Dynamic style configuration based on content density
+interface StyleConfig {
+    pagePadding: number;
+    baseFontSize: number;
+    nameFontSize: number;
+    sectionTitleSize: number;
+    entryTitleSize: number;
+    detailFontSize: number;
+    sectionMarginTop: number;
+    sectionMarginBottom: number;
+    entryMarginBottom: number;
+    bulletMarginBottom: number;
+    lineHeight: number;
+}
 
-// Smart content limits based on total content volume
-// This adjusts limits dynamically to fill the page without overflow
-function calculateContentLimits(data: ResumeData): {
-    maxExperiences: number;
-    maxBulletsPerExperience: number;
-    maxEducation: number;
-    maxProjects: number;
-    maxCertifications: number;
-    maxSkills: number;
-} {
-    // Count total content
-    const expCount = data.experience.length;
+// Calculate content density and return appropriate style config
+function calculateStyleConfig(data: ResumeData): StyleConfig {
+    // Count all content items
     const totalBullets = data.experience.reduce((sum, exp) => sum + exp.bullets.length, 0);
-    const eduCount = data.education.length;
-    const projCount = data.projects.length;
-    const certCount = data.certifications.length;
+    const totalDescriptionLength = data.projects.reduce((sum, p) => sum + (p.description?.length || 0), 0)
+        + (data.summary?.length || 0);
 
-    // Calculate approximate "content units" (rough estimate of space usage)
-    const expUnits = expCount * 3 + totalBullets * 1.5;
-    const eduUnits = eduCount * 2;
-    const projUnits = projCount * 2.5;
-    const certUnits = certCount * 1;
-    const totalUnits = expUnits + eduUnits + projUnits + certUnits;
+    // Calculate content score (higher = more content)
+    const contentScore =
+        data.experience.length * 8 +
+        totalBullets * 3 +
+        data.education.length * 4 +
+        data.projects.length * 6 +
+        data.certifications.length * 2 +
+        Math.floor(data.skills.length / 3) +
+        Math.floor(totalDescriptionLength / 100);
 
-    // If we have a lot of content, be more aggressive with limits
-    if (totalUnits > 30) {
-        // Lots of content - restrictive but fill the page
+    // Determine style tier based on content score
+    if (contentScore > 60) {
+        // Very dense content - compact everything
         return {
-            maxExperiences: 3,
-            maxBulletsPerExperience: 3,
-            maxEducation: 2,
-            maxProjects: 1,
-            maxCertifications: 3,
-            maxSkills: 12,
+            pagePadding: 28,
+            baseFontSize: 8.5,
+            nameFontSize: 18,
+            sectionTitleSize: 10,
+            entryTitleSize: 9,
+            detailFontSize: 8,
+            sectionMarginTop: 5,
+            sectionMarginBottom: 3,
+            entryMarginBottom: 3,
+            bulletMarginBottom: 1,
+            lineHeight: 1.25,
         };
-    } else if (totalUnits > 20) {
-        // Medium content - show more
+    } else if (contentScore > 45) {
+        // Medium-high content
         return {
-            maxExperiences: 4,
-            maxBulletsPerExperience: 3,
-            maxEducation: 2,
-            maxProjects: 2,
-            maxCertifications: 3,
-            maxSkills: 15,
+            pagePadding: 32,
+            baseFontSize: 9,
+            nameFontSize: 19,
+            sectionTitleSize: 10.5,
+            entryTitleSize: 9.5,
+            detailFontSize: 8.5,
+            sectionMarginTop: 6,
+            sectionMarginBottom: 4,
+            entryMarginBottom: 4,
+            bulletMarginBottom: 1.5,
+            lineHeight: 1.3,
+        };
+    } else if (contentScore > 30) {
+        // Medium content - balanced
+        return {
+            pagePadding: 35,
+            baseFontSize: 9.5,
+            nameFontSize: 20,
+            sectionTitleSize: 11,
+            entryTitleSize: 10,
+            detailFontSize: 9,
+            sectionMarginTop: 8,
+            sectionMarginBottom: 5,
+            entryMarginBottom: 5,
+            bulletMarginBottom: 2,
+            lineHeight: 1.35,
+        };
+    } else if (contentScore > 18) {
+        // Light content - more spacious
+        return {
+            pagePadding: 40,
+            baseFontSize: 10,
+            nameFontSize: 22,
+            sectionTitleSize: 12,
+            entryTitleSize: 10.5,
+            detailFontSize: 9.5,
+            sectionMarginTop: 10,
+            sectionMarginBottom: 6,
+            entryMarginBottom: 6,
+            bulletMarginBottom: 2.5,
+            lineHeight: 1.4,
         };
     } else {
-        // Light content - show everything
+        // Very light content - maximize spacing to fill page
         return {
-            maxExperiences: 5,
-            maxBulletsPerExperience: 4,
-            maxEducation: 3,
-            maxProjects: 2,
-            maxCertifications: 4,
-            maxSkills: 18,
+            pagePadding: 45,
+            baseFontSize: 10.5,
+            nameFontSize: 24,
+            sectionTitleSize: 13,
+            entryTitleSize: 11,
+            detailFontSize: 10,
+            sectionMarginTop: 14,
+            sectionMarginBottom: 8,
+            entryMarginBottom: 8,
+            bulletMarginBottom: 3,
+            lineHeight: 1.5,
         };
     }
 }
 
-// Function to fit resume data within calculated limits - NO TRUNCATION
-function fitToSinglePage(data: ResumeData): ResumeData {
-    const limits = calculateContentLimits(data);
-    const fitted = { ...data };
-
-    // Keep summary as-is (no truncation)
-
-    // Limit experience entries and bullets (but don't truncate text!)
-    fitted.experience = data.experience.slice(0, limits.maxExperiences).map(exp => ({
-        ...exp,
-        bullets: exp.bullets.slice(0, limits.maxBulletsPerExperience)
-        // NO text truncation - show full bullets
-    }));
-
-    // Limit education
-    fitted.education = data.education.slice(0, limits.maxEducation);
-
-    // Limit projects
-    fitted.projects = data.projects.slice(0, limits.maxProjects);
-    // NO description truncation
-
-    // Limit certifications
-    fitted.certifications = data.certifications.slice(0, limits.maxCertifications);
-
-    // Limit skills
-    fitted.skills = data.skills.slice(0, limits.maxSkills);
-
-    return fitted;
+// Create dynamic styles based on config
+function createDynamicStyles(config: StyleConfig) {
+    return StyleSheet.create({
+        page: {
+            padding: config.pagePadding,
+            paddingTop: config.pagePadding - 5,
+            paddingBottom: config.pagePadding - 10,
+            fontFamily: "Helvetica",
+            fontSize: config.baseFontSize,
+            color: "#333",
+        },
+        header: {
+            textAlign: "center",
+            marginBottom: config.sectionMarginBottom + 4,
+        },
+        name: {
+            fontSize: config.nameFontSize,
+            fontWeight: "bold",
+            marginBottom: 4,
+            color: "#1a1a1a",
+        },
+        divider: {
+            height: 1,
+            backgroundColor: "#ccc",
+            marginVertical: config.sectionMarginBottom,
+        },
+        contactRow: {
+            flexDirection: "row",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            gap: 8,
+            fontSize: config.detailFontSize,
+            color: "#666",
+        },
+        separator: {
+            marginHorizontal: 4,
+        },
+        link: {
+            color: "#2563eb",
+        },
+        sectionTitle: {
+            fontSize: config.sectionTitleSize,
+            fontWeight: "bold",
+            textAlign: "center",
+            marginBottom: config.sectionMarginBottom,
+            marginTop: config.sectionMarginTop,
+            textTransform: "uppercase",
+            letterSpacing: 1,
+        },
+        summary: {
+            fontSize: config.detailFontSize,
+            lineHeight: config.lineHeight,
+            color: "#444",
+            textAlign: "justify",
+        },
+        entryContainer: {
+            marginBottom: config.entryMarginBottom,
+        },
+        entryHeader: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            marginBottom: 1,
+        },
+        entryTitle: {
+            fontSize: config.entryTitleSize,
+            fontWeight: "bold",
+            textTransform: "uppercase",
+        },
+        entryTitleLink: {
+            fontSize: config.entryTitleSize,
+            fontWeight: "bold",
+            textTransform: "uppercase",
+            color: "#2563eb",
+            textDecoration: "none",
+        },
+        entrySubtitle: {
+            fontSize: config.detailFontSize,
+            color: "#555",
+            fontStyle: "italic",
+        },
+        entryRight: {
+            textAlign: "right",
+            fontSize: config.detailFontSize,
+            color: "#666",
+            flexShrink: 0,
+            marginLeft: 10,
+        },
+        entryLocation: {
+            fontSize: config.detailFontSize,
+            color: "#666",
+        },
+        entryDate: {
+            fontSize: config.detailFontSize,
+            color: "#666",
+        },
+        bulletList: {
+            marginLeft: 10,
+            marginTop: 2,
+        },
+        bulletItem: {
+            flexDirection: "row",
+            marginBottom: config.bulletMarginBottom,
+        },
+        bullet: {
+            marginRight: 5,
+            color: "#666",
+        },
+        bulletText: {
+            flex: 1,
+            fontSize: config.detailFontSize,
+            lineHeight: config.lineHeight,
+            color: "#444",
+        },
+        skillsContainer: {
+            textAlign: "center",
+        },
+        skillsText: {
+            fontSize: config.detailFontSize,
+            lineHeight: config.lineHeight,
+            color: "#444",
+        },
+        certContainer: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginBottom: config.entryMarginBottom,
+        },
+        certName: {
+            fontSize: config.detailFontSize,
+            fontWeight: "bold",
+        },
+        certIssuer: {
+            fontSize: config.detailFontSize - 1,
+            color: "#666",
+        },
+        certDate: {
+            fontSize: config.detailFontSize - 1,
+            color: "#666",
+        },
+        projectTech: {
+            fontSize: config.detailFontSize - 1,
+            color: "#666",
+        },
+    });
 }
 
 interface ResumePDFDocumentProps {
     data: ResumeData;
 }
 
-// The PDF Document component
+// The PDF Document component with dynamic styling
 function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
-    // Apply single-page fitting (no truncation, just limiting items)
-    const fittedData = fitToSinglePage(data);
-    const { personalInfo, summary, skills, experience, education, projects, certifications } = fittedData;
+    // Calculate style config based on content
+    const styleConfig = calculateStyleConfig(data);
+    const styles = createDynamicStyles(styleConfig);
+
+    // Use all available data (no artificial limits - styles adapt instead)
+    const { personalInfo, summary, skills, experience, education, projects, certifications } = data;
 
     const formatDateRange = (startDate?: string, endDate?: string, current?: boolean) => {
         const end = current ? "Present" : (endDate || "");
@@ -365,7 +397,7 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
                                 <View style={styles.entryHeader}>
                                     <Text style={styles.entryTitle}>{project.name}</Text>
                                     {project.technologies.length > 0 && (
-                                        <Text style={{ fontSize: 8, color: "#666" }}>
+                                        <Text style={styles.projectTech}>
                                             {project.technologies.join(", ")}
                                         </Text>
                                     )}
