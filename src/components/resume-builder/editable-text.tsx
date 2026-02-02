@@ -79,9 +79,9 @@ export function EditableText({
 
     if (isEditing) {
         const baseInputClass = `${className} bg-white border border-blue-400 rounded px-2 py-0.5 outline-none focus:ring-2 focus:ring-blue-300`;
-        
-        const inputStyle: React.CSSProperties = { 
-            fontFamily: "inherit", 
+
+        const inputStyle: React.CSSProperties = {
+            fontFamily: "inherit",
             fontSize: "inherit",
             fontWeight: "inherit",
             lineHeight: "inherit",
@@ -107,7 +107,7 @@ export function EditableText({
         }
 
         return (
-            <input 
+            <input
                 type="text"
                 ref={inputRef as React.RefObject<HTMLInputElement>}
                 value={editValue}
@@ -127,11 +127,10 @@ export function EditableText({
         <span
             ref={measureRef}
             onClick={handleClick}
-            className={`${className} cursor-pointer hover:bg-blue-50 rounded px-1 py-0.5 transition-colors`}
+            className={`${className} cursor-pointer hover:bg-blue-50/50 rounded transition-colors`}
             title="Click to edit"
-            style={{ display: "inline" }}
         >
-            {hasBeenEdited 
+            {hasBeenEdited
                 ? (value || <span className="text-gray-400 italic">{placeholder}</span>)
                 : (displayComponent || value || <span className="text-gray-400 italic">{placeholder}</span>)
             }
