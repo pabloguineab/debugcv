@@ -11,20 +11,22 @@ Font.register({
     ]
 });
 
-// Create styles - optimized for single page
+// Create styles - balanced for readability and fitting on one page
 const styles = StyleSheet.create({
     page: {
-        padding: 30,
+        padding: 35,
+        paddingTop: 30,
+        paddingBottom: 25,
         fontFamily: "Helvetica",
-        fontSize: 9,
+        fontSize: 10,
         color: "#333",
     },
     header: {
         textAlign: "center",
-        marginBottom: 10,
+        marginBottom: 12,
     },
     name: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: "bold",
         marginBottom: 4,
         color: "#1a1a1a",
@@ -38,12 +40,9 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         flexWrap: "wrap",
-        gap: 6,
-        fontSize: 8,
+        gap: 8,
+        fontSize: 9,
         color: "#666",
-    },
-    contactItem: {
-        flexDirection: "row",
     },
     separator: {
         marginHorizontal: 4,
@@ -52,16 +51,16 @@ const styles = StyleSheet.create({
         color: "#2563eb",
     },
     sectionTitle: {
-        fontSize: 10,
+        fontSize: 11,
         fontWeight: "bold",
         textAlign: "center",
         marginBottom: 6,
-        marginTop: 8,
+        marginTop: 10,
         textTransform: "uppercase",
         letterSpacing: 1,
     },
     summary: {
-        fontSize: 8,
+        fontSize: 9,
         lineHeight: 1.4,
         color: "#444",
         textAlign: "justify",
@@ -76,133 +75,166 @@ const styles = StyleSheet.create({
         marginBottom: 1,
     },
     entryTitle: {
-        fontSize: 9,
+        fontSize: 10,
         fontWeight: "bold",
         textTransform: "uppercase",
     },
     entryTitleLink: {
-        fontSize: 9,
+        fontSize: 10,
         fontWeight: "bold",
         textTransform: "uppercase",
         color: "#2563eb",
         textDecoration: "none",
     },
     entrySubtitle: {
-        fontSize: 8,
+        fontSize: 9,
         color: "#555",
         fontStyle: "italic",
     },
     entryRight: {
         textAlign: "right",
-        fontSize: 8,
+        fontSize: 9,
         color: "#666",
         flexShrink: 0,
-        marginLeft: 8,
+        marginLeft: 10,
     },
     entryLocation: {
-        fontSize: 8,
+        fontSize: 9,
         color: "#666",
     },
     entryDate: {
-        fontSize: 8,
+        fontSize: 9,
         color: "#666",
     },
     bulletList: {
-        marginLeft: 8,
-        marginTop: 2,
+        marginLeft: 10,
+        marginTop: 3,
     },
     bulletItem: {
         flexDirection: "row",
-        marginBottom: 1,
+        marginBottom: 2,
     },
     bullet: {
-        marginRight: 4,
+        marginRight: 5,
         color: "#666",
     },
     bulletText: {
         flex: 1,
-        fontSize: 8,
-        lineHeight: 1.3,
+        fontSize: 9,
+        lineHeight: 1.35,
         color: "#444",
     },
     skillsContainer: {
         textAlign: "center",
     },
     skillsText: {
-        fontSize: 8,
+        fontSize: 9,
         lineHeight: 1.4,
         color: "#444",
     },
     certContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
-        marginBottom: 3,
+        marginBottom: 4,
     },
     certName: {
-        fontSize: 8,
+        fontSize: 9,
         fontWeight: "bold",
     },
     certIssuer: {
-        fontSize: 7,
+        fontSize: 8,
         color: "#666",
     },
     certDate: {
-        fontSize: 7,
+        fontSize: 8,
         color: "#666",
     },
 });
 
-// Content limits to ensure single page
-const LIMITS = {
-    MAX_EXPERIENCES: 4,
-    MAX_BULLETS_PER_EXPERIENCE: 3,
-    MAX_BULLET_LENGTH: 150,
-    MAX_EDUCATION: 2,
-    MAX_PROJECTS: 2,
-    MAX_CERTIFICATIONS: 3,
-    MAX_SKILLS: 15,
-    MAX_SUMMARY_LENGTH: 350,
-};
+// Smart content limits based on total content volume
+// This adjusts limits dynamically to fill the page without overflow
+function calculateContentLimits(data: ResumeData): {
+    maxExperiences: number;
+    maxBulletsPerExperience: number;
+    maxEducation: number;
+    maxProjects: number;
+    maxCertifications: number;
+    maxSkills: number;
+} {
+    // Count total content
+    const expCount = data.experience.length;
+    const totalBullets = data.experience.reduce((sum, exp) => sum + exp.bullets.length, 0);
+    const eduCount = data.education.length;
+    const projCount = data.projects.length;
+    const certCount = data.certifications.length;
 
-// Truncate text to a maximum length
-function truncateText(text: string, maxLength: number): string {
-    if (!text || text.length <= maxLength) return text;
-    return text.slice(0, maxLength - 3).trim() + "...";
+    // Calculate approximate "content units" (rough estimate of space usage)
+    const expUnits = expCount * 3 + totalBullets * 1.5;
+    const eduUnits = eduCount * 2;
+    const projUnits = projCount * 2.5;
+    const certUnits = certCount * 1;
+    const totalUnits = expUnits + eduUnits + projUnits + certUnits;
+
+    // If we have a lot of content, be more aggressive with limits
+    if (totalUnits > 35) {
+        // Lots of content - be restrictive
+        return {
+            maxExperiences: 3,
+            maxBulletsPerExperience: 3,
+            maxEducation: 2,
+            maxProjects: 1,
+            maxCertifications: 2,
+            maxSkills: 15,
+        };
+    } else if (totalUnits > 25) {
+        // Medium content
+        return {
+            maxExperiences: 4,
+            maxBulletsPerExperience: 3,
+            maxEducation: 2,
+            maxProjects: 2,
+            maxCertifications: 3,
+            maxSkills: 18,
+        };
+    } else {
+        // Light content - show everything
+        return {
+            maxExperiences: 5,
+            maxBulletsPerExperience: 4,
+            maxEducation: 3,
+            maxProjects: 3,
+            maxCertifications: 4,
+            maxSkills: 20,
+        };
+    }
 }
 
-// Function to fit resume data within single page limits
+// Function to fit resume data within calculated limits - NO TRUNCATION
 function fitToSinglePage(data: ResumeData): ResumeData {
+    const limits = calculateContentLimits(data);
     const fitted = { ...data };
 
-    // Truncate summary
-    if (fitted.summary) {
-        fitted.summary = truncateText(fitted.summary, LIMITS.MAX_SUMMARY_LENGTH);
-    }
+    // Keep summary as-is (no truncation)
 
-    // Limit and truncate experience
-    fitted.experience = data.experience.slice(0, LIMITS.MAX_EXPERIENCES).map(exp => ({
+    // Limit experience entries and bullets (but don't truncate text!)
+    fitted.experience = data.experience.slice(0, limits.maxExperiences).map(exp => ({
         ...exp,
-        bullets: exp.bullets
-            .slice(0, LIMITS.MAX_BULLETS_PER_EXPERIENCE)
-            .map(bullet => truncateText(bullet, LIMITS.MAX_BULLET_LENGTH))
+        bullets: exp.bullets.slice(0, limits.maxBulletsPerExperience)
+        // NO text truncation - show full bullets
     }));
 
     // Limit education
-    fitted.education = data.education.slice(0, LIMITS.MAX_EDUCATION);
+    fitted.education = data.education.slice(0, limits.maxEducation);
 
-    // Limit projects (reduce if we have lots of experience)
-    const projectLimit = fitted.experience.length >= 3 ? 1 : LIMITS.MAX_PROJECTS;
-    fitted.projects = data.projects.slice(0, projectLimit).map(proj => ({
-        ...proj,
-        description: truncateText(proj.description, 120)
-    }));
+    // Limit projects
+    fitted.projects = data.projects.slice(0, limits.maxProjects);
+    // NO description truncation
 
-    // Limit certifications (skip if we have lots of other content)
-    const certLimit = (fitted.experience.length >= 3 && fitted.projects.length > 0) ? 2 : LIMITS.MAX_CERTIFICATIONS;
-    fitted.certifications = data.certifications.slice(0, certLimit);
+    // Limit certifications
+    fitted.certifications = data.certifications.slice(0, limits.maxCertifications);
 
     // Limit skills
-    fitted.skills = data.skills.slice(0, LIMITS.MAX_SKILLS);
+    fitted.skills = data.skills.slice(0, limits.maxSkills);
 
     return fitted;
 }
@@ -213,7 +245,7 @@ interface ResumePDFDocumentProps {
 
 // The PDF Document component
 function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
-    // Apply single-page fitting
+    // Apply single-page fitting (no truncation, just limiting items)
     const fittedData = fitToSinglePage(data);
     const { personalInfo, summary, skills, experience, education, projects, certifications } = fittedData;
 
@@ -324,7 +356,7 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
                     </View>
                 )}
 
-                {/* Projects - only show if we have room */}
+                {/* Projects */}
                 {projects.length > 0 && (
                     <View>
                         <Text style={styles.sectionTitle}>Projects</Text>
@@ -333,8 +365,8 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
                                 <View style={styles.entryHeader}>
                                     <Text style={styles.entryTitle}>{project.name}</Text>
                                     {project.technologies.length > 0 && (
-                                        <Text style={{ fontSize: 7, color: "#666" }}>
-                                            {project.technologies.slice(0, 5).join(", ")}
+                                        <Text style={{ fontSize: 8, color: "#666" }}>
+                                            {project.technologies.join(", ")}
                                         </Text>
                                     )}
                                 </View>
