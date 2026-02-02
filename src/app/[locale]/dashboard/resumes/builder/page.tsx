@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ResumeData, ResumeScore } from "@/types/resume";
-import { ResumePreview } from "@/components/resume-builder/resume-preview";
+import { ResumePreviewWrapper as ResumePreview } from "@/components/resume-builder/resume-preview-wrapper";
 import { ResumeEditorSidebar } from "@/components/resume-builder/resume-editor-sidebar";
 import { downloadResumePDF } from "@/components/resume-builder/resume-pdf";
 import { Button } from "@/components/ui/button";

@@ -366,13 +366,25 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
     );
 }
 
-// Function to generate and download PDF
+// Function to generate and download PDF based on template
 export async function downloadResumePDF(data: ResumeData): Promise<void> {
-    const blob = await pdf(<ResumePDFDocument data={data} />).toBlob();
-    const url = URL.createObjectURL(blob);
+    let pdfBlob: Blob;
+    let fileNameSuffix = "Simple";
+
+    // Import Modern PDF dynamically to avoid circular dependencies
+    if (data.template === "modern") {
+        const { ModernPDFDocument } = await import("./templates/modern-pdf");
+        pdfBlob = await pdf(<ModernPDFDocument data={data} />).toBlob();
+        fileNameSuffix = "Modern";
+    } else {
+        // Simple or Harvard (fallback to Simple for now)
+        pdfBlob = await pdf(<ResumePDFDocument data={data} />).toBlob();
+    }
+
+    const url = URL.createObjectURL(pdfBlob);
     const a = document.createElement("a");
     a.href = url;
-    const fileName = `${data.personalInfo.fullName || "Resume"}_${data.name || "CV"}.pdf`.replace(/[^a-zA-Z0-9_-]/g, "_");
+    const fileName = `${data.personalInfo.fullName || "Resume"}_${data.name || "CV"}_${fileNameSuffix}.pdf`.replace(/[^a-zA-Z0-9_-]/g, "_");
     a.download = fileName;
     document.body.appendChild(a);
     a.click();
