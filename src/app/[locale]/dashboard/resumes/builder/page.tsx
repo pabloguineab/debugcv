@@ -110,7 +110,7 @@ const createEmptyResume = (targetJob?: string, jobDescription?: string): ResumeD
     education: [],
     projects: [],
     certifications: [],
-    template: "harvard",
+    template: "simple",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
 });
@@ -743,7 +743,8 @@ export default function ResumeBuilderPage() {
 
                     if (currentStep >= steps) {
                         clearInterval(interval);
-                        // Score animation complete - using local algorithm only
+                        // Score animation complete - disable animation for future changes
+                        setAnimatePreview(false);
                     }
                 }, stepDuration);
 
