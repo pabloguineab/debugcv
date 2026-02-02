@@ -30,8 +30,6 @@ function createDynamicStyles(config: StyleConfig) {
         // Header
         header: {
             textAlign: "center",
-            borderBottomWidth: 2,
-            borderBottomColor: ACCENT_COLOR,
             paddingBottom: 10,
             marginBottom: 10,
         },

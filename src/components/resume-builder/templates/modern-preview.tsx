@@ -189,7 +189,7 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
                     }}
                 >
                     {/* Header */}
-                    <div className="text-center border-b-2 pb-4 mb-4" style={{ borderColor: accentColor }}>
+                    <div className="text-center pb-4 mb-4">
                         <h1
                             className="font-bold mb-1"
                             style={{ ...styles.name, color: accentColor }}
