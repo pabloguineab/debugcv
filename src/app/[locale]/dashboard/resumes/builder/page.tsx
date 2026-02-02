@@ -105,6 +105,7 @@ const createEmptyResume = (targetJob?: string, jobDescription?: string): ResumeD
     },
     summary: "",
     skills: [],
+    languages: [],
     experience: [],
     education: [],
     projects: [],
@@ -448,6 +449,7 @@ export default function ResumeBuilderPage() {
                 })) || [];
 
                 const baseSkills = profile.tech_stack || [];
+                const baseLanguages = profile.languages || [];
 
                 // If we have job details, tailor the resume with AI
                 if (jobTitle && jobDescription) {
@@ -486,6 +488,7 @@ export default function ResumeBuilderPage() {
                                     personalInfo: mappedPersonalInfo,
                                     summary: result.data.summary || "",
                                     skills: result.data.skills || baseSkills,
+                                    languages: baseLanguages,
                                     experience: result.data.experience || mappedExperience,
                                     education: result.data.education || mappedEducation,
                                     projects: result.data.projects || mappedProjects,
@@ -502,6 +505,7 @@ export default function ResumeBuilderPage() {
                                 personalInfo: mappedPersonalInfo,
                                 summary: profile.bio || "",
                                 skills: baseSkills,
+                                languages: baseLanguages,
                                 experience: mappedExperience,
                                 education: mappedEducation,
                                 projects: mappedProjects,
@@ -518,6 +522,7 @@ export default function ResumeBuilderPage() {
                             personalInfo: mappedPersonalInfo,
                             summary: profile.bio || "",
                             skills: baseSkills,
+                            languages: baseLanguages,
                             experience: mappedExperience,
                             education: mappedEducation,
                             projects: mappedProjects,
@@ -535,6 +540,7 @@ export default function ResumeBuilderPage() {
                         personalInfo: mappedPersonalInfo,
                         summary: profile.bio || "",
                         skills: baseSkills,
+                        languages: baseLanguages,
                         experience: mappedExperience,
                         education: mappedEducation,
                         projects: mappedProjects,

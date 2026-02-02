@@ -40,6 +40,7 @@ function calculateStyleConfig(data: ResumeData): StyleConfig {
         data.education.length * 4 +
         data.projects.length * 6 +
         data.certifications.length * 2 +
+        (data.languages?.length || 0) * 2 +
         Math.floor(data.skills.length / 3) +
         Math.floor(totalDescriptionLength / 100);
 
@@ -265,6 +266,25 @@ function createDynamicStyles(config: StyleConfig) {
             fontSize: config.detailFontSize - 1,
             color: "#666",
         },
+        languagesContainer: {
+            flexDirection: "row",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            gap: 6,
+        },
+        languageItem: {
+            flexDirection: "row",
+            gap: 2,
+        },
+        languageName: {
+            fontSize: config.detailFontSize,
+            fontWeight: "bold",
+            color: "#333",
+        },
+        languageLevel: {
+            fontSize: config.detailFontSize,
+            color: "#666",
+        },
     });
 }
 
@@ -279,7 +299,7 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
     const styles = createDynamicStyles(styleConfig);
 
     // Use all available data (no artificial limits - styles adapt instead)
-    const { personalInfo, summary, skills, experience, education, projects, certifications } = data;
+    const { personalInfo, summary, skills, experience, education, projects, certifications, languages } = data;
 
     const formatDateRange = (startDate?: string, endDate?: string, current?: boolean) => {
         const end = current ? "Present" : (endDate || "");
@@ -432,6 +452,22 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
                         <Text style={styles.sectionTitle}>Skills</Text>
                         <View style={styles.skillsContainer}>
                             <Text style={styles.skillsText}>{skills.join(" • ")}</Text>
+                        </View>
+                    </View>
+                )}
+
+                {/* Languages */}
+                {languages && languages.length > 0 && (
+                    <View>
+                        <Text style={styles.sectionTitle}>Languages</Text>
+                        <View style={styles.languagesContainer}>
+                            {languages.map((lang, index) => (
+                                <View key={index} style={styles.languageItem}>
+                                    <Text style={styles.languageName}>{lang.language}</Text>
+                                    <Text style={styles.languageLevel}>({lang.level})</Text>
+                                    {index < languages.length - 1 && <Text style={styles.languageLevel}> •</Text>}
+                                </View>
+                            ))}
                         </View>
                     </View>
                 )}
