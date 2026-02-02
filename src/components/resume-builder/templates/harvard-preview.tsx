@@ -13,11 +13,40 @@ interface HarvardPreviewProps {
     animate?: boolean;
 }
 
+// Primary accent color - professional blue
+const ACCENT_COLOR = "#2563eb";
+
+// Section Header Component - defined outside to prevent re-creation on each render
+const SectionHeader = ({ title }: { title: string }) => (
+    <div className="mb-2">
+        <h3
+            className="text-xs font-bold uppercase tracking-wider"
+            style={{ color: ACCENT_COLOR }}
+        >
+            {title}
+        </h3>
+        <div className="h-[2px] mt-1" style={{ backgroundColor: ACCENT_COLOR }} />
+    </div>
+);
+
+// Skill Tag Component - defined outside to prevent re-creation on each render
+const SkillTag = ({ skill }: { skill: string }) => (
+    <span
+        className="inline-block px-2 py-0.5 text-[9px] font-medium rounded mr-1 mb-1"
+        style={{
+            backgroundColor: `${ACCENT_COLOR}15`,
+            color: ACCENT_COLOR
+        }}
+    >
+        {skill}
+    </span>
+);
+
 export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }: HarvardPreviewProps) {
     const { personalInfo, summary, skills, experience, education, projects, certifications, languages } = data;
 
-    // Primary accent color - professional blue matching your PDF
-    const accentColor = "#2563eb";
+    // Use the global accent color constant
+    const accentColor = ACCENT_COLOR;
 
     // Auto-generate headline
     const generatedHeadline = useMemo(() => {
@@ -87,32 +116,6 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
             techKeywords.some(k => skill.toLowerCase().includes(k))
         );
     }, [skills]);
-
-    // Section Header Component
-    const SectionHeader = ({ title }: { title: string }) => (
-        <div className="mb-2">
-            <h3
-                className="text-xs font-bold uppercase tracking-wider"
-                style={{ color: accentColor }}
-            >
-                <Typewriter text={title} />
-            </h3>
-            <div className="h-[2px] mt-1" style={{ backgroundColor: accentColor }} />
-        </div>
-    );
-
-    // Skill Tag Component
-    const SkillTag = ({ skill }: { skill: string }) => (
-        <span
-            className="inline-block px-2 py-0.5 text-[9px] font-medium rounded mr-1 mb-1"
-            style={{
-                backgroundColor: `${accentColor}15`,
-                color: accentColor
-            }}
-        >
-            {skill}
-        </span>
-    );
 
     return (
         <div

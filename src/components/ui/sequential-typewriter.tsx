@@ -128,8 +128,11 @@ export function useSequentialWriter(text: string, speed: number = 20) {
         }
 
         // If not animating, show text immediately and keep syncing with prop changes
+        // Only update if text actually changed to prevent unnecessary re-renders
         if (!context.isAnimating) {
-            setDisplayedText(text);
+            if (displayedText !== text) {
+                setDisplayedText(text);
+            }
             if (!isDone) setIsDone(true);
             return;
         }

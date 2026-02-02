@@ -156,19 +156,23 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
         return Object.entries(groups).filter(([_, skills]) => skills.length > 0);
     }, [skills]);
 
-    // Clean section header
-    const SectionHeader = ({ title }: { title: string }) => (
-        <div className="flex items-center gap-3 mb-2" style={styles.sectionTitle}>
-            <div className="h-[2px] flex-1" style={{ backgroundColor: accentColor }} />
-            <span
-                className="font-semibold uppercase tracking-wider px-2"
-                style={{ color: accentColor }}
-            >
-                {title}
-            </span>
-            <div className="h-[2px] flex-1" style={{ backgroundColor: accentColor }} />
-        </div>
-    );
+    // Memoized section header to prevent re-creation on each render
+    const SectionHeader = useMemo(() => {
+        return function SectionHeaderInner({ title }: { title: string }) {
+            return (
+                <div className="flex items-center gap-3 mb-2" style={styles.sectionTitle}>
+                    <div className="h-[2px] flex-1" style={{ backgroundColor: accentColor }} />
+                    <span
+                        className="font-semibold uppercase tracking-wider px-2"
+                        style={{ color: accentColor }}
+                    >
+                        {title}
+                    </span>
+                    <div className="h-[2px] flex-1" style={{ backgroundColor: accentColor }} />
+                </div>
+            );
+        };
+    }, [styles.sectionTitle, accentColor]);
 
     return (
         <div
