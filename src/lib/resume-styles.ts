@@ -34,123 +34,73 @@ export function calculateContentScore(data: ResumeData): number {
         (data.summary?.length || 0);
 
     // Weight each content type by approximate space it takes on page
+    // Reduced weights to spread scores across the 0-200 range more evenly
     const score =
-        data.experience.length * 10 +        // Each experience entry ~10 units
-        totalBullets * 4 +                   // Each bullet ~4 units
-        data.education.length * 6 +          // Each education ~6 units
-        data.projects.length * 8 +           // Each project ~8 units
-        data.certifications.length * 3 +     // Each cert ~3 units
-        (data.languages?.length || 0) * 2 +  // Each language ~2 units
-        Math.floor(data.skills.length / 4) + // Skills (grouped) ~0.25 each
-        Math.floor(totalDescriptionLength / 80); // Text length contribution
+        data.experience.length * 6 +          // Each experience entry ~6 units
+        totalBullets * 2.5 +                  // Each bullet ~2.5 units
+        data.education.length * 4 +           // Each education ~4 units
+        data.projects.length * 5 +            // Each project ~5 units
+        data.certifications.length * 2 +      // Each cert ~2 units
+        (data.languages?.length || 0) * 1.5 + // Each language ~1.5 units
+        Math.floor(data.skills.length / 5) +  // Skills (grouped) ~0.2 each
+        Math.floor(totalDescriptionLength / 120); // Text length contribution
 
     return score;
 }
 
-// Calculate style config based on content density
+// Linear interpolation helper
+function lerp(min: number, max: number, t: number): number {
+    return min + (max - min) * t;
+}
+
+// Calculate style config based on content density using continuous interpolation
 // Target: Fill exactly 1 page (A4: ~842pt height, ~595pt width)
 export function calculateStyleConfig(data: ResumeData): StyleConfig {
     const contentScore = calculateContentScore(data);
 
-    // Thresholds tuned for A4 page with typical resume content
-    // Higher score = more content = need smaller fonts/margins
+    // Define min/max bounds for scores
+    // Score ~25 = very little content (needs max spacing)
+    // Score ~150 = extremely dense (needs min spacing)
+    const MIN_SCORE = 25;
+    const MAX_SCORE = 150;
 
-    if (contentScore > 80) {
-        // Very dense content - ultra compact
-        return {
-            pagePadding: 24,
-            pagePaddingTop: 20,
-            pagePaddingBottom: 16,
-            baseFontSize: 8,
-            nameFontSize: 16,
-            sectionTitleSize: 9.5,
-            entryTitleSize: 8.5,
-            detailFontSize: 7.5,
-            sectionMarginTop: 4,
-            sectionMarginBottom: 2,
-            entryMarginBottom: 2,
-            bulletMarginBottom: 0.5,
-            lineHeight: 1.2,
-            tier: 'very-dense',
-            contentScore,
-        };
-    } else if (contentScore > 60) {
-        // Dense content
-        return {
-            pagePadding: 28,
-            pagePaddingTop: 24,
-            pagePaddingBottom: 18,
-            baseFontSize: 8.5,
-            nameFontSize: 17,
-            sectionTitleSize: 10,
-            entryTitleSize: 9,
-            detailFontSize: 8,
-            sectionMarginTop: 5,
-            sectionMarginBottom: 3,
-            entryMarginBottom: 3,
-            bulletMarginBottom: 1,
-            lineHeight: 1.25,
-            tier: 'dense',
-            contentScore,
-        };
-    } else if (contentScore > 45) {
-        // Medium-high content
-        return {
-            pagePadding: 32,
-            pagePaddingTop: 28,
-            pagePaddingBottom: 22,
-            baseFontSize: 9,
-            nameFontSize: 18,
-            sectionTitleSize: 10.5,
-            entryTitleSize: 9.5,
-            detailFontSize: 8.5,
-            sectionMarginTop: 6,
-            sectionMarginBottom: 4,
-            entryMarginBottom: 4,
-            bulletMarginBottom: 1.5,
-            lineHeight: 1.3,
-            tier: 'medium',
-            contentScore,
-        };
-    } else if (contentScore > 30) {
-        // Light content - more spacious
-        return {
-            pagePadding: 38,
-            pagePaddingTop: 34,
-            pagePaddingBottom: 28,
-            baseFontSize: 9.5,
-            nameFontSize: 20,
-            sectionTitleSize: 11,
-            entryTitleSize: 10,
-            detailFontSize: 9,
-            sectionMarginTop: 8,
-            sectionMarginBottom: 5,
-            entryMarginBottom: 5,
-            bulletMarginBottom: 2,
-            lineHeight: 1.35,
-            tier: 'light',
-            contentScore,
-        };
-    } else {
-        // Very light content - maximize spacing to fill page
-        return {
-            pagePadding: 45,
-            pagePaddingTop: 40,
-            pagePaddingBottom: 35,
-            baseFontSize: 10.5,
-            nameFontSize: 24,
-            sectionTitleSize: 12,
-            entryTitleSize: 11,
-            detailFontSize: 10,
-            sectionMarginTop: 12,
-            sectionMarginBottom: 8,
-            entryMarginBottom: 8,
-            bulletMarginBottom: 3,
-            lineHeight: 1.5,
-            tier: 'very-light',
-            contentScore,
-        };
-    }
+    // Clamp score and calculate interpolation factor (0 = sparse, 1 = dense)
+    const clampedScore = Math.max(MIN_SCORE, Math.min(MAX_SCORE, contentScore));
+    const t = (clampedScore - MIN_SCORE) / (MAX_SCORE - MIN_SCORE);
+
+    // Determine tier for logging
+    let tier: StyleConfig['tier'];
+    if (t > 0.75) tier = 'very-dense';
+    else if (t > 0.55) tier = 'dense';
+    else if (t > 0.35) tier = 'medium';
+    else if (t > 0.15) tier = 'light';
+    else tier = 'very-light';
+
+    // Interpolate all values between sparse (max) and dense (min)
+    // Format: lerp(sparseValue, denseValue, t)
+    return {
+        // Page padding: sparse=55pt, dense=22pt
+        pagePadding: lerp(55, 22, t),
+        pagePaddingTop: lerp(50, 18, t),
+        pagePaddingBottom: lerp(45, 14, t),
+
+        // Typography: sparse=larger, dense=smaller
+        baseFontSize: lerp(11, 7.5, t),
+        nameFontSize: lerp(26, 15, t),
+        sectionTitleSize: lerp(13, 9, t),
+        entryTitleSize: lerp(11.5, 8, t),
+        detailFontSize: lerp(10.5, 7, t),
+
+        // Spacing: sparse=generous, dense=tight
+        sectionMarginTop: lerp(16, 3, t),
+        sectionMarginBottom: lerp(12, 2, t),
+        entryMarginBottom: lerp(12, 2, t),
+        bulletMarginBottom: lerp(4, 0.5, t),
+        lineHeight: lerp(1.6, 1.15, t),
+
+        tier,
+        contentScore,
+    };
 }
 
 // Convert style config to CSS custom properties for web preview
