@@ -13,14 +13,8 @@ import {
 import { ResumeData } from "@/types/resume";
 import { calculateStyleConfig, StyleConfig } from "@/lib/resume-styles";
 
-// Register fonts
-Font.register({
-    family: "Helvetica",
-    fonts: [
-        { src: "https://fonts.cdnfonts.com/s/29107/Helvetica.woff", fontWeight: "normal" },
-        { src: "https://fonts.cdnfonts.com/s/29107/Helvetica-Bold.woff", fontWeight: "bold" },
-    ],
-});
+// Accent color
+const ACCENT_COLOR = "#1e40af";
 
 // Create dynamic styles based on content density
 function createDynamicStyles(config: StyleConfig) {
@@ -35,64 +29,65 @@ function createDynamicStyles(config: StyleConfig) {
         },
         // Header
         header: {
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            marginBottom: config.sectionMarginBottom,
-        },
-        headerLeft: {
-            flex: 1,
+            textAlign: "center",
+            borderBottomWidth: 2,
+            borderBottomColor: ACCENT_COLOR,
+            paddingBottom: 10,
+            marginBottom: 10,
         },
         name: {
             fontSize: config.nameFontSize,
             fontWeight: "bold",
-            color: "#2c4a7c",
-            letterSpacing: 6,
-            marginBottom: 4,
+            color: ACCENT_COLOR,
+            marginBottom: 2,
         },
         headline: {
-            fontSize: config.detailFontSize + 1,
-            color: "#2c4a7c",
-            letterSpacing: 3,
+            fontSize: config.detailFontSize,
+            color: "#666",
             textTransform: "uppercase",
-            marginBottom: 6,
+            letterSpacing: 1,
+            marginBottom: 4,
         },
         contactRow: {
             flexDirection: "row",
+            justifyContent: "center",
             flexWrap: "wrap",
-            gap: 4,
+            gap: 6,
             fontSize: config.detailFontSize,
             color: "#666",
         },
         contactLink: {
-            color: "#2563eb",
+            color: ACCENT_COLOR,
         },
-        photoPlaceholder: {
-            width: 60,
-            height: 60,
-            borderRadius: 30,
-            backgroundColor: "#e5e7eb",
-            borderWidth: 2,
-            borderColor: "#2c4a7c",
+        separator: {
+            color: "#ccc",
+            marginHorizontal: 3,
         },
-        // Section divider
-        sectionDivider: {
+        // Section header with lines
+        sectionHeader: {
             flexDirection: "row",
             alignItems: "center",
             marginTop: config.sectionMarginTop,
-            marginBottom: config.sectionMarginBottom,
+            marginBottom: config.sectionMarginBottom * 0.6,
         },
         sectionLine: {
             flex: 1,
-            height: 1,
-            backgroundColor: "#2c4a7c",
+            height: 2,
+            backgroundColor: ACCENT_COLOR,
         },
         sectionTitle: {
-            fontSize: config.sectionTitleSize - 1,
-            color: "#2c4a7c",
-            letterSpacing: 4,
+            fontSize: config.sectionTitleSize * 0.85,
+            fontWeight: "bold",
+            color: ACCENT_COLOR,
             textTransform: "uppercase",
+            letterSpacing: 1,
             paddingHorizontal: 8,
+        },
+        // Content
+        summary: {
+            fontSize: config.detailFontSize,
+            lineHeight: config.lineHeight,
+            color: "#444",
         },
         // Entries
         entryContainer: {
@@ -111,6 +106,31 @@ function createDynamicStyles(config: StyleConfig) {
             fontWeight: "bold",
             color: "#1a1a1a",
         },
+        entryTitleInline: {
+            flexDirection: "row",
+            flexWrap: "wrap",
+            alignItems: "center",
+        },
+        entryTitleNormal: {
+            fontSize: config.entryTitleSize,
+            fontWeight: "bold",
+            color: "#1a1a1a",
+        },
+        entryTitleAccent: {
+            fontSize: config.entryTitleSize,
+            fontWeight: "bold",
+            color: ACCENT_COLOR,
+        },
+        entryTitleLink: {
+            fontSize: config.entryTitleSize,
+            fontWeight: "bold",
+            color: ACCENT_COLOR,
+            textDecoration: "underline",
+        },
+        entrySeparator: {
+            color: "#999",
+            marginHorizontal: 4,
+        },
         entrySubtitle: {
             fontSize: config.detailFontSize,
             color: "#555",
@@ -120,28 +140,6 @@ function createDynamicStyles(config: StyleConfig) {
             textAlign: "right",
             fontSize: config.detailFontSize,
             color: "#666",
-        },
-        entryInline: {
-            fontSize: config.entryTitleSize,
-            flexDirection: "row",
-            flexWrap: "wrap",
-        },
-        entryTitleNormal: {
-            fontSize: config.entryTitleSize,
-            fontWeight: "normal",
-        },
-        entryTitleBold: {
-            fontSize: config.entryTitleSize,
-            fontWeight: "bold",
-        },
-        entryTitleLink: {
-            fontSize: config.entryTitleSize,
-            fontWeight: "bold",
-            color: "#2563eb",
-            textDecoration: "underline",
-        },
-        separator: {
-            marginHorizontal: 3,
         },
         // Bullets
         bulletList: {
@@ -154,7 +152,7 @@ function createDynamicStyles(config: StyleConfig) {
         },
         bullet: {
             marginRight: 6,
-            color: "#666",
+            color: "#999",
         },
         bulletText: {
             flex: 1,
@@ -163,39 +161,36 @@ function createDynamicStyles(config: StyleConfig) {
             color: "#444",
         },
         // Skills
-        skillsSection: {},
-        skillCategory: {
+        skillRow: {
+            marginBottom: 2,
             flexDirection: "row",
             flexWrap: "wrap",
-            marginBottom: config.bulletMarginBottom,
         },
-        skillCategoryName: {
+        skillCategory: {
             fontSize: config.detailFontSize,
             fontWeight: "bold",
             color: "#1a1a1a",
         },
-        skillCategoryItems: {
+        skillItems: {
             fontSize: config.detailFontSize,
             color: "#444",
         },
         // Additional info
-        additionalSection: {},
+        additionalRow: {
+            marginBottom: 3,
+            flexDirection: "row",
+            flexWrap: "wrap",
+        },
         additionalLabel: {
             fontSize: config.detailFontSize,
             fontWeight: "bold",
             color: "#1a1a1a",
-            marginBottom: 2,
         },
         additionalText: {
             fontSize: config.detailFontSize,
             color: "#444",
         },
     });
-}
-
-// Helper to space letters (E D U C A T I O N)
-function spaceLetters(text: string): string {
-    return text.toUpperCase().split('').join(' ');
 }
 
 // Group skills by category
@@ -239,12 +234,12 @@ function groupSkills(skills: string[]): [string, string[]][] {
     return Object.entries(groups).filter(([_, skills]) => skills.length > 0);
 }
 
-// Section Divider component
-function SectionDivider({ title, styles }: { title: string; styles: ReturnType<typeof createDynamicStyles> }) {
+// Section Header component
+function SectionHeader({ title, styles }: { title: string; styles: ReturnType<typeof createDynamicStyles> }) {
     return (
-        <View style={styles.sectionDivider}>
+        <View style={styles.sectionHeader}>
             <View style={styles.sectionLine} />
-            <Text style={styles.sectionTitle}>{spaceLetters(title)}</Text>
+            <Text style={styles.sectionTitle}>{title}</Text>
             <View style={styles.sectionLine} />
         </View>
     );
@@ -262,7 +257,7 @@ function formatDateRange(startDate?: string, endDate?: string, current?: boolean
 
 // Modern PDF Document Component
 export function ModernPDFDocument({ data }: { data: ResumeData }) {
-    const { personalInfo, skills, experience, education, projects, certifications, languages } = data;
+    const { personalInfo, summary, skills, experience, education, projects, certifications, languages } = data;
 
     const styleConfig = calculateStyleConfig(data);
     const styles = createDynamicStyles(styleConfig);
@@ -273,45 +268,72 @@ export function ModernPDFDocument({ data }: { data: ResumeData }) {
             <Page size="A4" style={styles.page}>
                 {/* Header */}
                 <View style={styles.header}>
-                    <View style={styles.headerLeft}>
-                        <Text style={styles.name}>{spaceLetters(personalInfo.fullName)}</Text>
-                        {data.targetJob && (
-                            <Text style={styles.headline}>{data.targetJob}</Text>
+                    <Text style={styles.name}>{personalInfo.fullName}</Text>
+                    {data.targetJob && (
+                        <Text style={styles.headline}>{data.targetJob}</Text>
+                    )}
+                    <View style={styles.contactRow}>
+                        {personalInfo.email && (
+                            <Link src={`mailto:${personalInfo.email}`} style={styles.contactLink}>
+                                {personalInfo.email}
+                            </Link>
                         )}
-                        <View style={styles.contactRow}>
-                            {personalInfo.email && (
-                                <Link src={`mailto:${personalInfo.email}`} style={styles.contactLink}>
-                                    {personalInfo.email}
+                        {personalInfo.location && (
+                            <>
+                                <Text style={styles.separator}>|</Text>
+                                <Text>{personalInfo.location}</Text>
+                            </>
+                        )}
+                        {personalInfo.phone && (
+                            <>
+                                <Text style={styles.separator}>|</Text>
+                                <Text>{personalInfo.phone}</Text>
+                            </>
+                        )}
+                        {personalInfo.linkedin && (
+                            <>
+                                <Text style={styles.separator}>|</Text>
+                                <Link
+                                    src={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`}
+                                    style={styles.contactLink}
+                                >
+                                    LinkedIn
                                 </Link>
-                            )}
-                            {personalInfo.location && (
-                                <>
-                                    <Text> | </Text>
-                                    <Text>{personalInfo.location}</Text>
-                                </>
-                            )}
-                            {personalInfo.phone && (
-                                <>
-                                    <Text> | </Text>
-                                    <Text>{personalInfo.phone}</Text>
-                                </>
-                            )}
-                        </View>
+                            </>
+                        )}
+                        {personalInfo.github && (
+                            <>
+                                <Text style={styles.separator}>|</Text>
+                                <Link
+                                    src={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`}
+                                    style={styles.contactLink}
+                                >
+                                    GitHub
+                                </Link>
+                            </>
+                        )}
                     </View>
-                    <View style={styles.photoPlaceholder} />
                 </View>
+
+                {/* Summary */}
+                {summary && (
+                    <View>
+                        <SectionHeader title="Professional Summary" styles={styles} />
+                        <Text style={styles.summary}>{summary}</Text>
+                    </View>
+                )}
 
                 {/* Education */}
                 {education.length > 0 && (
                     <View>
-                        <SectionDivider title="Education" styles={styles} />
+                        <SectionHeader title="Education" styles={styles} />
                         {education.map((edu) => (
                             <View key={edu.id} style={styles.entryContainer}>
                                 <View style={styles.entryHeader}>
                                     <View style={styles.entryLeft}>
                                         <Text style={styles.entryTitle}>{edu.institution}</Text>
                                         <Text style={styles.entrySubtitle}>
-                                            {edu.degree} in {edu.field}
+                                            {edu.degree}{edu.field ? ` in ${edu.field}` : ""}
                                         </Text>
                                     </View>
                                     <View>
@@ -326,26 +348,29 @@ export function ModernPDFDocument({ data }: { data: ResumeData }) {
                     </View>
                 )}
 
-                {/* Corporate Experience */}
+                {/* Experience */}
                 {experience.length > 0 && (
                     <View>
-                        <SectionDivider title="Corporate Experience" styles={styles} />
+                        <SectionHeader title="Professional Experience" styles={styles} />
                         {experience.map((exp) => (
                             <View key={exp.id} style={styles.entryContainer}>
                                 <View style={styles.entryHeader}>
-                                    <View style={styles.entryInline}>
+                                    <View style={styles.entryTitleInline}>
                                         <Text style={styles.entryTitleNormal}>{exp.title}</Text>
-                                        <Text style={styles.separator}>|</Text>
+                                        <Text style={styles.entrySeparator}>|</Text>
                                         {exp.companyUrl ? (
-                                            <Link src={exp.companyUrl.startsWith("http") ? exp.companyUrl : `https://${exp.companyUrl}`} style={styles.entryTitleLink}>
+                                            <Link
+                                                src={exp.companyUrl.startsWith("http") ? exp.companyUrl : `https://${exp.companyUrl}`}
+                                                style={styles.entryTitleLink}
+                                            >
                                                 {exp.company}
                                             </Link>
                                         ) : (
-                                            <Text style={styles.entryTitleBold}>{exp.company}</Text>
+                                            <Text style={styles.entryTitleAccent}>{exp.company}</Text>
                                         )}
                                     </View>
                                     <Text style={styles.entryRight}>
-                                        {exp.location} | {formatDateRange(exp.startDate, exp.endDate, exp.current)}
+                                        {exp.location}{exp.location ? " | " : ""}{formatDateRange(exp.startDate, exp.endDate, exp.current)}
                                     </Text>
                                 </View>
 
@@ -364,24 +389,29 @@ export function ModernPDFDocument({ data }: { data: ResumeData }) {
                     </View>
                 )}
 
-                {/* Projects Experience */}
+                {/* Projects */}
                 {projects.length > 0 && (
                     <View>
-                        <SectionDivider title="Projects Experience" styles={styles} />
+                        <SectionHeader title="Projects" styles={styles} />
                         {projects.map((project) => (
                             <View key={project.id} style={styles.entryContainer}>
                                 <View style={styles.entryHeader}>
-                                    <View style={styles.entryInline}>
-                                        <Text style={styles.entryTitleNormal}>Founder and Developer</Text>
-                                        <Text style={styles.separator}>|</Text>
+                                    <View style={styles.entryTitleInline}>
                                         {project.url ? (
-                                            <Link src={project.url.startsWith("http") ? project.url : `https://${project.url}`} style={styles.entryTitleLink}>
+                                            <Link
+                                                src={project.url.startsWith("http") ? project.url : `https://${project.url}`}
+                                                style={styles.entryTitleLink}
+                                            >
                                                 {project.name}
                                             </Link>
                                         ) : (
-                                            <Text style={styles.entryTitleBold}>{project.name}</Text>
+                                            <Text style={styles.entryTitleAccent}>{project.name}</Text>
                                         )}
-                                        <Text style={{ ...styles.entryTitleNormal, color: "#666" }}> (startup prototype)</Text>
+                                        {project.technologies.length > 0 && (
+                                            <Text style={{ ...styles.skillItems, marginLeft: 4 }}>
+                                                ({project.technologies.slice(0, 4).join(", ")})
+                                            </Text>
+                                        )}
                                     </View>
                                     <Text style={styles.entryRight}>
                                         {formatDateRange(project.startDate, project.endDate)}
@@ -393,14 +423,6 @@ export function ModernPDFDocument({ data }: { data: ResumeData }) {
                                         <Text style={styles.bullet}>•</Text>
                                         <Text style={styles.bulletText}>{project.description}</Text>
                                     </View>
-                                    {project.technologies.length > 0 && (
-                                        <View style={styles.bulletItem}>
-                                            <Text style={styles.bullet}>•</Text>
-                                            <Text style={styles.bulletText}>
-                                                Technologies: {project.technologies.join(", ")}
-                                            </Text>
-                                        </View>
-                                    )}
                                 </View>
                             </View>
                         ))}
@@ -410,52 +432,40 @@ export function ModernPDFDocument({ data }: { data: ResumeData }) {
                 {/* Technical Skills */}
                 {skills.length > 0 && (
                     <View>
-                        <SectionDivider title="Technical Skills" styles={styles} />
-                        <View style={styles.skillsSection}>
-                            {groupedSkills.map(([category, categorySkills]) => (
-                                <View key={category} style={styles.skillCategory}>
-                                    <Text style={styles.skillCategoryName}>{category}: </Text>
-                                    <Text style={styles.skillCategoryItems}>
-                                        {categorySkills.join(", ")}
-                                    </Text>
-                                </View>
-                            ))}
-                        </View>
+                        <SectionHeader title="Technical Skills" styles={styles} />
+                        {groupedSkills.map(([category, categorySkills]) => (
+                            <View key={category} style={styles.skillRow}>
+                                <Text style={styles.skillCategory}>{category}: </Text>
+                                <Text style={styles.skillItems}>{categorySkills.join(", ")}</Text>
+                            </View>
+                        ))}
                     </View>
                 )}
 
                 {/* Additional Information */}
                 {(certifications.length > 0 || (languages && languages.length > 0)) && (
                     <View>
-                        <SectionDivider title="Additional Information" styles={styles} />
-                        <View style={styles.additionalSection}>
-                            {/* Certifications */}
-                            {certifications.length > 0 && (
-                                <View>
-                                    <Text style={styles.additionalLabel}>Certifications:</Text>
-                                    <View style={styles.bulletList}>
-                                        {certifications.map((cert) => (
-                                            <View key={cert.id} style={styles.bulletItem}>
-                                                <Text style={styles.bullet}>•</Text>
-                                                <Text style={styles.bulletText}>
-                                                    {cert.name} ({cert.issueDate})
-                                                </Text>
-                                            </View>
-                                        ))}
-                                    </View>
-                                </View>
-                            )}
+                        <SectionHeader title="Additional Information" styles={styles} />
 
-                            {/* Languages */}
-                            {languages && languages.length > 0 && (
-                                <View style={styles.skillCategory}>
-                                    <Text style={styles.skillCategoryName}>Languages: </Text>
-                                    <Text style={styles.skillCategoryItems}>
-                                        {languages.map(lang => `${lang.language} (${lang.level})`).join(" and ")}
-                                    </Text>
-                                </View>
-                            )}
-                        </View>
+                        {certifications.length > 0 && (
+                            <View style={styles.additionalRow}>
+                                <Text style={styles.additionalLabel}>Certifications: </Text>
+                                <Text style={styles.additionalText}>
+                                    {certifications.map((cert, i) =>
+                                        `${cert.name} (${cert.issueDate})${i < certifications.length - 1 ? " • " : ""}`
+                                    ).join("")}
+                                </Text>
+                            </View>
+                        )}
+
+                        {languages && languages.length > 0 && (
+                            <View style={styles.additionalRow}>
+                                <Text style={styles.additionalLabel}>Languages: </Text>
+                                <Text style={styles.additionalText}>
+                                    {languages.map(lang => `${lang.language} (${lang.level})`).join(" • ")}
+                                </Text>
+                            </View>
+                        )}
                     </View>
                 )}
             </Page>

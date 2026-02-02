@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { Typewriter, SequentialAnimationProvider } from "@/components/ui/sequential-typewriter";
 import { EditableText } from "../editable-text";
-import { ResumeData, Experience, Education, Project, Certification, ResumeLanguage } from "@/types/resume";
+import { ResumeData, Experience, Education, Project, Certification } from "@/types/resume";
 import { calculateStyleConfig } from "@/lib/resume-styles";
 
 interface ModernPreviewProps {
@@ -16,28 +16,23 @@ interface ModernPreviewProps {
 export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }: ModernPreviewProps) {
     const { personalInfo, summary, skills, experience, education, projects, certifications, languages } = data;
 
-    // Calculate dynamic styles based on content density
     const styleConfig = useMemo(() => calculateStyleConfig(data), [data]);
-
-    // Scale factor for web (PDF uses pt, we use px with 1.2x scale)
     const scale = 1.2;
+
     const styles = useMemo(() => ({
         container: {
             padding: `${styleConfig.pagePaddingTop * scale}px ${styleConfig.pagePadding * scale}px ${styleConfig.pagePaddingBottom * scale}px`,
         },
         name: {
-            fontSize: `${styleConfig.nameFontSize * scale * 1.1}px`,
-            letterSpacing: '0.3em',
+            fontSize: `${styleConfig.nameFontSize * scale * 1.15}px`,
         },
         headline: {
-            fontSize: `${styleConfig.detailFontSize * scale * 1.1}px`,
-            letterSpacing: '0.15em',
+            fontSize: `${styleConfig.detailFontSize * scale}px`,
         },
         sectionTitle: {
-            fontSize: `${styleConfig.sectionTitleSize * scale * 0.9}px`,
+            fontSize: `${styleConfig.sectionTitleSize * scale * 0.85}px`,
             marginTop: `${styleConfig.sectionMarginTop * scale}px`,
-            marginBottom: `${styleConfig.sectionMarginBottom * scale}px`,
-            letterSpacing: '0.4em',
+            marginBottom: `${styleConfig.sectionMarginBottom * scale * 0.6}px`,
         },
         entryTitle: {
             fontSize: `${styleConfig.entryTitleSize * scale}px`,
@@ -57,6 +52,9 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
         },
     }), [styleConfig, scale]);
 
+    // Accent color
+    const accentColor = "#1e40af"; // Professional blue
+
     // Helper to format date ranges
     const formatDateRange = (startDate?: string, endDate?: string, current?: boolean) => {
         const end = current ? "Present" : (endDate || "");
@@ -66,9 +64,6 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
         if (end) return end;
         return "";
     };
-
-    // Space letters for section titles (E D U C A T I O N)
-    const spaceLetters = (text: string) => text.toUpperCase().split('').join(' ');
 
     // Update handlers
     const updatePersonalInfo = (field: string, value: string) => {
@@ -113,15 +108,7 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
         onUpdate?.({ experience: newExperience });
     };
 
-    const updateSkills = (skillsString: string) => {
-        const newSkills = skillsString
-            .split(/[•,]/)
-            .map(s => s.trim())
-            .filter(s => s.length > 0);
-        onUpdate?.({ skills: newSkills });
-    };
-
-    // Group skills by category (simple heuristic based on keywords)
+    // Group skills by category
     const groupedSkills = useMemo(() => {
         const groups: Record<string, string[]> = {
             "Programming Languages": [],
@@ -129,14 +116,16 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
             "Web Development": [],
             "Cloud & DevOps": [],
             "Data Analytics": [],
+            "Business Intelligence": [],
             "Other": []
         };
 
-        const mlKeywords = ['tensorflow', 'pytorch', 'keras', 'ml', 'ai', 'neural', 'deep learning', 'nlp', 'llm', 'hugging', 'transformers', 'langchain', 'gensim', 'spacy', 'nltk'];
-        const webKeywords = ['react', 'vue', 'angular', 'node', 'next', 'html', 'css', 'javascript', 'typescript', 'flask', 'fastapi', 'streamlit', 'gradio'];
-        const cloudKeywords = ['aws', 'azure', 'gcp', 'docker', 'kubernetes', 'ci/cd', 'devops', 'lambda', 's3', 'ec2', 'sagemaker'];
-        const dataKeywords = ['pandas', 'numpy', 'scipy', 'matplotlib', 'tableau', 'power bi', 'sql', 'hadoop', 'spark', 'pyspark'];
-        const langKeywords = ['python', 'javascript', 'java', 'c++', 'c#', 'r', 'matlab', 'bash', 'shell'];
+        const mlKeywords = ['tensorflow', 'pytorch', 'keras', 'ml', 'ai', 'neural', 'deep learning', 'nlp', 'llm', 'hugging', 'transformers', 'langchain', 'gensim', 'spacy', 'nltk', 'qdrant', 'chromadb', 'pinecone', 'llamaindex', 'langsmith', 'langgraph'];
+        const webKeywords = ['react', 'vue', 'angular', 'node', 'next', 'html', 'css', 'javascript', 'typescript', 'flask', 'fastapi', 'streamlit', 'gradio', 'chainlit'];
+        const cloudKeywords = ['aws', 'azure', 'gcp', 'docker', 'kubernetes', 'ci/cd', 'devops', 'lambda', 's3', 'ec2', 'sagemaker', 'dialogflow'];
+        const dataKeywords = ['pandas', 'numpy', 'scipy', 'plotly', 'matplotlib', 'hadoop', 'spark', 'pyspark'];
+        const biKeywords = ['tableau', 'power bi', 'd3'];
+        const langKeywords = ['python', 'javascript', 'java', 'c++', 'c#', 'r', 'matlab', 'bash', 'shell', 'sql'];
 
         skills.forEach(skill => {
             const lower = skill.toLowerCase();
@@ -148,6 +137,8 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
                 groups["Web Development"].push(skill);
             } else if (cloudKeywords.some(k => lower.includes(k))) {
                 groups["Cloud & DevOps"].push(skill);
+            } else if (biKeywords.some(k => lower.includes(k))) {
+                groups["Business Intelligence"].push(skill);
             } else if (dataKeywords.some(k => lower.includes(k))) {
                 groups["Data Analytics"].push(skill);
             } else {
@@ -155,18 +146,20 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
             }
         });
 
-        // Filter out empty groups
         return Object.entries(groups).filter(([_, skills]) => skills.length > 0);
     }, [skills]);
 
-    // Section divider with spaced text
-    const SectionDivider = ({ title }: { title: string }) => (
-        <div className="flex items-center gap-2" style={styles.sectionTitle}>
-            <div className="flex-1 h-px bg-[#2c4a7c]" />
-            <span className="text-[#2c4a7c] font-normal tracking-[0.4em] uppercase text-xs">
-                {spaceLetters(title)}
+    // Clean section header
+    const SectionHeader = ({ title }: { title: string }) => (
+        <div className="flex items-center gap-3 mb-2" style={styles.sectionTitle}>
+            <div className="h-[2px] flex-1" style={{ backgroundColor: accentColor }} />
+            <span
+                className="font-semibold uppercase tracking-wider px-2"
+                style={{ color: accentColor }}
+            >
+                {title}
             </span>
-            <div className="flex-1 h-px bg-[#2c4a7c]" />
+            <div className="h-[2px] flex-1" style={{ backgroundColor: accentColor }} />
         </div>
     );
 
@@ -184,288 +177,320 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
                 <div
                     className="text-gray-800"
                     style={{
-                        fontFamily: "Arial, Helvetica, sans-serif",
+                        fontFamily: "'Segoe UI', Roboto, Arial, sans-serif",
                         ...styles.container
                     }}
                 >
-                    {/* Header with photo placeholder */}
-                    <div className="flex justify-between items-start" style={styles.sectionMargin}>
-                        <div className="flex-1">
-                            {/* Name with spaced letters */}
-                            <h1
-                                className="font-bold text-[#2c4a7c] mb-2"
-                                style={styles.name}
-                            >
-                                <EditableText
-                                    value={personalInfo.fullName}
-                                    onChange={(v) => updatePersonalInfo("fullName", v)}
-                                    placeholder="Your Name"
-                                    displayComponent={<Typewriter text={spaceLetters(personalInfo.fullName || "YOUR NAME")} />}
-                                />
-                            </h1>
+                    {/* Header */}
+                    <div className="text-center border-b-2 pb-4 mb-4" style={{ borderColor: accentColor }}>
+                        <h1
+                            className="font-bold mb-1"
+                            style={{ ...styles.name, color: accentColor }}
+                        >
+                            <EditableText
+                                value={personalInfo.fullName}
+                                onChange={(v) => updatePersonalInfo("fullName", v)}
+                                placeholder="Your Name"
+                                displayComponent={<Typewriter text={personalInfo.fullName || "Your Name"} />}
+                            />
+                        </h1>
 
-                            {/* Headline/Title */}
+                        {/* Title/Headline */}
+                        {data.targetJob && (
                             <p
-                                className="text-[#2c4a7c] tracking-widest uppercase mb-3"
+                                className="text-gray-600 uppercase tracking-wide mb-2"
                                 style={styles.headline}
                             >
                                 <EditableText
-                                    value={data.targetJob || ""}
+                                    value={data.targetJob}
                                     onChange={(v) => onUpdate?.({ targetJob: v })}
-                                    placeholder="Your Title | Specialty"
-                                    displayComponent={<Typewriter text={data.targetJob || "YOUR TITLE | SPECIALTY"} />}
+                                    placeholder="Your Title"
+                                    displayComponent={<Typewriter text={data.targetJob} />}
                                 />
                             </p>
+                        )}
 
-                            {/* Contact info row */}
-                            <p className="text-gray-600 flex items-center flex-wrap gap-1" style={styles.detail}>
-                                <span className="text-blue-600">
+                        {/* Contact info */}
+                        <div className="flex justify-center flex-wrap gap-x-3 gap-y-1 text-gray-600" style={styles.detail}>
+                            {personalInfo.email && (
+                                <span style={{ color: accentColor }}>
                                     <EditableText
                                         value={personalInfo.email}
                                         onChange={(v) => updatePersonalInfo("email", v)}
                                         placeholder="email@example.com"
-                                        displayComponent={<Typewriter text={personalInfo.email || ""} />}
+                                        displayComponent={<Typewriter text={personalInfo.email} />}
                                     />
                                 </span>
-                                {personalInfo.location && <span> | </span>}
-                                <EditableText
-                                    value={personalInfo.location}
-                                    onChange={(v) => updatePersonalInfo("location", v)}
-                                    placeholder="City, Country"
-                                    displayComponent={<Typewriter text={personalInfo.location || ""} />}
-                                />
-                                {personalInfo.phone && <span> | </span>}
-                                <EditableText
-                                    value={personalInfo.phone}
-                                    onChange={(v) => updatePersonalInfo("phone", v)}
-                                    placeholder="+1 234 567 890"
-                                    displayComponent={<Typewriter text={personalInfo.phone || ""} />}
-                                />
-                            </p>
-                        </div>
-
-                        {/* Profile photo placeholder */}
-                        <div
-                            className="w-20 h-20 rounded-full bg-gray-200 border-2 border-[#2c4a7c] flex items-center justify-center text-gray-400 text-xs ml-4 shrink-0"
-                        >
-                            Photo
+                            )}
+                            {personalInfo.location && (
+                                <>
+                                    <span className="text-gray-400">|</span>
+                                    <EditableText
+                                        value={personalInfo.location}
+                                        onChange={(v) => updatePersonalInfo("location", v)}
+                                        placeholder="City, Country"
+                                        displayComponent={<Typewriter text={personalInfo.location} />}
+                                    />
+                                </>
+                            )}
+                            {personalInfo.phone && (
+                                <>
+                                    <span className="text-gray-400">|</span>
+                                    <EditableText
+                                        value={personalInfo.phone}
+                                        onChange={(v) => updatePersonalInfo("phone", v)}
+                                        placeholder="+1 234 567 890"
+                                        displayComponent={<Typewriter text={personalInfo.phone} />}
+                                    />
+                                </>
+                            )}
+                            {personalInfo.linkedin && (
+                                <>
+                                    <span className="text-gray-400">|</span>
+                                    <a
+                                        href={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={{ color: accentColor }}
+                                        className="hover:underline"
+                                    >
+                                        <Typewriter text="LinkedIn" />
+                                    </a>
+                                </>
+                            )}
+                            {personalInfo.github && (
+                                <>
+                                    <span className="text-gray-400">|</span>
+                                    <a
+                                        href={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={{ color: accentColor }}
+                                        className="hover:underline"
+                                    >
+                                        <Typewriter text="GitHub" />
+                                    </a>
+                                </>
+                            )}
                         </div>
                     </div>
+
+                    {/* Summary */}
+                    {summary && (
+                        <div style={styles.sectionMargin}>
+                            <SectionHeader title="Professional Summary" />
+                            <div className="text-gray-700 leading-relaxed" style={styles.detail}>
+                                <EditableText
+                                    value={summary}
+                                    onChange={updateSummary}
+                                    placeholder="Professional summary..."
+                                    multiline
+                                    displayComponent={<Typewriter text={summary} speed={2} />}
+                                />
+                            </div>
+                        </div>
+                    )}
 
                     {/* Education */}
                     {education.length > 0 && (
                         <div style={styles.sectionMargin}>
-                            <SectionDivider title="Education" />
-                            <div>
-                                {education.map((edu, index) => (
-                                    <div key={edu.id} className="flex justify-between items-start" style={styles.entryMargin}>
-                                        <div className="flex-1 min-w-0">
-                                            <div className="font-bold text-gray-900" style={styles.entryTitle}>
-                                                <EditableText
-                                                    value={edu.institution}
-                                                    onChange={(v) => updateEducation(index, { institution: v })}
-                                                    placeholder="Institution"
-                                                    displayComponent={<Typewriter text={edu.institution} />}
-                                                />
-                                            </div>
-                                            <div className="text-gray-600 italic" style={styles.detail}>
-                                                <EditableText
-                                                    value={`${edu.degree} in ${edu.field}`}
-                                                    onChange={(v) => {
-                                                        const parts = v.split(" in ");
-                                                        updateEducation(index, {
-                                                            degree: parts[0] || "",
-                                                            field: parts.slice(1).join(" in ") || ""
-                                                        });
-                                                    }}
-                                                    placeholder="Degree in Field"
-                                                    displayComponent={<Typewriter text={`${edu.degree} in ${edu.field}`} />}
-                                                />
+                            <SectionHeader title="Education" />
+                            {education.map((edu, index) => (
+                                <div key={edu.id} className="flex justify-between items-start" style={styles.entryMargin}>
+                                    <div className="flex-1">
+                                        <div className="font-semibold text-gray-900" style={styles.entryTitle}>
+                                            <EditableText
+                                                value={edu.institution}
+                                                onChange={(v) => updateEducation(index, { institution: v })}
+                                                placeholder="Institution"
+                                                displayComponent={<Typewriter text={edu.institution} />}
+                                            />
+                                        </div>
+                                        <div className="text-gray-600 italic" style={styles.detail}>
+                                            <EditableText
+                                                value={`${edu.degree}${edu.field ? ` in ${edu.field}` : ''}`}
+                                                onChange={(v) => {
+                                                    const parts = v.split(" in ");
+                                                    updateEducation(index, {
+                                                        degree: parts[0] || "",
+                                                        field: parts.slice(1).join(" in ") || ""
+                                                    });
+                                                }}
+                                                placeholder="Degree in Field"
+                                                displayComponent={<Typewriter text={`${edu.degree}${edu.field ? ` in ${edu.field}` : ''}`} />}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="text-right text-gray-600 shrink-0 ml-4" style={styles.detail}>
+                                        <div><Typewriter text={edu.location || ""} /></div>
+                                        <div><Typewriter text={formatDateRange(edu.startDate, edu.endDate)} /></div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Experience */}
+                    {experience.length > 0 && (
+                        <div style={styles.sectionMargin}>
+                            <SectionHeader title="Professional Experience" />
+                            {experience.map((exp, index) => (
+                                <div key={exp.id} style={styles.entryMargin}>
+                                    <div className="flex justify-between items-start mb-1">
+                                        <div className="flex-1">
+                                            <div style={styles.entryTitle}>
+                                                <span className="font-semibold text-gray-900">{exp.title}</span>
+                                                <span className="text-gray-500 mx-2">|</span>
+                                                {exp.companyUrl ? (
+                                                    <a
+                                                        href={exp.companyUrl.startsWith("http") ? exp.companyUrl : `https://${exp.companyUrl}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="font-semibold hover:underline"
+                                                        style={{ color: accentColor }}
+                                                    >
+                                                        <EditableText
+                                                            value={exp.company}
+                                                            onChange={(v) => updateExperience(index, { company: v })}
+                                                            placeholder="Company"
+                                                            displayComponent={<Typewriter text={exp.company} />}
+                                                        />
+                                                    </a>
+                                                ) : (
+                                                    <span className="font-semibold" style={{ color: accentColor }}>
+                                                        <EditableText
+                                                            value={exp.company}
+                                                            onChange={(v) => updateExperience(index, { company: v })}
+                                                            placeholder="Company"
+                                                            displayComponent={<Typewriter text={exp.company} />}
+                                                        />
+                                                    </span>
+                                                )}
                                             </div>
                                         </div>
                                         <div className="text-right text-gray-600 shrink-0 ml-4" style={styles.detail}>
-                                            <div>
-                                                <Typewriter text={edu.location || ""} />
-                                            </div>
-                                            <div>
-                                                <Typewriter text={formatDateRange(edu.startDate, edu.endDate)} />
-                                            </div>
+                                            <Typewriter text={`${exp.location || ""}${exp.location ? " | " : ""}${formatDateRange(exp.startDate, exp.endDate, exp.current)}`} />
                                         </div>
                                     </div>
-                                ))}
-                            </div>
+
+                                    {exp.bullets.length > 0 && (
+                                        <ul className="ml-4 text-gray-700" style={styles.detail}>
+                                            {exp.bullets.filter(b => b.trim()).map((bullet, bulletIndex) => (
+                                                <li key={bulletIndex} className="flex items-start" style={styles.bulletMargin}>
+                                                    <span className="mr-2 text-gray-400">•</span>
+                                                    <span className="flex-1">
+                                                        <EditableText
+                                                            value={bullet}
+                                                            onChange={(v) => updateBullet(index, bulletIndex, v)}
+                                                            placeholder="Achievement..."
+                                                            multiline
+                                                            displayComponent={<Typewriter text={bullet} speed={2} />}
+                                                        />
+                                                    </span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     )}
 
-                    {/* Corporate Experience */}
-                    {experience.length > 0 && (
-                        <div style={styles.sectionMargin}>
-                            <SectionDivider title="Corporate Experience" />
-                            <div>
-                                {experience.map((exp, index) => (
-                                    <div key={exp.id} style={styles.entryMargin}>
-                                        <div className="flex justify-between items-start mb-1">
-                                            <div className="flex-1 min-w-0">
-                                                <div className="text-gray-900" style={styles.entryTitle}>
-                                                    <span className="font-normal">{exp.title}</span>
-                                                    <span className="mx-1">|</span>
-                                                    {exp.companyUrl ? (
-                                                        <a
-                                                            href={exp.companyUrl.startsWith("http") ? exp.companyUrl : `https://${exp.companyUrl}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="text-blue-600 font-bold underline"
-                                                        >
-                                                            <EditableText
-                                                                value={exp.company}
-                                                                onChange={(v) => updateExperience(index, { company: v })}
-                                                                placeholder="Company"
-                                                                displayComponent={<Typewriter text={exp.company} />}
-                                                            />
-                                                        </a>
-                                                    ) : (
-                                                        <span className="font-bold">
-                                                            <EditableText
-                                                                value={exp.company}
-                                                                onChange={(v) => updateExperience(index, { company: v })}
-                                                                placeholder="Company"
-                                                                displayComponent={<Typewriter text={exp.company} />}
-                                                            />
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div className="text-right text-gray-600 shrink-0 ml-4" style={styles.detail}>
-                                                <Typewriter text={`${exp.location || ""} | ${formatDateRange(exp.startDate, exp.endDate, exp.current)}`} />
-                                            </div>
-                                        </div>
-
-                                        {exp.bullets.length > 0 && (
-                                            <ul className="list-none ml-4 text-gray-700" style={styles.detail}>
-                                                {exp.bullets.map((bullet, bulletIndex) => (
-                                                    <li key={bulletIndex} className="flex items-start" style={styles.bulletMargin}>
-                                                        <span className="mr-2 text-gray-500">•</span>
-                                                        <span className="flex-1">
-                                                            <EditableText
-                                                                value={bullet}
-                                                                onChange={(v) => updateBullet(index, bulletIndex, v)}
-                                                                placeholder="Achievement..."
-                                                                multiline
-                                                                displayComponent={<Typewriter text={bullet} speed={2} />}
-                                                            />
-                                                        </span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Projects Experience */}
+                    {/* Projects */}
                     {projects.length > 0 && (
                         <div style={styles.sectionMargin}>
-                            <SectionDivider title="Projects Experience" />
-                            <div>
-                                {projects.map((project, index) => (
-                                    <div key={project.id} style={styles.entryMargin}>
-                                        <div className="flex justify-between items-start mb-1">
-                                            <div className="flex-1 min-w-0" style={styles.entryTitle}>
-                                                <span className="font-normal">Founder and Developer</span>
-                                                <span className="mx-1">|</span>
-                                                {project.url ? (
-                                                    <a
-                                                        href={project.url.startsWith("http") ? project.url : `https://${project.url}`}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="text-blue-600 font-bold underline"
-                                                    >
-                                                        <Typewriter text={project.name} />
-                                                    </a>
-                                                ) : (
-                                                    <span className="font-bold">
-                                                        <Typewriter text={project.name} />
-                                                    </span>
-                                                )}
-                                                <span className="text-gray-500 font-normal ml-1">(startup prototype)</span>
-                                            </div>
-                                            <div className="text-right text-gray-600 shrink-0 ml-4" style={styles.detail}>
-                                                <Typewriter text={formatDateRange(project.startDate, project.endDate)} />
-                                            </div>
-                                        </div>
-
-                                        <ul className="list-none ml-4 text-gray-700" style={styles.detail}>
-                                            <li className="flex items-start" style={styles.bulletMargin}>
-                                                <span className="mr-2 text-gray-500">•</span>
-                                                <span className="flex-1">
-                                                    <EditableText
-                                                        value={project.description}
-                                                        onChange={(v) => updateProject(index, { description: v })}
-                                                        placeholder="Project description..."
-                                                        multiline
-                                                        displayComponent={<Typewriter text={project.description} speed={2} />}
-                                                    />
+                            <SectionHeader title="Projects" />
+                            {projects.map((project, index) => (
+                                <div key={project.id} style={styles.entryMargin}>
+                                    <div className="flex justify-between items-start mb-1">
+                                        <div className="flex-1" style={styles.entryTitle}>
+                                            {project.url ? (
+                                                <a
+                                                    href={project.url.startsWith("http") ? project.url : `https://${project.url}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="font-semibold hover:underline"
+                                                    style={{ color: accentColor }}
+                                                >
+                                                    <Typewriter text={project.name} />
+                                                </a>
+                                            ) : (
+                                                <span className="font-semibold" style={{ color: accentColor }}>
+                                                    <Typewriter text={project.name} />
                                                 </span>
-                                            </li>
-                                        </ul>
+                                            )}
+                                            {project.technologies.length > 0 && (
+                                                <span className="text-gray-500 font-normal ml-2" style={{ fontSize: `${styleConfig.detailFontSize * scale * 0.9}px` }}>
+                                                    ({project.technologies.slice(0, 4).join(", ")})
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="text-right text-gray-600 shrink-0 ml-4" style={styles.detail}>
+                                            <Typewriter text={formatDateRange(project.startDate, project.endDate)} />
+                                        </div>
                                     </div>
-                                ))}
-                            </div>
+
+                                    <div className="ml-4 text-gray-700" style={styles.detail}>
+                                        <div className="flex items-start" style={styles.bulletMargin}>
+                                            <span className="mr-2 text-gray-400">•</span>
+                                            <span className="flex-1">
+                                                <EditableText
+                                                    value={project.description}
+                                                    onChange={(v) => updateProject(index, { description: v })}
+                                                    placeholder="Project description..."
+                                                    multiline
+                                                    displayComponent={<Typewriter text={project.description} speed={2} />}
+                                                />
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     )}
 
                     {/* Technical Skills */}
                     {skills.length > 0 && (
                         <div style={styles.sectionMargin}>
-                            <SectionDivider title="Technical Skills" />
+                            <SectionHeader title="Technical Skills" />
                             <div style={styles.detail}>
                                 {groupedSkills.map(([category, categorySkills]) => (
-                                    <div key={category} style={styles.bulletMargin}>
-                                        <span className="font-bold text-gray-900">{category}:</span>
-                                        <span className="text-gray-700 ml-1">
-                                            {categorySkills.join(", ")}
-                                        </span>
+                                    <div key={category} className="mb-1">
+                                        <span className="font-semibold text-gray-900">{category}: </span>
+                                        <span className="text-gray-700">{categorySkills.join(", ")}</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
                     )}
 
-                    {/* Additional Information */}
+                    {/* Certifications & Languages */}
                     {(certifications.length > 0 || (languages && languages.length > 0)) && (
                         <div style={styles.sectionMargin}>
-                            <SectionDivider title="Additional Information" />
-
-                            {/* Certifications */}
-                            {certifications.length > 0 && (
-                                <div style={styles.detail}>
-                                    <div className="font-bold text-gray-900 mb-1">Certifications:</div>
-                                    <ul className="list-none ml-4">
-                                        {certifications.map((cert, index) => (
-                                            <li key={cert.id} className="flex items-start" style={styles.bulletMargin}>
-                                                <span className="mr-2 text-gray-500">•</span>
-                                                <span>
-                                                    <Typewriter text={`${cert.name} (${cert.issueDate})`} />
+                            <SectionHeader title="Additional Information" />
+                            <div style={styles.detail}>
+                                {certifications.length > 0 && (
+                                    <div className="mb-2">
+                                        <span className="font-semibold text-gray-900">Certifications: </span>
+                                        <span className="text-gray-700">
+                                            {certifications.map((cert, i) => (
+                                                <span key={cert.id}>
+                                                    {cert.name} ({cert.issueDate})
+                                                    {i < certifications.length - 1 && " • "}
                                                 </span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
-
-                            {/* Languages */}
-                            {languages && languages.length > 0 && (
-                                <div style={styles.detail} className="mt-2">
-                                    <span className="font-bold text-gray-900">Languages:</span>
-                                    <span className="text-gray-700 ml-1">
-                                        <Typewriter
-                                            text={languages.map(lang => `${lang.language} (${lang.level})`).join(" and ")}
-                                        />
-                                    </span>
-                                </div>
-                            )}
+                                            ))}
+                                        </span>
+                                    </div>
+                                )}
+                                {languages && languages.length > 0 && (
+                                    <div>
+                                        <span className="font-semibold text-gray-900">Languages: </span>
+                                        <span className="text-gray-700">
+                                            {languages.map(lang => `${lang.language} (${lang.level})`).join(" • ")}
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     )}
                 </div>
