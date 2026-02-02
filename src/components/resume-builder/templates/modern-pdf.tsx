@@ -263,14 +263,18 @@ export function ModernPDFDocument({ data }: { data: ResumeData }) {
     const styles = createDynamicStyles(styleConfig);
     const groupedSkills = groupSkills(skills);
 
+    // Auto-generate headline based on targetJob, first experience, or default
+    const generatedHeadline = data.targetJob
+        || (experience.length > 0 && experience[0].title ? experience[0].title : "");
+
     return (
         <Document>
             <Page size="A4" style={styles.page}>
                 {/* Header */}
                 <View style={styles.header}>
                     <Text style={styles.name}>{personalInfo.fullName}</Text>
-                    {data.targetJob && (
-                        <Text style={styles.headline}>{data.targetJob}</Text>
+                    {generatedHeadline && (
+                        <Text style={styles.headline}>{generatedHeadline}</Text>
                     )}
                     <View style={styles.contactRow}>
                         {personalInfo.email && (

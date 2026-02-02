@@ -55,6 +55,13 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
     // Accent color
     const accentColor = "#1e40af"; // Professional blue
 
+    // Auto-generate headline based on targetJob, first experience, or default
+    const generatedHeadline = useMemo(() => {
+        if (data.targetJob) return data.targetJob;
+        if (experience.length > 0 && experience[0].title) return experience[0].title;
+        return ""; // No fallback - don't show if we don't have data
+    }, [data.targetJob, experience]);
+
     // Helper to format date ranges
     const formatDateRange = (startDate?: string, endDate?: string, current?: boolean) => {
         const end = current ? "Present" : (endDate || "");
@@ -195,17 +202,17 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
                             />
                         </h1>
 
-                        {/* Title/Headline */}
-                        {data.targetJob && (
+                        {/* Title/Headline - auto-generated from targetJob or first experience */}
+                        {generatedHeadline && (
                             <p
                                 className="text-gray-600 uppercase tracking-wide mb-2"
                                 style={styles.headline}
                             >
                                 <EditableText
-                                    value={data.targetJob}
+                                    value={generatedHeadline}
                                     onChange={(v) => onUpdate?.({ targetJob: v })}
                                     placeholder="Your Title"
-                                    displayComponent={<Typewriter text={data.targetJob} />}
+                                    displayComponent={<Typewriter text={generatedHeadline} />}
                                 />
                             </p>
                         )}
