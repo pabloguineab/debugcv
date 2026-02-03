@@ -563,6 +563,10 @@ export default function ResumeBuilderPage() {
 
     // Update resume data
     const handleUpdate = useCallback((updates: Partial<ResumeData>) => {
+        // If template is changing, disable animation to prevent restart
+        if (updates.template) {
+            setAnimatePreview(false);
+        }
         setResumeData(prev => ({
             ...prev,
             ...updates,
