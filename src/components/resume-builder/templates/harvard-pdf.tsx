@@ -516,7 +516,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                         <View key={index} style={styles.langItem}>
                                             <Text>
                                                 <Text style={styles.langName}>{lang.language}</Text>
-                                                <Text style={styles.langLevel}> {lang.level}</Text>
+                                                <Text style={styles.langLevel}> {lang.level.charAt(0).toUpperCase() + lang.level.slice(1)}</Text>
                                             </Text>
                                         </View>
                                     ))}

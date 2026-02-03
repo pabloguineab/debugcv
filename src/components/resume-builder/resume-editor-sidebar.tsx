@@ -195,6 +195,29 @@ export function ResumeEditorSidebar({
             </div>
 
             <div className="p-4 space-y-4">
+                {/* Template Selection - At the Top */}
+                <div className={cn("border-b pb-4", activeSection === "template" && "ring-2 ring-primary rounded-lg p-2")}>
+                    <SectionHeader title="Resume Template" section="template" />
+                    {expandedSections.template && (
+                        <div className="mt-3">
+                            <Label className="text-xs text-muted-foreground">Choose a template for your resume</Label>
+                            <div className="flex gap-2 mt-2">
+                                {(["harvard", "simple", "modern"] as const).map((template) => (
+                                    <Button
+                                        key={template}
+                                        variant={data.template === template ? "default" : "outline"}
+                                        size="sm"
+                                        onClick={() => onUpdate({ template })}
+                                        className="capitalize"
+                                    >
+                                        {template}
+                                    </Button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+
                 {/* Target Job Details */}
                 <div className={cn("border-b pb-4", activeSection === "targetJob" && "ring-2 ring-primary rounded-lg p-2")}>
                     <SectionHeader title="Target Job Details" section="targetJob" />
@@ -687,28 +710,7 @@ export function ResumeEditorSidebar({
                     )}
                 </div>
 
-                {/* Template Selection */}
-                <div className={cn("pb-4", activeSection === "template" && "ring-2 ring-primary rounded-lg p-2")}>
-                    <SectionHeader title="Resume Template" section="template" />
-                    {expandedSections.template && (
-                        <div className="mt-3">
-                            <Label className="text-xs text-muted-foreground">Choose a template for your resume</Label>
-                            <div className="flex gap-2 mt-2">
-                                {(["harvard", "simple", "modern"] as const).map((template) => (
-                                    <Button
-                                        key={template}
-                                        variant={data.template === template ? "default" : "outline"}
-                                        size="sm"
-                                        onClick={() => onUpdate({ template })}
-                                        className="capitalize"
-                                    >
-                                        {template}
-                                    </Button>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </div>
+
             </div>
         </div>
     );

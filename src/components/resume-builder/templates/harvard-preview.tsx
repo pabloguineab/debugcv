@@ -522,7 +522,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                         {languages.map((lang, index) => (
                                             <div key={index} style={styles.detail}>
                                                 <span className="font-semibold text-gray-800">{lang.language}</span>
-                                                <span className="text-gray-500 ml-1.5">{lang.level}</span>
+                                                <span className="text-gray-500 ml-1.5">{lang.level.charAt(0).toUpperCase() + lang.level.slice(1)}</span>
                                             </div>
                                         ))}
                                     </div>

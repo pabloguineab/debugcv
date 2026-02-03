@@ -465,7 +465,7 @@ export function ModernPDFDocument({ data }: { data: ResumeData }) {
                             <View style={styles.additionalRow}>
                                 <Text style={styles.additionalLabel}>Languages: </Text>
                                 <Text style={styles.additionalText}>
-                                    {languages.map(lang => `${lang.language} (${lang.level})`).join(" • ")}
+                                    {languages.map(lang => `${lang.language} (${lang.level.charAt(0).toUpperCase() + lang.level.slice(1)})`).join(" • ")}
                                 </Text>
                             </View>
                         )}

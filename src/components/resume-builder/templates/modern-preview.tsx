@@ -498,7 +498,7 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
                                     <div>
                                         <span className="font-semibold text-gray-900">Languages: </span>
                                         <span className="text-gray-700">
-                                            {languages.map(lang => `${lang.language} (${lang.level})`).join(" • ")}
+                                            {languages.map(lang => `${lang.language} (${lang.level.charAt(0).toUpperCase() + lang.level.slice(1)})`).join(" • ")}
                                         </span>
                                     </div>
                                 )}
