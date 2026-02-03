@@ -21,15 +21,18 @@ type FormData = z.infer<typeof formSchema>;
 interface ReferFriendModalProps {
     open: boolean;
     onClose: () => void;
+    userName?: string;
 }
 
 export function ReferFriendModal({
     open,
     onClose,
+    userName = "A friend",
 }: ReferFriendModalProps) {
     const overlayRef = useRef<HTMLDivElement>(null);
     const [isSuccess, setIsSuccess] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const form = useForm<FormData>({
         resolver: zodResolver(formSchema),
@@ -56,6 +59,7 @@ export function ReferFriendModal({
         if (!open) {
             setTimeout(() => {
                 setIsSuccess(false);
+                setError(null);
                 reset();
             }, 300);
         }
@@ -84,16 +88,38 @@ export function ReferFriendModal({
     };
 
     const onSubmit = async (data: FormData) => {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 800));
+        setError(null);
 
-        fireConfetti();
-        setIsSuccess(true);
+        try {
+            const response = await fetch('/api/referral/send-invite', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    friendEmail: data.email,
+                    referrerName: userName,
+                    referralLink: 'https://app.debugcv.com/auth/signup',
+                }),
+            });
 
-        // Auto close after success animation
-        setTimeout(() => {
-            onClose();
-        }, 3000);
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || 'Failed to send invitation');
+            }
+
+            fireConfetti();
+            setIsSuccess(true);
+
+            // Auto close after success animation
+            setTimeout(() => {
+                onClose();
+            }, 3000);
+        } catch (err) {
+            console.error('Error sending referral:', err);
+            setError(err instanceof Error ? err.message : 'Failed to send invitation. Please try again.');
+        }
     };
 
     const handleCopyLink = () => {
@@ -201,6 +227,12 @@ export function ReferFriendModal({
                                                 </div>
                                             )}
                                         />
+
+                                        {error && (
+                                            <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-md">
+                                                <p className="text-sm font-medium text-destructive">{error}</p>
+                                            </div>
+                                        )}
 
                                         <div className="flex justify-end gap-2 pt-2">
                                             <Button variant="outline" type="button" onClick={onClose}>

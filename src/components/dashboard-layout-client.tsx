@@ -47,6 +47,7 @@ export function DashboardLayoutClient({ children, user }: DashboardLayoutClientP
                     <ReferFriendModal
                         open={isReferModalOpen}
                         onClose={() => setIsReferModalOpen(false)}
+                        userName={user?.name || undefined}
                     />
                     <UploadResumeModal
                         open={isUploadModalOpen}
