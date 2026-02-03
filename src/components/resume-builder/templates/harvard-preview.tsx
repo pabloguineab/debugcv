@@ -286,9 +286,9 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                     </div>
 
                     {/* Two Column Layout */}
-                    <div className="flex gap-5">
-                        {/* Left Column - 60% - Summary, Experience & Education */}
-                        <div className="w-[60%] pr-4 border-r border-gray-200">
+                    <div className="flex gap-4">
+                        {/* Left Column - 55% - Summary, Experience & Education */}
+                        <div className="w-[55%] pr-3 border-r border-gray-200">
                             {/* Summary */}
                             {summary && (
                                 <div>
@@ -423,8 +423,8 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                             )}
                         </div>
 
-                        {/* Right Column - 40% - Skills, Projects, Certs, Languages */}
-                        <div className="w-[40%]">
+                        {/* Right Column - 45% - Skills, Projects, Certs, Languages */}
+                        <div className="w-[45%]">
                             {/* Technical Skills */}
                             {categorizedSkills.technical.length > 0 && (
                                 <div>

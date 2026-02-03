@@ -121,14 +121,14 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             paddingBottom: styleConfig.pagePaddingBottom,
         },
         leftColumn: {
-            width: "60%",
-            paddingRight: 12,
+            width: "55%",
+            paddingRight: 10,
             borderRightWidth: 1,
             borderRightColor: "#e0e0e0",
         },
         rightColumn: {
-            width: "40%",
-            paddingLeft: 12,
+            width: "45%",
+            paddingLeft: 10,
         },
         sectionHeader: {
             marginBottom: styleConfig.sectionMarginBottom * 0.6,

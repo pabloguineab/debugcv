@@ -60,9 +60,9 @@ export function calculateStyleConfig(data: ResumeData): StyleConfig {
 
     // Define min/max bounds for scores
     // Score ~25 = very little content (needs max spacing)
-    // Score ~150 = extremely dense (needs min spacing)
+    // Score ~200 = extremely dense (needs min spacing)
     const MIN_SCORE = 25;
-    const MAX_SCORE = 150;
+    const MAX_SCORE = 200;
 
     // Clamp score and calculate interpolation factor (0 = sparse, 1 = dense)
     const clampedScore = Math.max(MIN_SCORE, Math.min(MAX_SCORE, contentScore));
@@ -70,34 +70,34 @@ export function calculateStyleConfig(data: ResumeData): StyleConfig {
 
     // Determine tier for logging
     let tier: StyleConfig['tier'];
-    if (t > 0.75) tier = 'very-dense';
-    else if (t > 0.55) tier = 'dense';
-    else if (t > 0.35) tier = 'medium';
-    else if (t > 0.15) tier = 'light';
+    if (t > 0.80) tier = 'very-dense';
+    else if (t > 0.60) tier = 'dense';
+    else if (t > 0.40) tier = 'medium';
+    else if (t > 0.20) tier = 'light';
     else tier = 'very-light';
 
     // Interpolate all values between sparse (max) and dense (min)
     // Format: lerp(sparseValue, denseValue, t)
     // IMPORTANT: Sparse values are LARGER to fill the page with less content
     return {
-        // Page padding: sparse=50pt, dense=24pt
-        pagePadding: lerp(50, 24, t),
-        pagePaddingTop: lerp(44, 20, t),
-        pagePaddingBottom: lerp(40, 16, t),
+        // Page padding: sparse=50pt, dense=18pt (reduced for very dense)
+        pagePadding: lerp(50, 18, t),
+        pagePaddingTop: lerp(44, 14, t),
+        pagePaddingBottom: lerp(40, 12, t),
 
         // Typography: sparse=LARGE, dense=smaller to fit more content
-        baseFontSize: lerp(12, 8, t),
-        nameFontSize: lerp(28, 16, t),
-        sectionTitleSize: lerp(14, 9, t),
-        entryTitleSize: lerp(12, 8.5, t),
-        detailFontSize: lerp(11, 7.5, t),
+        baseFontSize: lerp(12, 7.5, t),
+        nameFontSize: lerp(28, 14, t),
+        sectionTitleSize: lerp(14, 8, t),
+        entryTitleSize: lerp(12, 7.5, t),
+        detailFontSize: lerp(11, 7, t),
 
-        // Spacing: sparse=GENEROUS, dense=tight
-        sectionMarginTop: lerp(16, 4, t),
-        sectionMarginBottom: lerp(12, 3, t),
-        entryMarginBottom: lerp(12, 3, t),
-        bulletMarginBottom: lerp(4, 1, t),
-        lineHeight: lerp(1.5, 1.2, t),
+        // Spacing: sparse=GENEROUS, dense=very tight
+        sectionMarginTop: lerp(16, 2, t),
+        sectionMarginBottom: lerp(12, 1.5, t),
+        entryMarginBottom: lerp(12, 2, t),
+        bulletMarginBottom: lerp(4, 0.5, t),
+        lineHeight: lerp(1.5, 1.15, t),
 
         tier,
         contentScore,
