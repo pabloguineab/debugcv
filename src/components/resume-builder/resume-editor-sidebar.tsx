@@ -39,7 +39,7 @@ export function ResumeEditorSidebar({
         education: false,
         projects: false,
         certifications: false,
-        template: false
+        template: true
     });
 
     const toggleSection = (section: string) => {
