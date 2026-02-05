@@ -72,11 +72,11 @@ function easeOutLerp(sparseValue: number, denseValue: number, t: number): number
 export function calculateStyleConfig(data: ResumeData): StyleConfig {
     const contentScore = calculateContentScore(data);
 
-    // Define min/max bounds for scores
-    // Score ~30 = very little content (needs max spacing)
-    // Score ~150 = extremely dense (needs min spacing) - lowered threshold
-    const MIN_SCORE = 30;
-    const MAX_SCORE = 150;
+    // Define min/max bounds for scores - calibrated for typical resumes
+    // Score ~35 = sparse content (1-2 experiences, few bullets)
+    // Score ~130 = dense content (4+ experiences, many bullets, projects, certs)
+    const MIN_SCORE = 35;
+    const MAX_SCORE = 130;
 
     // Clamp score and calculate interpolation factor (0 = sparse, 1 = dense)
     const clampedScore = Math.max(MIN_SCORE, Math.min(MAX_SCORE, contentScore));
@@ -84,34 +84,33 @@ export function calculateStyleConfig(data: ResumeData): StyleConfig {
 
     // Determine tier for logging
     let tier: StyleConfig['tier'];
-    if (t > 0.75) tier = 'very-dense';
-    else if (t > 0.55) tier = 'dense';
-    else if (t > 0.35) tier = 'medium';
-    else if (t > 0.15) tier = 'light';
+    if (t > 0.80) tier = 'very-dense';
+    else if (t > 0.60) tier = 'dense';
+    else if (t > 0.40) tier = 'medium';
+    else if (t > 0.20) tier = 'light';
     else tier = 'very-light';
 
     // Interpolate all values between sparse (max) and dense (min)
-    // Using eased interpolation for more aggressive scaling
-    // IMPORTANT: Sparse values are LARGER to fill the page with less content
+    // BALANCED: Values calibrated to fill exactly one page
     return {
-        // Page padding: sparse=45pt, dense=14pt (reduced further for very dense)
-        pagePadding: easeOutLerp(45, 14, t),
-        pagePaddingTop: easeOutLerp(40, 10, t),
-        pagePaddingBottom: easeOutLerp(36, 8, t),
+        // Page padding: sparse=48pt, dense=24pt (not too tight)
+        pagePadding: lerp(48, 24, t),
+        pagePaddingTop: lerp(42, 18, t),
+        pagePaddingBottom: lerp(38, 16, t),
 
-        // Typography: sparse=LARGE, dense=smaller to fit more content
-        baseFontSize: easeOutLerp(11.5, 7, t),
-        nameFontSize: easeOutLerp(26, 13, t),
-        sectionTitleSize: easeOutLerp(13, 7.5, t),
-        entryTitleSize: easeOutLerp(11, 7, t),
-        detailFontSize: easeOutLerp(10.5, 6.5, t),
+        // Typography: readable range (never below 8pt)
+        baseFontSize: lerp(11.5, 8.5, t),
+        nameFontSize: lerp(26, 16, t),
+        sectionTitleSize: lerp(13, 9, t),
+        entryTitleSize: lerp(11, 8.5, t),
+        detailFontSize: lerp(10.5, 8, t),
 
-        // Spacing: sparse=GENEROUS, dense=very tight
-        sectionMarginTop: easeOutLerp(14, 1, t),
-        sectionMarginBottom: easeOutLerp(10, 1, t),
-        entryMarginBottom: easeOutLerp(10, 1.5, t),
-        bulletMarginBottom: easeOutLerp(3.5, 0.3, t),
-        lineHeight: easeOutLerp(1.45, 1.1, t),
+        // Spacing: balanced (not cramped, not too loose)
+        sectionMarginTop: lerp(14, 5, t),
+        sectionMarginBottom: lerp(10, 4, t),
+        entryMarginBottom: lerp(10, 4, t),
+        bulletMarginBottom: lerp(3, 1.5, t),
+        lineHeight: lerp(1.45, 1.25, t),
 
         tier,
         contentScore,
