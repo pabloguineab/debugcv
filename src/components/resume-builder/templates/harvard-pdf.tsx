@@ -172,11 +172,12 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
     const { technical: technicalSkills, general: generalSkills } = categorizeSkills(skills);
 
     // Dynamic styles based on content density
+    // Colors matching Tailwind: gray-700=#374151, gray-600=#4b5563, gray-500=#6b7280, gray-400=#9ca3af, gray-200=#e5e7eb, gray-900=#111827
     const styles = StyleSheet.create({
         page: {
             fontFamily: "Helvetica",
             fontSize: styleConfig.baseFontSize,
-            color: "#333",
+            color: "#374151", // text-gray-700
             display: "flex",
             flexDirection: "column",
             height: "100%",
@@ -191,27 +192,27 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             letterSpacing: 0.5,
         },
         headline: {
-            fontSize: styleConfig.detailFontSize * 1.1,
-            color: "#555",
+            fontSize: styleConfig.detailFontSize * 1.15, // Match preview: 1.15
+            color: "#4b5563", // text-gray-600
             marginTop: 2,
         },
         headerDivider: {
             height: 3,
             backgroundColor: ACCENT_COLOR,
-            marginTop: 6,
-            marginBottom: 6,
+            marginTop: 8, // mt-3 = 12px but adjusted for PDF
+            marginBottom: 8,
         },
         contactRow: {
             flexDirection: "row",
             flexWrap: "wrap",
-            gap: 12,
-            fontSize: styleConfig.detailFontSize * 0.9,
-            color: "#555",
+            gap: 16, // gap-4 = 16px
+            fontSize: styleConfig.detailFontSize * 0.95, // Match preview
+            color: "#4b5563", // text-gray-600
         },
         contactItem: {
             flexDirection: "row",
             alignItems: "center",
-            gap: 3,
+            gap: 4, // gap-1.5 = 6px but adjusted
         },
         contactLink: {
             color: ACCENT_COLOR,
@@ -221,19 +222,20 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             paddingHorizontal: styleConfig.pagePadding,
             paddingBottom: styleConfig.pagePaddingBottom,
             flexGrow: 1,
+            gap: 12, // gap-4 adjusted for PDF
         },
         leftColumn: {
             width: "55%",
-            paddingRight: 10,
+            paddingRight: 10, // pr-3 = 12px
             borderRightWidth: 1,
-            borderRightColor: "#e0e0e0",
+            borderRightColor: "#e5e7eb", // border-gray-200
             display: "flex",
             flexDirection: "column",
             justifyContent: "flex-start",
         },
         rightColumn: {
             width: "45%",
-            paddingLeft: 10,
+            paddingLeft: 0,
             display: "flex",
             flexDirection: "column",
             justifyContent: "flex-start",
@@ -247,17 +249,17 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             fontWeight: "bold",
             color: ACCENT_COLOR,
             textTransform: "uppercase",
-            letterSpacing: 0.5,
+            letterSpacing: 0.8, // tracking-wider
         },
         sectionLine: {
             height: 2,
             backgroundColor: ACCENT_COLOR,
-            marginTop: 2,
+            marginTop: 3, // mt-1
         },
         summary: {
             fontSize: styleConfig.detailFontSize,
             lineHeight: styleConfig.lineHeight,
-            color: "#444",
+            color: "#374151", // text-gray-700
         },
         entryContainer: {
             marginBottom: styleConfig.entryMarginBottom,
@@ -271,11 +273,12 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             flexDirection: "row",
             alignItems: "center",
             flexWrap: "wrap",
+            flex: 1,
         },
         entryTitle: {
             fontSize: styleConfig.entryTitleSize,
             fontWeight: "bold",
-            color: "#1a1a1a",
+            color: "#111827", // text-gray-900
         },
         entryCompany: {
             fontSize: styleConfig.entryTitleSize,
@@ -289,31 +292,31 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             textDecoration: "underline",
         },
         entrySeparator: {
-            color: "#999",
-            marginHorizontal: 3,
-            fontSize: styleConfig.entryTitleSize,
+            color: "#6b7280", // text-gray-500
+            marginHorizontal: 4, // mx-1.5 = 6px
+            fontSize: styleConfig.detailFontSize,
         },
         entryMeta: {
             fontSize: styleConfig.detailFontSize * 0.85,
-            color: "#888",
+            color: "#6b7280", // text-gray-500
         },
         bulletList: {
-            marginTop: styleConfig.bulletMarginBottom,
-            marginLeft: 4,
+            marginTop: 6, // mt-2 = 8px
+            marginLeft: 8, // ml-3 = 12px
         },
         bulletItem: {
             flexDirection: "row",
-            marginBottom: styleConfig.bulletMarginBottom,
+            marginBottom: styleConfig.bulletMarginBottom + 2, // space-y-1
         },
         bulletIcon: {
-            marginRight: 4,
-            marginTop: 2,
+            marginRight: 6, // mr-2 = 8px
+            marginTop: 1.5, // mt-0.5 = 2px
         },
         bulletText: {
             flex: 1,
             fontSize: styleConfig.detailFontSize,
             lineHeight: styleConfig.lineHeight,
-            color: "#444",
+            color: "#374151", // text-gray-700
         },
         eduHeader: {
             flexDirection: "row",
@@ -323,29 +326,30 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         eduTitle: {
             fontSize: styleConfig.entryTitleSize,
             fontWeight: "bold",
-            color: "#1a1a1a",
+            color: "#111827", // text-gray-900
         },
         eduSubtitle: {
             fontSize: styleConfig.detailFontSize,
-            color: "#666",
+            color: "#4b5563", // text-gray-600
             fontStyle: "italic",
         },
         eduDate: {
             fontSize: styleConfig.detailFontSize * 0.85,
-            color: "#888",
+            color: "#6b7280", // text-gray-500
         },
         skillTagsContainer: {
             flexDirection: "row",
             flexWrap: "wrap",
-            gap: 3,
+            gap: 4, // mr-1.5 mb-1.5 approximation
         },
         skillTag: {
-            backgroundColor: "#eff6ff",
+            backgroundColor: `${ACCENT_COLOR}15`, // Match preview: ACCENT_COLOR with 15% opacity
             color: ACCENT_COLOR,
             fontSize: styleConfig.detailFontSize * 0.9,
-            paddingVertical: 2,
-            paddingHorizontal: 5,
-            borderRadius: 2,
+            paddingVertical: 3,
+            paddingHorizontal: 8,
+            borderRadius: 3,
+            fontWeight: "medium",
         },
         projectTitle: {
             fontSize: styleConfig.entryTitleSize,
@@ -353,43 +357,46 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             color: ACCENT_COLOR,
         },
         projectTech: {
-            fontSize: styleConfig.detailFontSize * 0.8,
-            color: "#888",
+            fontSize: styleConfig.detailFontSize * 0.85,
+            color: "#6b7280", // text-gray-500
+            marginLeft: 4, // ml-1.5
         },
         projectDesc: {
             fontSize: styleConfig.detailFontSize,
-            color: "#444",
+            color: "#374151", // text-gray-700
             lineHeight: styleConfig.lineHeight,
-            marginTop: 2,
+            marginTop: 3, // mt-1
         },
         certItem: {
             fontSize: styleConfig.detailFontSize,
             marginBottom: styleConfig.bulletMarginBottom * 1.5,
+            color: "#374151", // text-gray-700
         },
         certName: {
             fontWeight: "bold",
             color: ACCENT_COLOR,
         },
         certIssuer: {
-            color: "#666",
+            color: "#6b7280", // text-gray-500
         },
         certDate: {
-            color: "#999",
+            color: "#9ca3af", // text-gray-400
         },
         langContainer: {
             flexDirection: "row",
             flexWrap: "wrap",
-            gap: 8,
+            gap: 12, // gap-x-4 gap-y-1
         },
         langItem: {
             fontSize: styleConfig.detailFontSize,
         },
         langName: {
             fontWeight: "bold",
-            color: "#1a1a1a",
+            color: "#1f2937", // text-gray-800
         },
         langLevel: {
-            color: "#666",
+            color: "#6b7280", // text-gray-500
+            marginLeft: 4,
         },
     });
 
