@@ -222,7 +222,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             paddingHorizontal: styleConfig.pagePadding,
             paddingBottom: styleConfig.pagePaddingBottom,
             flexGrow: 1,
-            gap: 12, // gap-4 adjusted for PDF
+            gap: 16, // gap-4 = 16px
         },
         leftColumn: {
             width: "55%",
@@ -385,7 +385,8 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         langContainer: {
             flexDirection: "row",
             flexWrap: "wrap",
-            gap: 12, // gap-x-4 gap-y-1
+            rowGap: 4, // gap-y-1 = 4px
+            columnGap: 16, // gap-x-4 = 16px
         },
         langItem: {
             fontSize: styleConfig.detailFontSize,
@@ -396,7 +397,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         },
         langLevel: {
             color: "#6b7280", // text-gray-500
-            marginLeft: 4,
+            marginLeft: 6, // ml-1.5 = 6px
         },
     });
 
