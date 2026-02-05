@@ -33,24 +33,38 @@ export function calculateContentScore(data: ResumeData): number {
         data.projects.reduce((sum, p) => sum + (p.description?.length || 0), 0) +
         (data.summary?.length || 0);
 
+    // Calculate average bullet length (longer bullets need more space)
+    const allBullets = data.experience.flatMap(exp => exp.bullets || []);
+    const avgBulletLength = allBullets.length > 0
+        ? allBullets.reduce((sum, b) => sum + b.length, 0) / allBullets.length
+        : 0;
+    const bulletLengthFactor = avgBulletLength > 100 ? 1.5 : avgBulletLength > 60 ? 1.2 : 1;
+
     // Weight each content type by approximate space it takes on page
-    // Reduced weights to spread scores across the 0-200 range more evenly
+    // Increased weights for more accurate density detection
     const score =
-        data.experience.length * 6 +          // Each experience entry ~6 units
-        totalBullets * 2.5 +                  // Each bullet ~2.5 units
-        data.education.length * 4 +           // Each education ~4 units
-        data.projects.length * 5 +            // Each project ~5 units
-        data.certifications.length * 2 +      // Each cert ~2 units
-        (data.languages?.length || 0) * 1.5 + // Each language ~1.5 units
-        Math.floor(data.skills.length / 5) +  // Skills (grouped) ~0.2 each
-        Math.floor(totalDescriptionLength / 120); // Text length contribution
+        data.experience.length * 10 +                    // Each experience entry ~10 units
+        totalBullets * 4 * bulletLengthFactor +          // Each bullet ~4 units (adjusted by length)
+        data.education.length * 6 +                      // Each education ~6 units
+        data.projects.length * 8 +                       // Each project ~8 units
+        data.certifications.length * 4 +                 // Each cert ~4 units
+        (data.languages?.length || 0) * 2 +              // Each language ~2 units
+        Math.floor(data.skills.length / 3) +             // Skills (grouped) ~0.33 each
+        Math.floor(totalDescriptionLength / 80);         // Text length contribution (more sensitive)
 
     return score;
 }
 
-// Linear interpolation helper
+// Linear interpolation helper with easing for more aggressive scaling
 function lerp(min: number, max: number, t: number): number {
     return min + (max - min) * t;
+}
+
+// Eased lerp - more aggressive reduction as content increases
+function easeOutLerp(sparseValue: number, denseValue: number, t: number): number {
+    // Use quadratic easing for more aggressive reduction at higher densities
+    const easedT = 1 - Math.pow(1 - t, 1.5);
+    return sparseValue + (denseValue - sparseValue) * easedT;
 }
 
 // Calculate style config based on content density using continuous interpolation
@@ -59,10 +73,10 @@ export function calculateStyleConfig(data: ResumeData): StyleConfig {
     const contentScore = calculateContentScore(data);
 
     // Define min/max bounds for scores
-    // Score ~25 = very little content (needs max spacing)
-    // Score ~200 = extremely dense (needs min spacing)
-    const MIN_SCORE = 25;
-    const MAX_SCORE = 200;
+    // Score ~30 = very little content (needs max spacing)
+    // Score ~150 = extremely dense (needs min spacing) - lowered threshold
+    const MIN_SCORE = 30;
+    const MAX_SCORE = 150;
 
     // Clamp score and calculate interpolation factor (0 = sparse, 1 = dense)
     const clampedScore = Math.max(MIN_SCORE, Math.min(MAX_SCORE, contentScore));
@@ -70,34 +84,34 @@ export function calculateStyleConfig(data: ResumeData): StyleConfig {
 
     // Determine tier for logging
     let tier: StyleConfig['tier'];
-    if (t > 0.80) tier = 'very-dense';
-    else if (t > 0.60) tier = 'dense';
-    else if (t > 0.40) tier = 'medium';
-    else if (t > 0.20) tier = 'light';
+    if (t > 0.75) tier = 'very-dense';
+    else if (t > 0.55) tier = 'dense';
+    else if (t > 0.35) tier = 'medium';
+    else if (t > 0.15) tier = 'light';
     else tier = 'very-light';
 
     // Interpolate all values between sparse (max) and dense (min)
-    // Format: lerp(sparseValue, denseValue, t)
+    // Using eased interpolation for more aggressive scaling
     // IMPORTANT: Sparse values are LARGER to fill the page with less content
     return {
-        // Page padding: sparse=50pt, dense=18pt (reduced for very dense)
-        pagePadding: lerp(50, 18, t),
-        pagePaddingTop: lerp(44, 14, t),
-        pagePaddingBottom: lerp(40, 12, t),
+        // Page padding: sparse=45pt, dense=14pt (reduced further for very dense)
+        pagePadding: easeOutLerp(45, 14, t),
+        pagePaddingTop: easeOutLerp(40, 10, t),
+        pagePaddingBottom: easeOutLerp(36, 8, t),
 
         // Typography: sparse=LARGE, dense=smaller to fit more content
-        baseFontSize: lerp(12, 7.5, t),
-        nameFontSize: lerp(28, 14, t),
-        sectionTitleSize: lerp(14, 8, t),
-        entryTitleSize: lerp(12, 7.5, t),
-        detailFontSize: lerp(11, 7, t),
+        baseFontSize: easeOutLerp(11.5, 7, t),
+        nameFontSize: easeOutLerp(26, 13, t),
+        sectionTitleSize: easeOutLerp(13, 7.5, t),
+        entryTitleSize: easeOutLerp(11, 7, t),
+        detailFontSize: easeOutLerp(10.5, 6.5, t),
 
         // Spacing: sparse=GENEROUS, dense=very tight
-        sectionMarginTop: lerp(16, 2, t),
-        sectionMarginBottom: lerp(12, 1.5, t),
-        entryMarginBottom: lerp(12, 2, t),
-        bulletMarginBottom: lerp(4, 0.5, t),
-        lineHeight: lerp(1.5, 1.15, t),
+        sectionMarginTop: easeOutLerp(14, 1, t),
+        sectionMarginBottom: easeOutLerp(10, 1, t),
+        entryMarginBottom: easeOutLerp(10, 1.5, t),
+        bulletMarginBottom: easeOutLerp(3.5, 0.3, t),
+        lineHeight: easeOutLerp(1.45, 1.1, t),
 
         tier,
         contentScore,
