@@ -67,50 +67,53 @@ function easeOutLerp(sparseValue: number, denseValue: number, t: number): number
     return sparseValue + (denseValue - sparseValue) * easedT;
 }
 
-// Calculate style config based on content density using continuous interpolation
-// Target: Fill exactly 1 page (A4: ~842pt height, ~595pt width)
+// Calculate style config based on content density
+// Uses conservative, stable values that work well for most content
 export function calculateStyleConfig(data: ResumeData): StyleConfig {
     const contentScore = calculateContentScore(data);
 
-    // Define min/max bounds for scores - calibrated for typical resumes
-    // Score ~35 = sparse content (1-2 experiences, few bullets)
-    // Score ~130 = dense content (4+ experiences, many bullets, projects, certs)
-    const MIN_SCORE = 35;
-    const MAX_SCORE = 130;
-
-    // Clamp score and calculate interpolation factor (0 = sparse, 1 = dense)
-    const clampedScore = Math.max(MIN_SCORE, Math.min(MAX_SCORE, contentScore));
-    const t = (clampedScore - MIN_SCORE) / (MAX_SCORE - MIN_SCORE);
-
-    // Determine tier for logging
+    // Determine density tier for minor adjustments
     let tier: StyleConfig['tier'];
-    if (t > 0.80) tier = 'very-dense';
-    else if (t > 0.60) tier = 'dense';
-    else if (t > 0.40) tier = 'medium';
-    else if (t > 0.20) tier = 'light';
-    else tier = 'very-light';
+    let t: number; // adjustment factor (0 = sparse, 1 = dense)
 
-    // Interpolate all values between sparse (max) and dense (min)
-    // BALANCED: Values calibrated to fill exactly one page
+    if (contentScore > 100) {
+        tier = 'very-dense';
+        t = 0.9;
+    } else if (contentScore > 80) {
+        tier = 'dense';
+        t = 0.7;
+    } else if (contentScore > 60) {
+        tier = 'medium';
+        t = 0.5;
+    } else if (contentScore > 40) {
+        tier = 'light';
+        t = 0.3;
+    } else {
+        tier = 'very-light';
+        t = 0.1;
+    }
+
+    // Stable values with minimal variation
+    // These are designed to fill one page well for typical resumes
     return {
-        // Page padding: sparse=48pt, dense=24pt (not too tight)
-        pagePadding: lerp(48, 24, t),
-        pagePaddingTop: lerp(42, 18, t),
-        pagePaddingBottom: lerp(38, 16, t),
+        // Page padding: stable with minor adjustment
+        pagePadding: lerp(40, 28, t),
+        pagePaddingTop: lerp(35, 24, t),
+        pagePaddingBottom: lerp(30, 20, t),
 
-        // Typography: readable range (never below 8pt)
-        baseFontSize: lerp(11.5, 8.5, t),
-        nameFontSize: lerp(26, 16, t),
-        sectionTitleSize: lerp(13, 9, t),
-        entryTitleSize: lerp(11, 8.5, t),
-        detailFontSize: lerp(10.5, 8, t),
+        // Typography: consistent, readable sizes
+        baseFontSize: lerp(10.5, 9, t),
+        nameFontSize: lerp(24, 18, t),
+        sectionTitleSize: lerp(11.5, 9.5, t),
+        entryTitleSize: lerp(10, 8.5, t),
+        detailFontSize: lerp(9.5, 8, t),
 
-        // Spacing: balanced (not cramped, not too loose)
-        sectionMarginTop: lerp(14, 5, t),
-        sectionMarginBottom: lerp(10, 4, t),
-        entryMarginBottom: lerp(10, 4, t),
-        bulletMarginBottom: lerp(3, 1.5, t),
-        lineHeight: lerp(1.45, 1.25, t),
+        // Spacing: consistent with slight compression for dense content
+        sectionMarginTop: lerp(10, 6, t),
+        sectionMarginBottom: lerp(6, 4, t),
+        entryMarginBottom: lerp(8, 5, t),
+        bulletMarginBottom: lerp(2.5, 1.5, t),
+        lineHeight: lerp(1.4, 1.25, t),
 
         tier,
         contentScore,

@@ -177,6 +177,9 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             fontFamily: "Helvetica",
             fontSize: styleConfig.baseFontSize,
             color: "#333",
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
         },
         header: {
             padding: `${styleConfig.pagePaddingTop} ${styleConfig.pagePadding} ${styleConfig.sectionMarginBottom} ${styleConfig.pagePadding}`,
@@ -217,16 +220,23 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             flexDirection: "row",
             paddingHorizontal: styleConfig.pagePadding,
             paddingBottom: styleConfig.pagePaddingBottom,
+            flexGrow: 1,
         },
         leftColumn: {
             width: "55%",
             paddingRight: 10,
             borderRightWidth: 1,
             borderRightColor: "#e0e0e0",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
         },
         rightColumn: {
             width: "45%",
             paddingLeft: 10,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
         },
         sectionHeader: {
             marginBottom: styleConfig.sectionMarginBottom * 0.6,
