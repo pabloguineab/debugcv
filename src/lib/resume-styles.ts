@@ -94,27 +94,26 @@ export function calculateStyleConfig(data: ResumeData): StyleConfig {
     }
 
     // Dynamic values that scale based on content density
-    // Sparse content (t=0) gets larger fonts and more spacing to fill the page
-    // Dense content (t=1) gets smaller fonts and tighter spacing to fit
+    // Much larger values to properly fill the page
     return {
-        // Page padding: more generous for sparse content
-        pagePadding: lerp(50, 26, t),
-        pagePaddingTop: lerp(45, 22, t),
-        pagePaddingBottom: lerp(40, 18, t),
+        // Page padding: balanced margins
+        pagePadding: lerp(45, 24, t),
+        pagePaddingTop: lerp(40, 20, t),
+        pagePaddingBottom: lerp(35, 16, t),
 
-        // Typography: larger fonts for sparse content, smaller for dense
-        baseFontSize: lerp(11.5, 8.5, t),
-        nameFontSize: lerp(28, 17, t),
-        sectionTitleSize: lerp(13, 9, t),
-        entryTitleSize: lerp(11.5, 8, t),
-        detailFontSize: lerp(10.5, 7.5, t),
+        // Typography: significantly larger fonts
+        baseFontSize: lerp(12, 8.5, t),
+        nameFontSize: lerp(30, 18, t),
+        sectionTitleSize: lerp(14, 9.5, t),
+        entryTitleSize: lerp(12, 8.5, t),
+        detailFontSize: lerp(11, 8, t),
 
-        // Spacing: generous spacing for sparse, tight for dense
-        sectionMarginTop: lerp(16, 5, t),
-        sectionMarginBottom: lerp(10, 3, t),
-        entryMarginBottom: lerp(12, 4, t),
-        bulletMarginBottom: lerp(4, 1, t),
-        lineHeight: lerp(1.55, 1.2, t),
+        // Spacing: much more generous
+        sectionMarginTop: lerp(20, 6, t),
+        sectionMarginBottom: lerp(14, 4, t),
+        entryMarginBottom: lerp(16, 5, t),
+        bulletMarginBottom: lerp(5, 1.5, t),
+        lineHeight: lerp(1.6, 1.25, t),
 
         tier,
         contentScore,

@@ -229,14 +229,14 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             borderRightColor: "#e0e0e0",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "space-between",
+            justifyContent: "flex-start",
         },
         rightColumn: {
             width: "45%",
             paddingLeft: 10,
             display: "flex",
             flexDirection: "column",
-            justifyContent: "space-between",
+            justifyContent: "flex-start",
         },
         sectionHeader: {
             marginBottom: styleConfig.sectionMarginBottom * 0.6,
