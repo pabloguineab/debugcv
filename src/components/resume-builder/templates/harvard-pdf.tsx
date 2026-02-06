@@ -17,6 +17,7 @@ import {
 import { ResumeData } from "@/types/resume";
 import { calculateStyleConfig } from "@/lib/resume-styles";
 import { formatSkillName } from "@/lib/skill-formatter";
+import { getCompanyLogoUrl, getInstitutionLogoUrl } from "@/lib/logo-utils";
 
 // Register Poppins font
 Font.register({
@@ -556,10 +557,10 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                             { flexDirection: "row", gap: 10 }
                                         ]}
                                     >
-                                        {data.showCompanyLogos && exp.logoUrl && (
+                                        {data.showCompanyLogos && (
                                             <Image
-                                                src={exp.logoUrl}
-                                                style={{ width: 30, height: 30, objectFit: "contain", marginTop: 2 }}
+                                                src={exp.logoUrl || getCompanyLogoUrl(exp.company, exp.companyUrl)}
+                                                style={{ width: 30, height: 30, objectFit: "contain", marginTop: 2, borderRadius: 4 }}
                                             />
                                         )}
                                         <View style={{ flex: 1 }}>
@@ -614,10 +615,10 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                             { flexDirection: "row", gap: 10 }
                                         ]}
                                     >
-                                        {data.showInstitutionLogos && edu.logoUrl && (
+                                        {data.showInstitutionLogos && (
                                             <Image
-                                                src={edu.logoUrl}
-                                                style={{ width: 30, height: 30, objectFit: "contain", marginTop: 2 }}
+                                                src={edu.logoUrl || getInstitutionLogoUrl(edu.institution)}
+                                                style={{ width: 30, height: 30, objectFit: "contain", marginTop: 2, borderRadius: 4 }}
                                             />
                                         )}
                                         <View style={{ flex: 1 }}>

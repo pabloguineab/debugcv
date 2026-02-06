@@ -5,6 +5,8 @@ import { Typewriter, SequentialAnimationProvider } from "@/components/ui/sequent
 import { EditableText } from "../editable-text";
 import { ResumeData, Experience, Education, Project, Certification } from "@/types/resume";
 import { Mail, Phone, MapPin, Linkedin, Link2, CheckCircle2, Github, Building2, GraduationCap } from "lucide-react";
+import { CompanyLogo } from "@/components/company-logo";
+import { InstitutionLogo } from "@/components/institution-logo";
 import { calculateStyleConfig } from "@/lib/resume-styles";
 import { formatSkillName } from "@/lib/skill-formatter";
 
@@ -404,7 +406,15 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                                         {exp.logoUrl ? (
                                                             <img src={exp.logoUrl} alt={exp.company} className="w-full h-full object-contain" />
                                                         ) : (
-                                                            <Building2 className="w-5 h-5 text-gray-300" />
+                                                            <div className="w-full h-full flex items-center justify-center">
+                                                                <CompanyLogo
+                                                                    company={exp.company}
+                                                                    website={exp.companyUrl}
+                                                                    size="md"
+                                                                    className="!w-full !h-full !border-none !shadow-none !p-0 !bg-transparent rounded-none"
+                                                                    onLogoFallback={() => { }} // Handle fallback silently
+                                                                />
+                                                            </div>
                                                         )}
                                                         {/* Hover Overlay */}
                                                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -527,7 +537,14 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                                         {edu.logoUrl ? (
                                                             <img src={edu.logoUrl} alt={edu.institution} className="w-full h-full object-contain" />
                                                         ) : (
-                                                            <GraduationCap className="w-5 h-5 text-gray-300" />
+                                                            <div className="w-full h-full flex items-center justify-center">
+                                                                <InstitutionLogo
+                                                                    name={edu.institution}
+                                                                    website={undefined} // We don't have website for education in standard types yet, or fallback to name
+                                                                    size="md"
+                                                                    className="!w-full !h-full !border-none !shadow-none !p-0 !bg-transparent rounded-none"
+                                                                />
+                                                            </div>
                                                         )}
                                                         {/* Hover Overlay */}
                                                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
