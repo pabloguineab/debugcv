@@ -136,12 +136,12 @@ export function getInstitutionDomain(name: string, website?: string): string {
 // Preferred logo sources
 export function getCompanyLogoUrl(company: string, website?: string): string {
     const domain = getCompanyDomain(company, website);
-    // Prefer Clearbit for companies as it's often more reliable for icons
+    // Prefer Clearbit for consistency and PNG format (better for PDF)
     return `https://logo.clearbit.com/${domain}`;
 }
 
 export function getInstitutionLogoUrl(name: string, website?: string): string {
     const domain = getInstitutionDomain(name, website);
-    // Prefer Brandfetch for institutions/universities as they often have higher quality logos
-    return `https://cdn.brandfetch.io/${domain}/w/400/h/400`;
+    // Use Clearbit for institutions too as it reliably returns PNGs
+    return `https://logo.clearbit.com/${domain}`;
 }
