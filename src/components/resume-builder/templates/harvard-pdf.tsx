@@ -183,23 +183,23 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
 
     // Dynamic density scaling to fill page or save space
     // Shifted baseline: "very-dense" is now the standard (1.0) to avoid shrinking content that fits.
-    // Retuned to fill page without overflowing (Aggressive filling)
+    // Retuned to fill page without overflowing (Micro-adjustment to prevent page 2)
     const densityFactors = {
-        'very-dense': 1.0,  // Baseline
-        'dense': 1.05,      // Boost
-        'medium': 1.1,      // Significant Boost
-        'light': 1.2,       // Large Expansion
-        'very-light': 1.35  // Maximum Expansion
+        'very-dense': 0.96, // Slight reduction from 1.0
+        'dense': 1.0,       // Reset to baseline
+        'medium': 1.05,     // Boost
+        'light': 1.15,      // Expansion
+        'very-light': 1.3   // Max Expansion
     };
     const densityFactor = densityFactors[styleConfig.tier] || 1.0;
 
     // Vertical spacing scaling to fill vertical whitespace
     const spacingFactors = {
-        'very-dense': 1.15, // Ensure no whitespace at bottom even for dense CVs
-        'dense': 1.25,      // More breathing room
-        'medium': 1.4,      // Airy
-        'light': 1.6,       // Very open
-        'very-light': 1.8   // Maximum spread
+        'very-dense': 1.05, // Reduced from 1.15 to fix overflow
+        'dense': 1.15,      // Reduced from 1.25
+        'medium': 1.3,      // Airy
+        'light': 1.5,       // Very open
+        'very-light': 1.7   // Maximum spread
     };
     const spacingFactor = spacingFactors[styleConfig.tier] || 1.0;
 
