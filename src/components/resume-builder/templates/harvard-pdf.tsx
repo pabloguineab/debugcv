@@ -184,21 +184,21 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
     // Dynamic density scaling to fill page or save space
     // Shifted baseline: "very-dense" is now the standard (1.0) to avoid shrinking content that fits.
     const densityFactors = {
-        'very-dense': 1.0,  // Was 0.85 - restore to standard size
-        'dense': 1.02,      // Slight boost
-        'medium': 1.05,     // Boost to fill
-        'light': 1.1,       // More aggressive expansion
-        'very-light': 1.25  // Maximum expansion
+        'very-dense': 0.94, // Slight reduction to prevent overflow
+        'dense': 0.98,      // Almost standard
+        'medium': 1.02,     // Slight boost
+        'light': 1.08,      // Expand
+        'very-light': 1.2   // Max expansion
     };
     const densityFactor = densityFactors[styleConfig.tier] || 1.0;
 
     // Vertical spacing scaling to fill vertical whitespace
     const spacingFactors = {
-        'very-dense': 1.0,  // Was 0.8 - restore standard spacing
-        'dense': 1.1,       // Add breathing room
-        'medium': 1.2,      // Significant whitespace
-        'light': 1.4,       // Open layout
-        'very-light': 1.6   // Maximum vertical spread
+        'very-dense': 0.92, // Tighten slightly
+        'dense': 1.0,       // Standard
+        'medium': 1.1,      // Breathing room
+        'light': 1.3,       // Open
+        'very-light': 1.5   // Max spread
     };
     const spacingFactor = spacingFactors[styleConfig.tier] || 1.0;
 
@@ -524,8 +524,14 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                         {experience.length > 0 && (
                             <View>
                                 <SectionHeader title="Experience" />
-                                {experience.map((exp) => (
-                                    <View key={exp.id} style={styles.entryContainer}>
+                                {experience.map((exp, index) => (
+                                    <View
+                                        key={exp.id}
+                                        style={[
+                                            styles.entryContainer,
+                                            index === experience.length - 1 ? { marginBottom: 0 } : {}
+                                        ]}
+                                    >
                                         <View style={styles.entryHeader}>
                                             <View style={styles.entryTitleRow}>
                                                 <Text style={styles.entryTitle}>{exp.title}</Text>
@@ -567,8 +573,14 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                         {education.length > 0 && (
                             <View>
                                 <SectionHeader title="Education" />
-                                {education.map((edu) => (
-                                    <View key={edu.id} style={styles.entryContainer}>
+                                {education.map((edu, index) => (
+                                    <View
+                                        key={edu.id}
+                                        style={[
+                                            styles.entryContainer,
+                                            index === education.length - 1 ? { marginBottom: 0 } : {}
+                                        ]}
+                                    >
                                         <View style={styles.eduHeader}>
                                             <Text style={styles.eduTitle}>{edu.institution}</Text>
                                             <Text style={styles.eduDate}>
@@ -626,8 +638,14 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                         {projects.length > 0 && (
                             <View>
                                 <SectionHeader title="Projects" />
-                                {projects.map((project) => (
-                                    <View key={project.id} style={styles.entryContainer}>
+                                {projects.map((project, index) => (
+                                    <View
+                                        key={project.id}
+                                        style={[
+                                            styles.entryContainer,
+                                            index === projects.length - 1 ? { marginBottom: 0 } : {}
+                                        ]}
+                                    >
                                         <View>
                                             {project.url ? (
                                                 <Link
@@ -655,8 +673,14 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                         {certifications.length > 0 && (
                             <View>
                                 <SectionHeader title="Certifications" />
-                                {certifications.map((cert) => (
-                                    <View key={cert.id} style={styles.certItem}>
+                                {certifications.map((cert, index) => (
+                                    <View
+                                        key={cert.id}
+                                        style={[
+                                            styles.certItem,
+                                            index === certifications.length - 1 ? { marginBottom: 0 } : {}
+                                        ]}
+                                    >
                                         <Text>
                                             <Text style={styles.certName}>{cert.name}</Text>
                                             {cert.issuer && <Text style={styles.certIssuer}> - {cert.issuer}</Text>}
@@ -688,4 +712,254 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             </Page>
         </Document>
     );
+}
+
+// Section Header Component
+function SectionHeader({ title }: { title: string }) {
+    return (
+        <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>{title}</Text>
+            <View style={styles.sectionLine} />
+        </View>
+    );
+}
+
+return (
+    <Document>
+        <Page size="A4" style={styles.page}>
+            {/* Header */}
+            <View style={styles.header}>
+                <Text style={styles.name}>{personalInfo.fullName}</Text>
+                {generatedHeadline && (
+                    <Text style={styles.headline}>{generatedHeadline}</Text>
+                )}
+                <View style={styles.headerDivider} />
+
+                {/* Contact Row */}
+                <View style={styles.contactRow}>
+                    {personalInfo.phone && (
+                        <View style={styles.contactItem}>
+                            <PhoneIcon size={styleConfig.detailFontSize * 0.75} />
+                            <Text>{personalInfo.phone}</Text>
+                        </View>
+                    )}
+                    {personalInfo.email && (
+                        <View style={styles.contactItem}>
+                            <MailIcon size={styleConfig.detailFontSize * 0.75} />
+                            <Link src={`mailto:${personalInfo.email}`} style={styles.contactLink}>
+                                {personalInfo.email}
+                            </Link>
+                        </View>
+                    )}
+                    {personalInfo.linkedin && (
+                        <View style={styles.contactItem}>
+                            <LinkedInIcon size={styleConfig.detailFontSize * 0.75} />
+                            <Link
+                                src={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`}
+                                style={styles.contactLink}
+                            >
+                                {personalInfo.linkedin.replace(/^https?:\/\/(www\.)?/, '')}
+                            </Link>
+                        </View>
+                    )}
+                    {personalInfo.github && (
+                        <View style={styles.contactItem}>
+                            <GitHubIcon size={styleConfig.detailFontSize * 0.75} />
+                            <Link
+                                src={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`}
+                                style={styles.contactLink}
+                            >
+                                {personalInfo.github.replace(/^https?:\/\/(www\.)?/, '')}
+                            </Link>
+                        </View>
+                    )}
+                    {personalInfo.location && (
+                        <View style={styles.contactItem}>
+                            <MapPinIcon size={styleConfig.detailFontSize * 0.75} />
+                            <Text>{personalInfo.location}</Text>
+                        </View>
+                    )}
+                </View>
+            </View>
+
+            {/* Two Column Layout */}
+            <View style={styles.columnsContainer}>
+                {/* Left Column - Summary, Experience & Education */}
+                <View style={styles.leftColumn}>
+                    {/* Summary */}
+                    {summary && (
+                        <View>
+                            <SectionHeader title="Summary" />
+                            <Text style={styles.summary}>{summary}</Text>
+                        </View>
+                    )}
+
+                    {/* Experience */}
+                    {experience.length > 0 && (
+                        <View>
+                            <SectionHeader title="Experience" />
+                            {experience.map((exp) => (
+                                <View key={exp.id} style={styles.entryContainer}>
+                                    <View style={styles.entryHeader}>
+                                        <View style={styles.entryTitleRow}>
+                                            <Text style={styles.entryTitle}>{exp.title}</Text>
+                                            <Text style={styles.entrySeparator}>|</Text>
+                                            {exp.companyUrl ? (
+                                                <Link
+                                                    src={exp.companyUrl.startsWith("http") ? exp.companyUrl : `https://${exp.companyUrl}`}
+                                                    style={styles.entryCompanyLink}
+                                                >
+                                                    {exp.company}
+                                                </Link>
+                                            ) : (
+                                                <Text style={styles.entryCompany}>{exp.company}</Text>
+                                            )}
+                                        </View>
+                                        <Text style={styles.entryMeta}>
+                                            {exp.location}{exp.location ? " | " : ""}{formatDateRange(exp.startDate, exp.endDate, exp.current)}
+                                        </Text>
+                                    </View>
+
+                                    {exp.bullets.length > 0 && (
+                                        <View style={styles.bulletList}>
+                                            {exp.bullets.filter(b => b.trim()).map((bullet, i) => (
+                                                <View key={i} style={styles.bulletItem}>
+                                                    <View style={styles.bulletIcon}>
+                                                        <CheckIcon size={styleConfig.detailFontSize} />
+                                                    </View>
+                                                    <Text style={styles.bulletText}>{bullet}</Text>
+                                                </View>
+                                            ))}
+                                        </View>
+                                    )}
+                                </View>
+                            ))}
+                        </View>
+                    )}
+
+                    {/* Education - Now on left column with Experience */}
+                    {education.length > 0 && (
+                        <View>
+                            <SectionHeader title="Education" />
+                            {education.map((edu) => (
+                                <View key={edu.id} style={styles.entryContainer}>
+                                    <View style={styles.eduHeader}>
+                                        <Text style={styles.eduTitle}>{edu.institution}</Text>
+                                        <Text style={styles.eduDate}>
+                                            {formatDateRange(edu.startDate, edu.endDate)}
+                                        </Text>
+                                    </View>
+                                    <Text style={styles.eduSubtitle}>
+                                        {edu.degree}{edu.field ? ` in ${edu.field}` : ""}
+                                    </Text>
+                                </View>
+                            ))}
+                        </View>
+                    )}
+                </View>
+
+                {/* Right Column - Skills, Projects, Certifications, Languages */}
+                <View style={styles.rightColumn}>
+                    {/* Technical Skills */}
+                    {technicalSkills.length > 0 && (
+                        <View>
+                            <SectionHeader title="Technical Skills" />
+                            <View style={styles.skillTagsContainer}>
+                                {technicalSkills.map((skill, index) => (
+                                    <Text key={index} style={styles.skillTag}>{formatSkillName(skill)}</Text>
+                                ))}
+                            </View>
+                        </View>
+                    )}
+
+                    {/* Other Skills */}
+                    {generalSkills.length > 0 && (
+                        <View>
+                            <SectionHeader title="Other Skills" />
+                            <View style={styles.skillTagsContainer}>
+                                {generalSkills.map((skill, index) => (
+                                    <Text key={index} style={styles.skillTag}>{formatSkillName(skill)}</Text>
+                                ))}
+                            </View>
+                        </View>
+                    )}
+
+                    {/* All skills if no categorization */}
+                    {technicalSkills.length === 0 && generalSkills.length === 0 && skills.length > 0 && (
+                        <View>
+                            <SectionHeader title="Skills" />
+                            <View style={styles.skillTagsContainer}>
+                                {skills.map((skill, index) => (
+                                    <Text key={index} style={styles.skillTag}>{formatSkillName(skill)}</Text>
+                                ))}
+                            </View>
+                        </View>
+                    )}
+
+                    {/* Projects */}
+                    {projects.length > 0 && (
+                        <View>
+                            <SectionHeader title="Projects" />
+                            {projects.map((project) => (
+                                <View key={project.id} style={styles.entryContainer}>
+                                    <View>
+                                        {project.url ? (
+                                            <Link
+                                                src={project.url.startsWith("http") ? project.url : `https://${project.url}`}
+                                                style={styles.projectTitle}
+                                            >
+                                                {project.name}
+                                            </Link>
+                                        ) : (
+                                            <Text style={styles.projectTitle}>{project.name}</Text>
+                                        )}
+                                        {project.technologies.length > 0 && (
+                                            <Text style={styles.projectTech}>
+                                                ({project.technologies.slice(0, 3).join(", ")})
+                                            </Text>
+                                        )}
+                                    </View>
+                                    <Text style={styles.projectDesc}>{project.description}</Text>
+                                </View>
+                            ))}
+                        </View>
+                    )}
+
+                    {/* Certifications */}
+                    {certifications.length > 0 && (
+                        <View>
+                            <SectionHeader title="Certifications" />
+                            {certifications.map((cert) => (
+                                <View key={cert.id} style={styles.certItem}>
+                                    <Text>
+                                        <Text style={styles.certName}>{cert.name}</Text>
+                                        {cert.issuer && <Text style={styles.certIssuer}> - {cert.issuer}</Text>}
+                                        {cert.issueDate && <Text style={styles.certDate}> ({cert.issueDate})</Text>}
+                                    </Text>
+                                </View>
+                            ))}
+                        </View>
+                    )}
+
+                    {/* Languages */}
+                    {languages && languages.length > 0 && (
+                        <View>
+                            <SectionHeader title="Languages" />
+                            <View style={styles.langContainer}>
+                                {languages.map((lang, index) => (
+                                    <View key={index} style={styles.langItem}>
+                                        <Text>
+                                            <Text style={styles.langName}>{lang.language}</Text>
+                                            <Text style={styles.langLevel}> {lang.level.charAt(0).toUpperCase() + lang.level.slice(1)}</Text>
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+                    )}
+                </View>
+            </View>
+        </Page>
+    </Document>
+);
 }
