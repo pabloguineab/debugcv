@@ -512,92 +512,91 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                 <div>
                                     <SectionHeader title="Education" />
                                     {education.map((edu, index) => (
-                                        <div key={edu.id} style={styles.entryMargin}>
-                                            <div className="flex gap-4">
-                                                {/* Institution Logo */}
-                                                {data.showInstitutionLogos && (
-                                                    <div className="shrink-0 pt-1">
-                                                        <div
-                                                            className="relative group cursor-pointer w-10 h-10 rounded overflow-hidden bg-gray-50 border border-gray-100 flex items-center justify-center"
-                                                            onClick={() => document.getElementById(`edu-logo-${edu.id}`)?.click()}
-                                                        >
-                                                            <input
-                                                                id={`edu-logo-${edu.id}`}
-                                                                type="file"
-                                                                className="hidden"
-                                                                accept="image/*"
-                                                                onChange={(e) => {
-                                                                    const file = e.target.files?.[0];
-                                                                    if (file) {
-                                                                        const reader = new FileReader();
-                                                                        reader.onloadend = () => {
-                                                                            if (typeof reader.result === "string") {
-                                                                                updateEducation(index, { logoUrl: reader.result });
-                                                                            }
-                                                                        };
-                                                                        reader.readAsDataURL(file);
-                                                                    }
-                                                                }}
-                                                            />
-                                                            {edu.logoUrl ? (
-                                                                <img src={edu.logoUrl} alt={edu.institution} className="w-full h-full object-contain" />
-                                                            ) : (
-                                                                <div className="w-full h-full flex items-center justify-center">
-                                                                    <InstitutionLogo
-                                                                        name={edu.institution}
-                                                                        website={edu.website}
-                                                                        size="md"
-                                                                        className="!w-full !h-full !border-none !shadow-none !p-0 !bg-transparent rounded-none"
-                                                                    />
-                                                                </div>
-                                                            )}
-                                                            {/* Hover Overlay */}
-                                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                                                <div className="bg-white/20 backdrop-blur-sm p-1 rounded-full">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                                                        <polyline points="17 8 12 3 7 8" />
-                                                                        <line x1="12" x2="12" y1="3" y2="15" />
-                                                                    </svg>
-                                                                </div>
+                                        <div key={edu.id} style={styles.entryMargin} className="flex gap-4">
+                                            {/* Institution Logo */}
+                                            {data.showInstitutionLogos && (
+                                                <div className="shrink-0 pt-1">
+                                                    <div
+                                                        className="relative group cursor-pointer w-10 h-10 rounded overflow-hidden bg-gray-50 border border-gray-100 flex items-center justify-center"
+                                                        onClick={() => document.getElementById(`edu-logo-${edu.id}`)?.click()}
+                                                    >
+                                                        <input
+                                                            id={`edu-logo-${edu.id}`}
+                                                            type="file"
+                                                            className="hidden"
+                                                            accept="image/*"
+                                                            onChange={(e) => {
+                                                                const file = e.target.files?.[0];
+                                                                if (file) {
+                                                                    const reader = new FileReader();
+                                                                    reader.onloadend = () => {
+                                                                        if (typeof reader.result === "string") {
+                                                                            updateEducation(index, { logoUrl: reader.result });
+                                                                        }
+                                                                    };
+                                                                    reader.readAsDataURL(file);
+                                                                }
+                                                            }}
+                                                        />
+                                                        {edu.logoUrl ? (
+                                                            <img src={edu.logoUrl} alt={edu.institution} className="w-full h-full object-contain" />
+                                                        ) : (
+                                                            <div className="w-full h-full flex items-center justify-center">
+                                                                <InstitutionLogo
+                                                                    name={edu.institution}
+                                                                    website={edu.website}
+                                                                    size="md"
+                                                                    className="!w-full !h-full !border-none !shadow-none !p-0 !bg-transparent rounded-none"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                        {/* Hover Overlay */}
+                                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                            <div className="bg-white/20 backdrop-blur-sm p-1 rounded-full">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                                                    <polyline points="17 8 12 3 7 8" />
+                                                                    <line x1="12" x2="12" y1="3" y2="15" />
+                                                                </svg>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                )}
+                                                </div>
+                                            )}
 
-                                                <div className="flex-1">
-                                                    <div className="flex justify-between items-start">
-                                                        <div className="flex-1">
-                                                            <span className="font-bold text-gray-900" style={styles.entryTitle}>
-                                                                <EditableText
-                                                                    value={edu.institution}
-                                                                    onChange={(v) => updateEducation(index, { institution: v })}
-                                                                    placeholder="Institution"
-                                                                    displayComponent={<Typewriter text={edu.institution} />}
-                                                                />
-                                                            </span>
-                                                        </div>
-                                                        <span className="text-gray-500 shrink-0 ml-3" style={styles.smallDetail}>
-                                                            <Typewriter text={formatDateRange(edu.startDate, edu.endDate)} />
+                                            <div className="flex-1">
+                                                <div className="flex justify-between items-start">
+                                                    <div className="flex-1">
+                                                        <span className="font-bold text-gray-900" style={styles.entryTitle}>
+                                                            <EditableText
+                                                                value={edu.institution}
+                                                                onChange={(v) => updateEducation(index, { institution: v })}
+                                                                placeholder="Institution"
+                                                                displayComponent={<Typewriter text={edu.institution} />}
+                                                            />
                                                         </span>
                                                     </div>
+                                                    <span className="text-gray-500 shrink-0 ml-3" style={styles.smallDetail}>
+                                                        <Typewriter text={formatDateRange(edu.startDate, edu.endDate)} />
+                                                    </span>
                                                 </div>
-                                            </div>
 
-                                            {/* Degree Info - Outside flex container for full width */}
-                                            <div className="text-gray-600 italic mt-0.5" style={styles.detail}>
-                                                <EditableText
-                                                    value={`${edu.degree}${edu.field ? ` in ${edu.field}` : ''}`}
-                                                    onChange={(v) => {
-                                                        const parts = v.split(" in ");
-                                                        updateEducation(index, {
-                                                            degree: parts[0] || "",
-                                                            field: parts.slice(1).join(" in ") || ""
-                                                        });
-                                                    }}
-                                                    placeholder="Degree in Field"
-                                                    displayComponent={<Typewriter text={`${edu.degree}${edu.field ? ` in ${edu.field}` : ''}`} />}
-                                                />
+
+                                                {/* Degree Info - Outside flex container for full width */}
+                                                <div className="text-gray-600 italic mt-0.5" style={styles.detail}>
+                                                    <EditableText
+                                                        value={`${edu.degree}${edu.field ? ` in ${edu.field}` : ''}`}
+                                                        onChange={(v) => {
+                                                            const parts = v.split(" in ");
+                                                            updateEducation(index, {
+                                                                degree: parts[0] || "",
+                                                                field: parts.slice(1).join(" in ") || ""
+                                                            });
+                                                        }}
+                                                        placeholder="Degree in Field"
+                                                        displayComponent={<Typewriter text={`${edu.degree}${edu.field ? ` in ${edu.field}` : ''}`} />}
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                     ))}

@@ -553,38 +553,41 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                         key={exp.id}
                                         style={[
                                             styles.entryContainer,
-                                            index === experience.length - 1 ? { marginBottom: 0 } : {},
-                                            { flexDirection: "row", gap: 10 }
+                                            index === experience.length - 1 ? { marginBottom: 0 } : {}
                                         ]}
                                     >
-                                        {data.showCompanyLogos && (
-                                            <Image
-                                                src={exp.logoUrl || getCompanyLogoUrl(exp.company, exp.companyUrl)}
-                                                style={{ width: 30, height: 30, objectFit: "contain", marginTop: 2, borderRadius: 4 }}
-                                            />
-                                        )}
-                                        <View style={{ flex: 1 }}>
-                                            <View style={styles.entryHeader}>
-                                                <View style={[styles.entryTitleRow, { marginRight: 20 }]}>
-                                                    <Text style={styles.entryTitle}>{exp.title}</Text>
-                                                    <Text style={styles.entrySeparator}>|</Text>
-                                                    {exp.companyUrl ? (
-                                                        <Link
-                                                            src={exp.companyUrl.startsWith("http") ? exp.companyUrl : `https://${exp.companyUrl}`}
-                                                            style={styles.entryCompanyLink}
-                                                        >
-                                                            {exp.company}
-                                                        </Link>
-                                                    ) : (
-                                                        <Text style={styles.entryCompany}>{exp.company}</Text>
-                                                    )}
+                                        <View style={{ flexDirection: "row", gap: 10 }}>
+                                            {data.showCompanyLogos && (
+                                                <Image
+                                                    src={exp.logoUrl || getCompanyLogoUrl(exp.company, exp.companyUrl)}
+                                                    style={{ width: 30, height: 30, objectFit: "contain", marginTop: 2, borderRadius: 4 }}
+                                                />
+                                            )}
+                                            <View style={{ flex: 1 }}>
+                                                <View style={styles.entryHeader}>
+                                                    <View style={[styles.entryTitleRow, { marginRight: 20 }]}>
+                                                        <Text style={styles.entryTitle}>{exp.title}</Text>
+                                                        <Text style={styles.entrySeparator}>|</Text>
+                                                        {exp.companyUrl ? (
+                                                            <Link
+                                                                src={exp.companyUrl.startsWith("http") ? exp.companyUrl : `https://${exp.companyUrl}`}
+                                                                style={styles.entryCompanyLink}
+                                                            >
+                                                                {exp.company}
+                                                            </Link>
+                                                        ) : (
+                                                            <Text style={styles.entryCompany}>{exp.company}</Text>
+                                                        )}
+                                                    </View>
+                                                    <Text style={styles.entryMeta}>
+                                                        {exp.location}{exp.location ? " | " : ""}{formatDateRange(exp.startDate, exp.endDate, exp.current)}
+                                                    </Text>
                                                 </View>
-                                                <Text style={styles.entryMeta}>
-                                                    {exp.location}{exp.location ? " | " : ""}{formatDateRange(exp.startDate, exp.endDate, exp.current)}
-                                                </Text>
                                             </View>
+                                        </View>
 
-                                            {exp.bullets.length > 0 && (
+                                        {
+                                            exp.bullets.length > 0 && (
                                                 <View style={styles.bulletList}>
                                                     {exp.bullets.filter(b => b.trim()).map((bullet, i) => (
                                                         <View key={i} style={styles.bulletItem}>
@@ -595,8 +598,8 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                                         </View>
                                                     ))}
                                                 </View>
-                                            )}
-                                        </View>
+                                            )
+                                        }
                                     </View>
                                 ))}
                             </View>
@@ -754,6 +757,6 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                     </View>
                 </View>
             </Page>
-        </Document>
+        </Document >
     );
 }
