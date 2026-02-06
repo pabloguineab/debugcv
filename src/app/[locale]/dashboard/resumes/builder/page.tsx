@@ -428,7 +428,8 @@ export default function ResumeBuilderPage() {
                     field: edu.field_of_study || "",
                     location: edu.location || "",
                     startDate: `${edu.start_month || ""} ${edu.start_year || ""}`.trim(),
-                    endDate: `${edu.end_month || ""} ${edu.end_year || ""}`.trim()
+                    endDate: `${edu.end_month || ""} ${edu.end_year || ""}`.trim(),
+                    website: edu.school_url || ""
                 })) || [];
 
                 const mappedProjects = projects?.map((proj: any) => ({

@@ -540,7 +540,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                                             <div className="w-full h-full flex items-center justify-center">
                                                                 <InstitutionLogo
                                                                     name={edu.institution}
-                                                                    website={undefined} // We don't have website for education in standard types yet, or fallback to name
+                                                                    website={edu.website}
                                                                     size="md"
                                                                     className="!w-full !h-full !border-none !shadow-none !p-0 !bg-transparent rounded-none"
                                                                 />

@@ -617,7 +617,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                     >
                                         {data.showInstitutionLogos && (
                                             <Image
-                                                src={edu.logoUrl || getInstitutionLogoUrl(edu.institution)}
+                                                src={edu.logoUrl || getInstitutionLogoUrl(edu.institution, edu.website)}
                                                 style={{ width: 30, height: 30, objectFit: "contain", marginTop: 2, borderRadius: 4 }}
                                             />
                                         )}

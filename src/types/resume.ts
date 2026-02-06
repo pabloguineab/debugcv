@@ -33,6 +33,7 @@ export interface ResumeEducation {
     location: string;
     startDate: string;
     endDate: string;
+    website?: string;
 }
 
 export interface ResumeProject {
