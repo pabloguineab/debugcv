@@ -35,14 +35,14 @@ Font.register({
 // Accent color matching your PDF
 const ACCENT_COLOR = "#2563eb";
 
-// Check icon SVG
+// Check icon SVG - Outlined to match CheckCircle2
 function CheckIcon({ size = 7 }: { size?: number }) {
     return (
         <Svg width={size} height={size} viewBox="0 0 24 24">
-            <Circle cx="12" cy="12" r="10" fill={ACCENT_COLOR} />
+            <Circle cx="12" cy="12" r="10" stroke={ACCENT_COLOR} strokeWidth="2" fill="none" />
             <Path
                 d="M9 12l2 2 4-4"
-                stroke="white"
+                stroke={ACCENT_COLOR}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -221,7 +221,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         contactRow: {
             flexDirection: "row",
             flexWrap: "wrap",
-            gap: 10, // Reduced from 16 to 10 to fit more
+            gap: 12, // Gap 12 (approx 3/4 of gap-4 which is 16px)
             fontSize: styleConfig.detailFontSize * 0.85, // Reduced from 0.95
             color: "#4b5563", // text-gray-600
         },
@@ -241,7 +241,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             gap: 16,
         },
         leftColumn: {
-            width: "58%", // Increased from 55% to give more space to main content like preview
+            width: "55%", // Match Preview 55%
             paddingRight: 10,
             borderRightWidth: 1,
             borderRightColor: "#e5e7eb", // border-gray-200
@@ -250,7 +250,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             justifyContent: "flex-start",
         },
         rightColumn: {
-            width: "42%", // Reduced from 45%
+            width: "45%", // Match Preview 45%
             paddingLeft: 0,
             display: "flex",
             flexDirection: "column",
@@ -362,8 +362,8 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             backgroundColor: `${ACCENT_COLOR}15`,
             color: ACCENT_COLOR,
             fontSize: styleConfig.detailFontSize * 0.75, // Significantly smaller
-            paddingVertical: 1.5, // Reduced from 3
-            paddingHorizontal: 5, // Reduced from 8
+            paddingVertical: 2, // Adjusted to 2
+            paddingHorizontal: 6, // Adjusted to 6
             borderRadius: 2, // Reduced from 3
             fontWeight: 500, // medium
         },
@@ -528,7 +528,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                                 {exp.bullets.filter(b => b.trim()).map((bullet, i) => (
                                                     <View key={i} style={styles.bulletItem}>
                                                         <View style={styles.bulletIcon}>
-                                                            <CheckIcon size={Math.max(4, styleConfig.detailFontSize * 0.6)} />
+                                                            <CheckIcon size={styleConfig.detailFontSize} />
                                                         </View>
                                                         <Text style={styles.bulletText}>{bullet}</Text>
                                                     </View>
@@ -665,17 +665,4 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             </Page>
         </Document>
     );
-}
-
-// Download function for Harvard template
-export async function downloadHarvardPDF(data: ResumeData, filename?: string) {
-    const blob = await pdf(<HarvardPDFDocument data={data} />).toBlob();
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename || `${data.personalInfo.fullName.replace(/\s+/g, "_")}_Resume.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
 }
