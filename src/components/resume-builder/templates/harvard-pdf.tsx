@@ -217,7 +217,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             color: "#374151", // text-gray-700
             display: "flex",
             flexDirection: "column",
-            height: "100%",
+            // Removed height: "100%" to avoid forcing overflow
         },
         header: {
             padding: `${styleConfig.pagePaddingTop} ${styleConfig.pagePadding} ${styleConfig.sectionMarginBottom * spacingFactor} ${styleConfig.pagePadding}`,
@@ -254,13 +254,12 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         contactLink: {
             color: accentColor,
         },
+        // ... (omitted styles)
         columnsContainer: {
             flexDirection: "row",
             paddingHorizontal: styleConfig.pagePadding,
-            // Safety padding at bottom, reduced to avoid overflow
-            paddingBottom: 12,
-            flexGrow: 1,
             gap: 16,
+            // Removed flexGrow: 1 and paddingBottom to prevent pushing a new page
         },
         leftColumn: {
             width: "55%", // Match Preview 55%
