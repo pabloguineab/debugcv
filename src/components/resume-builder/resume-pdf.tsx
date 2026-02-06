@@ -189,20 +189,20 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
 
     // Dynamic density scaling - Simple template needs more aggressive compression
     const densityFactors = {
-        'very-dense': 0.95, // Reduced to prevent overflow
-        'dense': 1.0,
-        'medium': 1.05,
+        'very-dense': 0.98, // Slightly relaxed
+        'dense': 1.02,
+        'medium': 1.08,
         'light': 1.15,
         'very-light': 1.3
     };
     const densityFactor = densityFactors[styleConfig.tier] || 1.0;
 
     const spacingFactors = {
-        'very-dense': 0.9,  // Much tighter spacing for Simple template
-        'dense': 1.0,       // Baseline
-        'medium': 1.15,
-        'light': 1.35,
-        'very-light': 1.55
+        'very-dense': 1.05, // Increased to fill bottom space
+        'dense': 1.15,
+        'medium': 1.3,
+        'light': 1.5,
+        'very-light': 1.7
     };
     const spacingFactor = spacingFactors[styleConfig.tier] || 1.0;
 
