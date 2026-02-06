@@ -1,41 +1,38 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { User, CloudUpload, EyeOff, Camera } from "lucide-react";
+import { useRef, useState } from "react";
+import { useSession } from "next-auth/react";
+import { User, CloudUpload, Camera, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface ProfilePictureUploadProps {
-    pictureUrl?: string;
-    onUpdate: (url: string | undefined) => void;
-    showPhoto?: boolean;
-    onVisibilityChange?: (visible: boolean) => void;
+    value?: string;
+    onChange: (url: string) => void;
     size?: number;
     className?: string;
-    editable?: boolean;
 }
 
 export function ProfilePictureUpload({
-    pictureUrl,
-    onUpdate,
-    showPhoto = true,
-    onVisibilityChange,
-    size = 120, // Adjusted default size slightly
-    className,
-    editable = true
+    value,
+    onChange,
+    size = 100,
+    className
 }: ProfilePictureUploadProps) {
+    const { data: session } = useSession();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isHovering, setIsHovering] = useState(false);
+
+    // Get user profile image from session
+    const userProfileImage = session?.user?.image;
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                const result = reader.result as string;
-                onUpdate(result);
-                // If we upload a photo, automatically show it
-                if (onVisibilityChange && !showPhoto) {
-                    onVisibilityChange(true);
+                if (typeof reader.result === "string") {
+                    onChange(reader.result);
                 }
             };
             reader.readAsDataURL(file);
@@ -43,13 +40,18 @@ export function ProfilePictureUpload({
     };
 
     const triggerUpload = () => {
-        if (editable) {
-            fileInputRef.current?.click();
+        fileInputRef.current?.click();
+    };
+
+    const importFromProfile = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (userProfileImage) {
+            onChange(userProfileImage);
         }
     };
 
     return (
-        <>
+        <div className={cn("flex flex-col items-center gap-3", className)}>
             <input
                 type="file"
                 ref={fileInputRef}
@@ -58,78 +60,74 @@ export function ProfilePictureUpload({
                 onChange={handleFileChange}
             />
 
-            {!showPhoto ? (
-                /* Hidden State (Ghost Placeholder) */
-                editable ? (
+            <div
+                className="relative group rounded-full overflow-hidden shrink-0 select-none border-2 border-border cursor-pointer shadow-sm"
+                style={{ width: size, height: size }}
+                onMouseEnter={() => setIsHovering(true)}
+                onMouseLeave={() => setIsHovering(false)}
+                onClick={triggerUpload}
+            >
+                {value ? (
+                    <img
+                        src={value}
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                    />
+                ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-muted text-muted-foreground hover:bg-muted/80 transition-colors">
+                        <Camera className={cn("mb-1 opacity-50", size < 70 ? "w-5 h-5" : "w-8 h-8")} />
+                        {size >= 70 && <span className="text-[9px] font-bold uppercase tracking-wider opacity-70">Upload</span>}
+                    </div>
+                )}
+
+                {/* Hover Overlay */}
+                <div className={cn(
+                    "absolute inset-0 bg-black/60 backdrop-blur-[2px] flex items-center justify-center gap-2 transition-opacity duration-200 z-10",
+                    isHovering ? "opacity-100" : "opacity-0"
+                )}>
+                    {/* Upload Button */}
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
                             triggerUpload();
                         }}
                         className={cn(
-                            "w-full h-full rounded-full border-2 border-dashed border-muted-foreground/30 flex flex-col items-center justify-center text-muted-foreground hover:border-emerald-500 hover:text-emerald-500 hover:bg-emerald-50 transition-all opacity-70 hover:opacity-100",
-                            className
+                            "rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-transform hover:scale-110",
+                            size < 70 ? "w-6 h-6" : "w-8 h-8"
                         )}
-                        style={{ width: size, height: size }}
-                        title="Show/Add photo"
+                        title="Upload new photo"
                     >
-                        <Camera className="w-8 h-8 mb-1" />
-                        <span className="text-[9px] font-bold uppercase tracking-wider">Add Photo</span>
+                        <CloudUpload className={cn(size < 70 ? "w-3 h-3" : "w-4 h-4")} />
                     </button>
-                ) : null
-            ) : (
-                /* Visible State */
-                <div
-                    className={cn("relative group rounded-full overflow-hidden shrink-0 select-none border-2 border-border shadow-sm", className)}
-                    style={{ width: size, height: size }}
-                    onMouseEnter={() => setIsHovering(true)}
-                    onMouseLeave={() => setIsHovering(false)}
-                >
-                    {pictureUrl ? (
-                        <img
-                            src={pictureUrl}
-                            alt="Profile"
-                            className="w-full h-full object-cover"
-                        />
-                    ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
-                            <User className="w-3/5 h-3/5 stroke-[1.5]" />
-                        </div>
-                    )}
 
-                    {/* Hover Actions Overlay */}
-                    {editable && (
-                        <div className={cn(
-                            "absolute inset-0 bg-black/60 backdrop-blur-[1px] flex items-center justify-center gap-2 transition-opacity duration-200 z-10",
-                            isHovering ? "opacity-100" : "opacity-0"
-                        )}>
-                            {/* Import Button */}
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    triggerUpload();
-                                }}
-                                className="w-10 h-10 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center shadow-lg transition-transform hover:scale-105"
-                                title="Import photo"
-                            >
-                                <CloudUpload className="w-5 h-5" />
-                            </button>
-
-                            {/* Hide Button */}
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onVisibilityChange?.(false);
-                                }}
-                                className="w-10 h-10 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center shadow-lg transition-transform hover:scale-105"
-                                title="Hide photo on CV"
-                            >
-                                <EyeOff className="w-5 h-5" />
-                            </button>
-                        </div>
+                    {/* Import from Profile Button (only if different) */}
+                    {userProfileImage && userProfileImage !== value && (
+                        <button
+                            onClick={importFromProfile}
+                            className={cn(
+                                "rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center transition-transform hover:scale-110",
+                                size < 70 ? "w-6 h-6" : "w-8 h-8"
+                            )}
+                            title="Import from User Profile"
+                        >
+                            <RefreshCw className={cn(size < 70 ? "w-3 h-3" : "w-4 h-4")} />
+                        </button>
                     )}
                 </div>
+            </div>
+
+            {/* Helper Text or Quick Actions */}
+            {userProfileImage && !value && (
+                <Button
+                    variant="outline"
+                    size="xs"
+                    onClick={() => onChange(userProfileImage)}
+                    className="h-7 text-xs gap-1.5"
+                >
+                    <User className="w-3 h-3" />
+                    Use Profile Photo
+                </Button>
             )}
-        </>
+        </div>
     );
 }
