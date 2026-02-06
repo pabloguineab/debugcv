@@ -460,7 +460,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                 {/* Header */}
                 <View style={styles.header}>
                     <View style={{ flexDirection: data.showPhoto ? "row" : "column", justifyContent: "space-between", alignItems: "flex-start" }}>
-                        <View style={{ flex: 1 }}>
+                        <View style={{ flex: data.showPhoto ? 1 : undefined, width: data.showPhoto ? "auto" : "100%" }}>
                             <Text style={styles.name}>{personalInfo.fullName}</Text>
                             {generatedHeadline && (
                                 <Text style={styles.headline}>{generatedHeadline}</Text>

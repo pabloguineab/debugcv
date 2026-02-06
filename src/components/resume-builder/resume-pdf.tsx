@@ -229,7 +229,7 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
                 {/* Header */}
                 <View style={styles.header}>
                     <View style={{ flexDirection: data.showPhoto ? "row" : "column", alignItems: data.showPhoto ? "flex-start" : "center", textAlign: data.showPhoto ? "left" : "center" }}>
-                        <View style={{ flex: 1 }}>
+                        <View style={{ flex: data.showPhoto ? 1 : undefined, width: data.showPhoto ? "auto" : "100%" }}>
                             <Text style={styles.name}>{personalInfo.fullName}</Text>
                             <View style={styles.divider} />
                             <View style={[styles.contactRow, data.showPhoto ? { justifyContent: "flex-start" } : {}]}>
