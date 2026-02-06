@@ -9,9 +9,14 @@ export async function GET(request: NextRequest) {
     }
 
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            headers: {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+            }
+        });
 
         if (!response.ok) {
+            console.error(`Proxy fetch failed for ${url}: ${response.status} ${response.statusText}`);
             return new NextResponse(`Failed to fetch image: ${response.statusText}`, { status: response.status });
         }
 

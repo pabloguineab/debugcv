@@ -419,11 +419,37 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
             const origin = window.location.origin;
             const proxyUrl = `${origin}/api/image-proxy?url=${encodeURIComponent(url)}`;
             const response = await fetch(proxyUrl);
+
+            if (!response.ok) {
+                console.warn(`Failed to fetch image via proxy: ${response.statusText}`);
+                return "";
+            }
+
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.startsWith("image/")) {
+                console.warn(`Invalid content type for image: ${contentType}`);
+                return "";
+            }
+
             const blob = await response.blob();
+            // Double check blob size
+            if (blob.size < 100) {
+                console.warn("Image blob too small, likely invalid");
+                return "";
+            }
+
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result as string);
-                reader.onerror = reject;
+                reader.onloadend = () => {
+                    const result = reader.result as string;
+                    // Ensure it is a valid data URL
+                    if (result && result.startsWith("data:image")) {
+                        resolve(result);
+                    } else {
+                        resolve("");
+                    }
+                };
+                reader.onerror = () => resolve(""); // Resolve empty string on error to avoid crash
                 reader.readAsDataURL(blob);
             });
         } catch (error) {
