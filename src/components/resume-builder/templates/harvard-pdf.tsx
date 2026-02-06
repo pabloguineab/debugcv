@@ -195,11 +195,11 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
 
     // Vertical spacing scaling to fill vertical whitespace
     const spacingFactors = {
-        'very-dense': 1.15, // Ensure no whitespace at bottom even for dense CVs
-        'dense': 1.25,      // More breathing room
-        'medium': 1.4,      // Airy
-        'light': 1.6,       // Very open
-        'very-light': 1.8   // Maximum spread
+        'very-dense': 1.18, // Slightly increased to fill bottom gap
+        'dense': 1.28,      // Boosted
+        'medium': 1.45,     // Boosted
+        'light': 1.65,      // Open
+        'very-light': 1.85  // Maximum spread
     };
     const spacingFactor = spacingFactors[styleConfig.tier] || 1.0;
 
@@ -258,8 +258,8 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         columnsContainer: {
             flexDirection: "row",
             paddingHorizontal: styleConfig.pagePadding,
-            // Remove forced bottom padding to prevent page 2 overflow
-            paddingBottom: 0,
+            // Minimal safety padding at bottom (visual footer)
+            paddingBottom: 20,
             flexGrow: 1,
             gap: 16,
         },
