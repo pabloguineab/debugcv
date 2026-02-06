@@ -198,16 +198,62 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
                         {/* Photo - Left aligned for Modern template */}
                         {data.showPhoto && (
                             <div className="shrink-0">
-                                <img
-                                    src={personalInfo.pictureUrl || "https://avatar.vercel.sh/leerob"}
-                                    alt="Profile"
-                                    className="rounded-full object-cover border-2"
-                                    style={{
-                                        width: `${100 * scale}px`,
-                                        height: `${100 * scale}px`,
-                                        borderColor: accentColor
-                                    }}
-                                />
+                                <div
+                                    className="relative group cursor-pointer"
+                                    onClick={() => document.getElementById('modern-preview-photo-upload')?.click()}
+                                >
+                                    <input
+                                        id="modern-preview-photo-upload"
+                                        type="file"
+                                        className="hidden"
+                                        accept="image/*"
+                                        onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                                const reader = new FileReader();
+                                                reader.onloadend = () => {
+                                                    if (typeof reader.result === "string") {
+                                                        const event = {
+                                                            target: { value: reader.result }
+                                                        };
+                                                        updatePersonalInfo("pictureUrl", reader.result);
+                                                    }
+                                                };
+                                                reader.readAsDataURL(file);
+                                            }
+                                        }}
+                                    />
+                                    <img
+                                        src={personalInfo.pictureUrl || "https://avatar.vercel.sh/leerob"}
+                                        alt="Profile"
+                                        className="rounded-full object-cover border-2"
+                                        style={{
+                                            width: `${100 * scale}px`,
+                                            height: `${100 * scale}px`,
+                                            borderColor: accentColor
+                                        }}
+                                    />
+                                    {/* Hover Overlay */}
+                                    <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <div className="bg-white/20 backdrop-blur-sm p-2 rounded-full">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="white"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                                <polyline points="17 8 12 3 7 8" />
+                                                <line x1="12" x2="12" y1="3" y2="15" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         )}
 

@@ -15,6 +15,7 @@ export interface ResumeExperience {
     id: string;
     company: string;
     companyUrl?: string;
+    logoUrl?: string;
     title: string;
     location: string;
     startDate: string;
@@ -26,6 +27,7 @@ export interface ResumeExperience {
 export interface ResumeEducation {
     id: string;
     institution: string;
+    logoUrl?: string;
     degree: string;
     field: string;
     location: string;
@@ -74,6 +76,8 @@ export interface ResumeData {
     template: "harvard" | "simple" | "modern";
     atsScore?: number;
     showPhoto?: boolean;
+    showCompanyLogos?: boolean;
+    showInstitutionLogos?: boolean;
     accentColor?: string;
     createdAt: string;
     updatedAt: string;

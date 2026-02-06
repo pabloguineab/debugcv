@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Sparkles, GripVertical, Plus, Trash2, ChevronDown, ChevronUp, Image as ImageIcon, Check, Palette } from "lucide-react";
+import { Sparkles, GripVertical, Plus, Trash2, ChevronDown, ChevronUp, Image as ImageIcon, Check, Palette, Building2, GraduationCap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProfilePictureUpload } from "@/components/resume-builder/profile-picture-upload";
 
@@ -279,6 +279,43 @@ export function ResumeEditorSidebar({
                                     {data.showPhoto ? "On" : "Off"}
                                 </Button>
                             </div>
+
+                            {/* Harvard Specific Options */}
+                            {data.template === "harvard" && (
+                                <div className="space-y-2 pt-2 border-t">
+                                    <Label className="text-xs text-muted-foreground block">Harvard Style Options</Label>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div className="flex items-center justify-between border rounded-lg p-2 bg-muted/20">
+                                            <div className="flex items-center gap-2">
+                                                <Building2 className="w-3.5 h-3.5 text-gray-500" />
+                                                <span className="text-xs font-medium">Company Logos</span>
+                                            </div>
+                                            <Button
+                                                variant={data.showCompanyLogos ? "default" : "outline"}
+                                                size="sm"
+                                                onClick={() => onUpdate({ showCompanyLogos: !data.showCompanyLogos })}
+                                                className={cn("h-6 text-[10px] px-2", data.showCompanyLogos ? "bg-blue-600 hover:bg-blue-700" : "")}
+                                            >
+                                                {data.showCompanyLogos ? "On" : "Off"}
+                                            </Button>
+                                        </div>
+                                        <div className="flex items-center justify-between border rounded-lg p-2 bg-muted/20">
+                                            <div className="flex items-center gap-2">
+                                                <GraduationCap className="w-3.5 h-3.5 text-gray-500" />
+                                                <span className="text-xs font-medium">Uni Logos</span>
+                                            </div>
+                                            <Button
+                                                variant={data.showInstitutionLogos ? "default" : "outline"}
+                                                size="sm"
+                                                onClick={() => onUpdate({ showInstitutionLogos: !data.showInstitutionLogos })}
+                                                className={cn("h-6 text-[10px] px-2", data.showInstitutionLogos ? "bg-blue-600 hover:bg-blue-700" : "")}
+                                            >
+                                                {data.showInstitutionLogos ? "On" : "Off"}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
@@ -786,6 +823,6 @@ export function ResumeEditorSidebar({
 
 
             </div>
-        </div>
+        </div >
     );
 }

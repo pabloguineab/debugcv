@@ -552,41 +552,50 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                         key={exp.id}
                                         style={[
                                             styles.entryContainer,
-                                            index === experience.length - 1 ? { marginBottom: 0 } : {}
+                                            index === experience.length - 1 ? { marginBottom: 0 } : {},
+                                            { flexDirection: "row", gap: 10 }
                                         ]}
                                     >
-                                        <View style={styles.entryHeader}>
-                                            <View style={[styles.entryTitleRow, { marginRight: 20 }]}>
-                                                <Text style={styles.entryTitle}>{exp.title}</Text>
-                                                <Text style={styles.entrySeparator}>|</Text>
-                                                {exp.companyUrl ? (
-                                                    <Link
-                                                        src={exp.companyUrl.startsWith("http") ? exp.companyUrl : `https://${exp.companyUrl}`}
-                                                        style={styles.entryCompanyLink}
-                                                    >
-                                                        {exp.company}
-                                                    </Link>
-                                                ) : (
-                                                    <Text style={styles.entryCompany}>{exp.company}</Text>
-                                                )}
-                                            </View>
-                                            <Text style={styles.entryMeta}>
-                                                {exp.location}{exp.location ? " | " : ""}{formatDateRange(exp.startDate, exp.endDate, exp.current)}
-                                            </Text>
-                                        </View>
-
-                                        {exp.bullets.length > 0 && (
-                                            <View style={styles.bulletList}>
-                                                {exp.bullets.filter(b => b.trim()).map((bullet, i) => (
-                                                    <View key={i} style={styles.bulletItem}>
-                                                        <View style={styles.bulletIcon}>
-                                                            <CheckIcon size={styleConfig.detailFontSize} color={accentColor} />
-                                                        </View>
-                                                        <Text style={styles.bulletText}>{bullet}</Text>
-                                                    </View>
-                                                ))}
-                                            </View>
+                                        {data.showCompanyLogos && exp.logoUrl && (
+                                            <Image
+                                                src={exp.logoUrl}
+                                                style={{ width: 30, height: 30, objectFit: "contain", marginTop: 2 }}
+                                            />
                                         )}
+                                        <View style={{ flex: 1 }}>
+                                            <View style={styles.entryHeader}>
+                                                <View style={[styles.entryTitleRow, { marginRight: 20 }]}>
+                                                    <Text style={styles.entryTitle}>{exp.title}</Text>
+                                                    <Text style={styles.entrySeparator}>|</Text>
+                                                    {exp.companyUrl ? (
+                                                        <Link
+                                                            src={exp.companyUrl.startsWith("http") ? exp.companyUrl : `https://${exp.companyUrl}`}
+                                                            style={styles.entryCompanyLink}
+                                                        >
+                                                            {exp.company}
+                                                        </Link>
+                                                    ) : (
+                                                        <Text style={styles.entryCompany}>{exp.company}</Text>
+                                                    )}
+                                                </View>
+                                                <Text style={styles.entryMeta}>
+                                                    {exp.location}{exp.location ? " | " : ""}{formatDateRange(exp.startDate, exp.endDate, exp.current)}
+                                                </Text>
+                                            </View>
+
+                                            {exp.bullets.length > 0 && (
+                                                <View style={styles.bulletList}>
+                                                    {exp.bullets.filter(b => b.trim()).map((bullet, i) => (
+                                                        <View key={i} style={styles.bulletItem}>
+                                                            <View style={styles.bulletIcon}>
+                                                                <CheckIcon size={styleConfig.detailFontSize} color={accentColor} />
+                                                            </View>
+                                                            <Text style={styles.bulletText}>{bullet}</Text>
+                                                        </View>
+                                                    ))}
+                                                </View>
+                                            )}
+                                        </View>
                                     </View>
                                 ))}
                             </View>
@@ -601,20 +610,29 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                         key={edu.id}
                                         style={[
                                             styles.entryContainer,
-                                            index === education.length - 1 ? { marginBottom: 0 } : {}
+                                            index === education.length - 1 ? { marginBottom: 0 } : {},
+                                            { flexDirection: "row", gap: 10 }
                                         ]}
                                     >
-                                        <View style={styles.eduHeader}>
-                                            <View style={{ flex: 1, marginRight: 20 }}>
-                                                <Text style={styles.eduTitle}>{edu.institution}</Text>
+                                        {data.showInstitutionLogos && edu.logoUrl && (
+                                            <Image
+                                                src={edu.logoUrl}
+                                                style={{ width: 30, height: 30, objectFit: "contain", marginTop: 2 }}
+                                            />
+                                        )}
+                                        <View style={{ flex: 1 }}>
+                                            <View style={styles.eduHeader}>
+                                                <View style={{ flex: 1, marginRight: 20 }}>
+                                                    <Text style={styles.eduTitle}>{edu.institution}</Text>
+                                                </View>
+                                                <Text style={styles.eduDate}>
+                                                    {formatDateRange(edu.startDate, edu.endDate)}
+                                                </Text>
                                             </View>
-                                            <Text style={styles.eduDate}>
-                                                {formatDateRange(edu.startDate, edu.endDate)}
+                                            <Text style={styles.eduSubtitle}>
+                                                {edu.degree}{edu.field ? ` in ${edu.field}` : ""}
                                             </Text>
                                         </View>
-                                        <Text style={styles.eduSubtitle}>
-                                            {edu.degree}{edu.field ? ` in ${edu.field}` : ""}
-                                        </Text>
                                     </View>
                                 ))}
                             </View>
