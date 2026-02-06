@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Sparkles, GripVertical, Plus, Trash2, ChevronDown, ChevronUp, Image as ImageIcon, Check, Palette } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ProfilePictureUpload } from "@/components/resume-builder/profile-picture-upload";
 
 interface ResumeEditorSidebarProps {
     data: ResumeData;
@@ -251,20 +252,31 @@ export function ResumeEditorSidebar({
                                 </div>
                             </div>
 
-                            {/* Profile Picture Toggle */}
-                            <div className="flex items-center justify-between border rounded-lg p-3 bg-muted/20">
-                                <div className="flex items-center gap-2">
-                                    <ImageIcon className="w-4 h-4 text-gray-500" />
-                                    <span className="text-sm font-medium">Profile Picture</span>
+                            {/* Profile Picture Control */}
+                            <div className="border rounded-lg p-3 bg-muted/20 space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <ImageIcon className="w-4 h-4 text-gray-500" />
+                                        <span className="text-sm font-medium">Profile Picture</span>
+                                    </div>
+                                    <Button
+                                        variant={data.showPhoto ? "default" : "outline"}
+                                        size="sm"
+                                        onClick={() => onUpdate({ showPhoto: !data.showPhoto })}
+                                        className={cn("h-7 text-xs", data.showPhoto ? "bg-green-600 hover:bg-green-700" : "")}
+                                    >
+                                        {data.showPhoto ? "On" : "Off"}
+                                    </Button>
                                 </div>
-                                <Button
-                                    variant={data.showPhoto ? "default" : "outline"}
-                                    size="sm"
-                                    onClick={() => onUpdate({ showPhoto: !data.showPhoto })}
-                                    className={cn("h-7 text-xs", data.showPhoto ? "bg-green-600 hover:bg-green-700" : "")}
-                                >
-                                    {data.showPhoto ? "On" : "Off"}
-                                </Button>
+
+                                {data.showPhoto && (
+                                    <div className="flex justify-center py-2">
+                                        <ProfilePictureUpload
+                                            value={data.personalInfo.pictureUrl}
+                                            onChange={(url) => updatePersonalInfo("pictureUrl", url)}
+                                        />
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}
@@ -364,15 +376,6 @@ export function ResumeEditorSidebar({
                                     value={data.personalInfo.github || ""}
                                     onChange={(e) => updatePersonalInfo("github", e.target.value)}
                                     placeholder="github.com/username"
-                                    className="mt-1"
-                                />
-                            </div>
-                            <div>
-                                <Label className="text-xs text-muted-foreground">Picture URL</Label>
-                                <Input
-                                    value={data.personalInfo.pictureUrl || ""}
-                                    onChange={(e) => updatePersonalInfo("pictureUrl", e.target.value)}
-                                    placeholder="https://example.com/photo.jpg"
                                     className="mt-1"
                                 />
                             </div>
