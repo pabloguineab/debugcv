@@ -19,6 +19,15 @@ import { calculateStyleConfig } from "@/lib/resume-styles";
 import { formatSkillName } from "@/lib/skill-formatter";
 import { getCompanyLogoUrl, getInstitutionLogoUrl } from "@/lib/logo-utils";
 
+// Helper to proxy external images for PDF generation
+const getProxiedUrl = (url: string) => {
+    if (!url) return "";
+    if (url.startsWith("data:")) return url;
+    // Use window.location.origin to ensure absolute URL if available
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    return `${origin}/api/image-proxy?url=${encodeURIComponent(url)}`;
+};
+
 // Register Poppins font
 Font.register({
     family: "Poppins",
@@ -559,7 +568,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                         <View style={{ flexDirection: "row", gap: 10 }}>
                                             {data.showCompanyLogos && (
                                                 <Image
-                                                    src={exp.logoUrl || getCompanyLogoUrl(exp.company, exp.companyUrl)}
+                                                    src={exp.logoUrl || getProxiedUrl(getCompanyLogoUrl(exp.company, exp.companyUrl))}
                                                     style={{ width: 30, height: 30, objectFit: "contain", marginTop: 2, borderRadius: 4 }}
                                                 />
                                             )}
@@ -620,7 +629,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                     >
                                         {data.showInstitutionLogos && (
                                             <Image
-                                                src={edu.logoUrl || getInstitutionLogoUrl(edu.institution, edu.website)}
+                                                src={edu.logoUrl || getProxiedUrl(getInstitutionLogoUrl(edu.institution, edu.website))}
                                                 style={{ width: 30, height: 30, objectFit: "contain", marginTop: 2, borderRadius: 4 }}
                                             />
                                         )}
