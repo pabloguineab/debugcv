@@ -182,22 +182,23 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
     const styleConfig = calculateStyleConfig(data);
 
     // Dynamic density scaling to fill page or save space
+    // Shifted baseline: "very-dense" is now the standard (1.0) to avoid shrinking content that fits.
     const densityFactors = {
-        'very-dense': 0.85, // More aggressive reduction
-        'dense': 0.95,
-        'medium': 1.0,
+        'very-dense': 1.0,  // Was 0.85 - restore to standard size
+        'dense': 1.02,      // Slight boost
+        'medium': 1.05,     // Boost to fill
         'light': 1.1,       // More aggressive expansion
-        'very-light': 1.2   // Maximum expansion for readability
+        'very-light': 1.25  // Maximum expansion
     };
     const densityFactor = densityFactors[styleConfig.tier] || 1.0;
 
     // Vertical spacing scaling to fill vertical whitespace
     const spacingFactors = {
-        'very-dense': 0.8,
-        'dense': 0.9,
-        'medium': 1.0,
-        'light': 1.25,      // Increase gaps to fill page
-        'very-light': 1.5   // Large gaps for very sparse resumes
+        'very-dense': 1.0,  // Was 0.8 - restore standard spacing
+        'dense': 1.1,       // Add breathing room
+        'medium': 1.2,      // Significant whitespace
+        'light': 1.4,       // Open layout
+        'very-light': 1.6   // Maximum vertical spread
     };
     const spacingFactor = spacingFactors[styleConfig.tier] || 1.0;
 
