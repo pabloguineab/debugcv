@@ -539,7 +539,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                         ]}
                                     >
                                         <View style={styles.entryHeader}>
-                                            <View style={styles.entryTitleRow}>
+                                            <View style={[styles.entryTitleRow, { marginRight: 20 }]}>
                                                 <Text style={styles.entryTitle}>{exp.title}</Text>
                                                 <Text style={styles.entrySeparator}>|</Text>
                                                 {exp.companyUrl ? (
@@ -588,7 +588,9 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                         ]}
                                     >
                                         <View style={styles.eduHeader}>
-                                            <Text style={styles.eduTitle}>{edu.institution}</Text>
+                                            <View style={{ flex: 1, marginRight: 20 }}>
+                                                <Text style={styles.eduTitle}>{edu.institution}</Text>
+                                            </View>
                                             <Text style={styles.eduDate}>
                                                 {formatDateRange(edu.startDate, edu.endDate)}
                                             </Text>
