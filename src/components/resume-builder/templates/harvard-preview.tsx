@@ -192,7 +192,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                     {/* Header - Full Width */}
                     <div className="pb-4">
                         <div className="flex justify-between items-start gap-4">
-                            <div className="flex-1 text-center">
+                            <div className="flex-1 text-left">
                                 {/* Name */}
                                 <h1
                                     className="font-bold tracking-wide"
@@ -240,7 +240,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                         <div className="h-[3px] mt-3" style={{ backgroundColor: accentColor }} />
 
                         {/* Contact Info Row */}
-                        <div className="flex flex-wrap items-center justify-center gap-4 mt-3 text-gray-600" style={styles.contactFontSize}>
+                        <div className="flex flex-wrap items-center justify-start gap-4 mt-3 text-gray-600" style={styles.contactFontSize}>
                             {personalInfo.phone && (
                                 <span className="flex items-center gap-1.5">
                                     <Phone className="w-3.5 h-3.5" style={{ color: accentColor }} />

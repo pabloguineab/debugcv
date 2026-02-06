@@ -194,7 +194,23 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
                     }}
                 >
                     {/* Header */}
-                    <div className={`pb-4 mb-4 ${data.showPhoto ? "flex justify-between items-start text-left" : "text-center"}`}>
+                    <div className={`pb-4 mb-4 ${data.showPhoto ? "flex flex-row items-center text-left gap-6" : "text-center"}`}>
+                        {/* Photo - Left aligned for Modern template */}
+                        {data.showPhoto && (
+                            <div className="shrink-0">
+                                <img
+                                    src={personalInfo.pictureUrl || "https://avatar.vercel.sh/leerob"}
+                                    alt="Profile"
+                                    className="rounded-full object-cover border-2"
+                                    style={{
+                                        width: `${100 * scale}px`,
+                                        height: `${100 * scale}px`,
+                                        borderColor: accentColor
+                                    }}
+                                />
+                            </div>
+                        )}
+
                         <div className="flex-1">
                             <h1
                                 className="font-bold mb-1"
@@ -287,22 +303,6 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
                                 )}
                             </div>
                         </div>
-
-                        {/* Photo */}
-                        {data.showPhoto && (
-                            <div className="shrink-0 ml-6">
-                                <img
-                                    src={personalInfo.pictureUrl || "https://avatar.vercel.sh/leerob"}
-                                    alt="Profile"
-                                    className="rounded-full object-cover border-2"
-                                    style={{
-                                        width: `${100 * scale}px`,
-                                        height: `${100 * scale}px`,
-                                        borderColor: accentColor
-                                    }}
-                                />
-                            </div>
-                        )}
                     </div>
 
                     {/* Summary */}
