@@ -181,6 +181,16 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
     // Calculate dynamic styles based on content density
     const styleConfig = calculateStyleConfig(data);
 
+    // Dynamic density scaling to fill page or save space
+    const densityFactors = {
+        'very-dense': 0.9,  // Tight to fit everything
+        'dense': 0.95,      // Slightly tight
+        'medium': 1.0,      // Default calculated size
+        'light': 1.05,      // Slight boost to fill whitespace
+        'very-light': 1.15  // Larger boost for sparse content
+    };
+    const densityFactor = densityFactors[styleConfig.tier] || 1.0;
+
     // Auto-generate headline
     const generatedHeadline = data.targetJob
         || (experience.length > 0 && experience[0].title ? experience[0].title : "");
@@ -192,7 +202,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
     const styles = StyleSheet.create({
         page: {
             fontFamily: "Poppins",
-            fontSize: styleConfig.baseFontSize * 0.95, // Slightly compact base
+            fontSize: styleConfig.baseFontSize * densityFactor,
             color: "#374151", // text-gray-700
             display: "flex",
             flexDirection: "column",
@@ -208,7 +218,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             letterSpacing: 0.5,
         },
         headline: {
-            fontSize: styleConfig.detailFontSize * 1.05, // reduced multiplier from 1.15
+            fontSize: styleConfig.detailFontSize * densityFactor * 1.1,
             color: "#4b5563", // text-gray-600
             marginTop: 2,
         },
@@ -221,8 +231,8 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         contactRow: {
             flexDirection: "row",
             flexWrap: "wrap",
-            gap: 12, // Gap 12 (approx 3/4 of gap-4 which is 16px)
-            fontSize: styleConfig.detailFontSize * 0.85, // Reduced from 0.95
+            gap: 12, // Gap 12
+            fontSize: styleConfig.detailFontSize * densityFactor * 0.9, // Slightly smaller than detail
             color: "#4b5563", // text-gray-600
         },
         contactItem: {
@@ -261,7 +271,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             marginTop: styleConfig.sectionMarginTop * 0.9,
         },
         sectionTitle: {
-            fontSize: styleConfig.sectionTitleSize * 0.95, // Slightly smaller
+            fontSize: styleConfig.sectionTitleSize * densityFactor,
             fontWeight: 700, // bold
             color: ACCENT_COLOR,
             textTransform: "uppercase",
@@ -273,7 +283,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             marginTop: 2, // reduced from 3
         },
         summary: {
-            fontSize: styleConfig.detailFontSize * 0.9,
+            fontSize: styleConfig.detailFontSize * densityFactor,
             lineHeight: styleConfig.lineHeight,
             color: "#374151", // text-gray-700
         },
@@ -292,17 +302,17 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             flex: 1,
         },
         entryTitle: {
-            fontSize: styleConfig.entryTitleSize * 0.95,
+            fontSize: styleConfig.entryTitleSize * densityFactor,
             fontWeight: 700, // bold
             color: "#111827", // text-gray-900
         },
         entryCompany: {
-            fontSize: styleConfig.entryTitleSize * 0.95,
+            fontSize: styleConfig.entryTitleSize * densityFactor,
             fontWeight: 600, // semibold was used in preview often
             color: ACCENT_COLOR,
         },
         entryCompanyLink: {
-            fontSize: styleConfig.entryTitleSize * 0.95,
+            fontSize: styleConfig.entryTitleSize * densityFactor,
             fontWeight: 600, // semibold
             color: ACCENT_COLOR,
             textDecoration: "underline",
@@ -310,10 +320,10 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         entrySeparator: {
             color: "#6b7280",
             marginHorizontal: 3,
-            fontSize: styleConfig.detailFontSize * 0.9,
+            fontSize: styleConfig.detailFontSize * densityFactor,
         },
         entryMeta: {
-            fontSize: styleConfig.detailFontSize * 0.8,
+            fontSize: styleConfig.detailFontSize * densityFactor * 0.9,
             color: "#6b7280",
         },
         bulletList: {
@@ -330,7 +340,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         },
         bulletText: {
             flex: 1,
-            fontSize: styleConfig.detailFontSize * 0.9,
+            fontSize: styleConfig.detailFontSize * densityFactor,
             lineHeight: styleConfig.lineHeight,
             color: "#374151",
         },
@@ -340,17 +350,17 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             alignItems: "flex-start",
         },
         eduTitle: {
-            fontSize: styleConfig.entryTitleSize * 0.95,
+            fontSize: styleConfig.entryTitleSize * densityFactor,
             fontWeight: 700, // bold
             color: "#111827",
         },
         eduSubtitle: {
-            fontSize: styleConfig.detailFontSize * 0.9,
+            fontSize: styleConfig.detailFontSize * densityFactor,
             color: "#4b5563",
             fontStyle: "italic",
         },
         eduDate: {
-            fontSize: styleConfig.detailFontSize * 0.8,
+            fontSize: styleConfig.detailFontSize * densityFactor * 0.9,
             color: "#6b7280",
         },
         skillTagsContainer: {
@@ -361,30 +371,30 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         skillTag: {
             backgroundColor: `${ACCENT_COLOR}15`,
             color: ACCENT_COLOR,
-            fontSize: styleConfig.detailFontSize * 0.75, // Significantly smaller
+            fontSize: styleConfig.detailFontSize * densityFactor * 0.8, // Small but scales
             paddingVertical: 2, // Adjusted to 2
             paddingHorizontal: 6, // Adjusted to 6
             borderRadius: 2, // Reduced from 3
             fontWeight: 500, // medium
         },
         projectTitle: {
-            fontSize: styleConfig.entryTitleSize * 0.95,
+            fontSize: styleConfig.entryTitleSize * densityFactor,
             fontWeight: 700, // bold
             color: ACCENT_COLOR,
         },
         projectTech: {
-            fontSize: styleConfig.detailFontSize * 0.8,
+            fontSize: styleConfig.detailFontSize * densityFactor * 0.9,
             color: "#6b7280",
             marginLeft: 3,
         },
         projectDesc: {
-            fontSize: styleConfig.detailFontSize * 0.9,
+            fontSize: styleConfig.detailFontSize * densityFactor,
             color: "#374151",
             lineHeight: styleConfig.lineHeight,
             marginTop: 2,
         },
         certItem: {
-            fontSize: styleConfig.detailFontSize * 0.9,
+            fontSize: styleConfig.detailFontSize * densityFactor,
             marginBottom: styleConfig.bulletMarginBottom * 1.2,
             color: "#374151",
         },
@@ -405,7 +415,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             columnGap: 12, // reduced
         },
         langItem: {
-            fontSize: styleConfig.detailFontSize * 0.9,
+            fontSize: styleConfig.detailFontSize * densityFactor,
         },
         langName: {
             fontWeight: 600, // semibold for language name
