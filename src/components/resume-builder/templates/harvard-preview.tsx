@@ -27,7 +27,9 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
     // Scale factor for web preview
     const scale = 1.25;
 
-    // Dynamic styles based on content - LARGER base sizes
+    // Primary accent color - professional blue
+    const accentColor = data.accentColor || "#2563eb";
+
     const styles = useMemo(() => ({
         container: {
             padding: `${styleConfig.pagePaddingTop * scale}px ${styleConfig.pagePadding * scale}px ${styleConfig.pagePaddingBottom * scale}px`,
@@ -147,15 +149,15 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                 <div style={styles.sectionMargin}>
                     <h3
                         className="font-bold uppercase tracking-wider"
-                        style={{ ...styles.sectionTitle, color: ACCENT_COLOR }}
+                        style={{ ...styles.sectionTitle, color: accentColor }}
                     >
                         {title}
                     </h3>
-                    <div className="h-[2px] mt-1" style={{ backgroundColor: ACCENT_COLOR }} />
+                    <div className="h-[2px] mt-1" style={{ backgroundColor: accentColor }} />
                 </div>
             );
         };
-    }, [styles.sectionTitle, styles.sectionMargin]);
+    }, [styles.sectionTitle, styles.sectionMargin, accentColor]);
 
     // Skill Tag with dynamic styles
     const SkillTag = useMemo(() => {
@@ -165,15 +167,15 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                     className="inline-block font-medium rounded mr-1.5 mb-1.5"
                     style={{
                         ...styles.skillTag,
-                        backgroundColor: `${ACCENT_COLOR}15`,
-                        color: ACCENT_COLOR
+                        backgroundColor: `${accentColor}15`,
+                        color: accentColor
                     }}
                 >
                     {formatSkillName(skill)}
                 </span>
             );
         };
-    }, [styles.skillTag]);
+    }, [styles.skillTag, accentColor]);
 
     return (
         <div
@@ -189,39 +191,59 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                 <div style={styles.container}>
                     {/* Header - Full Width */}
                     <div className="pb-4">
-                        {/* Name */}
-                        <h1
-                            className="font-bold tracking-wide"
-                            style={{ ...styles.name, color: ACCENT_COLOR }}
-                        >
-                            <EditableText
-                                value={personalInfo.fullName}
-                                onChange={(v) => updatePersonalInfo("fullName", v)}
-                                placeholder="Your Name"
-                                displayComponent={<Typewriter text={personalInfo.fullName || "Your Name"} />}
-                            />
-                        </h1>
+                        <div className="flex justify-between items-start gap-4">
+                            <div className="flex-1 text-center">
+                                {/* Name */}
+                                <h1
+                                    className="font-bold tracking-wide"
+                                    style={{ ...styles.name, color: accentColor }}
+                                >
+                                    <EditableText
+                                        value={personalInfo.fullName}
+                                        onChange={(v) => updatePersonalInfo("fullName", v)}
+                                        placeholder="Your Name"
+                                        displayComponent={<Typewriter text={personalInfo.fullName || "Your Name"} />}
+                                    />
+                                </h1>
 
-                        {/* Headline/Title */}
-                        {generatedHeadline && (
-                            <p className="text-gray-600 mt-1" style={styles.headline}>
-                                <EditableText
-                                    value={generatedHeadline}
-                                    onChange={(v) => onUpdate?.({ targetJob: v })}
-                                    placeholder="Your Title"
-                                    displayComponent={<Typewriter text={generatedHeadline} />}
-                                />
-                            </p>
-                        )}
+                                {/* Headline/Title */}
+                                {generatedHeadline && (
+                                    <p className="text-gray-600 mt-1" style={styles.headline}>
+                                        <EditableText
+                                            value={generatedHeadline}
+                                            onChange={(v) => onUpdate?.({ targetJob: v })}
+                                            placeholder="Your Title"
+                                            displayComponent={<Typewriter text={generatedHeadline} />}
+                                        />
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Photo */}
+                            {data.showPhoto && (
+                                <div className="shrink-0 flex items-center justify-center">
+                                    <img
+                                        src={personalInfo.pictureUrl || "https://avatar.vercel.sh/leerob"}
+                                        alt="Profile"
+                                        className="rounded-full object-cover border-2"
+                                        style={{
+                                            width: `${80 * scale}px`,
+                                            height: `${80 * scale}px`,
+                                            borderColor: accentColor
+                                        }}
+                                    />
+                                </div>
+                            )}
+                        </div>
 
                         {/* Divider */}
-                        <div className="h-[3px] mt-3" style={{ backgroundColor: ACCENT_COLOR }} />
+                        <div className="h-[3px] mt-3" style={{ backgroundColor: accentColor }} />
 
                         {/* Contact Info Row */}
-                        <div className="flex flex-wrap items-center gap-4 mt-3 text-gray-600" style={styles.contactFontSize}>
+                        <div className="flex flex-wrap items-center justify-center gap-4 mt-3 text-gray-600" style={styles.contactFontSize}>
                             {personalInfo.phone && (
                                 <span className="flex items-center gap-1.5">
-                                    <Phone className="w-3.5 h-3.5" style={{ color: ACCENT_COLOR }} />
+                                    <Phone className="w-3.5 h-3.5" style={{ color: accentColor }} />
                                     <EditableText
                                         value={personalInfo.phone}
                                         onChange={(v) => updatePersonalInfo("phone", v)}
@@ -232,8 +254,8 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                             )}
                             {personalInfo.email && (
                                 <span className="flex items-center gap-1.5">
-                                    <Mail className="w-3.5 h-3.5" style={{ color: ACCENT_COLOR }} />
-                                    <span style={{ color: ACCENT_COLOR }}>
+                                    <Mail className="w-3.5 h-3.5" style={{ color: accentColor }} />
+                                    <span style={{ color: accentColor }}>
                                         <EditableText
                                             value={personalInfo.email}
                                             onChange={(v) => updatePersonalInfo("email", v)}
@@ -245,12 +267,12 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                             )}
                             {personalInfo.linkedin && (
                                 <span className="flex items-center gap-1.5">
-                                    <Linkedin className="w-3.5 h-3.5" style={{ color: ACCENT_COLOR }} />
+                                    <Linkedin className="w-3.5 h-3.5" style={{ color: accentColor }} />
                                     <a
                                         href={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        style={{ color: ACCENT_COLOR }}
+                                        style={{ color: accentColor }}
                                         className="hover:underline"
                                     >
                                         <Typewriter text={personalInfo.linkedin.replace(/^https?:\/\/(www\.)?/, '')} />
@@ -259,12 +281,12 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                             )}
                             {personalInfo.github && (
                                 <span className="flex items-center gap-1.5">
-                                    <Github className="w-3.5 h-3.5" style={{ color: ACCENT_COLOR }} />
+                                    <Github className="w-3.5 h-3.5" style={{ color: accentColor }} />
                                     <a
                                         href={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        style={{ color: ACCENT_COLOR }}
+                                        style={{ color: accentColor }}
                                         className="hover:underline"
                                     >
                                         <Typewriter text={personalInfo.github.replace(/^https?:\/\/(www\.)?/, '')} />
@@ -273,7 +295,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                             )}
                             {personalInfo.location && (
                                 <span className="flex items-center gap-1.5">
-                                    <MapPin className="w-3.5 h-3.5" style={{ color: ACCENT_COLOR }} />
+                                    <MapPin className="w-3.5 h-3.5" style={{ color: accentColor }} />
                                     <EditableText
                                         value={personalInfo.location}
                                         onChange={(v) => updatePersonalInfo("location", v)}
@@ -312,6 +334,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                     {experience.map((exp, index) => (
                                         <div key={exp.id} style={styles.entryMargin}>
                                             {/* Company & Title Row */}
+                                            {/* Company & Title Row */}
                                             <div className="flex justify-between items-start">
                                                 <div className="flex-1">
                                                     <span className="font-bold text-gray-900" style={styles.entryTitle}>
@@ -329,7 +352,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="font-semibold hover:underline"
-                                                            style={{ ...styles.entryTitle, color: ACCENT_COLOR }}
+                                                            style={{ ...styles.entryTitle, color: accentColor }}
                                                         >
                                                             <EditableText
                                                                 value={exp.company}
@@ -339,7 +362,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                                             />
                                                         </a>
                                                     ) : (
-                                                        <span className="font-semibold" style={{ ...styles.entryTitle, color: ACCENT_COLOR }}>
+                                                        <span className="font-semibold" style={{ ...styles.entryTitle, color: accentColor }}>
                                                             <EditableText
                                                                 value={exp.company}
                                                                 onChange={(v) => updateExperience(index, { company: v })}
@@ -362,7 +385,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                                         <li key={bulletIndex} className="flex items-start text-gray-700" style={styles.bulletMargin}>
                                                             <CheckCircle2
                                                                 className="w-3 h-3 mr-2 mt-0.5 shrink-0"
-                                                                style={{ color: ACCENT_COLOR }}
+                                                                style={{ color: accentColor }}
                                                             />
                                                             <span className="leading-relaxed" style={styles.detail}>
                                                                 <EditableText
@@ -463,12 +486,12 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         className="font-bold hover:underline"
-                                                        style={{ ...styles.entryTitle, color: ACCENT_COLOR }}
+                                                        style={{ ...styles.entryTitle, color: accentColor }}
                                                     >
                                                         <Typewriter text={project.name} />
                                                     </a>
                                                 ) : (
-                                                    <span className="font-bold" style={{ ...styles.entryTitle, color: ACCENT_COLOR }}>
+                                                    <span className="font-bold" style={{ ...styles.entryTitle, color: accentColor }}>
                                                         <Typewriter text={project.name} />
                                                     </span>
                                                 )}
@@ -500,7 +523,7 @@ export function HarvardPreview({ data, onFieldClick, onUpdate, animate = false }
                                     <SectionHeader title="Certifications" />
                                     {certifications.map((cert) => (
                                         <div key={cert.id} className="text-gray-700" style={{ ...styles.detail, marginBottom: `${styleConfig.bulletMarginBottom * scale * 1.5}px` }}>
-                                            <span className="font-semibold" style={{ color: ACCENT_COLOR }}>
+                                            <span className="font-semibold" style={{ color: accentColor }}>
                                                 <Typewriter text={cert.name} />
                                             </span>
                                             {cert.issuer && (

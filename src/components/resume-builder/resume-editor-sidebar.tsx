@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Sparkles, GripVertical, Plus, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import { Sparkles, GripVertical, Plus, Trash2, ChevronDown, ChevronUp, Image as ImageIcon, Check, Palette } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ResumeEditorSidebarProps {
@@ -195,24 +195,76 @@ export function ResumeEditorSidebar({
             </div>
 
             <div className="p-4 space-y-4">
-                {/* Template Selection - At the Top */}
+                {/* Design & Layout - At the Top */}
                 <div className={cn("border-b pb-4", activeSection === "template" && "ring-2 ring-primary rounded-lg p-2")}>
-                    <SectionHeader title="Resume Template" section="template" />
+                    <SectionHeader title="Design & Layout" section="template" />
                     {expandedSections.template && (
-                        <div className="mt-3">
-                            <Label className="text-xs text-muted-foreground">Choose a template for your resume</Label>
-                            <div className="flex gap-2 mt-2">
-                                {(["harvard", "simple", "modern"] as const).map((template) => (
-                                    <Button
-                                        key={template}
-                                        variant={data.template === template ? "default" : "outline"}
-                                        size="sm"
-                                        onClick={() => onUpdate({ template })}
-                                        className="capitalize"
-                                    >
-                                        {template}
-                                    </Button>
-                                ))}
+                        <div className="mt-3 space-y-4">
+                            {/* Template Selection */}
+                            <div>
+                                <Label className="text-xs text-muted-foreground block mb-2">Template Style</Label>
+                                <div className="flex gap-2">
+                                    {(["harvard", "simple", "modern"] as const).map((template) => (
+                                        <Button
+                                            key={template}
+                                            variant={data.template === template ? "default" : "outline"}
+                                            size="sm"
+                                            onClick={() => onUpdate({ template })}
+                                            className="capitalize flex-1"
+                                        >
+                                            {template}
+                                        </Button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Accent Color */}
+                            <div>
+                                <Label className="text-xs text-muted-foreground block mb-2">Accent Color</Label>
+                                <div className="flex flex-wrap gap-2">
+                                    {[
+                                        "#2563eb", // Default Blue
+                                        "#1a1a1a", // Black
+                                        "#059669", // Emerald
+                                        "#7c3aed", // Violet
+                                        "#e11d48", // Rose
+                                        "#ea580c", // Orange
+                                        "#0891b2", // Cyan
+                                    ].map((color) => (
+                                        <button
+                                            key={color}
+                                            onClick={() => onUpdate({ accentColor: color })}
+                                            className={cn(
+                                                "w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all",
+                                                data.accentColor === color || (!data.accentColor && color === "#2563eb")
+                                                    ? "border-gray-900 dark:border-white scale-110"
+                                                    : "border-transparent hover:scale-110"
+                                            )}
+                                            style={{ backgroundColor: color }}
+                                            title={color}
+                                        >
+                                            {(data.accentColor === color || (!data.accentColor && color === "#2563eb")) && (
+                                                <Check className="w-4 h-4 text-white drop-shadow-md" />
+                                            )}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Profile Picture Toggle */}
+                            <div className="flex items-center justify-between border rounded-lg p-3 bg-muted/20">
+                                <div className="flex items-center gap-2">
+                                    <ImageIcon className="w-4 h-4 text-gray-500" />
+                                    <span className="text-sm font-medium">Profile Picture</span>
+                                </div>
+                                <Button
+                                    variant={data.showPhoto ? "default" : "outline"}
+                                    size="sm"
+                                    onClick={() => onUpdate({ showPhoto: !data.showPhoto })}
+                                    className={cn("h-7 text-xs", data.showPhoto ? "bg-green-600 hover:bg-green-700" : "")}
+                                >
+                                    {data.showPhoto ? "On" : "Off"}
+                                </Button>
                             </div>
                         </div>
                     )}
@@ -298,11 +350,29 @@ export function ResumeEditorSidebar({
                                 />
                             </div>
                             <div>
-                                <Label className="text-xs text-muted-foreground">Profile URL</Label>
+                                <Label className="text-xs text-muted-foreground">LinkedIn / Profile URL</Label>
                                 <Input
-                                    value={data.personalInfo.profileUrl || ""}
-                                    onChange={(e) => updatePersonalInfo("profileUrl", e.target.value)}
+                                    value={data.personalInfo.linkedin || ""}
+                                    onChange={(e) => updatePersonalInfo("linkedin", e.target.value)}
                                     placeholder="linkedin.com/in/yourname"
+                                    className="mt-1"
+                                />
+                            </div>
+                            <div>
+                                <Label className="text-xs text-muted-foreground">GitHub URL</Label>
+                                <Input
+                                    value={data.personalInfo.github || ""}
+                                    onChange={(e) => updatePersonalInfo("github", e.target.value)}
+                                    placeholder="github.com/username"
+                                    className="mt-1"
+                                />
+                            </div>
+                            <div>
+                                <Label className="text-xs text-muted-foreground">Picture URL</Label>
+                                <Input
+                                    value={data.personalInfo.pictureUrl || ""}
+                                    onChange={(e) => updatePersonalInfo("pictureUrl", e.target.value)}
+                                    placeholder="https://example.com/photo.jpg"
                                     className="mt-1"
                                 />
                             </div>

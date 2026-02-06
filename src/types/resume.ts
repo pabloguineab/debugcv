@@ -8,6 +8,7 @@ export interface ResumePersonalInfo {
     profileUrl?: string;
     linkedin?: string;
     github?: string;
+    pictureUrl?: string;
 }
 
 export interface ResumeExperience {
@@ -72,6 +73,8 @@ export interface ResumeData {
     certifications: ResumeCertification[];
     template: "harvard" | "simple" | "modern";
     atsScore?: number;
+    showPhoto?: boolean;
+    accentColor?: string;
     createdAt: string;
     updatedAt: string;
 }

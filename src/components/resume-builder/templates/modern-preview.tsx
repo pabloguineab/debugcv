@@ -54,7 +54,7 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
     }), [styleConfig, scale]);
 
     // Accent color
-    const accentColor = "#1e40af"; // Professional blue
+    const accentColor = data.accentColor || "#1e40af";
 
     // Auto-generate headline based on targetJob, first experience, or default
     const generatedHeadline = useMemo(() => {
@@ -194,97 +194,115 @@ export function ModernPreview({ data, onFieldClick, onUpdate, animate = false }:
                     }}
                 >
                     {/* Header */}
-                    <div className="text-center pb-4 mb-4">
-                        <h1
-                            className="font-bold mb-1"
-                            style={{ ...styles.name, color: accentColor }}
-                        >
-                            <EditableText
-                                value={personalInfo.fullName}
-                                onChange={(v) => updatePersonalInfo("fullName", v)}
-                                placeholder="Your Name"
-                                displayComponent={<Typewriter text={personalInfo.fullName || "Your Name"} />}
-                            />
-                        </h1>
-
-                        {/* Title/Headline - auto-generated from targetJob or first experience */}
-                        {generatedHeadline && (
-                            <p
-                                className="text-gray-600 uppercase tracking-wide mb-2"
-                                style={styles.headline}
+                    <div className={`pb-4 mb-4 ${data.showPhoto ? "flex justify-between items-start text-left" : "text-center"}`}>
+                        <div className="flex-1">
+                            <h1
+                                className="font-bold mb-1"
+                                style={{ ...styles.name, color: accentColor }}
                             >
                                 <EditableText
-                                    value={generatedHeadline}
-                                    onChange={(v) => onUpdate?.({ targetJob: v })}
-                                    placeholder="Your Title"
-                                    displayComponent={<Typewriter text={generatedHeadline} />}
+                                    value={personalInfo.fullName}
+                                    onChange={(v) => updatePersonalInfo("fullName", v)}
+                                    placeholder="Your Name"
+                                    displayComponent={<Typewriter text={personalInfo.fullName || "Your Name"} />}
                                 />
-                            </p>
-                        )}
+                            </h1>
 
-                        {/* Contact info */}
-                        <div className="flex justify-center flex-wrap gap-x-3 gap-y-1 text-gray-600" style={styles.detail}>
-                            {personalInfo.email && (
-                                <span style={{ color: accentColor }}>
+                            {/* Title/Headline - auto-generated from targetJob or first experience */}
+                            {generatedHeadline && (
+                                <p
+                                    className="text-gray-600 uppercase tracking-wide mb-2"
+                                    style={styles.headline}
+                                >
                                     <EditableText
-                                        value={personalInfo.email}
-                                        onChange={(v) => updatePersonalInfo("email", v)}
-                                        placeholder="email@example.com"
-                                        displayComponent={<Typewriter text={personalInfo.email} />}
+                                        value={generatedHeadline}
+                                        onChange={(v) => onUpdate?.({ targetJob: v })}
+                                        placeholder="Your Title"
+                                        displayComponent={<Typewriter text={generatedHeadline} />}
                                     />
-                                </span>
+                                </p>
                             )}
-                            {personalInfo.location && (
-                                <>
-                                    <span className="text-gray-400">|</span>
-                                    <EditableText
-                                        value={personalInfo.location}
-                                        onChange={(v) => updatePersonalInfo("location", v)}
-                                        placeholder="City, Country"
-                                        displayComponent={<Typewriter text={personalInfo.location} />}
-                                    />
-                                </>
-                            )}
-                            {personalInfo.phone && (
-                                <>
-                                    <span className="text-gray-400">|</span>
-                                    <EditableText
-                                        value={personalInfo.phone}
-                                        onChange={(v) => updatePersonalInfo("phone", v)}
-                                        placeholder="+1 234 567 890"
-                                        displayComponent={<Typewriter text={personalInfo.phone} />}
-                                    />
-                                </>
-                            )}
-                            {personalInfo.linkedin && (
-                                <>
-                                    <span className="text-gray-400">|</span>
-                                    <a
-                                        href={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        style={{ color: accentColor }}
-                                        className="hover:underline"
-                                    >
-                                        <Typewriter text="LinkedIn" />
-                                    </a>
-                                </>
-                            )}
-                            {personalInfo.github && (
-                                <>
-                                    <span className="text-gray-400">|</span>
-                                    <a
-                                        href={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        style={{ color: accentColor }}
-                                        className="hover:underline"
-                                    >
-                                        <Typewriter text="GitHub" />
-                                    </a>
-                                </>
-                            )}
+
+                            {/* Contact info */}
+                            <div className={`flex flex-wrap gap-x-3 gap-y-1 text-gray-600 ${data.showPhoto ? "" : "justify-center"}`} style={styles.detail}>
+                                {personalInfo.email && (
+                                    <span style={{ color: accentColor }}>
+                                        <EditableText
+                                            value={personalInfo.email}
+                                            onChange={(v) => updatePersonalInfo("email", v)}
+                                            placeholder="email@example.com"
+                                            displayComponent={<Typewriter text={personalInfo.email} />}
+                                        />
+                                    </span>
+                                )}
+                                {personalInfo.location && (
+                                    <>
+                                        <span className="text-gray-400">|</span>
+                                        <EditableText
+                                            value={personalInfo.location}
+                                            onChange={(v) => updatePersonalInfo("location", v)}
+                                            placeholder="City, Country"
+                                            displayComponent={<Typewriter text={personalInfo.location} />}
+                                        />
+                                    </>
+                                )}
+                                {personalInfo.phone && (
+                                    <>
+                                        <span className="text-gray-400">|</span>
+                                        <EditableText
+                                            value={personalInfo.phone}
+                                            onChange={(v) => updatePersonalInfo("phone", v)}
+                                            placeholder="+1 234 567 890"
+                                            displayComponent={<Typewriter text={personalInfo.phone} />}
+                                        />
+                                    </>
+                                )}
+                                {personalInfo.linkedin && (
+                                    <>
+                                        <span className="text-gray-400">|</span>
+                                        <a
+                                            href={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{ color: accentColor }}
+                                            className="hover:underline"
+                                        >
+                                            <Typewriter text="LinkedIn" />
+                                        </a>
+                                    </>
+                                )}
+                                {personalInfo.github && (
+                                    <>
+                                        <span className="text-gray-400">|</span>
+                                        <a
+                                            href={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{ color: accentColor }}
+                                            className="hover:underline"
+                                        >
+                                            <Typewriter text="GitHub" />
+                                        </a>
+                                    </>
+                                )}
+                            </div>
                         </div>
+
+                        {/* Photo */}
+                        {data.showPhoto && (
+                            <div className="shrink-0 ml-6">
+                                <img
+                                    src={personalInfo.pictureUrl || "https://avatar.vercel.sh/leerob"}
+                                    alt="Profile"
+                                    className="rounded-full object-cover border-2"
+                                    style={{
+                                        width: `${100 * scale}px`,
+                                        height: `${100 * scale}px`,
+                                        borderColor: accentColor
+                                    }}
+                                />
+                            </div>
+                        )}
                     </div>
 
                     {/* Summary */}

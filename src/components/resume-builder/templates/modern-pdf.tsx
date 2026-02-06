@@ -9,16 +9,14 @@ import {
     Font,
     Link,
     pdf,
+    Image,
 } from "@react-pdf/renderer";
 import { ResumeData } from "@/types/resume";
 import { calculateStyleConfig, StyleConfig } from "@/lib/resume-styles";
 import { formatSkillName } from "@/lib/skill-formatter";
 
-// Accent color
-const ACCENT_COLOR = "#1e40af";
-
 // Create dynamic styles based on content density
-function createDynamicStyles(config: StyleConfig, densityFactor: number, spacingFactor: number) {
+function createDynamicStyles(config: StyleConfig, densityFactor: number, spacingFactor: number, accentColor: string) {
     return StyleSheet.create({
         page: {
             padding: config.pagePadding,
@@ -37,7 +35,7 @@ function createDynamicStyles(config: StyleConfig, densityFactor: number, spacing
         name: {
             fontSize: config.nameFontSize,
             fontWeight: "bold",
-            color: ACCENT_COLOR,
+            color: accentColor,
             marginBottom: 2 * spacingFactor,
         },
         headline: {
@@ -56,7 +54,7 @@ function createDynamicStyles(config: StyleConfig, densityFactor: number, spacing
             color: "#666",
         },
         contactLink: {
-            color: ACCENT_COLOR,
+            color: accentColor,
         },
         separator: {
             color: "#ccc",
@@ -72,12 +70,12 @@ function createDynamicStyles(config: StyleConfig, densityFactor: number, spacing
         sectionLine: {
             flex: 1,
             height: 2,
-            backgroundColor: ACCENT_COLOR,
+            backgroundColor: accentColor,
         },
         sectionTitle: {
             fontSize: config.sectionTitleSize * 0.85 * densityFactor,
             fontWeight: "bold",
-            color: ACCENT_COLOR,
+            color: accentColor,
             textTransform: "uppercase",
             letterSpacing: 1,
             paddingHorizontal: 8,
@@ -118,12 +116,12 @@ function createDynamicStyles(config: StyleConfig, densityFactor: number, spacing
         entryTitleAccent: {
             fontSize: config.entryTitleSize * densityFactor,
             fontWeight: "bold",
-            color: ACCENT_COLOR,
+            color: accentColor,
         },
         entryTitleLink: {
             fontSize: config.entryTitleSize * densityFactor,
             fontWeight: "bold",
-            color: ACCENT_COLOR,
+            color: accentColor,
             textDecoration: "underline",
         },
         entrySeparator: {
@@ -278,8 +276,9 @@ export function ModernPDFDocument({ data }: { data: ResumeData }) {
         'very-light': 1.83
     };
     const spacingFactor = spacingFactors[styleConfig.tier] || 1.0;
+    const accentColor = data.accentColor || "#1e40af";
 
-    const styles = createDynamicStyles(styleConfig, densityFactor, spacingFactor);
+    const styles = createDynamicStyles(styleConfig, densityFactor, spacingFactor, accentColor);
     const groupedSkills = groupSkills(skills);
 
     // Auto-generate headline based on targetJob, first experience, or default
@@ -290,51 +289,66 @@ export function ModernPDFDocument({ data }: { data: ResumeData }) {
         <Document>
             <Page size="A4" style={styles.page}>
                 {/* Header */}
-                <View style={styles.header}>
-                    <Text style={styles.name}>{personalInfo.fullName}</Text>
-                    {generatedHeadline && (
-                        <Text style={styles.headline}>{generatedHeadline}</Text>
+                <View style={[styles.header, data.showPhoto ? { flexDirection: "row", alignItems: "center", textAlign: "left", justifyContent: "flex-start", gap: 20 } : {}]}>
+                    {data.showPhoto && personalInfo.pictureUrl && (
+                        <Image
+                            src={personalInfo.pictureUrl}
+                            style={{
+                                width: 80,
+                                height: 80,
+                                borderRadius: 40,
+                                objectFit: "cover",
+                                borderWidth: 2,
+                                borderColor: accentColor
+                            }}
+                        />
                     )}
-                    <View style={styles.contactRow}>
-                        {personalInfo.email && (
-                            <Link src={`mailto:${personalInfo.email}`} style={styles.contactLink}>
-                                {personalInfo.email}
-                            </Link>
+                    <View style={{ flex: 1 }}>
+                        <Text style={styles.name}>{personalInfo.fullName}</Text>
+                        {generatedHeadline && (
+                            <Text style={styles.headline}>{generatedHeadline}</Text>
                         )}
-                        {personalInfo.location && (
-                            <>
-                                <Text style={styles.separator}>|</Text>
-                                <Text>{personalInfo.location}</Text>
-                            </>
-                        )}
-                        {personalInfo.phone && (
-                            <>
-                                <Text style={styles.separator}>|</Text>
-                                <Text>{personalInfo.phone}</Text>
-                            </>
-                        )}
-                        {personalInfo.linkedin && (
-                            <>
-                                <Text style={styles.separator}>|</Text>
-                                <Link
-                                    src={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`}
-                                    style={styles.contactLink}
-                                >
-                                    LinkedIn
+                        <View style={[styles.contactRow, data.showPhoto ? { justifyContent: "flex-start" } : {}]}>
+                            {personalInfo.email && (
+                                <Link src={`mailto:${personalInfo.email}`} style={styles.contactLink}>
+                                    {personalInfo.email}
                                 </Link>
-                            </>
-                        )}
-                        {personalInfo.github && (
-                            <>
-                                <Text style={styles.separator}>|</Text>
-                                <Link
-                                    src={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`}
-                                    style={styles.contactLink}
-                                >
-                                    GitHub
-                                </Link>
-                            </>
-                        )}
+                            )}
+                            {personalInfo.location && (
+                                <>
+                                    <Text style={styles.separator}>|</Text>
+                                    <Text>{personalInfo.location}</Text>
+                                </>
+                            )}
+                            {personalInfo.phone && (
+                                <>
+                                    <Text style={styles.separator}>|</Text>
+                                    <Text>{personalInfo.phone}</Text>
+                                </>
+                            )}
+                            {personalInfo.linkedin && (
+                                <>
+                                    <Text style={styles.separator}>|</Text>
+                                    <Link
+                                        src={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`}
+                                        style={styles.contactLink}
+                                    >
+                                        LinkedIn
+                                    </Link>
+                                </>
+                            )}
+                            {personalInfo.github && (
+                                <>
+                                    <Text style={styles.separator}>|</Text>
+                                    <Link
+                                        src={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`}
+                                        style={styles.contactLink}
+                                    >
+                                        GitHub
+                                    </Link>
+                                </>
+                            )}
+                        </View>
                     </View>
                 </View>
 

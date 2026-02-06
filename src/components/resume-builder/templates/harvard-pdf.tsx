@@ -12,6 +12,7 @@ import {
     Path,
     Circle,
     Font,
+    Image,
 } from "@react-pdf/renderer";
 import { ResumeData } from "@/types/resume";
 import { calculateStyleConfig } from "@/lib/resume-styles";
@@ -32,17 +33,14 @@ Font.register({
     ],
 });
 
-// Accent color matching your PDF
-const ACCENT_COLOR = "#2563eb";
-
 // Check icon SVG - Outlined to match CheckCircle2
-function CheckIcon({ size = 7 }: { size?: number }) {
+function CheckIcon({ size = 7, color = "#2563eb" }: { size?: number, color?: string }) {
     return (
         <Svg width={size} height={size} viewBox="0 0 24 24">
-            <Circle cx="12" cy="12" r="10" stroke={ACCENT_COLOR} strokeWidth="2" fill="none" />
+            <Circle cx="12" cy="12" r="10" stroke={color} strokeWidth="2" fill="none" />
             <Path
                 d="M9 12l2 2 4-4"
-                stroke={ACCENT_COLOR}
+                stroke={color}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -53,12 +51,12 @@ function CheckIcon({ size = 7 }: { size?: number }) {
 }
 
 // Phone icon SVG
-function PhoneIcon({ size = 8 }: { size?: number }) {
+function PhoneIcon({ size = 8, color = "#2563eb" }: { size?: number, color?: string }) {
     return (
         <Svg width={size} height={size} viewBox="0 0 24 24">
             <Path
                 d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
-                stroke={ACCENT_COLOR}
+                stroke={color}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -69,12 +67,12 @@ function PhoneIcon({ size = 8 }: { size?: number }) {
 }
 
 // Mail icon SVG
-function MailIcon({ size = 8 }: { size?: number }) {
+function MailIcon({ size = 8, color = "#2563eb" }: { size?: number, color?: string }) {
     return (
         <Svg width={size} height={size} viewBox="0 0 24 24">
             <Path
                 d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
-                stroke={ACCENT_COLOR}
+                stroke={color}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -82,7 +80,7 @@ function MailIcon({ size = 8 }: { size?: number }) {
             />
             <Path
                 d="M22 6l-10 7L2 6"
-                stroke={ACCENT_COLOR}
+                stroke={color}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -93,12 +91,12 @@ function MailIcon({ size = 8 }: { size?: number }) {
 }
 
 // LinkedIn icon SVG
-function LinkedInIcon({ size = 8 }: { size?: number }) {
+function LinkedInIcon({ size = 8, color = "#2563eb" }: { size?: number, color?: string }) {
     return (
         <Svg width={size} height={size} viewBox="0 0 24 24">
             <Path
                 d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
-                stroke={ACCENT_COLOR}
+                stroke={color}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -106,24 +104,24 @@ function LinkedInIcon({ size = 8 }: { size?: number }) {
             />
             <Path
                 d="M2 9h4v12H2z"
-                stroke={ACCENT_COLOR}
+                stroke={color}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 fill="none"
             />
-            <Circle cx="4" cy="4" r="2" stroke={ACCENT_COLOR} strokeWidth="2" fill="none" />
+            <Circle cx="4" cy="4" r="2" stroke={color} strokeWidth="2" fill="none" />
         </Svg>
     );
 }
 
 // GitHub icon SVG
-function GitHubIcon({ size = 8 }: { size?: number }) {
+function GitHubIcon({ size = 8, color = "#2563eb" }: { size?: number, color?: string }) {
     return (
         <Svg width={size} height={size} viewBox="0 0 24 24">
             <Path
                 d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
-                stroke={ACCENT_COLOR}
+                stroke={color}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -134,18 +132,18 @@ function GitHubIcon({ size = 8 }: { size?: number }) {
 }
 
 // MapPin icon SVG
-function MapPinIcon({ size = 8 }: { size?: number }) {
+function MapPinIcon({ size = 8, color = "#2563eb" }: { size?: number, color?: string }) {
     return (
         <Svg width={size} height={size} viewBox="0 0 24 24">
             <Path
                 d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
-                stroke={ACCENT_COLOR}
+                stroke={color}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 fill="none"
             />
-            <Circle cx="12" cy="10" r="3" stroke={ACCENT_COLOR} strokeWidth="2" fill="none" />
+            <Circle cx="12" cy="10" r="3" stroke={color} strokeWidth="2" fill="none" />
         </Svg>
     );
 }
@@ -180,6 +178,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
 
     // Calculate dynamic styles based on content density
     const styleConfig = calculateStyleConfig(data);
+    const accentColor = data.accentColor || "#2563eb";
 
     // Dynamic density scaling to fill page or save space
     // Shifted baseline: "very-dense" is now the standard (1.0) to avoid shrinking content that fits.
@@ -226,7 +225,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         name: {
             fontSize: styleConfig.nameFontSize, // Keep name prominent
             fontWeight: 700, // bold
-            color: ACCENT_COLOR,
+            color: accentColor,
             letterSpacing: 0.5,
         },
         headline: {
@@ -236,7 +235,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         },
         headerDivider: {
             height: 3,
-            backgroundColor: ACCENT_COLOR,
+            backgroundColor: accentColor,
             marginTop: 6 * spacingFactor,
             marginBottom: 6 * spacingFactor,
         },
@@ -253,7 +252,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             gap: 3,
         },
         contactLink: {
-            color: ACCENT_COLOR,
+            color: accentColor,
         },
         columnsContainer: {
             flexDirection: "row",
@@ -286,13 +285,13 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         sectionTitle: {
             fontSize: styleConfig.sectionTitleSize * densityFactor,
             fontWeight: 700, // bold
-            color: ACCENT_COLOR,
+            color: accentColor,
             textTransform: "uppercase",
             letterSpacing: 0.8,
         },
         sectionLine: {
             height: 2,
-            backgroundColor: ACCENT_COLOR,
+            backgroundColor: accentColor,
             marginTop: 2 * spacingFactor,
         },
         summary: {
@@ -322,12 +321,12 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         entryCompany: {
             fontSize: styleConfig.entryTitleSize * densityFactor,
             fontWeight: 600, // semibold was used in preview often
-            color: ACCENT_COLOR,
+            color: accentColor,
         },
         entryCompanyLink: {
             fontSize: styleConfig.entryTitleSize * densityFactor,
             fontWeight: 600, // semibold
-            color: ACCENT_COLOR,
+            color: accentColor,
             textDecoration: "underline",
         },
         entrySeparator: {
@@ -388,8 +387,8 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             marginBottom: 6 * spacingFactor,
         },
         skillTag: {
-            backgroundColor: `${ACCENT_COLOR}15`,
-            color: ACCENT_COLOR,
+            backgroundColor: `${accentColor}15`,
+            color: accentColor,
             fontSize: styleConfig.detailFontSize * densityFactor * 0.8, // Small but scales
             paddingVertical: 2, // Adjusted to 2
             paddingHorizontal: 6, // Adjusted to 6
@@ -399,7 +398,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         projectTitle: {
             fontSize: styleConfig.entryTitleSize * densityFactor,
             fontWeight: 700, // bold
-            color: ACCENT_COLOR,
+            color: accentColor,
         },
         projectTech: {
             fontSize: styleConfig.detailFontSize * densityFactor * 0.9,
@@ -419,7 +418,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         },
         certName: {
             fontWeight: 600, // semibold
-            color: ACCENT_COLOR,
+            color: accentColor,
         },
         certIssuer: {
             color: "#6b7280",
@@ -461,23 +460,42 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             <Page size="A4" style={styles.page}>
                 {/* Header */}
                 <View style={styles.header}>
-                    <Text style={styles.name}>{personalInfo.fullName}</Text>
-                    {generatedHeadline && (
-                        <Text style={styles.headline}>{generatedHeadline}</Text>
-                    )}
+                    <View style={{ flexDirection: data.showPhoto ? "row" : "column", justifyContent: "space-between", alignItems: "flex-start" }}>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.name}>{personalInfo.fullName}</Text>
+                            {generatedHeadline && (
+                                <Text style={styles.headline}>{generatedHeadline}</Text>
+                            )}
+                        </View>
+                        {data.showPhoto && personalInfo.pictureUrl && (
+                            <Image
+                                src={personalInfo.pictureUrl}
+                                style={{
+                                    width: 60,
+                                    height: 60,
+                                    borderRadius: 30, // Circle
+                                    objectFit: "cover",
+                                    marginLeft: 10,
+                                    borderWidth: 2,
+                                    borderColor: accentColor,
+                                }}
+                            />
+                        )}
+                    </View>
+
                     <View style={styles.headerDivider} />
 
                     {/* Contact Row */}
                     <View style={styles.contactRow}>
                         {personalInfo.phone && (
                             <View style={styles.contactItem}>
-                                <PhoneIcon size={styleConfig.detailFontSize * 0.75} />
+                                <PhoneIcon size={styleConfig.detailFontSize * 0.75} color={accentColor} />
                                 <Text>{personalInfo.phone}</Text>
                             </View>
                         )}
                         {personalInfo.email && (
                             <View style={styles.contactItem}>
-                                <MailIcon size={styleConfig.detailFontSize * 0.75} />
+                                <MailIcon size={styleConfig.detailFontSize * 0.75} color={accentColor} />
                                 <Link src={`mailto:${personalInfo.email}`} style={styles.contactLink}>
                                     {personalInfo.email}
                                 </Link>
@@ -485,7 +503,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                         )}
                         {personalInfo.linkedin && (
                             <View style={styles.contactItem}>
-                                <LinkedInIcon size={styleConfig.detailFontSize * 0.75} />
+                                <LinkedInIcon size={styleConfig.detailFontSize * 0.75} color={accentColor} />
                                 <Link
                                     src={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`}
                                     style={styles.contactLink}
@@ -496,7 +514,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                         )}
                         {personalInfo.github && (
                             <View style={styles.contactItem}>
-                                <GitHubIcon size={styleConfig.detailFontSize * 0.75} />
+                                <GitHubIcon size={styleConfig.detailFontSize * 0.75} color={accentColor} />
                                 <Link
                                     src={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`}
                                     style={styles.contactLink}
@@ -507,7 +525,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                         )}
                         {personalInfo.location && (
                             <View style={styles.contactItem}>
-                                <MapPinIcon size={styleConfig.detailFontSize * 0.75} />
+                                <MapPinIcon size={styleConfig.detailFontSize * 0.75} color={accentColor} />
                                 <Text>{personalInfo.location}</Text>
                             </View>
                         )}
@@ -563,7 +581,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                                 {exp.bullets.filter(b => b.trim()).map((bullet, i) => (
                                                     <View key={i} style={styles.bulletItem}>
                                                         <View style={styles.bulletIcon}>
-                                                            <CheckIcon size={styleConfig.detailFontSize} />
+                                                            <CheckIcon size={styleConfig.detailFontSize} color={accentColor} />
                                                         </View>
                                                         <Text style={styles.bulletText}>{bullet}</Text>
                                                     </View>

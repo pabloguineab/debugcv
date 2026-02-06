@@ -51,7 +51,10 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
         },
     }), [styleConfig, scale]);
 
-    // Helper to format date ranges (avoids "- 2023" when startDate is empty)
+    // Accent color
+    const accentColor = data.accentColor || "#1a1a1a";
+
+    // Helper to format date ranges
     const formatDateRange = (startDate?: string, endDate?: string, current?: boolean) => {
         const end = current ? "Present" : (endDate || "");
         const start = startDate || "";
@@ -135,73 +138,95 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                     }}
                 >
                     {/* Header */}
-                    <div className="text-center" style={styles.sectionMargin}>
-                        <h1 className="font-normal tracking-wide mb-2" style={styles.name}>
-                            <EditableText
-                                value={personalInfo.fullName}
-                                onChange={(v) => updatePersonalInfo("fullName", v)}
-                                placeholder="Your Name"
-                                displayComponent={<Typewriter text={personalInfo.fullName || "Your Name"} />}
-                            />
-                        </h1>
+                    <div style={styles.sectionMargin}>
+                        <div className={`flex ${data.showPhoto ? "justify-between items-start text-left" : "justify-center text-center"}`}>
+                            <div className="flex-1">
+                                <h1 className="font-normal tracking-wide mb-2" style={{ ...styles.name, color: accentColor }}>
+                                    <EditableText
+                                        value={personalInfo.fullName}
+                                        onChange={(v) => updatePersonalInfo("fullName", v)}
+                                        placeholder="Your Name"
+                                        displayComponent={<Typewriter text={personalInfo.fullName || "Your Name"} />}
+                                    />
+                                </h1>
 
-                        <div className="w-full h-px bg-gray-300 mx-auto mb-3" />
+                                <div className="w-full h-px mb-3" style={{ backgroundColor: accentColor, opacity: 0.3 }} />
 
-                        <p className="text-gray-600 flex justify-center items-center flex-wrap gap-1" style={styles.detail}>
-                            <EditableText
-                                value={personalInfo.location}
-                                onChange={(v) => updatePersonalInfo("location", v)}
-                                placeholder="City, State"
-                                displayComponent={<Typewriter text={personalInfo.location || "City, State"} />}
-                            />
-                            {personalInfo.email && <span> • </span>}
-                            <span className="text-blue-600">
-                                <EditableText
-                                    value={personalInfo.email}
-                                    onChange={(v) => updatePersonalInfo("email", v)}
-                                    placeholder="email@example.com"
-                                    displayComponent={<Typewriter text={personalInfo.email || ""} />}
-                                />
-                            </span>
-                            {personalInfo.phone && <span> • </span>}
-                            <EditableText
-                                value={personalInfo.phone}
-                                onChange={(v) => updatePersonalInfo("phone", v)}
-                                placeholder="+1 234 567 890"
-                                displayComponent={<Typewriter text={personalInfo.phone || ""} />}
-                            />
-                            {personalInfo.linkedin && (
-                                <>
-                                    <span> • </span>
-                                    <a
-                                        href={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-blue-600 hover:underline"
-                                    >
-                                        <Typewriter text="LinkedIn" />
-                                    </a>
-                                </>
+                                <p className={`text-gray-600 flex flex-wrap gap-1 leading-relaxed ${data.showPhoto ? "" : "justify-center items-center"}`} style={styles.detail}>
+                                    <EditableText
+                                        value={personalInfo.location}
+                                        onChange={(v) => updatePersonalInfo("location", v)}
+                                        placeholder="City, State"
+                                        displayComponent={<Typewriter text={personalInfo.location || "City, State"} />}
+                                    />
+                                    {personalInfo.email && <span> • </span>}
+                                    <span style={{ color: accentColor }}>
+                                        <EditableText
+                                            value={personalInfo.email}
+                                            onChange={(v) => updatePersonalInfo("email", v)}
+                                            placeholder="email@example.com"
+                                            displayComponent={<Typewriter text={personalInfo.email || ""} />}
+                                        />
+                                    </span>
+                                    {personalInfo.phone && <span> • </span>}
+                                    <EditableText
+                                        value={personalInfo.phone}
+                                        onChange={(v) => updatePersonalInfo("phone", v)}
+                                        placeholder="+1 234 567 890"
+                                        displayComponent={<Typewriter text={personalInfo.phone || ""} />}
+                                    />
+                                    {personalInfo.linkedin && (
+                                        <>
+                                            <span> • </span>
+                                            <a
+                                                href={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="hover:underline"
+                                                style={{ color: accentColor }}
+                                            >
+                                                <Typewriter text="LinkedIn" />
+                                            </a>
+                                        </>
+                                    )}
+                                    {personalInfo.github && (
+                                        <>
+                                            <span> • </span>
+                                            <a
+                                                href={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="hover:underline"
+                                                style={{ color: accentColor }}
+                                            >
+                                                <Typewriter text="GitHub" />
+                                            </a>
+                                        </>
+                                    )}
+                                </p>
+                            </div>
+
+                            {/* Photo */}
+                            {data.showPhoto && (
+                                <div className="shrink-0 ml-6">
+                                    <img
+                                        src={personalInfo.pictureUrl || "https://avatar.vercel.sh/leerob"}
+                                        alt="Profile"
+                                        className="rounded-full object-cover border-2"
+                                        style={{
+                                            width: `${90 * scale}px`,
+                                            height: `${90 * scale}px`,
+                                            borderColor: accentColor
+                                        }}
+                                    />
+                                </div>
                             )}
-                            {personalInfo.github && (
-                                <>
-                                    <span> • </span>
-                                    <a
-                                        href={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-blue-600 hover:underline"
-                                    >
-                                        <Typewriter text="GitHub" />
-                                    </a>
-                                </>
-                            )}
-                        </p>
+                        </div>
                     </div>
 
                     {/* Professional Summary */}
                     <div style={styles.sectionMargin}>
-                        <h2 className="font-bold text-center uppercase tracking-wide" style={styles.sectionTitle}>
+                        <h2 className="font-bold text-center uppercase tracking-wide" style={{ ...styles.sectionTitle, color: accentColor }}>
                             <Typewriter text="Professional summary" speed={5} />
                         </h2>
                         <div className="leading-relaxed text-gray-700 min-h-[3em]" style={styles.detail}>
@@ -223,7 +248,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                     {/* Education */}
                     {education.length > 0 && (
                         <div style={styles.sectionMargin}>
-                            <h2 className="font-bold text-center uppercase tracking-wide" style={styles.sectionTitle}>
+                            <h2 className="font-bold text-center uppercase tracking-wide" style={{ ...styles.sectionTitle, color: accentColor }}>
                                 <Typewriter text="Education" speed={5} />
                             </h2>
                             <div>
@@ -289,7 +314,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                     {/* Experience */}
                     {experience.length > 0 && (
                         <div style={styles.sectionMargin}>
-                            <h2 className="font-bold text-center uppercase tracking-wide" style={styles.sectionTitle}>
+                            <h2 className="font-bold text-center uppercase tracking-wide" style={{ ...styles.sectionTitle, color: accentColor }}>
                                 <Typewriter text="Experience" speed={5} />
                             </h2>
                             <div>
@@ -297,7 +322,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                     <div key={exp.id} style={styles.entryMargin}>
                                         <div className="flex justify-between items-start mb-1 gap-4">
                                             <div className="flex-1 min-w-0">
-                                                <div className={`font-bold uppercase tracking-wide ${exp.companyUrl ? 'text-blue-600' : ''}`} style={styles.entryTitle}>
+                                                <div className="font-bold uppercase tracking-wide" style={{ ...styles.entryTitle, color: exp.companyUrl ? accentColor : undefined }}>
                                                     {exp.companyUrl ? (
                                                         <a
                                                             href={exp.companyUrl.startsWith("http") ? exp.companyUrl : `https://${exp.companyUrl}`}
@@ -382,7 +407,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                     {/* Projects */}
                     {projects.length > 0 && (
                         <div style={styles.sectionMargin}>
-                            <h2 className="font-bold text-center uppercase tracking-wide" style={styles.sectionTitle}>
+                            <h2 className="font-bold text-center uppercase tracking-wide" style={{ ...styles.sectionTitle, color: accentColor }}>
                                 <Typewriter text="Projects" speed={5} />
                             </h2>
                             <div>
@@ -398,7 +423,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                                                 />
                                             </div>
                                             {project.url && (
-                                                <span className="text-[10px] text-blue-600">
+                                                <span className="text-[10px]" style={{ color: accentColor }}>
                                                     <EditableText
                                                         value={project.url}
                                                         onChange={(v) => updateProject(index, { url: v })}
@@ -432,7 +457,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                     {/* Certifications */}
                     {certifications.length > 0 && (
                         <div style={styles.sectionMargin}>
-                            <h2 className="font-bold text-center uppercase tracking-wide" style={styles.sectionTitle}>
+                            <h2 className="font-bold text-center uppercase tracking-wide" style={{ ...styles.sectionTitle, color: accentColor }}>
                                 <Typewriter text="Certifications" speed={5} />
                             </h2>
                             <div>
@@ -477,7 +502,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                     {/* Skills */}
                     {skills.length > 0 && (
                         <div style={styles.sectionMargin}>
-                            <h2 className="font-bold text-center uppercase tracking-wide" style={styles.sectionTitle}>
+                            <h2 className="font-bold text-center uppercase tracking-wide" style={{ ...styles.sectionTitle, color: accentColor }}>
                                 <Typewriter text="Skills" speed={5} />
                             </h2>
                             <div className="text-gray-700 text-center" style={styles.detail}>
@@ -495,7 +520,7 @@ export function ResumePreview({ data, onFieldClick, onUpdate, animate = false }:
                     {/* Languages */}
                     {languages && languages.length > 0 && (
                         <div style={styles.sectionMargin}>
-                            <h2 className="font-bold text-center uppercase tracking-wide" style={styles.sectionTitle}>
+                            <h2 className="font-bold text-center uppercase tracking-wide" style={{ ...styles.sectionTitle, color: accentColor }}>
                                 <Typewriter text="Languages" speed={5} />
                             </h2>
                             <div className="text-gray-700 text-center" style={styles.detail}>

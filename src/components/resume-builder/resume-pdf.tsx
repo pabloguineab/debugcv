@@ -1,6 +1,6 @@
 "use client";
 
-import { Document, Page, Text, View, StyleSheet, Font, pdf, Link } from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet, Font, pdf, Link, Image } from "@react-pdf/renderer";
 import { ResumeData } from "@/types/resume";
 import { calculateStyleConfig, StyleConfig } from "@/lib/resume-styles";
 
@@ -13,7 +13,7 @@ Font.register({
 });
 
 // Create dynamic styles based on config and density/spacing factors
-function createDynamicStyles(config: StyleConfig, densityFactor: number, spacingFactor: number) {
+function createDynamicStyles(config: StyleConfig, densityFactor: number, spacingFactor: number, accentColor: string) {
     return StyleSheet.create({
         page: {
             padding: config.pagePadding,
@@ -31,11 +31,12 @@ function createDynamicStyles(config: StyleConfig, densityFactor: number, spacing
             fontSize: config.nameFontSize,
             fontWeight: "bold",
             marginBottom: 3 * spacingFactor,
-            color: "#1a1a1a",
+            color: accentColor,
         },
         divider: {
             height: 1,
-            backgroundColor: "#ccc",
+            backgroundColor: accentColor,
+            opacity: 0.3,
             marginVertical: config.sectionMarginBottom * spacingFactor,
         },
         contactRow: {
@@ -50,7 +51,7 @@ function createDynamicStyles(config: StyleConfig, densityFactor: number, spacing
             marginHorizontal: 3,
         },
         link: {
-            color: "#2563eb",
+            color: accentColor,
         },
         sectionTitle: {
             fontSize: config.sectionTitleSize * densityFactor,
@@ -60,6 +61,7 @@ function createDynamicStyles(config: StyleConfig, densityFactor: number, spacing
             marginTop: config.sectionMarginTop * spacingFactor,
             textTransform: "uppercase",
             letterSpacing: 1,
+            color: accentColor,
         },
         summary: {
             fontSize: config.detailFontSize * densityFactor,
@@ -85,7 +87,7 @@ function createDynamicStyles(config: StyleConfig, densityFactor: number, spacing
             fontSize: config.entryTitleSize * densityFactor,
             fontWeight: "bold",
             textTransform: "uppercase",
-            color: "#2563eb",
+            color: accentColor,
             textDecoration: "none",
         },
         entrySubtitle: {
@@ -205,8 +207,9 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
         'very-light': 1.7
     };
     const spacingFactor = spacingFactors[styleConfig.tier] || 1.0;
+    const accentColor = data.accentColor || "#1a1a1a";
 
-    const styles = createDynamicStyles(styleConfig, densityFactor, spacingFactor);
+    const styles = createDynamicStyles(styleConfig, densityFactor, spacingFactor, accentColor);
 
     // Use all available data (no artificial limits - styles adapt instead)
     const { personalInfo, summary, skills, experience, education, projects, certifications, languages } = data;
@@ -225,30 +228,49 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
             <Page size="A4" style={styles.page}>
                 {/* Header */}
                 <View style={styles.header}>
-                    <Text style={styles.name}>{personalInfo.fullName}</Text>
-                    <View style={styles.divider} />
-                    <View style={styles.contactRow}>
-                        {personalInfo.location && <Text>{personalInfo.location}</Text>}
-                        {personalInfo.location && personalInfo.email && <Text style={styles.separator}>•</Text>}
-                        {personalInfo.email && (
-                            <Link src={`mailto:${personalInfo.email}`} style={styles.link}>
-                                {personalInfo.email}
-                            </Link>
-                        )}
-                        {personalInfo.email && personalInfo.phone && <Text style={styles.separator}>•</Text>}
-                        {personalInfo.phone && <Text>{personalInfo.phone}</Text>}
-                        {personalInfo.phone && personalInfo.linkedin && <Text style={styles.separator}>•</Text>}
-                        {personalInfo.linkedin && (
-                            <Link src={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`} style={styles.link}>
-                                LinkedIn
-                            </Link>
-                        )}
-                        {personalInfo.linkedin && personalInfo.github && <Text style={styles.separator}>•</Text>}
-                        {!personalInfo.linkedin && personalInfo.phone && personalInfo.github && <Text style={styles.separator}>•</Text>}
-                        {personalInfo.github && (
-                            <Link src={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`} style={styles.link}>
-                                GitHub
-                            </Link>
+                    <View style={{ flexDirection: data.showPhoto ? "row" : "column", alignItems: data.showPhoto ? "flex-start" : "center", textAlign: data.showPhoto ? "left" : "center" }}>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.name}>{personalInfo.fullName}</Text>
+                            <View style={styles.divider} />
+                            <View style={[styles.contactRow, data.showPhoto ? { justifyContent: "flex-start" } : {}]}>
+                                {personalInfo.location && <Text>{personalInfo.location}</Text>}
+                                {personalInfo.location && personalInfo.email && <Text style={styles.separator}>•</Text>}
+                                {personalInfo.email && (
+                                    <Link src={`mailto:${personalInfo.email}`} style={styles.link}>
+                                        {personalInfo.email}
+                                    </Link>
+                                )}
+                                {personalInfo.email && personalInfo.phone && <Text style={styles.separator}>•</Text>}
+                                {personalInfo.phone && <Text>{personalInfo.phone}</Text>}
+                                {personalInfo.phone && personalInfo.linkedin && <Text style={styles.separator}>•</Text>}
+                                {personalInfo.linkedin && (
+                                    <Link src={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`} style={styles.link}>
+                                        LinkedIn
+                                    </Link>
+                                )}
+                                {personalInfo.linkedin && personalInfo.github && <Text style={styles.separator}>•</Text>}
+                                {!personalInfo.linkedin && personalInfo.phone && personalInfo.github && <Text style={styles.separator}>•</Text>}
+                                {personalInfo.github && (
+                                    <Link src={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`} style={styles.link}>
+                                        GitHub
+                                    </Link>
+                                )}
+                            </View>
+                        </View>
+                        {data.showPhoto && personalInfo.pictureUrl && (
+                            <Image
+                                src={personalInfo.pictureUrl}
+                                style={{
+                                    width: 80,
+                                    height: 80,
+                                    borderRadius: 40,
+                                    marginLeft: 20,
+                                    marginBottom: 10,
+                                    borderWidth: 2,
+                                    borderColor: accentColor,
+                                    objectFit: "cover"
+                                }}
+                            />
                         )}
                     </View>
                 </View>
