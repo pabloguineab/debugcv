@@ -183,23 +183,23 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
 
     // Dynamic density scaling to fill page or save space
     // Shifted baseline: "very-dense" is now the standard (1.0) to avoid shrinking content that fits.
-    // Retuned to fill page without overflowing (0.98/0.98 sweet spot for dense content)
+    // Retuned to fill page without overflowing (Aggressive filling)
     const densityFactors = {
-        'very-dense': 0.98, // Increased from 0.94 to fill gap
-        'dense': 1.0,       // Standard size
-        'medium': 1.04,     // Slight boost
-        'light': 1.1,       // Expand
-        'very-light': 1.22  // Max expansion
+        'very-dense': 1.0,  // Baseline
+        'dense': 1.05,      // Boost
+        'medium': 1.1,      // Significant Boost
+        'light': 1.2,       // Large Expansion
+        'very-light': 1.35  // Maximum Expansion
     };
     const densityFactor = densityFactors[styleConfig.tier] || 1.0;
 
     // Vertical spacing scaling to fill vertical whitespace
     const spacingFactors = {
-        'very-dense': 0.98, // Increased from 0.92 to fill gap
-        'dense': 1.05,      // Slight breathing room
-        'medium': 1.15,     // Breathing room
-        'light': 1.35,      // Open
-        'very-light': 1.55  // Max spread
+        'very-dense': 1.15, // Ensure no whitespace at bottom even for dense CVs
+        'dense': 1.25,      // More breathing room
+        'medium': 1.4,      // Airy
+        'light': 1.6,       // Very open
+        'very-light': 1.8   // Maximum spread
     };
     const spacingFactor = spacingFactors[styleConfig.tier] || 1.0;
 
@@ -338,6 +338,9 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         entryMeta: {
             fontSize: styleConfig.detailFontSize * densityFactor * 0.9,
             color: "#6b7280",
+            flexShrink: 0,
+            marginLeft: 8,
+            textAlign: "right",
         },
         bulletList: {
             marginTop: 4,
@@ -375,6 +378,8 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         eduDate: {
             fontSize: styleConfig.detailFontSize * densityFactor * 0.9,
             color: "#6b7280",
+            flexShrink: 0,
+            textAlign: "right",
         },
         skillTagsContainer: {
             flexDirection: "row",
