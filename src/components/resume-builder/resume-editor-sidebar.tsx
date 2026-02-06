@@ -253,30 +253,31 @@ export function ResumeEditorSidebar({
                             </div>
 
                             {/* Profile Picture Control */}
-                            <div className="border rounded-lg p-3 bg-muted/20 space-y-3">
-                                <div className="flex items-center justify-between">
+                            {/* Profile Picture Control */}
+                            <div className="flex items-start justify-between border rounded-lg p-3 bg-muted/20">
+                                <div className="space-y-3">
                                     <div className="flex items-center gap-2">
                                         <ImageIcon className="w-4 h-4 text-gray-500" />
                                         <span className="text-sm font-medium">Profile Picture</span>
                                     </div>
-                                    <Button
-                                        variant={data.showPhoto ? "default" : "outline"}
-                                        size="sm"
-                                        onClick={() => onUpdate({ showPhoto: !data.showPhoto })}
-                                        className={cn("h-7 text-xs", data.showPhoto ? "bg-green-600 hover:bg-green-700" : "")}
-                                    >
-                                        {data.showPhoto ? "On" : "Off"}
-                                    </Button>
-                                </div>
 
-                                {data.showPhoto && (
-                                    <div className="flex justify-center py-2">
+                                    {data.showPhoto && (
                                         <ProfilePictureUpload
                                             value={data.personalInfo.pictureUrl}
                                             onChange={(url) => updatePersonalInfo("pictureUrl", url)}
+                                            size={64}
+                                            className="ml-1"
                                         />
-                                    </div>
-                                )}
+                                    )}
+                                </div>
+                                <Button
+                                    variant={data.showPhoto ? "default" : "outline"}
+                                    size="sm"
+                                    onClick={() => onUpdate({ showPhoto: !data.showPhoto })}
+                                    className={cn("h-7 text-xs", data.showPhoto ? "bg-green-600 hover:bg-green-700" : "")}
+                                >
+                                    {data.showPhoto ? "On" : "Off"}
+                                </Button>
                             </div>
                         </div>
                     )}

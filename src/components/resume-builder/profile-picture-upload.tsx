@@ -75,8 +75,8 @@ export function ProfilePictureUpload({
                     />
                 ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center bg-muted text-muted-foreground hover:bg-muted/80 transition-colors">
-                        <Camera className="w-8 h-8 mb-1 opacity-50" />
-                        <span className="text-[9px] font-bold uppercase tracking-wider opacity-70">Upload</span>
+                        <Camera className={cn("mb-1 opacity-50", size < 70 ? "w-5 h-5" : "w-8 h-8")} />
+                        {size >= 70 && <span className="text-[9px] font-bold uppercase tracking-wider opacity-70">Upload</span>}
                     </div>
                 )}
 
@@ -91,20 +91,26 @@ export function ProfilePictureUpload({
                             e.stopPropagation();
                             triggerUpload();
                         }}
-                        className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-transform hover:scale-110"
+                        className={cn(
+                            "rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-transform hover:scale-110",
+                            size < 70 ? "w-6 h-6" : "w-8 h-8"
+                        )}
                         title="Upload new photo"
                     >
-                        <CloudUpload className="w-4 h-4" />
+                        <CloudUpload className={cn(size < 70 ? "w-3 h-3" : "w-4 h-4")} />
                     </button>
 
                     {/* Import from Profile Button (only if different) */}
                     {userProfileImage && userProfileImage !== value && (
                         <button
                             onClick={importFromProfile}
-                            className="w-8 h-8 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center transition-transform hover:scale-110"
+                            className={cn(
+                                "rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center transition-transform hover:scale-110",
+                                size < 70 ? "w-6 h-6" : "w-8 h-8"
+                            )}
                             title="Import from User Profile"
                         >
-                            <RefreshCw className="w-4 h-4" />
+                            <RefreshCw className={cn(size < 70 ? "w-3 h-3" : "w-4 h-4")} />
                         </button>
                     )}
                 </div>
