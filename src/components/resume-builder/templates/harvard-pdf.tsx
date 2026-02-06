@@ -566,9 +566,9 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                         ]}
                                     >
                                         <View style={{ flexDirection: "row", gap: 10 }}>
-                                            {data.showCompanyLogos && (
+                                            {data.showCompanyLogos && exp.logoUrl && (
                                                 <Image
-                                                    src={exp.logoUrl || getProxiedUrl(getCompanyLogoUrl(exp.company, exp.companyUrl))}
+                                                    src={exp.logoUrl}
                                                     style={{ width: 30, height: 30, objectFit: "contain", marginTop: 2, borderRadius: 4 }}
                                                 />
                                             )}
@@ -627,9 +627,9 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                             { flexDirection: "row", gap: 10 }
                                         ]}
                                     >
-                                        {data.showInstitutionLogos && (
+                                        {data.showInstitutionLogos && edu.logoUrl && (
                                             <Image
-                                                src={edu.logoUrl || getProxiedUrl(getInstitutionLogoUrl(edu.institution, edu.website))}
+                                                src={edu.logoUrl}
                                                 style={{ width: 30, height: 30, objectFit: "contain", marginTop: 2, borderRadius: 4 }}
                                             />
                                         )}

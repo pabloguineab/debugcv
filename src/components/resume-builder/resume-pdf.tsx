@@ -409,7 +409,62 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
 }
 
 // Function to generate and download PDF based on template
-export async function downloadResumePDF(data: ResumeData): Promise<void> {
+export async function downloadResumePDF(originalData: ResumeData): Promise<void> {
+    const { getCompanyLogoUrl, getInstitutionLogoUrl } = await import("@/lib/logo-utils");
+
+    // Helper to convert URL to Base64
+    const urlToBase64 = async (url: string): Promise<string> => {
+        try {
+            // Using our proxy to avoid CORS issues during the fetch
+            const origin = window.location.origin;
+            const proxyUrl = `${origin}/api/image-proxy?url=${encodeURIComponent(url)}`;
+            const response = await fetch(proxyUrl);
+            const blob = await response.blob();
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result as string);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        } catch (error) {
+            console.warn("Failed to convert image to base64:", url, error);
+            return "";
+        }
+    };
+
+    // Deep copy data to avoid mutating state
+    const data = JSON.parse(JSON.stringify(originalData));
+
+    // Pre-fetch images to base64 to ensure they render in PDF
+    // Experience Company Logos
+    if (data.showCompanyLogos) {
+        await Promise.all(data.experience.map(async (exp: any) => {
+            if (!exp.logoUrl) {
+                const url = getCompanyLogoUrl(exp.company, exp.companyUrl);
+                if (url) {
+                    exp.logoUrl = await urlToBase64(url);
+                }
+            } else if (exp.logoUrl.startsWith('http')) {
+                // Even manually added URLs might need proxying if not base64
+                exp.logoUrl = await urlToBase64(exp.logoUrl);
+            }
+        }));
+    }
+
+    // Education Institution Logos
+    if (data.showInstitutionLogos) {
+        await Promise.all(data.education.map(async (edu: any) => {
+            if (!edu.logoUrl) {
+                const url = getInstitutionLogoUrl(edu.institution, edu.website);
+                if (url) {
+                    edu.logoUrl = await urlToBase64(url);
+                }
+            } else if (edu.logoUrl.startsWith('http')) {
+                edu.logoUrl = await urlToBase64(edu.logoUrl);
+            }
+        }));
+    }
+
     let pdfBlob: Blob;
     let fileNameSuffix = "Simple";
 
