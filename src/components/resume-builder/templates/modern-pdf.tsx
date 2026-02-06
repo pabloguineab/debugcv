@@ -18,41 +18,41 @@ import { formatSkillName } from "@/lib/skill-formatter";
 const ACCENT_COLOR = "#1e40af";
 
 // Create dynamic styles based on content density
-function createDynamicStyles(config: StyleConfig) {
+function createDynamicStyles(config: StyleConfig, densityFactor: number, spacingFactor: number) {
     return StyleSheet.create({
         page: {
             padding: config.pagePadding,
             paddingTop: config.pagePaddingTop,
-            paddingBottom: config.pagePaddingBottom,
+            paddingBottom: 12, // minimal safe padding
             fontFamily: "Helvetica",
-            fontSize: config.baseFontSize,
+            fontSize: config.baseFontSize * densityFactor,
             color: "#333",
         },
         // Header
         header: {
             textAlign: "center",
-            paddingBottom: 10,
-            marginBottom: 10,
+            paddingBottom: 10 * spacingFactor,
+            marginBottom: 10 * spacingFactor,
         },
         name: {
             fontSize: config.nameFontSize,
             fontWeight: "bold",
             color: ACCENT_COLOR,
-            marginBottom: 2,
+            marginBottom: 2 * spacingFactor,
         },
         headline: {
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             color: "#666",
             textTransform: "uppercase",
             letterSpacing: 1,
-            marginBottom: 4,
+            marginBottom: 4 * spacingFactor,
         },
         contactRow: {
             flexDirection: "row",
             justifyContent: "center",
             flexWrap: "wrap",
             gap: 6,
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             color: "#666",
         },
         contactLink: {
@@ -66,8 +66,8 @@ function createDynamicStyles(config: StyleConfig) {
         sectionHeader: {
             flexDirection: "row",
             alignItems: "center",
-            marginTop: config.sectionMarginTop,
-            marginBottom: config.sectionMarginBottom * 0.6,
+            marginTop: config.sectionMarginTop * spacingFactor,
+            marginBottom: config.sectionMarginBottom * 0.6 * spacingFactor,
         },
         sectionLine: {
             flex: 1,
@@ -75,7 +75,7 @@ function createDynamicStyles(config: StyleConfig) {
             backgroundColor: ACCENT_COLOR,
         },
         sectionTitle: {
-            fontSize: config.sectionTitleSize * 0.85,
+            fontSize: config.sectionTitleSize * 0.85 * densityFactor,
             fontWeight: "bold",
             color: ACCENT_COLOR,
             textTransform: "uppercase",
@@ -84,13 +84,13 @@ function createDynamicStyles(config: StyleConfig) {
         },
         // Content
         summary: {
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             lineHeight: config.lineHeight,
             color: "#444",
         },
         // Entries
         entryContainer: {
-            marginBottom: config.entryMarginBottom,
+            marginBottom: config.entryMarginBottom * spacingFactor,
         },
         entryHeader: {
             flexDirection: "row",
@@ -101,7 +101,7 @@ function createDynamicStyles(config: StyleConfig) {
             flex: 1,
         },
         entryTitle: {
-            fontSize: config.entryTitleSize,
+            fontSize: config.entryTitleSize * densityFactor,
             fontWeight: "bold",
             color: "#1a1a1a",
         },
@@ -111,17 +111,17 @@ function createDynamicStyles(config: StyleConfig) {
             alignItems: "center",
         },
         entryTitleNormal: {
-            fontSize: config.entryTitleSize,
+            fontSize: config.entryTitleSize * densityFactor,
             fontWeight: "bold",
             color: "#1a1a1a",
         },
         entryTitleAccent: {
-            fontSize: config.entryTitleSize,
+            fontSize: config.entryTitleSize * densityFactor,
             fontWeight: "bold",
             color: ACCENT_COLOR,
         },
         entryTitleLink: {
-            fontSize: config.entryTitleSize,
+            fontSize: config.entryTitleSize * densityFactor,
             fontWeight: "bold",
             color: ACCENT_COLOR,
             textDecoration: "underline",
@@ -131,13 +131,13 @@ function createDynamicStyles(config: StyleConfig) {
             marginHorizontal: 4,
         },
         entrySubtitle: {
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             color: "#555",
             fontStyle: "italic",
         },
         entryRight: {
             textAlign: "right",
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             color: "#666",
         },
         // Bullets
@@ -147,7 +147,7 @@ function createDynamicStyles(config: StyleConfig) {
         },
         bulletItem: {
             flexDirection: "row",
-            marginBottom: config.bulletMarginBottom,
+            marginBottom: config.bulletMarginBottom * spacingFactor,
         },
         bullet: {
             marginRight: 6,
@@ -155,38 +155,38 @@ function createDynamicStyles(config: StyleConfig) {
         },
         bulletText: {
             flex: 1,
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             lineHeight: config.lineHeight,
             color: "#444",
         },
         // Skills
         skillRow: {
-            marginBottom: 2,
+            marginBottom: 2 * spacingFactor,
             flexDirection: "row",
             flexWrap: "wrap",
         },
         skillCategory: {
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             fontWeight: "bold",
             color: "#1a1a1a",
         },
         skillItems: {
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             color: "#444",
         },
         // Additional info
         additionalRow: {
-            marginBottom: 3,
+            marginBottom: 3 * spacingFactor,
             flexDirection: "row",
             flexWrap: "wrap",
         },
         additionalLabel: {
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             fontWeight: "bold",
             color: "#1a1a1a",
         },
         additionalText: {
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             color: "#444",
         },
     });
@@ -259,7 +259,27 @@ export function ModernPDFDocument({ data }: { data: ResumeData }) {
     const { personalInfo, summary, skills, experience, education, projects, certifications, languages } = data;
 
     const styleConfig = calculateStyleConfig(data);
-    const styles = createDynamicStyles(styleConfig);
+
+    // Dynamic density scaling from Harvard template approach
+    const densityFactors = {
+        'very-dense': 1.0,
+        'dense': 1.05,
+        'medium': 1.1,
+        'light': 1.2,
+        'very-light': 1.35
+    };
+    const densityFactor = densityFactors[styleConfig.tier] || 1.0;
+
+    const spacingFactors = {
+        'very-dense': 1.16,
+        'dense': 1.26,
+        'medium': 1.43,
+        'light': 1.63,
+        'very-light': 1.83
+    };
+    const spacingFactor = spacingFactors[styleConfig.tier] || 1.0;
+
+    const styles = createDynamicStyles(styleConfig, densityFactor, spacingFactor);
     const groupedSkills = groupSkills(skills);
 
     // Auto-generate headline based on targetJob, first experience, or default
@@ -330,8 +350,8 @@ export function ModernPDFDocument({ data }: { data: ResumeData }) {
                 {education.length > 0 && (
                     <View>
                         <SectionHeader title="Education" styles={styles} />
-                        {education.map((edu) => (
-                            <View key={edu.id} style={styles.entryContainer}>
+                        {education.map((edu, index) => (
+                            <View key={edu.id} style={[styles.entryContainer, index === education.length - 1 ? { marginBottom: 0 } : {}]}>
                                 <View style={styles.entryHeader}>
                                     <View style={styles.entryLeft}>
                                         <Text style={styles.entryTitle}>{edu.institution}</Text>
@@ -355,8 +375,8 @@ export function ModernPDFDocument({ data }: { data: ResumeData }) {
                 {experience.length > 0 && (
                     <View>
                         <SectionHeader title="Professional Experience" styles={styles} />
-                        {experience.map((exp) => (
-                            <View key={exp.id} style={styles.entryContainer}>
+                        {experience.map((exp, index) => (
+                            <View key={exp.id} style={[styles.entryContainer, index === experience.length - 1 ? { marginBottom: 0 } : {}]}>
                                 <View style={styles.entryHeader}>
                                     <View style={styles.entryTitleInline}>
                                         <Text style={styles.entryTitleNormal}>{exp.title}</Text>
@@ -379,8 +399,8 @@ export function ModernPDFDocument({ data }: { data: ResumeData }) {
 
                                 {exp.bullets.length > 0 && (
                                     <View style={styles.bulletList}>
-                                        {exp.bullets.filter(b => b.trim()).map((bullet, i) => (
-                                            <View key={i} style={styles.bulletItem}>
+                                        {exp.bullets.filter(b => b.trim()).map((bullet, i, arr) => (
+                                            <View key={i} style={[styles.bulletItem, i === arr.length - 1 ? { marginBottom: 0 } : {}]}>
                                                 <Text style={styles.bullet}>•</Text>
                                                 <Text style={styles.bulletText}>{bullet}</Text>
                                             </View>
@@ -396,8 +416,8 @@ export function ModernPDFDocument({ data }: { data: ResumeData }) {
                 {projects.length > 0 && (
                     <View>
                         <SectionHeader title="Projects" styles={styles} />
-                        {projects.map((project) => (
-                            <View key={project.id} style={styles.entryContainer}>
+                        {projects.map((project, index) => (
+                            <View key={project.id} style={[styles.entryContainer, index === projects.length - 1 ? { marginBottom: 0 } : {}]}>
                                 <View style={styles.entryHeader}>
                                     <View style={styles.entryTitleInline}>
                                         {project.url ? (
@@ -422,7 +442,7 @@ export function ModernPDFDocument({ data }: { data: ResumeData }) {
                                 </View>
 
                                 <View style={styles.bulletList}>
-                                    <View style={styles.bulletItem}>
+                                    <View style={[styles.bulletItem, { marginBottom: 0 }]}>
                                         <Text style={styles.bullet}>•</Text>
                                         <Text style={styles.bulletText}>{project.description}</Text>
                                     </View>
@@ -436,8 +456,8 @@ export function ModernPDFDocument({ data }: { data: ResumeData }) {
                 {skills.length > 0 && (
                     <View>
                         <SectionHeader title="Technical Skills" styles={styles} />
-                        {groupedSkills.map(([category, categorySkills]) => (
-                            <View key={category} style={styles.skillRow}>
+                        {groupedSkills.map(([category, categorySkills], index) => (
+                            <View key={category} style={[styles.skillRow, index === groupedSkills.length - 1 ? { marginBottom: 0 } : {}]}>
                                 <Text style={styles.skillCategory}>{category}: </Text>
                                 <Text style={styles.skillItems}>{categorySkills.map(s => formatSkillName(s)).join(", ")}</Text>
                             </View>

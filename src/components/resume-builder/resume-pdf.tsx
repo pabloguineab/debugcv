@@ -12,38 +12,38 @@ Font.register({
     ]
 });
 
-// Create dynamic styles based on config
-function createDynamicStyles(config: StyleConfig) {
+// Create dynamic styles based on config and density/spacing factors
+function createDynamicStyles(config: StyleConfig, densityFactor: number, spacingFactor: number) {
     return StyleSheet.create({
         page: {
             padding: config.pagePadding,
             paddingTop: config.pagePaddingTop,
-            paddingBottom: config.pagePaddingBottom,
+            paddingBottom: 12, // minimal safe padding
             fontFamily: "Helvetica",
-            fontSize: config.baseFontSize,
+            fontSize: config.baseFontSize * densityFactor,
             color: "#333",
         },
         header: {
             textAlign: "center",
-            marginBottom: config.sectionMarginBottom + 2,
+            marginBottom: (config.sectionMarginBottom + 2) * spacingFactor,
         },
         name: {
             fontSize: config.nameFontSize,
             fontWeight: "bold",
-            marginBottom: 3,
+            marginBottom: 3 * spacingFactor,
             color: "#1a1a1a",
         },
         divider: {
             height: 1,
             backgroundColor: "#ccc",
-            marginVertical: config.sectionMarginBottom,
+            marginVertical: config.sectionMarginBottom * spacingFactor,
         },
         contactRow: {
             flexDirection: "row",
             justifyContent: "center",
             flexWrap: "wrap",
             gap: 6,
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             color: "#666",
         },
         separator: {
@@ -53,22 +53,22 @@ function createDynamicStyles(config: StyleConfig) {
             color: "#2563eb",
         },
         sectionTitle: {
-            fontSize: config.sectionTitleSize,
+            fontSize: config.sectionTitleSize * densityFactor,
             fontWeight: "bold",
             textAlign: "center",
-            marginBottom: config.sectionMarginBottom,
-            marginTop: config.sectionMarginTop,
+            marginBottom: config.sectionMarginBottom * spacingFactor,
+            marginTop: config.sectionMarginTop * spacingFactor,
             textTransform: "uppercase",
             letterSpacing: 1,
         },
         summary: {
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             lineHeight: config.lineHeight,
             color: "#444",
             textAlign: "justify",
         },
         entryContainer: {
-            marginBottom: config.entryMarginBottom,
+            marginBottom: config.entryMarginBottom * spacingFactor,
         },
         entryHeader: {
             flexDirection: "row",
@@ -77,35 +77,35 @@ function createDynamicStyles(config: StyleConfig) {
             marginBottom: 1,
         },
         entryTitle: {
-            fontSize: config.entryTitleSize,
+            fontSize: config.entryTitleSize * densityFactor,
             fontWeight: "bold",
             textTransform: "uppercase",
         },
         entryTitleLink: {
-            fontSize: config.entryTitleSize,
+            fontSize: config.entryTitleSize * densityFactor,
             fontWeight: "bold",
             textTransform: "uppercase",
             color: "#2563eb",
             textDecoration: "none",
         },
         entrySubtitle: {
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             color: "#555",
             fontStyle: "italic",
         },
         entryRight: {
             textAlign: "right",
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             color: "#666",
             flexShrink: 0,
             marginLeft: 8,
         },
         entryLocation: {
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             color: "#666",
         },
         entryDate: {
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             color: "#666",
         },
         bulletList: {
@@ -114,7 +114,7 @@ function createDynamicStyles(config: StyleConfig) {
         },
         bulletItem: {
             flexDirection: "row",
-            marginBottom: config.bulletMarginBottom,
+            marginBottom: config.bulletMarginBottom * spacingFactor,
         },
         bullet: {
             marginRight: 4,
@@ -122,7 +122,7 @@ function createDynamicStyles(config: StyleConfig) {
         },
         bulletText: {
             flex: 1,
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             lineHeight: config.lineHeight,
             color: "#444",
         },
@@ -130,29 +130,29 @@ function createDynamicStyles(config: StyleConfig) {
             textAlign: "center",
         },
         skillsText: {
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             lineHeight: config.lineHeight,
             color: "#444",
         },
         certContainer: {
             flexDirection: "row",
             justifyContent: "space-between",
-            marginBottom: config.entryMarginBottom,
+            marginBottom: config.entryMarginBottom * spacingFactor,
         },
         certName: {
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             fontWeight: "bold",
         },
         certIssuer: {
-            fontSize: config.detailFontSize - 0.5,
+            fontSize: (config.detailFontSize - 0.5) * densityFactor,
             color: "#666",
         },
         certDate: {
-            fontSize: config.detailFontSize - 0.5,
+            fontSize: (config.detailFontSize - 0.5) * densityFactor,
             color: "#666",
         },
         projectTech: {
-            fontSize: config.detailFontSize - 0.5,
+            fontSize: (config.detailFontSize - 0.5) * densityFactor,
             color: "#666",
         },
         languagesContainer: {
@@ -166,12 +166,12 @@ function createDynamicStyles(config: StyleConfig) {
             gap: 2,
         },
         languageName: {
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             fontWeight: "bold",
             color: "#333",
         },
         languageLevel: {
-            fontSize: config.detailFontSize,
+            fontSize: config.detailFontSize * densityFactor,
             color: "#666",
         },
     });
@@ -186,7 +186,27 @@ interface ResumePDFDocumentProps {
 function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
     // Calculate style config based on content
     const styleConfig = calculateStyleConfig(data);
-    const styles = createDynamicStyles(styleConfig);
+
+    // Dynamic density scaling from Harvard template approach
+    const densityFactors = {
+        'very-dense': 1.0,
+        'dense': 1.05,
+        'medium': 1.1,
+        'light': 1.2,
+        'very-light': 1.35
+    };
+    const densityFactor = densityFactors[styleConfig.tier] || 1.0;
+
+    const spacingFactors = {
+        'very-dense': 1.16,
+        'dense': 1.26,
+        'medium': 1.43,
+        'light': 1.63,
+        'very-light': 1.83
+    };
+    const spacingFactor = spacingFactors[styleConfig.tier] || 1.0;
+
+    const styles = createDynamicStyles(styleConfig, densityFactor, spacingFactor);
 
     // Use all available data (no artificial limits - styles adapt instead)
     const { personalInfo, summary, skills, experience, education, projects, certifications, languages } = data;
@@ -246,7 +266,7 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
                     <View>
                         <Text style={styles.sectionTitle}>Education</Text>
                         {education.map((edu, index) => (
-                            <View key={index} style={styles.entryContainer}>
+                            <View key={index} style={[styles.entryContainer, index === education.length - 1 ? { marginBottom: 0 } : {}]}>
                                 <View style={styles.entryHeader}>
                                     <View style={{ flex: 1 }}>
                                         <Text style={styles.entryTitle}>{edu.institution}</Text>
@@ -266,7 +286,7 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
                     <View>
                         <Text style={styles.sectionTitle}>Experience</Text>
                         {experience.map((exp, index) => (
-                            <View key={index} style={styles.entryContainer}>
+                            <View key={index} style={[styles.entryContainer, index === experience.length - 1 ? { marginBottom: 0 } : {}]}>
                                 <View style={styles.entryHeader}>
                                     <View style={{ flex: 1 }}>
                                         {exp.companyUrl ? (
@@ -286,7 +306,7 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
                                 {exp.bullets.length > 0 && (
                                     <View style={styles.bulletList}>
                                         {exp.bullets.map((bullet, bulletIndex) => (
-                                            <View key={bulletIndex} style={styles.bulletItem}>
+                                            <View key={bulletIndex} style={[styles.bulletItem, bulletIndex === exp.bullets.length - 1 ? { marginBottom: 0 } : {}]}>
                                                 <Text style={styles.bullet}>•</Text>
                                                 <Text style={styles.bulletText}>{bullet}</Text>
                                             </View>
@@ -303,7 +323,7 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
                     <View>
                         <Text style={styles.sectionTitle}>Projects</Text>
                         {projects.map((project, index) => (
-                            <View key={index} style={styles.entryContainer}>
+                            <View key={index} style={[styles.entryContainer, index === projects.length - 1 ? { marginBottom: 0 } : {}]}>
                                 <View style={styles.entryHeader}>
                                     <Text style={styles.entryTitle}>{project.name}</Text>
                                     {project.technologies.length > 0 && (
@@ -323,7 +343,7 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
                     <View>
                         <Text style={styles.sectionTitle}>Certifications</Text>
                         {certifications.map((cert, index) => (
-                            <View key={index} style={styles.certContainer}>
+                            <View key={index} style={[styles.certContainer, index === certifications.length - 1 ? { marginBottom: 0 } : {}]}>
                                 <View>
                                     <Text style={styles.certName}>{cert.name}</Text>
                                     <Text style={styles.certIssuer}>{cert.issuer}</Text>
