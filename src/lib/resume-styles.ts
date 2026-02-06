@@ -103,11 +103,11 @@ export function calculateStyleConfig(data: ResumeData): StyleConfig {
         pagePaddingBottom: lerp(35, 16, t),
 
         // Typography: significantly larger fonts
-        baseFontSize: lerp(12, 8.5, t),
-        nameFontSize: lerp(30, 18, t),
-        sectionTitleSize: lerp(14, 9.5, t),
+        baseFontSize: lerp(12, 8.0, t),
+        nameFontSize: lerp(30, 16, t),
+        sectionTitleSize: lerp(14, 9.0, t),
         entryTitleSize: lerp(12, 8.5, t),
-        detailFontSize: lerp(11, 8, t),
+        detailFontSize: lerp(11, 7.5, t),
 
         // Spacing: much more generous
         sectionMarginTop: lerp(20, 6, t),

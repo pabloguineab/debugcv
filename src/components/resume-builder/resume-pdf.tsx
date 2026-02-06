@@ -200,8 +200,8 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
     const densityFactor = densityFactors[styleConfig.tier] || 1.0;
 
     const spacingFactors = {
-        'very-dense': 1.05, // Increased to fill bottom space
-        'dense': 1.15,
+        'very-dense': 0.95, // Increased compaction
+        'dense': 1.05,
         'medium': 1.3,
         'light': 1.5,
         'very-light': 1.7
@@ -390,7 +390,7 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
 
                 {/* Languages */}
                 {languages && languages.length > 0 && (
-                    <View wrap={false}>
+                    <View>
                         <Text style={styles.sectionTitle}>Languages</Text>
                         <View style={styles.languagesContainer}>
                             {languages.map((lang, index) => (
