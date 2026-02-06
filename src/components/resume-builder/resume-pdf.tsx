@@ -412,62 +412,55 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
 export async function downloadResumePDF(originalData: ResumeData): Promise<void> {
     const { getCompanyDomain, getInstitutionDomain } = await import("@/lib/logo-utils");
 
-    // Helper to fetch and convert to Base64 - ALWAYS use proxy since direct CORS will fail
+    // Helper to fetch and convert to Base64 with Hybrid Strategy
+    // 1. Try Direct Fetch (Fastest, works if CORS allowed, likely what Browser Preview uses)
+    // 2. Try Proxy Fetch (Fallback for CORS issues or blocked requests)
     const fetchImageAsBase64 = async (domain: string): Promise<string> => {
-        const fetchViaProxy = async (url: string): Promise<string | null> => {
+        const fetchBase64 = async (url: string, useProxy: boolean): Promise<string | null> => {
             try {
-                const proxyUrl = `${window.location.origin}/api/image-proxy?url=${encodeURIComponent(url)}`;
-                console.log(`[PDF Logo] Fetching via proxy: ${url}`);
+                const fetchUrl = useProxy
+                    ? `${window.location.origin}/api/image-proxy?url=${encodeURIComponent(url)}`
+                    : url;
 
-                const response = await fetch(proxyUrl);
-                if (!response.ok) {
-                    console.warn(`[PDF Logo] Proxy returned ${response.status} for ${url}`);
-                    return null;
-                }
+                const response = await fetch(fetchUrl, useProxy ? {} : { mode: 'cors' });
+                if (!response.ok) return null;
 
                 const blob = await response.blob();
-                console.log(`[PDF Logo] Got blob of size ${blob.size} for ${url}`);
-
-                if (blob.size < 50) {
-                    console.warn(`[PDF Logo] Blob too small (${blob.size}), likely invalid`);
-                    return null;
-                }
+                if (blob.size < 50) return null; // Too small to be valid
 
                 return new Promise((resolve) => {
                     const reader = new FileReader();
                     reader.onloadend = () => {
                         const res = reader.result as string;
-                        if (res.startsWith("data:image")) {
-                            console.log(`[PDF Logo] Successfully converted to base64 for ${domain}`);
-                            resolve(res);
-                        } else {
-                            console.warn(`[PDF Logo] Not a valid image data URL`);
-                            resolve(null);
-                        }
+                        // Basic validation that it's an image
+                        resolve(res.startsWith("data:image") ? res : null);
                     };
-                    reader.onerror = () => {
-                        console.error(`[PDF Logo] FileReader error`);
-                        resolve(null);
-                    };
+                    reader.onerror = () => resolve(null);
                     reader.readAsDataURL(blob);
                 });
             } catch (e) {
-                console.error(`[PDF Logo] Fetch error for ${url}:`, e);
                 return null;
             }
         };
 
-        // Strategy 1: Clearbit via Proxy (PNG format, good for PDFs)
+        // Strategy 1: Clearbit Direct (Fastest, mostly CORS enabled)
         const clearbitUrl = `https://logo.clearbit.com/${domain}`;
-        let base64 = await fetchViaProxy(clearbitUrl);
+        let base64 = await fetchBase64(clearbitUrl, false);
         if (base64) return base64;
 
-        // Strategy 2: Brandfetch via Proxy (fallback)
+        // Strategy 2: Brandfetch Direct
         const brandfetchUrl = `https://cdn.brandfetch.io/${domain}/w/400/h/400`;
-        base64 = await fetchViaProxy(brandfetchUrl);
+        base64 = await fetchBase64(brandfetchUrl, false);
         if (base64) return base64;
 
-        console.warn(`[PDF Logo] All strategies failed for domain: ${domain}`);
+        // Strategy 3: Clearbit via Proxy (Backup)
+        base64 = await fetchBase64(clearbitUrl, true);
+        if (base64) return base64;
+
+        // Strategy 4: Brandfetch via Proxy
+        base64 = await fetchBase64(brandfetchUrl, true);
+        if (base64) return base64;
+
         return "";
     };
 
@@ -487,22 +480,42 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
             } else if (exp.logoUrl && exp.logoUrl.startsWith('http')) {
                 // If user has a manual URL, try to fetch it directly or via proxy
                 const fetchSimple = async (url: string) => {
-                    try {
-                        const proxyUrl = `${window.location.origin}/api/image-proxy?url=${encodeURIComponent(url)}`;
-                        const res = await fetch(proxyUrl);
-                        if (res.ok) {
-                            const blob = await res.blob();
-                            return await new Promise<string>(resolve => {
-                                const reader = new FileReader();
-                                reader.onloadend = () => resolve(reader.result as string);
-                                reader.onerror = () => resolve("");
-                                reader.readAsDataURL(blob);
-                            });
-                        }
-                    } catch (e) { }
-                    return ""; // Failed
+                    // Try logic similar to hybrid: Direct then Proxy
+                    const fetchDirect = async () => {
+                        try {
+                            const res = await fetch(url, { mode: 'cors' });
+                            if (res.ok) {
+                                const blob = await res.blob();
+                                return new Promise<string>(resolve => {
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => resolve(reader.result as string);
+                                    reader.readAsDataURL(blob);
+                                });
+                            }
+                        } catch (e) { }
+                        return null;
+                    };
+
+                    const fetchProxy = async () => {
+                        try {
+                            const proxyUrl = `${window.location.origin}/api/image-proxy?url=${encodeURIComponent(url)}`;
+                            const res = await fetch(proxyUrl);
+                            if (res.ok) {
+                                const blob = await res.blob();
+                                return new Promise<string>(resolve => {
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => resolve(reader.result as string);
+                                    reader.readAsDataURL(blob);
+                                });
+                            }
+                        } catch (e) { }
+                        return null;
+                    };
+
+                    const b64 = await fetchDirect() || await fetchProxy();
+                    return b64 || "";
                 };
-                // Try proxy for custom URLs
+
                 const b64 = await fetchSimple(exp.logoUrl);
                 exp.logoUrl = b64;
             }
@@ -520,20 +533,40 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
                 }
             } else if (edu.logoUrl && edu.logoUrl.startsWith('http')) {
                 const fetchSimple = async (url: string) => {
-                    try {
-                        const proxyUrl = `${window.location.origin}/api/image-proxy?url=${encodeURIComponent(url)}`;
-                        const res = await fetch(proxyUrl);
-                        if (res.ok) {
-                            const blob = await res.blob();
-                            return await new Promise<string>(resolve => {
-                                const reader = new FileReader();
-                                reader.onloadend = () => resolve(reader.result as string);
-                                reader.onerror = () => resolve("");
-                                reader.readAsDataURL(blob);
-                            });
-                        }
-                    } catch (e) { }
-                    return "";
+                    // Same hybrid logic for manual education URLs
+                    const fetchDirect = async () => {
+                        try {
+                            const res = await fetch(url, { mode: 'cors' });
+                            if (res.ok) {
+                                const blob = await res.blob();
+                                return new Promise<string>(resolve => {
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => resolve(reader.result as string);
+                                    reader.readAsDataURL(blob);
+                                });
+                            }
+                        } catch (e) { }
+                        return null;
+                    };
+
+                    const fetchProxy = async () => {
+                        try {
+                            const proxyUrl = `${window.location.origin}/api/image-proxy?url=${encodeURIComponent(url)}`;
+                            const res = await fetch(proxyUrl);
+                            if (res.ok) {
+                                const blob = await res.blob();
+                                return new Promise<string>(resolve => {
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => resolve(reader.result as string);
+                                    reader.readAsDataURL(blob);
+                                });
+                            }
+                        } catch (e) { }
+                        return null;
+                    };
+
+                    const b64 = await fetchDirect() || await fetchProxy();
+                    return b64 || "";
                 };
                 const b64 = await fetchSimple(edu.logoUrl);
                 edu.logoUrl = b64;
