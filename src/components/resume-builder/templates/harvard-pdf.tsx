@@ -689,9 +689,9 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                             index === certifications.length - 1 ? { marginBottom: 0 } : {}
                                         ]}
                                     >
-                                        <Text>
-                                            <Text style={styles.certName}>{cert.name}</Text>
-                                            {cert.issuer && <Text style={styles.certIssuer}> - {cert.issuer}</Text>}
+                                        <Text style={styles.certName}>{cert.name}</Text>
+                                        <Text style={{ marginTop: 2 }}>
+                                            {cert.issuer && <Text style={styles.certIssuer}>{cert.issuer}</Text>}
                                             {cert.issueDate && <Text style={styles.certDate}> ({cert.issueDate})</Text>}
                                         </Text>
                                     </View>
