@@ -206,7 +206,7 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
         'light': 1.5,
         'very-light': 1.7
     };
-    const spacingFactor = (spacingFactors[styleConfig.tier] || 1.0) * (data.showPhoto ? 0.90 : 1.0);
+    const spacingFactor = (spacingFactors[styleConfig.tier] || 1.0) * (data.showPhoto ? 0.85 : 1.0);
     const accentColor = data.accentColor || "#1a1a1a";
 
     const styles = createDynamicStyles(styleConfig, densityFactor, spacingFactor, accentColor);
@@ -390,7 +390,7 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
 
                 {/* Languages */}
                 {languages && languages.length > 0 && (
-                    <View>
+                    <View wrap={false}>
                         <Text style={styles.sectionTitle}>Languages</Text>
                         <View style={styles.languagesContainer}>
                             {languages.map((lang, index) => (
