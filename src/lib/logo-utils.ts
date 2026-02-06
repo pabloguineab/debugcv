@@ -70,6 +70,7 @@ export function getCompanyDomain(company: string, website?: string): string {
 
     // Fallback: clean company name and append .com
     const cleanName = lowerCompany
+        .replace(/\s*\([^)]*\)/g, '') // Remove parenthetical suffixes like "(part of XYZ)"
         .replace(/ inc\.?$/, '')
         .replace(/ corp\.?$/, '')
         .replace(/ corporation$/, '')

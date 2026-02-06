@@ -412,54 +412,62 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
 export async function downloadResumePDF(originalData: ResumeData): Promise<void> {
     const { getCompanyDomain, getInstitutionDomain } = await import("@/lib/logo-utils");
 
-    // Helper to fetch and convert to Base64 with fallbacks
+    // Helper to fetch and convert to Base64 - ALWAYS use proxy since direct CORS will fail
     const fetchImageAsBase64 = async (domain: string): Promise<string> => {
-        const fetchBase64 = async (url: string, useProxy: boolean): Promise<string | null> => {
+        const fetchViaProxy = async (url: string): Promise<string | null> => {
             try {
-                // If using proxy, construct proxy URL. If not, use direct URL.
-                const fetchUrl = useProxy
-                    ? `${window.location.origin}/api/image-proxy?url=${encodeURIComponent(url)}`
-                    : url;
+                const proxyUrl = `${window.location.origin}/api/image-proxy?url=${encodeURIComponent(url)}`;
+                console.log(`[PDF Logo] Fetching via proxy: ${url}`);
 
-                const response = await fetch(fetchUrl);
-                if (!response.ok) return null;
+                const response = await fetch(proxyUrl);
+                if (!response.ok) {
+                    console.warn(`[PDF Logo] Proxy returned ${response.status} for ${url}`);
+                    return null;
+                }
 
                 const blob = await response.blob();
-                if (blob.size < 50) return null; // Too small to be valid
+                console.log(`[PDF Logo] Got blob of size ${blob.size} for ${url}`);
+
+                if (blob.size < 50) {
+                    console.warn(`[PDF Logo] Blob too small (${blob.size}), likely invalid`);
+                    return null;
+                }
 
                 return new Promise((resolve) => {
                     const reader = new FileReader();
                     reader.onloadend = () => {
                         const res = reader.result as string;
-                        // Basic validation that it's an image
-                        resolve(res.startsWith("data:image") ? res : null);
+                        if (res.startsWith("data:image")) {
+                            console.log(`[PDF Logo] Successfully converted to base64 for ${domain}`);
+                            resolve(res);
+                        } else {
+                            console.warn(`[PDF Logo] Not a valid image data URL`);
+                            resolve(null);
+                        }
                     };
-                    reader.onerror = () => resolve(null);
+                    reader.onerror = () => {
+                        console.error(`[PDF Logo] FileReader error`);
+                        resolve(null);
+                    };
                     reader.readAsDataURL(blob);
                 });
             } catch (e) {
+                console.error(`[PDF Logo] Fetch error for ${url}:`, e);
                 return null;
             }
         };
 
-        // Strategy 1: Clearbit Direct (Preferred, PNG)
+        // Strategy 1: Clearbit via Proxy (PNG format, good for PDFs)
         const clearbitUrl = `https://logo.clearbit.com/${domain}`;
-        let base64 = await fetchBase64(clearbitUrl, false);
+        let base64 = await fetchViaProxy(clearbitUrl);
         if (base64) return base64;
 
-        // Strategy 2: Brandfetch Direct (Fallback)
+        // Strategy 2: Brandfetch via Proxy (fallback)
         const brandfetchUrl = `https://cdn.brandfetch.io/${domain}/w/400/h/400`;
-        base64 = await fetchBase64(brandfetchUrl, false);
+        base64 = await fetchViaProxy(brandfetchUrl);
         if (base64) return base64;
 
-        // Strategy 3: Clearbit via Proxy (If CORS blocked direct)
-        base64 = await fetchBase64(clearbitUrl, true);
-        if (base64) return base64;
-
-        // Strategy 4: Brandfetch via Proxy
-        base64 = await fetchBase64(brandfetchUrl, true);
-        if (base64) return base64;
-
+        console.warn(`[PDF Logo] All strategies failed for domain: ${domain}`);
         return "";
     };
 
