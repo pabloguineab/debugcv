@@ -192,7 +192,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
     const styles = StyleSheet.create({
         page: {
             fontFamily: "Poppins",
-            fontSize: styleConfig.baseFontSize,
+            fontSize: styleConfig.baseFontSize * 0.95, // Slightly compact base
             color: "#374151", // text-gray-700
             display: "flex",
             flexDirection: "column",
@@ -202,33 +202,33 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             padding: `${styleConfig.pagePaddingTop} ${styleConfig.pagePadding} ${styleConfig.sectionMarginBottom} ${styleConfig.pagePadding}`,
         },
         name: {
-            fontSize: styleConfig.nameFontSize,
+            fontSize: styleConfig.nameFontSize, // Keep name prominent
             fontWeight: 700, // bold
             color: ACCENT_COLOR,
             letterSpacing: 0.5,
         },
         headline: {
-            fontSize: styleConfig.detailFontSize * 1.15,
+            fontSize: styleConfig.detailFontSize * 1.05, // reduced multiplier from 1.15
             color: "#4b5563", // text-gray-600
             marginTop: 2,
         },
         headerDivider: {
             height: 3,
             backgroundColor: ACCENT_COLOR,
-            marginTop: 8,
-            marginBottom: 8,
+            marginTop: 6, // reduced from 8
+            marginBottom: 6,
         },
         contactRow: {
             flexDirection: "row",
             flexWrap: "wrap",
-            gap: 16,
-            fontSize: styleConfig.detailFontSize * 0.95,
+            gap: 10, // Reduced from 16 to 10 to fit more
+            fontSize: styleConfig.detailFontSize * 0.85, // Reduced from 0.95
             color: "#4b5563", // text-gray-600
         },
         contactItem: {
             flexDirection: "row",
             alignItems: "center",
-            gap: 4,
+            gap: 3, // Reduced from 4
         },
         contactLink: {
             color: ACCENT_COLOR,
@@ -241,7 +241,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             gap: 16,
         },
         leftColumn: {
-            width: "55%",
+            width: "58%", // Increased from 55% to give more space to main content like preview
             paddingRight: 10,
             borderRightWidth: 1,
             borderRightColor: "#e5e7eb", // border-gray-200
@@ -250,18 +250,18 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             justifyContent: "flex-start",
         },
         rightColumn: {
-            width: "45%",
+            width: "42%", // Reduced from 45%
             paddingLeft: 0,
             display: "flex",
             flexDirection: "column",
             justifyContent: "flex-start",
         },
         sectionHeader: {
-            marginBottom: styleConfig.sectionMarginBottom * 0.6,
-            marginTop: styleConfig.sectionMarginTop,
+            marginBottom: styleConfig.sectionMarginBottom * 0.5, // Reduced from 0.6
+            marginTop: styleConfig.sectionMarginTop * 0.9,
         },
         sectionTitle: {
-            fontSize: styleConfig.sectionTitleSize,
+            fontSize: styleConfig.sectionTitleSize * 0.95, // Slightly smaller
             fontWeight: 700, // bold
             color: ACCENT_COLOR,
             textTransform: "uppercase",
@@ -270,15 +270,15 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         sectionLine: {
             height: 2,
             backgroundColor: ACCENT_COLOR,
-            marginTop: 3,
+            marginTop: 2, // reduced from 3
         },
         summary: {
-            fontSize: styleConfig.detailFontSize,
+            fontSize: styleConfig.detailFontSize * 0.9,
             lineHeight: styleConfig.lineHeight,
             color: "#374151", // text-gray-700
         },
         entryContainer: {
-            marginBottom: styleConfig.entryMarginBottom,
+            marginBottom: styleConfig.entryMarginBottom * 0.9,
         },
         entryHeader: {
             flexDirection: "row",
@@ -292,37 +292,37 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             flex: 1,
         },
         entryTitle: {
-            fontSize: styleConfig.entryTitleSize,
+            fontSize: styleConfig.entryTitleSize * 0.95,
             fontWeight: 700, // bold
             color: "#111827", // text-gray-900
         },
         entryCompany: {
-            fontSize: styleConfig.entryTitleSize,
+            fontSize: styleConfig.entryTitleSize * 0.95,
             fontWeight: 600, // semibold was used in preview often
             color: ACCENT_COLOR,
         },
         entryCompanyLink: {
-            fontSize: styleConfig.entryTitleSize,
+            fontSize: styleConfig.entryTitleSize * 0.95,
             fontWeight: 600, // semibold
             color: ACCENT_COLOR,
             textDecoration: "underline",
         },
         entrySeparator: {
             color: "#6b7280",
-            marginHorizontal: 4,
-            fontSize: styleConfig.detailFontSize,
+            marginHorizontal: 3,
+            fontSize: styleConfig.detailFontSize * 0.9,
         },
         entryMeta: {
-            fontSize: styleConfig.detailFontSize * 0.85,
+            fontSize: styleConfig.detailFontSize * 0.8,
             color: "#6b7280",
         },
         bulletList: {
-            marginTop: 6,
+            marginTop: 4, // reduced from 6
             marginLeft: 8,
         },
         bulletItem: {
             flexDirection: "row",
-            marginBottom: styleConfig.bulletMarginBottom + 2,
+            marginBottom: styleConfig.bulletMarginBottom, // removed +2
         },
         bulletIcon: {
             marginRight: 6,
@@ -330,7 +330,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         },
         bulletText: {
             flex: 1,
-            fontSize: styleConfig.detailFontSize,
+            fontSize: styleConfig.detailFontSize * 0.9,
             lineHeight: styleConfig.lineHeight,
             color: "#374151",
         },
@@ -340,52 +340,52 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
             alignItems: "flex-start",
         },
         eduTitle: {
-            fontSize: styleConfig.entryTitleSize,
+            fontSize: styleConfig.entryTitleSize * 0.95,
             fontWeight: 700, // bold
             color: "#111827",
         },
         eduSubtitle: {
-            fontSize: styleConfig.detailFontSize,
+            fontSize: styleConfig.detailFontSize * 0.9,
             color: "#4b5563",
             fontStyle: "italic",
         },
         eduDate: {
-            fontSize: styleConfig.detailFontSize * 0.85,
+            fontSize: styleConfig.detailFontSize * 0.8,
             color: "#6b7280",
         },
         skillTagsContainer: {
             flexDirection: "row",
             flexWrap: "wrap",
-            gap: 4,
+            gap: 3, // Reduced from 4
         },
         skillTag: {
             backgroundColor: `${ACCENT_COLOR}15`,
             color: ACCENT_COLOR,
-            fontSize: styleConfig.detailFontSize * 0.9,
-            paddingVertical: 3,
-            paddingHorizontal: 8,
-            borderRadius: 3,
+            fontSize: styleConfig.detailFontSize * 0.75, // Significantly smaller
+            paddingVertical: 1.5, // Reduced from 3
+            paddingHorizontal: 5, // Reduced from 8
+            borderRadius: 2, // Reduced from 3
             fontWeight: 500, // medium
         },
         projectTitle: {
-            fontSize: styleConfig.entryTitleSize,
+            fontSize: styleConfig.entryTitleSize * 0.95,
             fontWeight: 700, // bold
             color: ACCENT_COLOR,
         },
         projectTech: {
-            fontSize: styleConfig.detailFontSize * 0.85,
+            fontSize: styleConfig.detailFontSize * 0.8,
             color: "#6b7280",
-            marginLeft: 4,
+            marginLeft: 3,
         },
         projectDesc: {
-            fontSize: styleConfig.detailFontSize,
+            fontSize: styleConfig.detailFontSize * 0.9,
             color: "#374151",
             lineHeight: styleConfig.lineHeight,
-            marginTop: 3,
+            marginTop: 2,
         },
         certItem: {
-            fontSize: styleConfig.detailFontSize,
-            marginBottom: styleConfig.bulletMarginBottom * 1.5,
+            fontSize: styleConfig.detailFontSize * 0.9,
+            marginBottom: styleConfig.bulletMarginBottom * 1.2,
             color: "#374151",
         },
         certName: {
@@ -401,11 +401,11 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         langContainer: {
             flexDirection: "row",
             flexWrap: "wrap",
-            rowGap: 4,
-            columnGap: 16,
+            rowGap: 2, // reduced
+            columnGap: 12, // reduced
         },
         langItem: {
-            fontSize: styleConfig.detailFontSize,
+            fontSize: styleConfig.detailFontSize * 0.9,
         },
         langName: {
             fontWeight: 600, // semibold for language name
@@ -413,7 +413,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         },
         langLevel: {
             color: "#6b7280",
-            marginLeft: 6,
+            marginLeft: 4,
         },
     });
 
@@ -442,13 +442,13 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                     <View style={styles.contactRow}>
                         {personalInfo.phone && (
                             <View style={styles.contactItem}>
-                                <PhoneIcon size={8} />
+                                <PhoneIcon size={styleConfig.detailFontSize * 0.75} />
                                 <Text>{personalInfo.phone}</Text>
                             </View>
                         )}
                         {personalInfo.email && (
                             <View style={styles.contactItem}>
-                                <MailIcon size={8} />
+                                <MailIcon size={styleConfig.detailFontSize * 0.75} />
                                 <Link src={`mailto:${personalInfo.email}`} style={styles.contactLink}>
                                     {personalInfo.email}
                                 </Link>
@@ -456,7 +456,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                         )}
                         {personalInfo.linkedin && (
                             <View style={styles.contactItem}>
-                                <LinkedInIcon size={8} />
+                                <LinkedInIcon size={styleConfig.detailFontSize * 0.75} />
                                 <Link
                                     src={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`}
                                     style={styles.contactLink}
@@ -467,7 +467,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                         )}
                         {personalInfo.github && (
                             <View style={styles.contactItem}>
-                                <GitHubIcon size={8} />
+                                <GitHubIcon size={styleConfig.detailFontSize * 0.75} />
                                 <Link
                                     src={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`}
                                     style={styles.contactLink}
@@ -478,7 +478,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                         )}
                         {personalInfo.location && (
                             <View style={styles.contactItem}>
-                                <MapPinIcon size={8} />
+                                <MapPinIcon size={styleConfig.detailFontSize * 0.75} />
                                 <Text>{personalInfo.location}</Text>
                             </View>
                         )}
@@ -528,7 +528,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                                 {exp.bullets.filter(b => b.trim()).map((bullet, i) => (
                                                     <View key={i} style={styles.bulletItem}>
                                                         <View style={styles.bulletIcon}>
-                                                            <CheckIcon size={Math.max(5, styleConfig.detailFontSize * 0.8)} />
+                                                            <CheckIcon size={Math.max(4, styleConfig.detailFontSize * 0.6)} />
                                                         </View>
                                                         <Text style={styles.bulletText}>{bullet}</Text>
                                                     </View>
