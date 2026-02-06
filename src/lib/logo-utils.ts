@@ -114,6 +114,9 @@ export function getInstitutionDomain(name: string, website?: string): string {
         'cambridge': 'cam.ac.uk',
         'university of cambridge': 'cam.ac.uk',
         'caltech': 'caltech.edu',
+        'universidad francisco de vitoria': 'ufv.es',
+        'george brown college': 'georgebrown.ca',
+        'george brown college, institute of technology & advanced learning': 'georgebrown.ca',
     };
 
     if (overrides[lowerName]) return overrides[lowerName];
