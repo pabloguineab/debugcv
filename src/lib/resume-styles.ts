@@ -49,6 +49,7 @@ export function calculateContentScore(data: ResumeData): number {
         data.projects.length * 8 +                       // Each project ~8 units
         data.certifications.length * 4 +                 // Each cert ~4 units
         (data.languages?.length || 0) * 2 +              // Each language ~2 units
+        (data.showPhoto ? 15 : 0) +                      // Profile picture consumes vertical/header space
         Math.floor(data.skills.length / 3) +             // Skills (grouped) ~0.33 each
         Math.floor(totalDescriptionLength / 80);         // Text length contribution (more sensitive)
 

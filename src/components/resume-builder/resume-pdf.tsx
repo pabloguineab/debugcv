@@ -206,7 +206,7 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
         'light': 1.5,
         'very-light': 1.7
     };
-    const spacingFactor = spacingFactors[styleConfig.tier] || 1.0;
+    const spacingFactor = (spacingFactors[styleConfig.tier] || 1.0) * (data.showPhoto ? 0.95 : 1.0);
     const accentColor = data.accentColor || "#1a1a1a";
 
     const styles = createDynamicStyles(styleConfig, densityFactor, spacingFactor, accentColor);

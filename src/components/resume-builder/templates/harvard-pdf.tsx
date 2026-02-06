@@ -200,7 +200,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
         'light': 1.63,      // Open
         'very-light': 1.83  // Maximum spread
     };
-    const spacingFactor = spacingFactors[styleConfig.tier] || 1.0;
+    const spacingFactor = (spacingFactors[styleConfig.tier] || 1.0) * (data.showPhoto ? 0.95 : 1.0);
 
     // Auto-generate headline
     const generatedHeadline = data.targetJob
