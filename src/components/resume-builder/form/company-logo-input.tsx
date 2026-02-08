@@ -54,19 +54,28 @@ export function CompanyLogoInput({
                 return;
             }
 
-            // Helper to process response and return base64
+            // Helper to process response and return base64 PNG
             const processResponse = async (res: Response): Promise<string> => {
                 const blob = await res.blob();
                 if (blob.size < 50) throw new Error("Image too small");
+
                 return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => {
-                        const result = reader.result as string;
-                        if (result && result.startsWith("data:image")) resolve(result);
-                        else reject(new Error("Invalid base64"));
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement("canvas");
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        const ctx = canvas.getContext("2d");
+                        if (!ctx) {
+                            reject(new Error("Canvas context failed"));
+                            return;
+                        }
+                        ctx.drawImage(img, 0, 0);
+                        const pngBase64 = canvas.toDataURL("image/png");
+                        resolve(pngBase64);
                     };
-                    reader.onerror = () => reject(new Error("Reader error"));
-                    reader.readAsDataURL(blob);
+                    img.onerror = () => reject(new Error("Image load failed"));
+                    img.src = URL.createObjectURL(blob);
                 });
             };
 
