@@ -566,10 +566,11 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                         ]}
                                     >
                                         <View style={{ flexDirection: "row", gap: 10 }}>
+                                            {/* Logo Rendering */}
                                             {data.showCompanyLogos && exp.logoUrl && (
                                                 <Image
                                                     src={exp.logoUrl}
-                                                    style={{ width: 30, height: 30, objectFit: "contain", marginTop: 2, borderRadius: 4 }}
+                                                    style={{ width: 30, height: 30, objectFit: "contain", borderRadius: 4 }}
                                                 />
                                             )}
                                             <View style={{ flex: 1 }}>
