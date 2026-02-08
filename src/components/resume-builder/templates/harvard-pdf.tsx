@@ -565,12 +565,18 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                             index === experience.length - 1 ? { marginBottom: 0 } : {}
                                         ]}
                                     >
-                                        <View style={{ flexDirection: "row", gap: 10 }}>
+                                        <View style={{ flexDirection: "row" }}>
                                             {/* Logo Rendering */}
                                             {data.showCompanyLogos && exp.logoUrl && (
                                                 <Image
                                                     src={exp.logoUrl}
-                                                    style={{ width: 30, height: 30, objectFit: "contain", borderRadius: 4 }}
+                                                    style={{
+                                                        width: 30,
+                                                        height: 30,
+                                                        objectFit: "contain",
+                                                        marginRight: 10,
+                                                        backgroundColor: "#f3f4f6"
+                                                    }}
                                                 />
                                             )}
                                             <View style={{ flex: 1 }}>
@@ -625,13 +631,20 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                         style={[
                                             styles.entryContainer,
                                             index === education.length - 1 ? { marginBottom: 0 } : {},
-                                            { flexDirection: "row", gap: 10 }
+                                            { flexDirection: "row" }
                                         ]}
                                     >
                                         {data.showInstitutionLogos && edu.logoUrl && (
                                             <Image
                                                 src={edu.logoUrl}
-                                                style={{ width: 30, height: 30, objectFit: "contain", marginTop: 2, borderRadius: 4 }}
+                                                style={{
+                                                    width: 30,
+                                                    height: 30,
+                                                    objectFit: "contain",
+                                                    marginTop: 2,
+                                                    marginRight: 10,
+                                                    backgroundColor: "#f3f4f6"
+                                                }}
                                             />
                                         )}
                                         <View style={{ flex: 1 }}>
