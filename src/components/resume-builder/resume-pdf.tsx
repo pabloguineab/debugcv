@@ -418,27 +418,43 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
     const fetchImageAsBase64 = async (domain: string): Promise<string> => {
         const fetchBase64 = async (url: string, useProxy: boolean): Promise<string | null> => {
             try {
+                console.log(`[PDF Logo] Attempting fetch for ${url} (Proxy: ${useProxy})`);
                 const fetchUrl = useProxy
                     ? `${window.location.origin}/api/image-proxy?url=${encodeURIComponent(url)}`
                     : url;
 
                 const response = await fetch(fetchUrl, useProxy ? {} : { mode: 'cors' });
-                if (!response.ok) return null;
+                if (!response.ok) {
+                    console.warn(`[PDF Logo] Fetch failed for ${url} (Proxy: ${useProxy}): ${response.status}`);
+                    return null;
+                }
 
                 const blob = await response.blob();
-                if (blob.size < 50) return null; // Too small to be valid
+                if (blob.size < 50) {
+                    console.warn(`[PDF Logo] Blob too small for ${url} (Size: ${blob.size})`);
+                    return null;
+                }
 
                 return new Promise((resolve) => {
                     const reader = new FileReader();
                     reader.onloadend = () => {
                         const res = reader.result as string;
-                        // Basic validation that it's an image
-                        resolve(res.startsWith("data:image") ? res : null);
+                        if (res.startsWith("data:image")) {
+                            console.log(`[PDF Logo] Success for ${url} (Proxy: ${useProxy})`);
+                            resolve(res);
+                        } else {
+                            console.warn(`[PDF Logo] Invalid base64 for ${url}`);
+                            resolve(null);
+                        }
                     };
-                    reader.onerror = () => resolve(null);
+                    reader.onerror = () => {
+                        console.error(`[PDF Logo] FileReader error for ${url}`);
+                        resolve(null);
+                    };
                     reader.readAsDataURL(blob);
                 });
             } catch (e) {
+                console.error(`[PDF Logo] Network error for ${url} (Proxy: ${useProxy})`, e);
                 return null;
             }
         };
@@ -454,6 +470,7 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
         if (base64) return base64;
 
         // Strategy 3: Clearbit via Proxy (Backup)
+        console.log(`[PDF Logo] Falling back to proxy for ${domain}`);
         base64 = await fetchBase64(clearbitUrl, true);
         if (base64) return base64;
 
@@ -461,6 +478,7 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
         base64 = await fetchBase64(brandfetchUrl, true);
         if (base64) return base64;
 
+        console.warn(`[PDF Logo] All strategies failed for ${domain}`);
         return "";
     };
 

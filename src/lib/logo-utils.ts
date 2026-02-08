@@ -124,6 +124,7 @@ export function getInstitutionDomain(name: string, website?: string): string {
 
     // Try to guess domain from name
     const cleanName = lowerName
+        .replace(/\s*\([^)]*\)/g, '') // Remove parenthetical suffixes like "(part of XYZ)"
         .replace(/university of /g, '')
         .replace(/ university/g, '')
         .replace(/universidad de /g, '')
