@@ -194,21 +194,21 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
     // Shifted baseline: "very-dense" is now the standard (1.0) to avoid shrinking content that fits.
     // Restored "perfect" aggressive filling, relying on removing bottom padding to fix overflow
     const densityFactors = {
-        'very-dense': 1.0,  // Baseline
-        'dense': 1.05,      // Boost
-        'medium': 1.1,      // Significant Boost
-        'light': 1.2,       // Large Expansion
-        'very-light': 1.35  // Maximum Expansion
+        'very-dense': 0.95, // Slightly smaller to fit more
+        'dense': 1.0,
+        'medium': 1.1,
+        'light': 1.2,
+        'very-light': 1.35
     };
     const densityFactor = densityFactors[styleConfig.tier] || 1.0;
 
     // Vertical spacing scaling to fill vertical whitespace
     const spacingFactors = {
-        'very-dense': 1.16, // Micro-reduction to prevent page 2
-        'dense': 1.26,      // High density but safe
-        'medium': 1.43,     // Boosted
-        'light': 1.63,      // Open
-        'very-light': 1.83  // Maximum spread
+        'very-dense': 1.05, // Tighter to prevent page 2
+        'dense': 1.15,
+        'medium': 1.3,
+        'light': 1.5,
+        'very-light': 1.7
     };
     const spacingFactor = (spacingFactors[styleConfig.tier] || 1.0) * (data.showPhoto ? 0.95 : 1.0);
 
@@ -641,8 +641,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                                     height: 30,
                                                     objectFit: "contain",
                                                     marginTop: 2,
-                                                    marginRight: 10,
-                                                    backgroundColor: "#f3f4f6"
+                                                    marginRight: 10
                                                 }}
                                             />
                                         )}
