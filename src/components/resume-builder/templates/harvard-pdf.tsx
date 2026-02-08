@@ -574,8 +574,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
                                                         width: 30,
                                                         height: 30,
                                                         objectFit: "contain",
-                                                        marginRight: 10,
-                                                        backgroundColor: "#f3f4f6"
+                                                        marginRight: 10
                                                     }}
                                                 />
                                             )}

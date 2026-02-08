@@ -409,17 +409,18 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
 }
 
 // Function to generate and download PDF based on template
-// Helper to ensure base64 is a valid PNG (converts SVGs if needed)
-// This runs in the browser, so we can use Canvas
-async function ensurePngDataUri(dataUri: string): Promise<string> {
-    if (!dataUri || !dataUri.startsWith('data:image')) return dataUri;
-    // Optimization: if it looks like a simple PNG already, maybe skip? 
-    // But to be safe against "data:image/svg+xml" or "data:image/webp", we just process everything except maybe exact matches if we trusted the source.
-    // For now, let's process all to be safe.
+// Helper to ensure any image source (URL or Base64) is converted to a valid PNG Base64
+// This runs in the browser, bypassing server-side proxy issues
+async function resolveImageToPngBase64(src: string): Promise<string> {
+    if (!src) return "";
+
+    // If it's already a PNG data URI, we might trust it, but re-processing ensures consistency
+    // if (src.startsWith('data:image/png')) return src; 
 
     return new Promise((resolve) => {
         const img = new window.Image();
-        img.crossOrigin = "anonymous"; // Just in case, though for data URI usually ignored
+        img.crossOrigin = "anonymous"; // Request CORS permission
+
         img.onload = () => {
             const canvas = document.createElement('canvas');
             canvas.width = img.width;
@@ -427,17 +428,69 @@ async function ensurePngDataUri(dataUri: string): Promise<string> {
             const ctx = canvas.getContext('2d');
             if (ctx) {
                 ctx.drawImage(img, 0, 0);
-                // safe export
-                resolve(canvas.toDataURL('image/png'));
+                try {
+                    const dataUrl = canvas.toDataURL('image/png');
+                    resolve(dataUrl);
+                } catch (e) {
+                    // Canvas tainted?
+                    console.warn("Canvas tainted, cannot export Base64", e);
+                    resolve(src);
+                }
             } else {
-                resolve(dataUri);
+                resolve(src);
             }
         };
-        img.onerror = () => {
-            console.warn("Failed to load image for PNG conversion, using original.");
-            resolve(dataUri);
+
+        img.onerror = async () => {
+            // If direct load fails (e.g. CORS error on a URL), try fetching as blob first
+            // This sometimes works if the Image tag fails but fetch works? 
+            // Actually, if Image fails, fetch loop might work better.
+            if (src.startsWith('http')) {
+                try {
+                    const res = await fetch(src, { mode: 'cors' });
+                    if (res.ok) {
+                        const blob = await res.blob();
+                        const blobUrl = URL.createObjectURL(blob);
+                        // Recursively try with the blob URL (which is a safe local URL)
+                        // But we need to use a new image object
+                        const img2 = new window.Image();
+                        img2.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = img2.width;
+                            canvas.height = img2.height;
+                            const ctx = canvas.getContext('2d');
+                            if (ctx) {
+                                ctx.drawImage(img2, 0, 0);
+                                resolve(canvas.toDataURL('image/png'));
+                            } else {
+                                resolve(src);
+                            }
+                            URL.revokeObjectURL(blobUrl);
+                        };
+                        img2.onerror = () => {
+                            URL.revokeObjectURL(blobUrl);
+                            resolve(src); // Giving up, return original
+                        };
+                        img2.src = blobUrl;
+                        return;
+                    }
+                } catch (e) {
+                    // Proxies?
+                    // If we are really stuck, we could try the API proxy as last resort
+                    const origin = window.location.origin;
+                    if (!src.includes('/api/image-proxy')) {
+                        // prevent infinite loop if we passed a proxy url
+                        // resolve(resolveImageToPngBase64(`${origin}/api/image-proxy?url=${encodeURIComponent(src)}`));
+                        // This risks recursion limit. Just return original.
+                    }
+                }
+            }
+
+            console.warn("Failed to load image for PNG conversion:", src);
+            resolve(src);
         };
-        img.src = dataUri;
+
+        img.src = src;
     });
 }
 
@@ -454,30 +507,29 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
         return `${origin}/api/image-proxy?url=${encodeURIComponent(targetUrl)}`;
     };
 
-    // Deep copy data to avoid mutating state
+    // Deep clone the data so we can modify it for PDF generation
     const data = JSON.parse(JSON.stringify(originalData));
 
     // Experience Company Logos
     if (data.showCompanyLogos) {
         for (const exp of data.experience) {
-            // console.log(`[PDF Gen] Processing ${exp.company}. LogoUrl length: ${exp.logoUrl?.length || 0}`);
-            if (exp.logoUrl && exp.logoUrl.startsWith('data:image')) {
-                // Ensure it's a PNG (converts SVGs/WEBP to PNG)
-                exp.logoUrl = await ensurePngDataUri(exp.logoUrl);
-                // console.log(`[PDF Logo] Base64 detected for ${exp.company}, using directly.`);
+            if (exp.logoUrl) {
+                // Convert whatever we have (URL or Base64) to a clean PNG Base64
+                exp.logoUrl = await resolveImageToPngBase64(exp.logoUrl);
                 continue;
             }
 
+            // Fallback: Try to find a logo if one is missing (Late binding)
             if (!exp.logoUrl && (exp.companyUrl || exp.company)) {
-                // ... (no changes to fetch logic, but we should prioritize client-side fix)
-                // Actually, if we are here, we don't have a logo.
+                // Note: We don't have the fetch logic here, we rely on the editor sidebar having done it.
+                // But we could potentially do a last-ditch fetch here if we imported fetchLogoAndReturnBase64?
+                // For now, let's assume the user logic covers it. 
+                // The previous logic had a fallback for safeDomain URLs.
                 const domain = getCompanyDomain(exp.company, exp.companyUrl);
                 if (domain) {
-                    exp.logoUrl = getSafeLogoUrl(domain);
+                    const safeUrl = `https://logo.clearbit.com/${domain}`;
+                    exp.logoUrl = await resolveImageToPngBase64(safeUrl);
                 }
-            } else if (exp.logoUrl && exp.logoUrl.startsWith('http')) {
-                const origin = window.location.origin;
-                exp.logoUrl = `${origin}/api/image-proxy?url=${encodeURIComponent(exp.logoUrl)}`;
             }
         }
     }
@@ -485,19 +537,17 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
     // Education Institution Logos
     if (data.showInstitutionLogos) {
         for (const edu of data.education) {
-            if (edu.logoUrl && edu.logoUrl.startsWith('data:image')) {
-                edu.logoUrl = await ensurePngDataUri(edu.logoUrl);
+            if (edu.logoUrl) {
+                edu.logoUrl = await resolveImageToPngBase64(edu.logoUrl);
                 continue;
             }
 
             if (!edu.logoUrl && (edu.website || edu.institution)) {
                 const domain = getInstitutionDomain(edu.institution, edu.website);
                 if (domain) {
-                    edu.logoUrl = getSafeLogoUrl(domain);
+                    const safeUrl = `https://logo.clearbit.com/${domain}`;
+                    edu.logoUrl = await resolveImageToPngBase64(safeUrl);
                 }
-            } else if (edu.logoUrl && edu.logoUrl.startsWith('http')) {
-                const origin = window.location.origin;
-                edu.logoUrl = `${origin}/api/image-proxy?url=${encodeURIComponent(edu.logoUrl)}`;
             }
         }
     }
