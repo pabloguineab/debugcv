@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { ProfilePictureUpload } from "@/components/resume-builder/profile-picture-upload";
 
 import { CompanyLogoInput } from "@/components/resume-builder/form/company-logo-input";
+import { fetchLogoAndReturnBase64 } from "@/lib/fetch-logo";
 
 interface ResumeEditorSidebarProps {
     data: ResumeData;
@@ -146,6 +147,62 @@ export function ResumeEditorSidebar({
 
     const removeCertification = (index: number) => {
         onUpdate({ certifications: data.certifications.filter((_, i) => i !== index) });
+    };
+
+    const [isFetchingLogos, setIsFetchingLogos] = useState(false);
+
+    const handleToggleCompanyLogos = async () => {
+        const newValue = !data.showCompanyLogos;
+        onUpdate({ showCompanyLogos: newValue });
+
+        if (newValue) {
+            setIsFetchingLogos(true);
+            try {
+                const experiencesToUpdate = data.experience.map(async (exp) => {
+                    if (!exp.logoUrl && exp.company) {
+                        const logo = await fetchLogoAndReturnBase64(exp.company, exp.companyUrl, "company");
+                        if (logo) {
+                            return { ...exp, logoUrl: logo };
+                        }
+                    }
+                    return exp;
+                });
+
+                const updatedExperience = await Promise.all(experiencesToUpdate);
+                if (JSON.stringify(updatedExperience) !== JSON.stringify(data.experience)) {
+                    onUpdate({ experience: updatedExperience });
+                }
+            } finally {
+                setIsFetchingLogos(false);
+            }
+        }
+    };
+
+    const handleToggleInstitutionLogos = async () => {
+        const newValue = !data.showInstitutionLogos;
+        onUpdate({ showInstitutionLogos: newValue });
+
+        if (newValue) {
+            setIsFetchingLogos(true);
+            try {
+                const educationsToUpdate = data.education.map(async (edu) => {
+                    if (!edu.logoUrl && edu.institution) {
+                        const logo = await fetchLogoAndReturnBase64(edu.institution, edu.website, "institution");
+                        if (logo) {
+                            return { ...edu, logoUrl: logo };
+                        }
+                    }
+                    return edu;
+                });
+
+                const updatedEducation = await Promise.all(educationsToUpdate);
+                if (JSON.stringify(updatedEducation) !== JSON.stringify(data.education)) {
+                    onUpdate({ education: updatedEducation });
+                }
+            } finally {
+                setIsFetchingLogos(false);
+            }
+        }
     };
 
     const SectionHeader = ({ title, section }: { title: string; section: string }) => (
@@ -295,10 +352,15 @@ export function ResumeEditorSidebar({
                                             <Button
                                                 variant={data.showCompanyLogos ? "default" : "outline"}
                                                 size="sm"
-                                                onClick={() => onUpdate({ showCompanyLogos: !data.showCompanyLogos })}
+                                                onClick={handleToggleCompanyLogos}
+                                                disabled={isFetchingLogos}
                                                 className={cn("h-6 text-[10px] px-2", data.showCompanyLogos ? "bg-blue-600 hover:bg-blue-700" : "")}
                                             >
-                                                {data.showCompanyLogos ? "On" : "Off"}
+                                                {isFetchingLogos ? (
+                                                    <Sparkles className="w-3 h-3 animate-spin" />
+                                                ) : (
+                                                    data.showCompanyLogos ? "On" : "Off"
+                                                )}
                                             </Button>
                                         </div>
                                         <div className="flex items-center justify-between border rounded-lg p-2 bg-muted/20">
@@ -309,10 +371,15 @@ export function ResumeEditorSidebar({
                                             <Button
                                                 variant={data.showInstitutionLogos ? "default" : "outline"}
                                                 size="sm"
-                                                onClick={() => onUpdate({ showInstitutionLogos: !data.showInstitutionLogos })}
+                                                onClick={handleToggleInstitutionLogos}
+                                                disabled={isFetchingLogos}
                                                 className={cn("h-6 text-[10px] px-2", data.showInstitutionLogos ? "bg-blue-600 hover:bg-blue-700" : "")}
                                             >
-                                                {data.showInstitutionLogos ? "On" : "Off"}
+                                                {isFetchingLogos ? (
+                                                    <Sparkles className="w-3 h-3 animate-spin" />
+                                                ) : (
+                                                    data.showInstitutionLogos ? "On" : "Off"
+                                                )}
                                             </Button>
                                         </div>
                                     </div>
