@@ -409,6 +409,38 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
 }
 
 // Function to generate and download PDF based on template
+// Helper to ensure base64 is a valid PNG (converts SVGs if needed)
+// This runs in the browser, so we can use Canvas
+async function ensurePngDataUri(dataUri: string): Promise<string> {
+    if (!dataUri || !dataUri.startsWith('data:image')) return dataUri;
+    // Optimization: if it looks like a simple PNG already, maybe skip? 
+    // But to be safe against "data:image/svg+xml" or "data:image/webp", we just process everything except maybe exact matches if we trusted the source.
+    // For now, let's process all to be safe.
+
+    return new Promise((resolve) => {
+        const img = new window.Image();
+        img.crossOrigin = "anonymous"; // Just in case, though for data URI usually ignored
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                ctx.drawImage(img, 0, 0);
+                // safe export
+                resolve(canvas.toDataURL('image/png'));
+            } else {
+                resolve(dataUri);
+            }
+        };
+        img.onerror = () => {
+            console.warn("Failed to load image for PNG conversion, using original.");
+            resolve(dataUri);
+        };
+        img.src = dataUri;
+    });
+}
+
 export async function downloadResumePDF(originalData: ResumeData): Promise<void> {
     const { getCompanyDomain, getInstitutionDomain } = await import("@/lib/logo-utils");
 
@@ -427,32 +459,35 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
 
     // Experience Company Logos
     if (data.showCompanyLogos) {
-        data.experience.forEach((exp: any) => {
-            console.log(`[PDF Gen] Processing ${exp.company}. LogoUrl length: ${exp.logoUrl?.length || 0}`);
+        for (const exp of data.experience) {
+            // console.log(`[PDF Gen] Processing ${exp.company}. LogoUrl length: ${exp.logoUrl?.length || 0}`);
             if (exp.logoUrl && exp.logoUrl.startsWith('data:image')) {
-                console.log(`[PDF Logo] Base64 detected for ${exp.company}, using directly.`);
-                return;
+                // Ensure it's a PNG (converts SVGs/WEBP to PNG)
+                exp.logoUrl = await ensurePngDataUri(exp.logoUrl);
+                // console.log(`[PDF Logo] Base64 detected for ${exp.company}, using directly.`);
+                continue;
             }
 
             if (!exp.logoUrl && (exp.companyUrl || exp.company)) {
+                // ... (no changes to fetch logic, but we should prioritize client-side fix)
+                // Actually, if we are here, we don't have a logo.
                 const domain = getCompanyDomain(exp.company, exp.companyUrl);
                 if (domain) {
                     exp.logoUrl = getSafeLogoUrl(domain);
                 }
             } else if (exp.logoUrl && exp.logoUrl.startsWith('http')) {
-                // Proxy manual URLs too
                 const origin = window.location.origin;
                 exp.logoUrl = `${origin}/api/image-proxy?url=${encodeURIComponent(exp.logoUrl)}`;
             }
-        });
+        }
     }
 
     // Education Institution Logos
     if (data.showInstitutionLogos) {
-        data.education.forEach((edu: any) => {
+        for (const edu of data.education) {
             if (edu.logoUrl && edu.logoUrl.startsWith('data:image')) {
-                console.log(`[PDF Logo] Base64 detected for ${edu.institution}, skipping fetch.`);
-                return;
+                edu.logoUrl = await ensurePngDataUri(edu.logoUrl);
+                continue;
             }
 
             if (!edu.logoUrl && (edu.website || edu.institution)) {
@@ -464,7 +499,7 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
                 const origin = window.location.origin;
                 edu.logoUrl = `${origin}/api/image-proxy?url=${encodeURIComponent(edu.logoUrl)}`;
             }
-        });
+        }
     }
 
     let pdfBlob: Blob;
