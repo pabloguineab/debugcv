@@ -194,7 +194,7 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
     // Shifted baseline: "very-dense" is now the standard (1.0) to avoid shrinking content that fits.
     // Restored "perfect" aggressive filling, relying on removing bottom padding to fix overflow
     const densityFactors = {
-        'very-dense': 0.95, // Slightly smaller to fit more
+        'very-dense': 1.0,  // Restored to standard size for readability
         'dense': 1.0,
         'medium': 1.1,
         'light': 1.2,
@@ -204,11 +204,11 @@ export function HarvardPDFDocument({ data }: { data: ResumeData }) {
 
     // Vertical spacing scaling to fill vertical whitespace
     const spacingFactors = {
-        'very-dense': 1.05, // Tighter to prevent page 2
-        'dense': 1.15,
-        'medium': 1.3,
-        'light': 1.5,
-        'very-light': 1.7
+        'very-dense': 1.1,  // Balanced: tighter than original (1.16), looser than aggressive (1.05)
+        'dense': 1.2,       // Smoother transition
+        'medium': 1.35,
+        'light': 1.55,
+        'very-light': 1.75
     };
     const spacingFactor = (spacingFactors[styleConfig.tier] || 1.0) * (data.showPhoto ? 0.95 : 1.0);
 
