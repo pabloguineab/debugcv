@@ -10,6 +10,8 @@ import { Sparkles, GripVertical, Plus, Trash2, ChevronDown, ChevronUp, Image as 
 import { cn } from "@/lib/utils";
 import { ProfilePictureUpload } from "@/components/resume-builder/profile-picture-upload";
 
+import { CompanyLogoInput } from "@/components/resume-builder/form/company-logo-input";
+
 interface ResumeEditorSidebarProps {
     data: ResumeData;
     score: number;
@@ -507,19 +509,32 @@ export function ResumeEditorSidebar({
                                             <Trash2 className="w-3 h-3" />
                                         </Button>
                                     </div>
-                                    <div className="space-y-2">
-                                        <Input
-                                            value={exp.company}
-                                            onChange={(e) => updateExperience(index, { company: e.target.value })}
-                                            placeholder="Company name"
-                                            className="h-8 text-xs"
-                                        />
-                                        <Input
-                                            value={exp.title}
-                                            onChange={(e) => updateExperience(index, { title: e.target.value })}
-                                            placeholder="Job title"
-                                            className="h-8 text-xs"
-                                        />
+                                    <div className="space-y-4">
+                                        <div className="flex gap-4">
+                                            <div className="flex-1 space-y-2">
+                                                <Input
+                                                    value={exp.company}
+                                                    onChange={(e) => updateExperience(index, { company: e.target.value })}
+                                                    placeholder="Company name"
+                                                    className="h-8 text-xs"
+                                                />
+                                                <Input
+                                                    value={exp.title}
+                                                    onChange={(e) => updateExperience(index, { title: e.target.value })}
+                                                    placeholder="Job title"
+                                                    className="h-8 text-xs"
+                                                />
+                                            </div>
+                                            <div className="pt-0.5">
+                                                <CompanyLogoInput
+                                                    type="company"
+                                                    companyName={exp.company}
+                                                    website={exp.companyUrl}
+                                                    value={exp.logoUrl}
+                                                    onChange={(url) => updateExperience(index, { logoUrl: url })}
+                                                />
+                                            </div>
+                                        </div>
                                         <div className="grid grid-cols-2 gap-2">
                                             <Input
                                                 value={exp.startDate}
@@ -620,19 +635,32 @@ export function ResumeEditorSidebar({
                                             <Trash2 className="w-3 h-3" />
                                         </Button>
                                     </div>
-                                    <div className="space-y-2">
-                                        <Input
-                                            value={edu.institution}
-                                            onChange={(e) => updateEducation(index, { institution: e.target.value })}
-                                            placeholder="Institution name"
-                                            className="h-8 text-xs"
-                                        />
-                                        <Input
-                                            value={edu.degree}
-                                            onChange={(e) => updateEducation(index, { degree: e.target.value })}
-                                            placeholder="Degree (e.g., B.Sc.)"
-                                            className="h-8 text-xs"
-                                        />
+                                    <div className="space-y-4">
+                                        <div className="flex gap-4">
+                                            <div className="flex-1 space-y-2">
+                                                <Input
+                                                    value={edu.institution}
+                                                    onChange={(e) => updateEducation(index, { institution: e.target.value })}
+                                                    placeholder="Institution name"
+                                                    className="h-8 text-xs"
+                                                />
+                                                <Input
+                                                    value={edu.degree}
+                                                    onChange={(e) => updateEducation(index, { degree: e.target.value })}
+                                                    placeholder="Degree (e.g., B.Sc.)"
+                                                    className="h-8 text-xs"
+                                                />
+                                            </div>
+                                            <div className="pt-0.5">
+                                                <CompanyLogoInput
+                                                    type="institution"
+                                                    companyName={edu.institution}
+                                                    website={edu.website}
+                                                    value={edu.logoUrl}
+                                                    onChange={(url) => updateEducation(index, { logoUrl: url })}
+                                                />
+                                            </div>
+                                        </div>
                                         <Input
                                             value={edu.field}
                                             onChange={(e) => updateEducation(index, { field: e.target.value })}

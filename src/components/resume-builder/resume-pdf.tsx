@@ -428,6 +428,11 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
     // Experience Company Logos
     if (data.showCompanyLogos) {
         data.experience.forEach((exp: any) => {
+            if (exp.logoUrl && exp.logoUrl.startsWith('data:image')) {
+                console.log(`[PDF Logo] Base64 detected for ${exp.company}, skipping fetch.`);
+                return;
+            }
+
             if (!exp.logoUrl && (exp.companyUrl || exp.company)) {
                 const domain = getCompanyDomain(exp.company, exp.companyUrl);
                 if (domain) {
@@ -444,6 +449,11 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
     // Education Institution Logos
     if (data.showInstitutionLogos) {
         data.education.forEach((edu: any) => {
+            if (edu.logoUrl && edu.logoUrl.startsWith('data:image')) {
+                console.log(`[PDF Logo] Base64 detected for ${edu.institution}, skipping fetch.`);
+                return;
+            }
+
             if (!edu.logoUrl && (edu.website || edu.institution)) {
                 const domain = getInstitutionDomain(edu.institution, edu.website);
                 if (domain) {
