@@ -158,19 +158,22 @@ export function ResumeEditorSidebar({
         if (newValue) {
             setIsFetchingLogos(true);
             try {
-                const experiencesToUpdate = data.experience.map(async (exp) => {
+                const newExperience = [...data.experience];
+                let hasChanges = false;
+
+                for (let i = 0; i < newExperience.length; i++) {
+                    const exp = newExperience[i];
                     if (!exp.logoUrl && exp.company) {
                         const logo = await fetchLogoAndReturnBase64(exp.company, exp.companyUrl, "company");
                         if (logo) {
-                            return { ...exp, logoUrl: logo };
+                            newExperience[i] = { ...exp, logoUrl: logo };
+                            hasChanges = true;
                         }
                     }
-                    return exp;
-                });
+                }
 
-                const updatedExperience = await Promise.all(experiencesToUpdate);
-                if (JSON.stringify(updatedExperience) !== JSON.stringify(data.experience)) {
-                    onUpdate({ experience: updatedExperience });
+                if (hasChanges) {
+                    onUpdate({ experience: newExperience });
                 }
             } finally {
                 setIsFetchingLogos(false);
@@ -185,19 +188,22 @@ export function ResumeEditorSidebar({
         if (newValue) {
             setIsFetchingLogos(true);
             try {
-                const educationsToUpdate = data.education.map(async (edu) => {
+                const newEducation = [...data.education];
+                let hasChanges = false;
+
+                for (let i = 0; i < newEducation.length; i++) {
+                    const edu = newEducation[i];
                     if (!edu.logoUrl && edu.institution) {
                         const logo = await fetchLogoAndReturnBase64(edu.institution, edu.website, "institution");
                         if (logo) {
-                            return { ...edu, logoUrl: logo };
+                            newEducation[i] = { ...edu, logoUrl: logo };
+                            hasChanges = true;
                         }
                     }
-                    return edu;
-                });
+                }
 
-                const updatedEducation = await Promise.all(educationsToUpdate);
-                if (JSON.stringify(updatedEducation) !== JSON.stringify(data.education)) {
-                    onUpdate({ education: updatedEducation });
+                if (hasChanges) {
+                    onUpdate({ education: newEducation });
                 }
             } finally {
                 setIsFetchingLogos(false);
