@@ -412,74 +412,14 @@ function ResumePDFDocument({ data }: ResumePDFDocumentProps) {
 export async function downloadResumePDF(originalData: ResumeData): Promise<void> {
     const { getCompanyDomain, getInstitutionDomain } = await import("@/lib/logo-utils");
 
-    // Helper to fetch and convert to Base64 with Hybrid Strategy
-    // 1. Try Direct Fetch (Fastest, works if CORS allowed, likely what Browser Preview uses)
-    // 2. Try Proxy Fetch (Fallback for CORS issues or blocked requests)
-    const fetchImageAsBase64 = async (domain: string): Promise<string> => {
-        const fetchBase64 = async (url: string, useProxy: boolean): Promise<string | null> => {
-            try {
-                console.log(`[PDF Logo] Attempting fetch for ${url} (Proxy: ${useProxy})`);
-                const fetchUrl = useProxy
-                    ? `${window.location.origin}/api/image-proxy?url=${encodeURIComponent(url)}`
-                    : url;
-
-                const response = await fetch(fetchUrl, useProxy ? {} : { mode: 'cors' });
-                if (!response.ok) {
-                    console.warn(`[PDF Logo] Fetch failed for ${url} (Proxy: ${useProxy}): ${response.status}`);
-                    return null;
-                }
-
-                const blob = await response.blob();
-                if (blob.size < 50) {
-                    console.warn(`[PDF Logo] Blob too small for ${url} (Size: ${blob.size})`);
-                    return null;
-                }
-
-                return new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => {
-                        const res = reader.result as string;
-                        if (res.startsWith("data:image")) {
-                            console.log(`[PDF Logo] Success for ${url} (Proxy: ${useProxy})`);
-                            resolve(res);
-                        } else {
-                            console.warn(`[PDF Logo] Invalid base64 for ${url}`);
-                            resolve(null);
-                        }
-                    };
-                    reader.onerror = () => {
-                        console.error(`[PDF Logo] FileReader error for ${url}`);
-                        resolve(null);
-                    };
-                    reader.readAsDataURL(blob);
-                });
-            } catch (e) {
-                console.error(`[PDF Logo] Network error for ${url} (Proxy: ${useProxy})`, e);
-                return null;
-            }
-        };
-
-        // Strategy 1: Clearbit Direct (Fastest, mostly CORS enabled)
-        const clearbitUrl = `https://logo.clearbit.com/${domain}`;
-        let base64 = await fetchBase64(clearbitUrl, false);
-        if (base64) return base64;
-
-        // Strategy 2: Brandfetch Direct
-        const brandfetchUrl = `https://cdn.brandfetch.io/${domain}/w/400/h/400`;
-        base64 = await fetchBase64(brandfetchUrl, false);
-        if (base64) return base64;
-
-        // Strategy 3: Clearbit via Proxy (Backup)
-        console.log(`[PDF Logo] Falling back to proxy for ${domain}`);
-        base64 = await fetchBase64(clearbitUrl, true);
-        if (base64) return base64;
-
-        // Strategy 4: Brandfetch via Proxy
-        base64 = await fetchBase64(brandfetchUrl, true);
-        if (base64) return base64;
-
-        console.warn(`[PDF Logo] All strategies failed for ${domain}`);
-        return "";
+    // Helper to generate a proxy URL that React-PDF can fetch safely
+    const getSafeLogoUrl = (domain: string) => {
+        const origin = window.location.origin;
+        const targetUrl = `https://logo.clearbit.com/${domain}`;
+        // We pass the proxy URL directly to the Image component. 
+        // React-PDF will fetch from our own API, which then fetches from Clearbit.
+        // This avoids CORS issues and complex base64 conversion logic.
+        return `${origin}/api/image-proxy?url=${encodeURIComponent(targetUrl)}`;
     };
 
     // Deep copy data to avoid mutating state
@@ -487,117 +427,33 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
 
     // Experience Company Logos
     if (data.showCompanyLogos) {
-        await Promise.all(data.experience.map(async (exp: any) => {
+        data.experience.forEach((exp: any) => {
             if (!exp.logoUrl && (exp.companyUrl || exp.company)) {
-                // Try to derive domain and fetch logo
                 const domain = getCompanyDomain(exp.company, exp.companyUrl);
                 if (domain) {
-                    console.log(`[PDF Logo] Resolved domain for ${exp.company}: ${domain}`);
-                    const base64 = await fetchImageAsBase64(domain);
-                    if (base64) {
-                        console.log(`[PDF Logo] Assigned base64 for ${exp.company} (Length: ${base64.length})`);
-                        exp.logoUrl = base64;
-                    } else {
-                        console.warn(`[PDF Logo] Failed to fetch base64 for ${exp.company}`);
-                    }
-                } else {
-                    console.warn(`[PDF Logo] Could not resolve domain for ${exp.company}`);
+                    exp.logoUrl = getSafeLogoUrl(domain);
                 }
             } else if (exp.logoUrl && exp.logoUrl.startsWith('http')) {
-                // If user has a manual URL, try to fetch it directly or via proxy
-                const fetchSimple = async (url: string) => {
-                    // Try logic similar to hybrid: Direct then Proxy
-                    const fetchDirect = async () => {
-                        try {
-                            const res = await fetch(url, { mode: 'cors' });
-                            if (res.ok) {
-                                const blob = await res.blob();
-                                return new Promise<string>(resolve => {
-                                    const reader = new FileReader();
-                                    reader.onloadend = () => resolve(reader.result as string);
-                                    reader.readAsDataURL(blob);
-                                });
-                            }
-                        } catch (e) { }
-                        return null;
-                    };
-
-                    const fetchProxy = async () => {
-                        try {
-                            const proxyUrl = `${window.location.origin}/api/image-proxy?url=${encodeURIComponent(url)}`;
-                            const res = await fetch(proxyUrl);
-                            if (res.ok) {
-                                const blob = await res.blob();
-                                return new Promise<string>(resolve => {
-                                    const reader = new FileReader();
-                                    reader.onloadend = () => resolve(reader.result as string);
-                                    reader.readAsDataURL(blob);
-                                });
-                            }
-                        } catch (e) { }
-                        return null;
-                    };
-
-                    const b64 = await fetchDirect() || await fetchProxy();
-                    return b64 || "";
-                };
-
-                const b64 = await fetchSimple(exp.logoUrl);
-                exp.logoUrl = b64;
+                // Proxy manual URLs too
+                const origin = window.location.origin;
+                exp.logoUrl = `${origin}/api/image-proxy?url=${encodeURIComponent(exp.logoUrl)}`;
             }
-        }));
+        });
     }
 
     // Education Institution Logos
     if (data.showInstitutionLogos) {
-        await Promise.all(data.education.map(async (edu: any) => {
+        data.education.forEach((edu: any) => {
             if (!edu.logoUrl && (edu.website || edu.institution)) {
                 const domain = getInstitutionDomain(edu.institution, edu.website);
                 if (domain) {
-                    const base64 = await fetchImageAsBase64(domain);
-                    if (base64) edu.logoUrl = base64;
+                    edu.logoUrl = getSafeLogoUrl(domain);
                 }
             } else if (edu.logoUrl && edu.logoUrl.startsWith('http')) {
-                const fetchSimple = async (url: string) => {
-                    // Same hybrid logic for manual education URLs
-                    const fetchDirect = async () => {
-                        try {
-                            const res = await fetch(url, { mode: 'cors' });
-                            if (res.ok) {
-                                const blob = await res.blob();
-                                return new Promise<string>(resolve => {
-                                    const reader = new FileReader();
-                                    reader.onloadend = () => resolve(reader.result as string);
-                                    reader.readAsDataURL(blob);
-                                });
-                            }
-                        } catch (e) { }
-                        return null;
-                    };
-
-                    const fetchProxy = async () => {
-                        try {
-                            const proxyUrl = `${window.location.origin}/api/image-proxy?url=${encodeURIComponent(url)}`;
-                            const res = await fetch(proxyUrl);
-                            if (res.ok) {
-                                const blob = await res.blob();
-                                return new Promise<string>(resolve => {
-                                    const reader = new FileReader();
-                                    reader.onloadend = () => resolve(reader.result as string);
-                                    reader.readAsDataURL(blob);
-                                });
-                            }
-                        } catch (e) { }
-                        return null;
-                    };
-
-                    const b64 = await fetchDirect() || await fetchProxy();
-                    return b64 || "";
-                };
-                const b64 = await fetchSimple(edu.logoUrl);
-                edu.logoUrl = b64;
+                const origin = window.location.origin;
+                edu.logoUrl = `${origin}/api/image-proxy?url=${encodeURIComponent(edu.logoUrl)}`;
             }
-        }));
+        });
     }
 
     let pdfBlob: Blob;
