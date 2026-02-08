@@ -492,8 +492,16 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
                 // Try to derive domain and fetch logo
                 const domain = getCompanyDomain(exp.company, exp.companyUrl);
                 if (domain) {
+                    console.log(`[PDF Logo] Resolved domain for ${exp.company}: ${domain}`);
                     const base64 = await fetchImageAsBase64(domain);
-                    if (base64) exp.logoUrl = base64;
+                    if (base64) {
+                        console.log(`[PDF Logo] Assigned base64 for ${exp.company} (Length: ${base64.length})`);
+                        exp.logoUrl = base64;
+                    } else {
+                        console.warn(`[PDF Logo] Failed to fetch base64 for ${exp.company}`);
+                    }
+                } else {
+                    console.warn(`[PDF Logo] Could not resolve domain for ${exp.company}`);
                 }
             } else if (exp.logoUrl && exp.logoUrl.startsWith('http')) {
                 // If user has a manual URL, try to fetch it directly or via proxy
