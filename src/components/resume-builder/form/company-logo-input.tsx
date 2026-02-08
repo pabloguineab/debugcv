@@ -54,8 +54,6 @@ export function CompanyLogoInput({
                 return;
             }
 
-            const targetUrl = `https://logo.clearbit.com/${domain}`;
-
             // Helper to process response and return base64
             const processResponse = async (res: Response): Promise<string> => {
                 const blob = await res.blob();
@@ -72,29 +70,41 @@ export function CompanyLogoInput({
                 });
             };
 
-            // 1. Try Direct Browser Fetch (Fastest & avoids server DNS issues)
+            const strategies = [
+                `https://logo.clearbit.com/${domain}`,
+                `https://cdn.brandfetch.io/${domain}/w/400/h/400`,
+                `https://www.google.com/s2/favicons?domain=${domain}&sz=128`
+            ];
+
+            for (const url of strategies) {
+                try {
+                    console.log("Attempting fetch:", url);
+                    const res = await fetch(url, { mode: 'cors' });
+                    if (res.ok) {
+                        const base64 = await processResponse(res);
+                        onChange(base64);
+                        setIsFetching(false);
+                        return; // Success!
+                    }
+                } catch (e) {
+                    console.warn(`Failed to fetch ${url}`, e);
+                }
+            }
+
+            // If all direct fetches fail, try the proxy one last time (just in case)
+            // But we know proxy is likely broken on local, so this is a hail mary.
             try {
-                console.log("Attempting direct fetch:", targetUrl);
-                const res = await fetch(targetUrl, { mode: 'cors' });
+                const proxyUrl = `/api/image-proxy?url=${encodeURIComponent(`https://logo.clearbit.com/${domain}`)}`;
+                const res = await fetch(proxyUrl);
                 if (res.ok) {
                     const base64 = await processResponse(res);
                     onChange(base64);
                     setIsFetching(false);
                     return;
                 }
-            } catch (directError) {
-                console.warn("Direct fetch failed, trying proxy:", directError);
-            }
+            } catch (e) { }
 
-            // 2. Fallback to Proxy (if direct blocked by CORS)
-            const proxyUrl = `/api/image-proxy?url=${encodeURIComponent(targetUrl)}`;
-            console.log("Attempting proxy fetch:", proxyUrl);
-            const response = await fetch(proxyUrl);
-            if (!response.ok) throw new Error("Proxy fetch failed");
-
-            const base64 = await processResponse(response);
-            onChange(base64);
-            setIsFetching(false);
+            throw new Error("All strategies failed");
 
         } catch (error) {
             console.error("All logo fetch strategies failed:", error);
