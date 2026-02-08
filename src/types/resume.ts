@@ -66,6 +66,7 @@ export interface ResumeData {
     name: string;
     targetJob?: string;
     targetCompany?: string;
+    isTailored?: boolean;
     personalInfo: ResumePersonalInfo;
     summary: string;
     skills: string[];

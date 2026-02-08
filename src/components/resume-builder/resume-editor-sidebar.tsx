@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Sparkles, GripVertical, Plus, Trash2, ChevronDown, ChevronUp, Image as ImageIcon, Check, Palette, Building2, GraduationCap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProfilePictureUpload } from "@/components/resume-builder/profile-picture-upload";
@@ -400,33 +401,51 @@ export function ResumeEditorSidebar({
                     <SectionHeader title="Target Job Details" section="targetJob" />
                     {expandedSections.targetJob && (
                         <div className="space-y-3 mt-3">
-                            <div>
-                                <Label className="text-xs text-muted-foreground">Target Job Title</Label>
-                                <Input
-                                    value={data.targetJob || ""}
-                                    onChange={(e) => onUpdate({ targetJob: e.target.value })}
-                                    placeholder="e.g. Senior Frontend Engineer"
-                                    className="mt-1"
+                            <div className="flex items-center space-x-2 pb-2">
+                                <Checkbox
+                                    id="tailor-resume"
+                                    checked={data.isTailored || false}
+                                    onCheckedChange={(checked) => onUpdate({ isTailored: checked as boolean })}
                                 />
+                                <Label
+                                    htmlFor="tailor-resume"
+                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
+                                    Tailor to a specific job description
+                                </Label>
                             </div>
-                            <div>
-                                <Label className="text-xs text-muted-foreground">Target Company</Label>
-                                <Input
-                                    value={data.targetCompany || ""}
-                                    onChange={(e) => onUpdate({ targetCompany: e.target.value })}
-                                    placeholder="e.g. Acme Corp"
-                                    className="mt-1"
-                                />
-                            </div>
-                            {onJobDescriptionChange && (
-                                <div>
-                                    <Label className="text-xs text-muted-foreground">Job Description</Label>
-                                    <Textarea
-                                        value={jobDescription || ""}
-                                        onChange={(e) => onJobDescriptionChange(e.target.value)}
-                                        placeholder="Paste the job description here to improve AI suggestions..."
-                                        className="mt-1 min-h-[100px] resize-none text-xs"
-                                    />
+
+                            {data.isTailored && (
+                                <div className="space-y-3 pl-2 border-l-2 border-muted ml-1">
+                                    <div>
+                                        <Label className="text-xs text-muted-foreground">Target Job Title</Label>
+                                        <Input
+                                            value={data.targetJob || ""}
+                                            onChange={(e) => onUpdate({ targetJob: e.target.value })}
+                                            placeholder="e.g. Senior Frontend Engineer"
+                                            className="mt-1"
+                                        />
+                                    </div>
+                                    <div>
+                                        <Label className="text-xs text-muted-foreground">Target Company</Label>
+                                        <Input
+                                            value={data.targetCompany || ""}
+                                            onChange={(e) => onUpdate({ targetCompany: e.target.value })}
+                                            placeholder="e.g. Acme Corp"
+                                            className="mt-1"
+                                        />
+                                    </div>
+                                    {onJobDescriptionChange && (
+                                        <div>
+                                            <Label className="text-xs text-muted-foreground">Job Description</Label>
+                                            <Textarea
+                                                value={jobDescription || ""}
+                                                onChange={(e) => onJobDescriptionChange(e.target.value)}
+                                                placeholder="Paste the job description here to improve AI suggestions..."
+                                                className="mt-1 min-h-[100px] resize-none text-xs"
+                                            />
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
