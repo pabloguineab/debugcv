@@ -50,37 +50,54 @@ export function CompanyLogoInput({
                 : getInstitutionDomain(companyName, website);
 
             if (!domain) {
-                // If we can't guess a domain, we can't fetch
                 setIsFetching(false);
                 return;
             }
 
-            // Use our proxy to fetch and get base64 directly
-            // We use the proxy route but ask for base64 response? 
-            // Actually, we can just fetch the proxy URL and convertblob to base64 here on client
             const targetUrl = `https://logo.clearbit.com/${domain}`;
-            const proxyUrl = `/api/image-proxy?url=${encodeURIComponent(targetUrl)}`;
 
-            const response = await fetch(proxyUrl);
-            if (!response.ok) throw new Error("Fetch failed");
-
-            const blob = await response.blob();
-            if (blob.size < 50) throw new Error("Image too small");
-
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64 = reader.result as string;
-                if (base64 && base64.startsWith("data:image")) {
-                    onChange(base64); // Save the Base64 string directly!
-                } else {
-                    setFetchError(true);
-                }
-                setIsFetching(false);
+            // Helper to process response and return base64
+            const processResponse = async (res: Response): Promise<string> => {
+                const blob = await res.blob();
+                if (blob.size < 50) throw new Error("Image too small");
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        const result = reader.result as string;
+                        if (result && result.startsWith("data:image")) resolve(result);
+                        else reject(new Error("Invalid base64"));
+                    };
+                    reader.onerror = () => reject(new Error("Reader error"));
+                    reader.readAsDataURL(blob);
+                });
             };
-            reader.readAsDataURL(blob);
+
+            // 1. Try Direct Browser Fetch (Fastest & avoids server DNS issues)
+            try {
+                console.log("Attempting direct fetch:", targetUrl);
+                const res = await fetch(targetUrl, { mode: 'cors' });
+                if (res.ok) {
+                    const base64 = await processResponse(res);
+                    onChange(base64);
+                    setIsFetching(false);
+                    return;
+                }
+            } catch (directError) {
+                console.warn("Direct fetch failed, trying proxy:", directError);
+            }
+
+            // 2. Fallback to Proxy (if direct blocked by CORS)
+            const proxyUrl = `/api/image-proxy?url=${encodeURIComponent(targetUrl)}`;
+            console.log("Attempting proxy fetch:", proxyUrl);
+            const response = await fetch(proxyUrl);
+            if (!response.ok) throw new Error("Proxy fetch failed");
+
+            const base64 = await processResponse(response);
+            onChange(base64);
+            setIsFetching(false);
 
         } catch (error) {
-            console.warn("Auto-fetch logo failed:", error);
+            console.error("All logo fetch strategies failed:", error);
             setFetchError(true);
             setIsFetching(false);
         }
