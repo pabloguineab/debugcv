@@ -428,8 +428,9 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
     // Experience Company Logos
     if (data.showCompanyLogos) {
         data.experience.forEach((exp: any) => {
+            console.log(`[PDF Gen] Processing ${exp.company}. LogoUrl length: ${exp.logoUrl?.length || 0}`);
             if (exp.logoUrl && exp.logoUrl.startsWith('data:image')) {
-                console.log(`[PDF Logo] Base64 detected for ${exp.company}, skipping fetch.`);
+                console.log(`[PDF Logo] Base64 detected for ${exp.company}, using directly.`);
                 return;
             }
 
