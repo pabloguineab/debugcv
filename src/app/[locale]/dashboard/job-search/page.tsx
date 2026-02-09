@@ -725,10 +725,10 @@ function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds
             )}>
                 {/* Match Score Badge - Positioned Absolute Top Right */}
                 <div className={cn(
-                    "absolute top-4 right-4 px-2.5 py-1 rounded-full text-xs font-bold border flex items-center gap-1 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-sm",
+                    "absolute top-4 right-4 px-2 py-0.5 rounded-full text-[10px] font-bold border flex items-center gap-1 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-sm",
                     scoreColor
                 )}>
-                    <Sparkles className="w-3 h-3" />
+                    <Sparkles className="w-2.5 h-2.5" />
                     {matchScore}% Match
                 </div>
 
