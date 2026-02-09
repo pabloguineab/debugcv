@@ -32,6 +32,7 @@ export default function JobSearchPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const fileInputRef = React.useRef<HTMLInputElement>(null);
+    const loadMoreRef = React.useRef<HTMLDivElement>(null);
 
     // State
     const [query, setQuery] = useState('');
@@ -60,6 +61,23 @@ export default function JobSearchPage() {
         }
     }, []);
 
+    // Infinite scroll: auto-load more when scrolling to bottom
+    useEffect(() => {
+        const sentinel = loadMoreRef.current;
+        if (!sentinel) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && !loading && !loadingMore && hasMore) {
+                    handleLoadMore();
+                }
+            },
+            { threshold: 0.1, rootMargin: '200px' }
+        );
+
+        observer.observe(sentinel);
+        return () => observer.disconnect();
+    }, [loading, loadingMore, hasMore]);
 
     useEffect(() => {
         if (status === "unauthenticated") {
@@ -645,23 +663,10 @@ export default function JobSearchPage() {
                             ))}
                         </div>
 
+                        {/* Infinite scroll sentinel */}
                         {(hasMore || visibleCount < displayedJobs.length) && (
-                            <div className="flex justify-center py-8">
-                                <Button
-                                    variant="outline"
-                                    onClick={handleLoadMore}
-                                    disabled={loadingMore}
-                                    className="min-w-[150px]"
-                                >
-                                    {loadingMore ? (
-                                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-600 border-t-transparent" />
-                                    ) : (
-                                        <>
-                                            Load More
-                                            <ArrowDown className="ml-2 h-4 w-4" />
-                                        </>
-                                    )}
-                                </Button>
+                            <div ref={loadMoreRef} className="flex justify-center py-8">
+                                <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
                             </div>
                         )}
                     </>
