@@ -224,7 +224,7 @@ export default function JobSearchPage() {
                 const jobs = await searchJobs(finalQ, {
                     remote_jobs_only: false,
                     date_posted: 'month',
-                    num_pages: 4,
+                    num_pages: 6,
                     page: pageNum
                 });
 
@@ -304,7 +304,8 @@ export default function JobSearchPage() {
 
     const handleLoadMore = async () => {
         if (loading || loadingMore) return;
-        const remainingHidden = displayedJobs.length - visibleCount;
+        const filteredJobs = displayedJobs.filter(job => !invalidJobIds.has(job.job_id));
+        const remainingHidden = filteredJobs.length - visibleCount;
 
         if (remainingHidden >= 20) {
             setVisibleCount(prev => prev + 20);
@@ -319,9 +320,13 @@ export default function JobSearchPage() {
             let localNextQueryIndex = nextQueryIndex;
             let localPage = page;
             const MAX_ATTEMPTS = 5;
-            const targetNewFetchedJobs = Math.max(1, 20 - remainingHidden);
+            // Target is to have at least 20 new VALID jobs show up, or fill the gap
+            const targetNewValidJobs = Math.max(1, 20 - remainingHidden);
 
-            while (jobsFound < targetNewFetchedJobs && attempts < MAX_ATTEMPTS) {
+            // We need to loop until we have enough VALID jobs, not just raw jobs
+            // But we can't know validity until render. So we just fetch a big enough chunk.
+
+            while (jobsFound < 1 && attempts < MAX_ATTEMPTS) { // Logic simplified: Just ensure we fetched *something* new
                 attempts++;
                 let count = 0;
 
@@ -340,8 +345,13 @@ export default function JobSearchPage() {
                 jobsFound += count;
             }
 
+            // After fetching, we update visible count. 
+            // Since we can't know validity yet, we just expand visibility to show what we have.
+            // If the new jobs are invalid, the UI filter will handle them and they won't count towards visibleCount visual limit,
+            // effectively just "skipping" them until valid ones appear? 
+            // Actually, we simply add to visibleCount. The filter slice logic does the rest.
+
             if (jobsFound > 0 || remainingHidden > 0) {
-                // Ensure we don't exceed the total number of jobs available
                 setVisibleCount(prev => prev + 20);
             } else {
                 if (remainingHidden === 0) {
@@ -605,26 +615,29 @@ export default function JobSearchPage() {
                         <div className="flex items-center gap-2 mb-4">
                             <Badge variant="outline" className="text-emerald-600 border-emerald-200 bg-emerald-50 dark:bg-emerald-900/20 dark:border-emerald-800">
                                 <CheckCircle2 className="w-3 h-3 mr-1" />
-                                {displayedJobs.length} Jobs Found
+                                {displayedJobs.filter(job => !invalidJobIds.has(job.job_id)).length} Jobs Found
                             </Badge>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {displayedJobs.slice(0, visibleCount).map((job, index) => (
-                                <JobCard
-                                    key={job.job_id}
-                                    job={job}
-                                    index={index}
-                                    query={query}
-                                    onJobValidated={handleJobValidated}
-                                    validJobIds={validJobIds}
-                                    invalidJobIds={invalidJobIds}
-                                    visibleCount={visibleCount}
-                                />
-                            ))}
+                            {displayedJobs
+                                .filter(job => !invalidJobIds.has(job.job_id))
+                                .slice(0, visibleCount)
+                                .map((job, index) => (
+                                    <JobCard
+                                        key={job.job_id}
+                                        job={job}
+                                        index={index}
+                                        query={query}
+                                        onJobValidated={handleJobValidated}
+                                        validJobIds={validJobIds}
+                                        invalidJobIds={invalidJobIds}
+                                        visibleCount={visibleCount}
+                                    />
+                                ))}
                         </div>
 
-                        {(hasMore || visibleCount < displayedJobs.length) && (
+                        {(hasMore || visibleCount < displayedJobs.filter(job => !invalidJobIds.has(job.job_id)).length) && (
                             <div className="flex justify-center py-8">
                                 <Button
                                     variant="outline"
