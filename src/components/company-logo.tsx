@@ -16,7 +16,6 @@ interface CompanyLogoProps {
 export function CompanyLogo({ company, logo, website, size = "md", className = "", onLogoSuccess, onLogoFallback }: CompanyLogoProps) {
     const [logoSrc, setLogoSrc] = useState<string | null>(logo || null);
     const [hasError, setHasError] = useState(false);
-    const [triedFallback, setTriedFallback] = useState(false);
 
     // Helper to get domain from URL or name
     const getDomain = () => {
@@ -108,17 +107,13 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
     useEffect(() => {
         // Try Clearbit first (better coverage for smaller companies)
         setLogoSrc(`https://logo.clearbit.com/${domain}`);
-        setTriedFallback(false);
         setHasError(false);
     }, [logo, company, website, domain]);
 
     const handleImageError = () => {
-        if (!triedFallback) {
-            // Then try Brandfetch
-            setLogoSrc(`https://cdn.brandfetch.io/${domain}/w/400/h/400`);
-            setTriedFallback(true);
-        } else if (logo && logoSrc !== logo) {
-            // Finally try the provided logo from API
+        // Skip Brandfetch to avoid generic "B" logo
+        if (logo && logoSrc !== logo) {
+            // Try the provided logo from API
             setLogoSrc(logo);
         } else {
             setHasError(true);
