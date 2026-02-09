@@ -82,7 +82,7 @@ export async function searchJobs(
                 'X-RapidAPI-Key': RAPIDAPI_KEY,
                 'X-RapidAPI-Host': RAPIDAPI_HOST
             },
-            cache: 'no-store'
+            next: { revalidate: 0 }
         });
 
         if (!response.ok) {
@@ -93,7 +93,18 @@ export async function searchJobs(
         const result = await response.json() as SearchJobsResponse;
         let jobs = result.data || [];
 
-        console.log(`[searchJobs] Found ${jobs.length} results for: "${query}" (country: ${countryCode})`);
+        console.log(`[searchJobs] Found ${jobs.length} raw results for: "${query}" (country: ${countryCode})`);
+
+        // Filter: Must have employer_website or employer_logo
+        // User requirement: "no quiero empresa que no conozcamos su url y por lo tanto no tengamos logo"
+        const initialCount = jobs.length;
+        jobs = jobs.filter(job => {
+            const hasUrl = !!job.employer_website;
+            const hasLogo = !!job.employer_logo;
+            return hasUrl || hasLogo;
+        });
+
+        console.log(`[searchJobs] After filtering (URL/Logo): ${jobs.length}/${initialCount} jobs remaining`);
 
         if (remote_jobs_only) {
             jobs = jobs.filter(job => job.job_is_remote === true);

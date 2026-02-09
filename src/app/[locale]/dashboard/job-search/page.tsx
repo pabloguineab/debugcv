@@ -43,7 +43,7 @@ export default function JobSearchPage() {
     const [searched, setSearched] = useState(false);
     const [analyzingCv, setAnalyzingCv] = useState(false);
     const [page, setPage] = useState(1);
-    const [visibleCount, setVisibleCount] = useState(18);
+    const [visibleCount, setVisibleCount] = useState(20);
     const [searchQueries, setSearchQueries] = useState<string[]>([]);
     const [nextQueryIndex, setNextQueryIndex] = useState(0);
     const [error, setError] = useState<'rate_limit' | 'general' | null>(null);
@@ -184,12 +184,12 @@ export default function JobSearchPage() {
         if (queriesToRun.length === 0) queriesToRun.push(mainQuery);
         setNextQueryIndex(1);
         setPage(1);
-        setVisibleCount(18);
+        setVisibleCount(20);
         setHasMore(true);
 
         const count = await runBatchSearch(queriesToRun, locationVal, true, 1);
 
-        if (count < 18 && queries.length > 1) {
+        if (count < 20 && queries.length > 1) {
             const nextBatch = queries.slice(1, 2);
             setNextQueryIndex(2);
             await runBatchSearch(nextBatch, locationVal, false, 1);
@@ -224,7 +224,7 @@ export default function JobSearchPage() {
                 const jobs = await searchJobs(finalQ, {
                     remote_jobs_only: false,
                     date_posted: 'month',
-                    num_pages: 2,
+                    num_pages: 4,
                     page: pageNum
                 });
 
@@ -285,7 +285,7 @@ export default function JobSearchPage() {
             setSearchQueries([q]);
             setNextQueryIndex(1);
             setPage(1);
-            setVisibleCount(18);
+            setVisibleCount(20);
             setHasMore(true);
             setValidJobIds(new Set());
             setInvalidJobIds(new Set());
@@ -306,8 +306,8 @@ export default function JobSearchPage() {
         if (loading || loadingMore) return;
         const remainingHidden = displayedJobs.length - visibleCount;
 
-        if (remainingHidden >= 18) {
-            setVisibleCount(prev => prev + 18);
+        if (remainingHidden >= 20) {
+            setVisibleCount(prev => prev + 20);
             return;
         }
 
@@ -319,7 +319,7 @@ export default function JobSearchPage() {
             let localNextQueryIndex = nextQueryIndex;
             let localPage = page;
             const MAX_ATTEMPTS = 5;
-            const targetNewFetchedJobs = Math.max(1, 18 - remainingHidden);
+            const targetNewFetchedJobs = Math.max(1, 20 - remainingHidden);
 
             while (jobsFound < targetNewFetchedJobs && attempts < MAX_ATTEMPTS) {
                 attempts++;
@@ -342,7 +342,7 @@ export default function JobSearchPage() {
 
             if (jobsFound > 0 || remainingHidden > 0) {
                 // Ensure we don't exceed the total number of jobs available
-                setVisibleCount(prev => prev + 18);
+                setVisibleCount(prev => prev + 20);
             } else {
                 if (remainingHidden === 0) {
                     // If we found nothing and have nothing hidden, maybe we are done?
@@ -724,7 +724,7 @@ function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds
                 hoverBorderColor
             )}>
                 {/* Match Score Badge - Positioned Absolute Top Right */}
-                 <div className={cn(
+                <div className={cn(
                     "absolute top-4 right-4 px-2.5 py-1 rounded-full text-xs font-bold border flex items-center gap-1 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-sm",
                     scoreColor
                 )}>
@@ -759,7 +759,7 @@ function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds
 
                         {/* Badges / Meta Info */}
                         <div className="flex flex-wrap gap-2 mt-2">
-                             <Badge variant="secondary" className="rounded-full px-3 font-normal bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">
+                            <Badge variant="secondary" className="rounded-full px-3 font-normal bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">
                                 <MapPin className="h-3 w-3 mr-1.5 text-slate-400" />
                                 <span className="truncate max-w-[140px]">
                                     {job.job_city ? `${job.job_city}, ${job.job_country}` : "Location n/a"}
@@ -780,7 +780,7 @@ function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds
                                 </Badge>
                             )}
 
-                             <span className="text-xs text-slate-400 flex items-center ml-auto pt-1">
+                            <span className="text-xs text-slate-400 flex items-center ml-auto pt-1">
                                 {formatJobDate(job.job_posted_at_timestamp)}
                             </span>
                         </div>
