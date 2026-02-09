@@ -221,12 +221,24 @@ export default function JobSearchPage() {
 
                 console.log(`[runBatchSearch] Final query: "${finalQ}"`);
 
-                const jobs = await searchJobs(finalQ, {
+                const options = {
                     remote_jobs_only: false,
-                    date_posted: 'month',
+                    date_posted: 'month' as const,
                     num_pages: 6,
                     page: pageNum
-                });
+                };
+
+                let jobs = await searchJobs(finalQ, options);
+
+                // RELAXATION LOGIC: If 0 results for specific query, try broadening it
+                if (jobs.length === 0) {
+                    const broadQ = broadenQuery(finalQ);
+                    if (broadQ && broadQ !== finalQ) {
+                        console.log(`[runBatchSearch] 0 results for "${finalQ}", retrying with "${broadQ}"`);
+                        const broadJobs = await searchJobs(broadQ, options);
+                        jobs = broadJobs;
+                    }
+                }
 
                 resultsArray.push(jobs);
 
@@ -875,4 +887,33 @@ function getProviderInfo(publisher: string) {
     }
 
     return info;
+}
+
+// Helper to broaden query (remove last word of role if too long)
+function broadenQuery(query: string): string | null {
+    // Regex to split "Role in Location"
+    // Handles "Java Developer in Madrid", "Java Developer in Madrid, Spain"
+    // Case insensitive " in "
+    const match = query.match(/^(.*?)\s+in\s+(.*)$/i);
+
+    let role = query;
+    let location = "";
+
+    if (match) {
+        role = match[1];
+        location = match[2];
+    }
+
+    const words = role.trim().split(/\s+/);
+
+    // If query is short (<= 2 words), don't broaden further (e.g. "Java Developer" -> "Java" is bad)
+    if (words.length <= 2) return null;
+
+    // Remove the last word (likely a specific skill like "LangChain", "RAG", "React")
+    const newRole = words.slice(0, -1).join(" ");
+
+    if (location) {
+        return `${newRole} in ${location}`;
+    }
+    return newRole;
 }
