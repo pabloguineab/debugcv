@@ -316,8 +316,7 @@ export default function JobSearchPage() {
 
     const handleLoadMore = async () => {
         if (loading || loadingMore) return;
-        const filteredJobs = displayedJobs.filter(job => !invalidJobIds.has(job.job_id));
-        const remainingHidden = filteredJobs.length - visibleCount;
+        const remainingHidden = displayedJobs.length - visibleCount;
 
         if (remainingHidden >= 20) {
             setVisibleCount(prev => prev + 20);
@@ -627,29 +626,26 @@ export default function JobSearchPage() {
                         <div className="flex items-center gap-2 mb-4">
                             <Badge variant="outline" className="text-emerald-600 border-emerald-200 bg-emerald-50 dark:bg-emerald-900/20 dark:border-emerald-800">
                                 <CheckCircle2 className="w-3 h-3 mr-1" />
-                                {displayedJobs.filter(job => !invalidJobIds.has(job.job_id)).length} Jobs Found
+                                {displayedJobs.length} Jobs Found
                             </Badge>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {displayedJobs
-                                .filter(job => !invalidJobIds.has(job.job_id))
-                                .slice(0, visibleCount)
-                                .map((job, index) => (
-                                    <JobCard
-                                        key={job.job_id}
-                                        job={job}
-                                        index={index}
-                                        query={query}
-                                        onJobValidated={handleJobValidated}
-                                        validJobIds={validJobIds}
-                                        invalidJobIds={invalidJobIds}
-                                        visibleCount={visibleCount}
-                                    />
-                                ))}
+                            {displayedJobs.slice(0, visibleCount).map((job, index) => (
+                                <JobCard
+                                    key={job.job_id}
+                                    job={job}
+                                    index={index}
+                                    query={query}
+                                    onJobValidated={handleJobValidated}
+                                    validJobIds={validJobIds}
+                                    invalidJobIds={invalidJobIds}
+                                    visibleCount={visibleCount}
+                                />
+                            ))}
                         </div>
 
-                        {(hasMore || visibleCount < displayedJobs.filter(job => !invalidJobIds.has(job.job_id)).length) && (
+                        {(hasMore || visibleCount < displayedJobs.length) && (
                             <div className="flex justify-center py-8">
                                 <Button
                                     variant="outline"
