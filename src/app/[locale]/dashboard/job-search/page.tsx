@@ -333,9 +333,10 @@ export default function JobSearchPage() {
     };
 
     const handleLoadMore = async () => {
-        if (loading || loadingMore) return;
+        if (loading || loadingMore || !hasMore) return;
         const remainingHidden = displayedJobs.length - visibleCount;
 
+        // If we have enough hidden jobs, just show more
         if (remainingHidden >= 20) {
             setVisibleCount(prev => prev + 20);
             return;
@@ -348,14 +349,10 @@ export default function JobSearchPage() {
             let attempts = 0;
             let localNextQueryIndex = nextQueryIndex;
             let localPage = page;
-            const MAX_ATTEMPTS = 5;
-            // Target is to have at least 20 new VALID jobs show up, or fill the gap
-            const targetNewValidJobs = Math.max(1, 20 - remainingHidden);
+            const MAX_ATTEMPTS = 3; // Reduced to avoid too many API calls
 
-            // We need to loop until we have enough VALID jobs, not just raw jobs
-            // But we can't know validity until render. So we just fetch a big enough chunk.
-
-            while (jobsFound < 1 && attempts < MAX_ATTEMPTS) { // Logic simplified: Just ensure we fetched *something* new
+            // Try to fetch more jobs
+            while (jobsFound < 1 && attempts < MAX_ATTEMPTS) {
                 attempts++;
                 let count = 0;
 
@@ -363,7 +360,6 @@ export default function JobSearchPage() {
                     const nextBatch = searchQueries.slice(localNextQueryIndex, localNextQueryIndex + 1);
                     localNextQueryIndex += 1;
                     setNextQueryIndex(localNextQueryIndex);
-
                     count = await runBatchSearch(nextBatch, location, false, 1);
                 } else {
                     localPage++;
@@ -374,30 +370,18 @@ export default function JobSearchPage() {
                 jobsFound += count;
             }
 
-            // After fetching, we update visible count. 
-            // Since we can't know validity yet, we just expand visibility to show what we have.
-            // If the new jobs are invalid, the UI filter will handle them and they won't count towards visibleCount visual limit,
-            // effectively just "skipping" them until valid ones appear? 
-            // Actually, we simply add to visibleCount. The filter slice logic does the rest.
-
+            // Update visible count if we have any jobs to show
             if (jobsFound > 0 || remainingHidden > 0) {
                 setVisibleCount(prev => prev + 20);
-            } else {
-                if (remainingHidden === 0) {
-                    // If we found nothing and have nothing hidden, maybe we are done?
-                    // Only if we retried enough times.
-                    if (jobsFound === 0) setHasMore(false);
-                    if (jobsFound === 0) alert("No more jobs found.");
-                } else {
-                    setVisibleCount(prev => prev + remainingHidden);
-                    // If we found 0 new jobs but had some hidden, we showed them.
-                    // But if jobsFound was 0, it means we MIGHT be at the end next time.
-                    // But we let the user click again to find out, unless we are sure.
-                    // For now, keep hasMore true unless 0 found AND 0 hidden.
-                }
+            }
+
+            // If we got 0 results after all attempts, stop infinite scroll
+            if (jobsFound === 0) {
+                setHasMore(false);
             }
         } catch (error) {
             console.error("Load more failed", error);
+            setHasMore(false); // Stop on error too
         } finally {
             setLoadingMore(false);
         }
