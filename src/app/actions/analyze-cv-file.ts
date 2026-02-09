@@ -33,17 +33,25 @@ export async function analyzeCvFile(formData: FormData): Promise<CVCriteria | nu
 
         const prompt = `
             You are an expert Job Search Assistant.
-            Analyze the provided CV document to create the BEST search queries for finding a relevant job.
+            Analyze the provided CV document to create EFFECTIVE search queries for finding relevant jobs.
             
             Extract:
-            1. "role": The most accurate job title (e.g. "Senior Frontend Developer").
+            1. "role": The SIMPLEST, most common job title that matches the candidate (e.g. "Software Engineer", "Data Scientist", "Product Manager"). Avoid overly specific titles.
             2. "skills": Top 3-5 most relevant technical skills.
             3. "location": The candidate's CURRENT residency (City, Country). STRICTLY infer from the Header/Contact section (e.g., "Madrid, Spain" near name/email) or current job location. Do NOT use Education location.
             4. "level": Seniority level (Junior, Mid, Senior, Staff, Lead).
 
-            Construct 2 distinct "search_queries":
-            1. Broad/Standard: Role + Location (e.g. "Machine Learning Engineer in Toronto")
-            2. Specific/Niche: Role + Top Skill (e.g. "Machine Learning Engineer Python")
+            Construct 5 distinct "search_queries" - use SIMPLE, COMMON job titles that job boards recognize:
+            1. Base query: "[Level] [Simple Role] in [City]" (e.g. "Senior Software Engineer in Madrid")
+            2. Broader: "[Simple Role] in [City]" without level (e.g. "Software Engineer in Madrid")
+            3. Alternative title: Use a synonym/alternative common title (e.g. "Developer" instead of "Engineer", "Data Analyst" instead of "Data Scientist")
+            4. Industry specific: "[Role] [Industry/Domain]" if applicable (e.g. "Backend Developer Fintech")
+            5. Remote option: "[Level] [Role] Remote"
+            
+            IMPORTANT: 
+            - Use SIMPLE, COMMON job titles that return many results (avoid niche terms like "LangChain", "RAG", specific frameworks)
+            - Keep queries SHORT (2-4 words + location)
+            - Focus on roles that exist on job boards, not cutting-edge titles
             
             Return JSON ONLY:
             {
