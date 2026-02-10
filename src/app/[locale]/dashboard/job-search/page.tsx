@@ -633,7 +633,7 @@ export default function JobSearchPage() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {displayedJobs.slice(0, visibleCount).map((job, index) => (
+                            {displayedJobs.map((job, index) => (
                                 <JobCard
                                     key={job.job_id}
                                     job={job}
@@ -648,9 +648,13 @@ export default function JobSearchPage() {
                         </div>
 
                         {/* Infinite scroll sentinel */}
-                        {(hasMore || visibleCount < displayedJobs.length) && (
+                        {hasMore && (
                             <div ref={loadMoreRef} className="flex justify-center py-8">
-                                <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+                                {loadingMore ? (
+                                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+                                ) : (
+                                    <div className="h-8" />
+                                )}
                             </div>
                         )}
                     </>
