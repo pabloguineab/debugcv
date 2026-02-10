@@ -711,11 +711,6 @@ function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds
         }
     }, [logoStatus, job.job_id, validJobIds, invalidJobIds, onJobValidated]);
 
-    // If logo failed, hide this card
-    if (logoStatus === 'invalid') {
-        return null;
-    }
-
     // Color code based on score
     const scoreColor = matchScore >= 90 ? "text-emerald-700 bg-emerald-50 border-emerald-200"
         : matchScore >= 80 ? "text-blue-700 bg-blue-50 border-blue-200"

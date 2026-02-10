@@ -105,17 +105,25 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
     const domain = getDomain();
 
     useEffect(() => {
-        // Try Clearbit first (better coverage for smaller companies)
-        setLogoSrc(`https://logo.clearbit.com/${domain}`);
+        // Prioritize the API-provided logo (from Google Images, reliable)
+        // Then fall back to Clearbit
+        if (logo) {
+            setLogoSrc(logo);
+        } else {
+            setLogoSrc(`https://logo.clearbit.com/${domain}`);
+        }
         setHasError(false);
     }, [logo, company, website, domain]);
 
     const handleImageError = () => {
-        // Skip Brandfetch to avoid generic "B" logo
-        if (logo && logoSrc !== logo) {
-            // Try the provided logo from API
+        if (logo && logoSrc === logo) {
+            // API logo failed, try Clearbit
+            setLogoSrc(`https://logo.clearbit.com/${domain}`);
+        } else if (logoSrc?.includes('clearbit') && logo && logoSrc !== logo) {
+            // Clearbit failed but we haven't tried the API logo yet
             setLogoSrc(logo);
         } else {
+            // Both failed
             setHasError(true);
             if (onLogoFallback) onLogoFallback();
         }
@@ -126,43 +134,12 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
 
         // Check dimensions first
         if (img.naturalWidth < 10 || img.naturalHeight < 10) {
-            setHasError(true);
-            if (onLogoFallback) onLogoFallback();
+            handleImageError();
             return;
         }
 
-        // Try to detect if image is transparent/empty using Canvas
-        try {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            if (ctx) {
-                canvas.width = 20;
-                canvas.height = 20;
-                ctx.drawImage(img, 0, 0, 20, 20);
-                const imageData = ctx.getImageData(0, 0, 20, 20);
-                const data = imageData.data;
-
-                // Check if any pixel has significant opacity
-                let hasVisiblePixels = false;
-                for (let i = 3; i < data.length; i += 4) { // Check alpha channel every 4th byte
-                    if (data[i] > 50) { // Alpha > 50 means somewhat visible
-                        hasVisiblePixels = true;
-                        break;
-                    }
-                }
-
-                if (!hasVisiblePixels) {
-                    // Image is mostly transparent - treat as failed
-                    setHasError(true);
-                    if (onLogoFallback) onLogoFallback();
-                    return;
-                }
-            }
-        } catch (err) {
-            // CORS error or other issue - can't analyze, assume valid
-            console.log('Cannot analyze image pixels, assuming valid');
-        }
-
+        // Skip canvas validation for external URLs (CORS issues)
+        // The API logos from Google Images are reliable enough
         if (onLogoSuccess) onLogoSuccess();
     };
 
