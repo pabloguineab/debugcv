@@ -103,31 +103,40 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
     };
 
     const domain = getDomain();
-
     const clearbitUrl = `https://logo.clearbit.com/${domain}`;
-    const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+
+    // Filter out job board logos that the API sometimes returns as employer logos
+    const isJobBoardLogo = (url: string) => {
+        if (!url) return false;
+        const lower = url.toLowerCase();
+        return lower.includes('linkedin') ||
+            lower.includes('indeed') ||
+            lower.includes('glassdoor') ||
+            lower.includes('ziprecruiter') ||
+            lower.includes('monster.com') ||
+            lower.includes('infojobs');
+    };
+
+    const cleanLogo = logo && !isJobBoardLogo(logo) ? logo : undefined;
 
     useEffect(() => {
-        // Prioritize the API-provided logo (from Google Images, reliable)
-        // Then fall back to Clearbit, then Google Favicons
-        if (logo) {
-            setLogoSrc(logo);
+        // Use API logo first (if it's not a job board logo), then Clearbit
+        if (cleanLogo) {
+            setLogoSrc(cleanLogo);
         } else {
             setLogoSrc(clearbitUrl);
         }
         setHasError(false);
-    }, [logo, company, website, domain, clearbitUrl]);
+    }, [cleanLogo, company, website, domain, clearbitUrl]);
 
     const handleImageError = () => {
-        if (logo && logoSrc === logo) {
+        if (cleanLogo && logoSrc === cleanLogo) {
             // API logo failed → try Clearbit
             setLogoSrc(clearbitUrl);
-        } else if (logoSrc === clearbitUrl) {
-            // Clearbit failed → try Google Favicon
-            setLogoSrc(googleFaviconUrl);
-        } else if (logoSrc === googleFaviconUrl && logo && logoSrc !== logo) {
-            // Google Favicon failed but we have API logo we haven't tried
-            setLogoSrc(logo);
+        } else if (logoSrc === clearbitUrl && cleanLogo) {
+            // Clearbit failed, already tried API logo → show initials
+            setHasError(true);
+            if (onLogoFallback) onLogoFallback();
         } else {
             // All sources exhausted
             setHasError(true);
