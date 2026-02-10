@@ -104,26 +104,32 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
 
     const domain = getDomain();
 
+    const clearbitUrl = `https://logo.clearbit.com/${domain}`;
+    const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+
     useEffect(() => {
         // Prioritize the API-provided logo (from Google Images, reliable)
-        // Then fall back to Clearbit
+        // Then fall back to Clearbit, then Google Favicons
         if (logo) {
             setLogoSrc(logo);
         } else {
-            setLogoSrc(`https://logo.clearbit.com/${domain}`);
+            setLogoSrc(clearbitUrl);
         }
         setHasError(false);
-    }, [logo, company, website, domain]);
+    }, [logo, company, website, domain, clearbitUrl]);
 
     const handleImageError = () => {
         if (logo && logoSrc === logo) {
-            // API logo failed, try Clearbit
-            setLogoSrc(`https://logo.clearbit.com/${domain}`);
-        } else if (logoSrc?.includes('clearbit') && logo && logoSrc !== logo) {
-            // Clearbit failed but we haven't tried the API logo yet
+            // API logo failed → try Clearbit
+            setLogoSrc(clearbitUrl);
+        } else if (logoSrc === clearbitUrl) {
+            // Clearbit failed → try Google Favicon
+            setLogoSrc(googleFaviconUrl);
+        } else if (logoSrc === googleFaviconUrl && logo && logoSrc !== logo) {
+            // Google Favicon failed but we have API logo we haven't tried
             setLogoSrc(logo);
         } else {
-            // Both failed
+            // All sources exhausted
             setHasError(true);
             if (onLogoFallback) onLogoFallback();
         }
