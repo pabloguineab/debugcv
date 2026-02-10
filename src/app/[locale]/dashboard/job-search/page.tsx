@@ -749,7 +749,8 @@ function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds
                                 <CompanyLogo
                                     company={job.employer_name}
                                     logo={job.employer_logo || undefined}
-                                    size="lg" // kept large for visibility
+                                    website={job.employer_website || undefined}
+                                    size="lg"
                                     className="bg-white dark:bg-gray-800 rounded-lg shadow-sm w-12 h-12 object-contain p-1"
                                     onLogoSuccess={() => setLogoStatus('valid')}
                                     onLogoFallback={() => setLogoStatus('invalid')}

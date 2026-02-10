@@ -135,17 +135,7 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
         }
     };
 
-    const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
-        const img = e.target as HTMLImageElement;
-
-        // Check dimensions first
-        if (img.naturalWidth < 10 || img.naturalHeight < 10) {
-            handleImageError();
-            return;
-        }
-
-        // Skip canvas validation for external URLs (CORS issues)
-        // The API logos from Google Images are reliable enough
+    const handleImageLoad = () => {
         if (onLogoSuccess) onLogoSuccess();
     };
 
