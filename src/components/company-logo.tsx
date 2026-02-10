@@ -185,7 +185,6 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
             className
         )}>
             <img
-                crossOrigin="anonymous"
                 src={logoSrc || undefined}
                 alt={company}
                 className="w-full h-full object-contain rounded-md"
