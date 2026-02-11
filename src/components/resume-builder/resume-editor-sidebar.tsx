@@ -7,12 +7,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Sparkles, GripVertical, Plus, Trash2, ChevronDown, ChevronUp, Image as ImageIcon, Check, Palette, Building2, GraduationCap } from "lucide-react";
+import { Sparkles, Plus, ChevronDown, ChevronUp, Image as ImageIcon, Check, Palette, Building2, GraduationCap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProfilePictureUpload } from "@/components/resume-builder/profile-picture-upload";
 
-import { CompanyLogoInput } from "@/components/resume-builder/form/company-logo-input";
+
 import { fetchLogoAndReturnBase64 } from "@/lib/fetch-logo";
+import { Reorder } from "framer-motion";
+import { ExperienceItem } from "@/components/resume-builder/form/experience-item";
+import { EducationItem } from "@/components/resume-builder/form/education-item";
+import { ProjectItem } from "@/components/resume-builder/form/project-item";
+import { CertificationItem } from "@/components/resume-builder/form/certification-item";
 
 interface ResumeEditorSidebarProps {
     data: ResumeData;
@@ -583,113 +588,16 @@ export function ResumeEditorSidebar({
                     {expandedSections.experience && (
                         <div className="mt-3 space-y-3">
                             <Label className="text-xs text-muted-foreground">Focus on your most relevant experiences</Label>
-                            {data.experience.map((exp, index) => (
-                                <div key={exp.id} className="border rounded-lg p-3 bg-muted/30">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <div className="flex items-center gap-2">
-                                            <GripVertical className="w-4 h-4 text-muted-foreground cursor-grab" />
-                                            <span className="text-sm font-medium truncate max-w-[200px]">
-                                                {exp.title || "New Position"}
-                                            </span>
-                                        </div>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-6 w-6 text-red-500 hover:text-red-600"
-                                            onClick={() => removeExperience(index)}
-                                        >
-                                            <Trash2 className="w-3 h-3" />
-                                        </Button>
-                                    </div>
-                                    <div className="space-y-4">
-                                        <div className="flex gap-4">
-                                            <div className="flex-1 space-y-2">
-                                                <Input
-                                                    value={exp.company}
-                                                    onChange={(e) => updateExperience(index, { company: e.target.value })}
-                                                    placeholder="Company name"
-                                                    className="h-8 text-xs"
-                                                />
-                                                <Input
-                                                    value={exp.title}
-                                                    onChange={(e) => updateExperience(index, { title: e.target.value })}
-                                                    placeholder="Job title"
-                                                    className="h-8 text-xs"
-                                                />
-                                            </div>
-                                            <div className="pt-0.5">
-                                                <CompanyLogoInput
-                                                    type="company"
-                                                    companyName={exp.company}
-                                                    website={exp.companyUrl}
-                                                    value={exp.logoUrl}
-                                                    onChange={(url) => updateExperience(index, { logoUrl: url })}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-2">
-                                            <Input
-                                                value={exp.startDate}
-                                                onChange={(e) => updateExperience(index, { startDate: e.target.value })}
-                                                placeholder="Start date"
-                                                className="h-8 text-xs"
-                                            />
-                                            <Input
-                                                value={exp.current ? "Present" : exp.endDate}
-                                                onChange={(e) => updateExperience(index, { endDate: e.target.value })}
-                                                placeholder="End date"
-                                                className="h-8 text-xs"
-                                                disabled={exp.current}
-                                            />
-                                        </div>
-
-                                        {/* Bullet Points */}
-                                        <div className="mt-2">
-                                            <Label className="text-xs text-muted-foreground">Achievements / Responsibilities</Label>
-                                            <div className="space-y-1 mt-1">
-                                                {(exp.bullets || []).map((bullet, bulletIndex) => (
-                                                    <div key={bulletIndex} className="flex items-start gap-1">
-                                                        <span className="text-xs text-muted-foreground mt-2">•</span>
-                                                        <Textarea
-                                                            value={bullet}
-                                                            onChange={(e) => {
-                                                                const newBullets = [...(exp.bullets || [])];
-                                                                newBullets[bulletIndex] = e.target.value;
-                                                                updateExperience(index, { bullets: newBullets });
-                                                            }}
-                                                            placeholder="Describe your achievement..."
-                                                            className="h-16 text-xs resize-none flex-1"
-                                                        />
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            className="h-6 w-6 text-red-500 hover:text-red-600 hover:bg-red-50 mt-1"
-                                                            onClick={() => {
-                                                                const newBullets = (exp.bullets || []).filter((_, i) => i !== bulletIndex);
-                                                                updateExperience(index, { bullets: newBullets });
-                                                            }}
-                                                        >
-                                                            <Trash2 className="w-3 h-3" />
-                                                        </Button>
-                                                    </div>
-                                                ))}
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    onClick={() => {
-                                                        const newBullets = [...(exp.bullets || []), ""];
-                                                        updateExperience(index, { bullets: newBullets });
-                                                    }}
-                                                    className="w-full h-7 text-xs border-dashed border mt-1"
-                                                >
-                                                    <Plus className="w-3 h-3 mr-1" />
-                                                    Add bullet point
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                            <Reorder.Group axis="y" values={data.experience} onReorder={(newOrder) => onUpdate({ experience: newOrder })} className="space-y-3 list-none p-0">
+                                {data.experience.map((exp, index) => (
+                                    <ExperienceItem
+                                        key={exp.id}
+                                        item={exp}
+                                        onUpdate={(updates) => updateExperience(index, updates)}
+                                        onRemove={() => removeExperience(index)}
+                                    />
+                                ))}
+                            </Reorder.Group>
                             <Button
                                 variant="ghost"
                                 size="sm"
@@ -709,59 +617,16 @@ export function ResumeEditorSidebar({
                     {expandedSections.education && (
                         <div className="mt-3 space-y-3">
                             <Label className="text-xs text-muted-foreground">List your educational qualifications</Label>
-                            {data.education.map((edu, index) => (
-                                <div key={edu.id} className="border rounded-lg p-3 bg-muted/30">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <div className="flex items-center gap-2">
-                                            <GripVertical className="w-4 h-4 text-muted-foreground cursor-grab" />
-                                            <span className="text-sm font-medium truncate max-w-[200px]">
-                                                {edu.degree || "New Education"}
-                                            </span>
-                                        </div>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-6 w-6 text-red-500 hover:text-red-600"
-                                            onClick={() => removeEducation(index)}
-                                        >
-                                            <Trash2 className="w-3 h-3" />
-                                        </Button>
-                                    </div>
-                                    <div className="space-y-4">
-                                        <div className="flex gap-4">
-                                            <div className="flex-1 space-y-2">
-                                                <Input
-                                                    value={edu.institution}
-                                                    onChange={(e) => updateEducation(index, { institution: e.target.value })}
-                                                    placeholder="Institution name"
-                                                    className="h-8 text-xs"
-                                                />
-                                                <Input
-                                                    value={edu.degree}
-                                                    onChange={(e) => updateEducation(index, { degree: e.target.value })}
-                                                    placeholder="Degree (e.g., B.Sc.)"
-                                                    className="h-8 text-xs"
-                                                />
-                                            </div>
-                                            <div className="pt-0.5">
-                                                <CompanyLogoInput
-                                                    type="institution"
-                                                    companyName={edu.institution}
-                                                    website={edu.website}
-                                                    value={edu.logoUrl}
-                                                    onChange={(url) => updateEducation(index, { logoUrl: url })}
-                                                />
-                                            </div>
-                                        </div>
-                                        <Input
-                                            value={edu.field}
-                                            onChange={(e) => updateEducation(index, { field: e.target.value })}
-                                            placeholder="Field of study"
-                                            className="h-8 text-xs"
-                                        />
-                                    </div>
-                                </div>
-                            ))}
+                            <Reorder.Group axis="y" values={data.education} onReorder={(newOrder) => onUpdate({ education: newOrder })} className="space-y-3 list-none p-0">
+                                {data.education.map((edu, index) => (
+                                    <EducationItem
+                                        key={edu.id}
+                                        item={edu}
+                                        onUpdate={(updates) => updateEducation(index, updates)}
+                                        onRemove={() => removeEducation(index)}
+                                    />
+                                ))}
+                            </Reorder.Group>
                             <Button
                                 variant="ghost"
                                 size="sm"
@@ -781,80 +646,16 @@ export function ResumeEditorSidebar({
                     {expandedSections.projects && (
                         <div className="mt-3 space-y-3">
                             <Label className="text-xs text-muted-foreground">Showcase relevant projects</Label>
-                            {data.projects.map((project, index) => (
-                                <div key={project.id} className="border rounded-lg p-3 bg-muted/30">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <div className="flex items-center gap-2">
-                                            <GripVertical className="w-4 h-4 text-muted-foreground cursor-grab" />
-                                            <span className="text-sm font-medium truncate max-w-[200px]">
-                                                {project.name || "New Project"}
-                                            </span>
-                                        </div>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-6 w-6 text-red-500 hover:text-red-600"
-                                            onClick={() => removeProject(index)}
-                                        >
-                                            <Trash2 className="w-3 h-3" />
-                                        </Button>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Input
-                                            value={project.name}
-                                            onChange={(e) => updateProject(index, { name: e.target.value })}
-                                            placeholder="Project name"
-                                            className="h-8 text-xs"
-                                        />
-                                        <Textarea
-                                            value={project.description}
-                                            onChange={(e) => updateProject(index, { description: e.target.value })}
-                                            placeholder="Brief description..."
-                                            className="h-16 text-xs resize-none"
-                                        />
-                                        <Input
-                                            value={project.url || ""}
-                                            onChange={(e) => updateProject(index, { url: e.target.value })}
-                                            placeholder="Project URL (optional)"
-                                            className="h-8 text-xs"
-                                        />
-                                        <div>
-                                            <Label className="text-xs text-muted-foreground">Technologies</Label>
-                                            <div className="flex flex-wrap gap-1 mt-1">
-                                                {project.technologies.map((tech, techIndex) => (
-                                                    <span
-                                                        key={techIndex}
-                                                        className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-primary/10 text-primary rounded text-[10px]"
-                                                    >
-                                                        {tech}
-                                                        <button
-                                                            onClick={() => {
-                                                                const newTechs = project.technologies.filter((_, i) => i !== techIndex);
-                                                                updateProject(index, { technologies: newTechs });
-                                                            }}
-                                                            className="hover:text-red-500"
-                                                        >
-                                                            ×
-                                                        </button>
-                                                    </span>
-                                                ))}
-                                            </div>
-                                            <Input
-                                                placeholder="Add technology..."
-                                                className="h-7 text-xs mt-1"
-                                                onKeyDown={(e) => {
-                                                    if (e.key === "Enter" && e.currentTarget.value) {
-                                                        updateProject(index, {
-                                                            technologies: [...project.technologies, e.currentTarget.value]
-                                                        });
-                                                        e.currentTarget.value = "";
-                                                    }
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                            <Reorder.Group axis="y" values={data.projects} onReorder={(newOrder) => onUpdate({ projects: newOrder })} className="space-y-3 list-none p-0">
+                                {data.projects.map((project, index) => (
+                                    <ProjectItem
+                                        key={project.id}
+                                        item={project}
+                                        onUpdate={(updates) => updateProject(index, updates)}
+                                        onRemove={() => removeProject(index)}
+                                    />
+                                ))}
+                            </Reorder.Group>
                             <Button
                                 variant="ghost"
                                 size="sm"
@@ -874,60 +675,16 @@ export function ResumeEditorSidebar({
                     {expandedSections.certifications && (
                         <div className="mt-3 space-y-3">
                             <Label className="text-xs text-muted-foreground">Add relevant certifications</Label>
-                            {data.certifications.map((cert, index) => (
-                                <div key={cert.id} className="border rounded-lg p-3 bg-muted/30">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <div className="flex items-center gap-2">
-                                            <GripVertical className="w-4 h-4 text-muted-foreground cursor-grab" />
-                                            <span className="text-sm font-medium truncate max-w-[200px]">
-                                                {cert.name || "New Certification"}
-                                            </span>
-                                        </div>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-6 w-6 text-red-500 hover:text-red-600"
-                                            onClick={() => removeCertification(index)}
-                                        >
-                                            <Trash2 className="w-3 h-3" />
-                                        </Button>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Input
-                                            value={cert.name}
-                                            onChange={(e) => updateCertification(index, { name: e.target.value })}
-                                            placeholder="Certification name"
-                                            className="h-8 text-xs"
-                                        />
-                                        <Input
-                                            value={cert.issuer}
-                                            onChange={(e) => updateCertification(index, { issuer: e.target.value })}
-                                            placeholder="Issuing organization"
-                                            className="h-8 text-xs"
-                                        />
-                                        <div className="grid grid-cols-2 gap-2">
-                                            <Input
-                                                value={cert.issueDate}
-                                                onChange={(e) => updateCertification(index, { issueDate: e.target.value })}
-                                                placeholder="Issue date"
-                                                className="h-8 text-xs"
-                                            />
-                                            <Input
-                                                value={cert.expiryDate || ""}
-                                                onChange={(e) => updateCertification(index, { expiryDate: e.target.value })}
-                                                placeholder="Expiry (optional)"
-                                                className="h-8 text-xs"
-                                            />
-                                        </div>
-                                        <Input
-                                            value={cert.credentialId || ""}
-                                            onChange={(e) => updateCertification(index, { credentialId: e.target.value })}
-                                            placeholder="Credential ID (optional)"
-                                            className="h-8 text-xs"
-                                        />
-                                    </div>
-                                </div>
-                            ))}
+                            <Reorder.Group axis="y" values={data.certifications} onReorder={(newOrder) => onUpdate({ certifications: newOrder })} className="space-y-3 list-none p-0">
+                                {data.certifications.map((cert, index) => (
+                                    <CertificationItem
+                                        key={cert.id}
+                                        item={cert}
+                                        onUpdate={(updates) => updateCertification(index, updates)}
+                                        onRemove={() => removeCertification(index)}
+                                    />
+                                ))}
+                            </Reorder.Group>
                             <Button
                                 variant="ghost"
                                 size="sm"
