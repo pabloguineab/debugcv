@@ -81,10 +81,10 @@ export default function JobSearchPage() {
 
 
     // Auto-fill barrier: If we have few jobs and stopped loading, fetch more automatically
-    // This handles the case where initial results don't fill the screen, so the footer sentinel might be visible but ignored or simply to improve UX
+    // This handles the case where initial results don't fill the screen (e.g. only 5-8 jobs)
+    // We aim for at least 15 jobs (5 rows) to enable proper scrolling
     useEffect(() => {
-        if (!loading && !loadingMore && hasMore && displayedJobs.length > 0 && displayedJobs.length < 10) {
-            // console.log("Auto-filling jobs because list is short...");
+        if (!loading && !loadingMore && hasMore && displayedJobs.length > 0 && displayedJobs.length < 15) {
             handleLoadMore();
         }
     }, [loading, loadingMore, hasMore, displayedJobs.length]);
@@ -673,29 +673,20 @@ export default function JobSearchPage() {
                                     />
                                 ))}
 
-                            {/* Fill empty grid slots with skeletons if loading more */}
-                            {loadingMore && (() => {
+                            {/* Always fill empty grid slots with skeletons to keep layout 100% clean */}
+                            {(() => {
                                 const currentCount = displayedJobs.slice(0, visibleCount).filter(job => !invalidJobIds.has(job.job_id)).length;
                                 const remainder = currentCount % 3;
                                 const skeletonsNeeded = remainder === 0 ? 0 : 3 - remainder;
 
+                                if (skeletonsNeeded === 0) return null;
+
                                 return Array.from({ length: skeletonsNeeded }).map((_, i) => (
-                                    <Card key={`skeleton-fill-${i}`} className="h-full border border-slate-200 dark:border-slate-800 shadow-sm animate-pulse bg-white dark:bg-slate-900">
-                                        <CardContent className="p-6 space-y-4">
-                                            <div className="flex gap-4">
-                                                <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-lg" />
-                                                <div className="space-y-2 flex-1">
-                                                    <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-3/4" />
-                                                    <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-1/2" />
-                                                </div>
-                                            </div>
-                                            <div className="space-y-2 pt-4">
-                                                <div className="h-20 bg-slate-50 dark:bg-slate-800/50 rounded w-full" />
-                                                <div className="flex gap-2 pt-2">
-                                                    <div className="h-6 w-16 bg-slate-100 dark:bg-slate-800 rounded" />
-                                                    <div className="h-6 w-24 bg-slate-100 dark:bg-slate-800 rounded" />
-                                                </div>
-                                            </div>
+                                    <Card key={`skeleton-fill-${i}`} className="h-full border border-slate-200 dark:border-slate-800 shadow-sm bg-slate-50/50 dark:bg-slate-900/50 opacity-50">
+                                        <CardContent className="p-6 space-y-4 flex flex-col items-center justify-center h-full min-h-[250px] text-center">
+                                            <div className="w-12 h-12 bg-slate-200 dark:bg-slate-800 rounded-full mb-2" />
+                                            <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-2/3 mx-auto" />
+                                            <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded w-1/2 mx-auto" />
                                         </CardContent>
                                     </Card>
                                 ));
