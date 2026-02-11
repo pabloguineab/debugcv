@@ -340,8 +340,8 @@ export default function AccountPage() {
             </Card>
 
             {/* Danger Zone */}
-            <Card className="border-red-200 bg-red-50/50 dark:bg-red-950/10 dark:border-red-900 overflow-hidden">
-                <CardHeader className="bg-red-50/50 dark:bg-red-950/20 border-b border-red-100 dark:border-red-900/50">
+            <Card className="border-red-200 bg-red-50/50 dark:bg-red-950/10 dark:border-red-900 overflow-hidden pt-0">
+                <CardHeader className="bg-red-50/50 dark:bg-red-950/20 border-b border-red-100 dark:border-red-900/50 p-4">
                     <CardTitle className="flex items-center gap-2 text-red-600 dark:text-red-400">
                         <AlertTriangle className="w-5 h-5" />
                         Danger Zone
