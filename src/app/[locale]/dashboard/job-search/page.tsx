@@ -62,7 +62,22 @@ export default function JobSearchPage() {
     }, []);
 
     // Infinite scroll: auto-load more when scrolling to bottom
-    // Infinite scroll removed in favor of manual "Load More" button per user request
+    useEffect(() => {
+        const sentinel = loadMoreRef.current;
+        if (!sentinel) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && !loading && !loadingMore && hasMore) {
+                    handleLoadMore();
+                }
+            },
+            { threshold: 0.1, rootMargin: '400px' } // Preload nicely before reaching end
+        );
+
+        observer.observe(sentinel);
+        return () => observer.disconnect();
+    }, [loading, loadingMore, hasMore, jobs, visibleCount]);
 
 
     useEffect(() => {
@@ -647,28 +662,19 @@ export default function JobSearchPage() {
                             ))}
                         </div>
 
-                        {/* Manual Load More Button */}
+                        {/* Infinite scroll sentinel */}
                         {hasMore && (
-                            <div className="flex justify-center py-8">
-                                <Button
-                                    onClick={handleLoadMore}
-                                    disabled={loadingMore}
-                                    variant="outline"
-                                    size="lg"
-                                    className="min-w-[200px] h-12 text-base font-medium shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-all border-slate-200"
-                                >
-                                    {loadingMore ? (
-                                        <>
-                                            <Spinner className="w-5 h-5 mr-2 text-blue-600" />
-                                            Finding more jobs...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <ArrowDown className="w-5 h-5 mr-2 text-slate-500" />
-                                            Load More Jobs
-                                        </>
-                                    )}
-                                </Button>
+                            <div ref={loadMoreRef} className="flex justify-center py-8">
+                                {loadingMore ? (
+                                    <div className="flex flex-col items-center gap-2">
+                                        <Spinner className="h-8 w-8 text-blue-600" />
+                                        <span className="text-sm text-muted-foreground animate-pulse">
+                                            Finding more relevant jobs for you...
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <div className="h-8" />
+                                )}
                             </div>
                         )}
                     </>
