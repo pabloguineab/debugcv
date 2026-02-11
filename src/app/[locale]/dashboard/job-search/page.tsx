@@ -657,18 +657,49 @@ export default function JobSearchPage() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {displayedJobs.map((job, index) => (
-                                <JobCard
-                                    key={job.job_id}
-                                    job={job}
-                                    index={index}
-                                    query={query}
-                                    onJobValidated={handleJobValidated}
-                                    validJobIds={validJobIds}
-                                    invalidJobIds={invalidJobIds}
-                                    visibleCount={visibleCount}
-                                />
-                            ))}
+                            {displayedJobs
+                                .slice(0, visibleCount)
+                                .filter(job => !invalidJobIds.has(job.job_id))
+                                .map((job, i) => (
+                                    <JobCard
+                                        key={`${job.job_id}-${i}`}
+                                        job={job}
+                                        index={i}
+                                        query={query} // passing query for relevance highlighting if needed
+                                        onJobValidated={handleJobValidated}
+                                        validJobIds={validJobIds}
+                                        invalidJobIds={invalidJobIds}
+                                        visibleCount={visibleCount}
+                                    />
+                                ))}
+
+                            {/* Fill empty grid slots with skeletons if loading more */}
+                            {loadingMore && (() => {
+                                const currentCount = displayedJobs.slice(0, visibleCount).filter(job => !invalidJobIds.has(job.job_id)).length;
+                                const remainder = currentCount % 3;
+                                const skeletonsNeeded = remainder === 0 ? 0 : 3 - remainder;
+
+                                return Array.from({ length: skeletonsNeeded }).map((_, i) => (
+                                    <Card key={`skeleton-fill-${i}`} className="h-full border border-slate-200 dark:border-slate-800 shadow-sm animate-pulse bg-white dark:bg-slate-900">
+                                        <CardContent className="p-6 space-y-4">
+                                            <div className="flex gap-4">
+                                                <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-lg" />
+                                                <div className="space-y-2 flex-1">
+                                                    <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-3/4" />
+                                                    <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-1/2" />
+                                                </div>
+                                            </div>
+                                            <div className="space-y-2 pt-4">
+                                                <div className="h-20 bg-slate-50 dark:bg-slate-800/50 rounded w-full" />
+                                                <div className="flex gap-2 pt-2">
+                                                    <div className="h-6 w-16 bg-slate-100 dark:bg-slate-800 rounded" />
+                                                    <div className="h-6 w-24 bg-slate-100 dark:bg-slate-800 rounded" />
+                                                </div>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                ));
+                            })()}
                         </div>
 
                         {/* Infinite scroll sentinel */}
