@@ -11,6 +11,8 @@ import { ArrowLeft, MessageCircle, Download, Loader2, Pencil, Check, Cloud, Clou
 import { saveResume as saveResumeToDb, getResume as getResumeFromDb } from "@/lib/actions/resumes";
 import { ResumePreviewSkeleton } from "@/components/resume-builder/resume-preview-skeleton";
 import { ResumeSidebarSkeleton } from "@/components/resume-builder/resume-sidebar-skeleton";
+import { LimitModal } from "@/components/limit-modal";
+import { UpgradePlanModal } from "@/components/upgrade-plan-modal";
 
 // Helper function to normalize location format from "City, StateCode" to "City, CountryName"
 // This handles legacy data where location was stored as "Madrid, MD" instead of "Madrid, Spain"
@@ -336,6 +338,9 @@ export default function ResumeBuilderPage() {
     const [animatePreview, setAnimatePreview] = useState(() => !searchParams.get("id"));
     const [autoSaveStatus, setAutoSaveStatus] = useState<"saved" | "saving" | "unsaved">("saved");
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
+    const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
+    const [limitFeature, setLimitFeature] = useState("");
+    const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
     const nameInputRef = useRef<HTMLInputElement>(null);
     const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -605,7 +610,8 @@ export default function ResumeBuilderPage() {
                 } else {
                     console.error("Failed to save resume:", result.error);
                     if (result.error?.includes("limit")) {
-                        alert(result.error);
+                        setLimitFeature("Active Resumes");
+                        setIsLimitModalOpen(true);
                     }
                     setAutoSaveStatus("unsaved");
                 }
@@ -783,7 +789,8 @@ export default function ResumeBuilderPage() {
             if (!result.success) {
                 // Determine if user has Free plan to show upgrade message
                 if (result.error?.includes("limit reached")) {
-                    alert(result.error + " Upgrade to Pro for unlimited downloads.");
+                    setLimitFeature("Resume Downloads");
+                    setIsLimitModalOpen(true);
                 } else {
                     alert(result.error || "Usage limit reached.");
                 }
@@ -942,6 +949,21 @@ export default function ResumeBuilderPage() {
                     </div>
                 </div>
             </div>
+            {/* Modals */}
+            <LimitModal
+                open={isLimitModalOpen}
+                onOpenChange={setIsLimitModalOpen}
+                feature={limitFeature}
+                onUpgrade={() => {
+                    setIsLimitModalOpen(false);
+                    setIsUpgradeModalOpen(true);
+                }}
+            />
+            <UpgradePlanModal
+                open={isUpgradeModalOpen}
+                onClose={() => setIsUpgradeModalOpen(false)}
+                currentPlan="Free"
+            />
         </div>
     );
 }

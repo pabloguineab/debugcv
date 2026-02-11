@@ -9,6 +9,8 @@ import { saveCoverLetter, getCoverLetter } from "@/lib/actions/cover-letters";
 import { getResume } from "@/lib/actions/resumes";
 import { downloadCoverLetterPDF } from "@/components/cover-letter-pdf";
 import { ResumeData } from "@/types/resume";
+import { LimitModal } from "@/components/limit-modal";
+import { UpgradePlanModal } from "@/components/upgrade-plan-modal";
 
 export default function CoverLetterBuilderPage() {
     const searchParams = useSearchParams();
@@ -25,6 +27,9 @@ export default function CoverLetterBuilderPage() {
     const [targetJob, setTargetJob] = useState("");
     const [targetCompany, setTargetCompany] = useState("");
     const [resumeData, setResumeData] = useState<ResumeData | null>(null);
+    const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
+    const [limitFeature, setLimitFeature] = useState("");
+    const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
     const [isLoading, setIsLoading] = useState(true);
     const [isGenerating, setIsGenerating] = useState(false);
@@ -153,7 +158,8 @@ export default function CoverLetterBuilderPage() {
             } else {
                 console.error("Error saving:", result.error);
                 if (result.error?.includes("limit")) {
-                    alert(result.error);
+                    setLimitFeature("Active Cover Letters");
+                    setIsLimitModalOpen(true);
                 }
             }
         } catch (error) {
@@ -255,7 +261,8 @@ export default function CoverLetterBuilderPage() {
 
             if (!result.success) {
                 if (result.error?.includes("limit reached")) {
-                    alert(result.error + " Upgrade to Pro for unlimited downloads.");
+                    setLimitFeature("Cover Letter Downloads");
+                    setIsLimitModalOpen(true);
                 } else {
                     alert(result.error || "Usage limit reached.");
                 }
@@ -497,6 +504,22 @@ export default function CoverLetterBuilderPage() {
                     </div>
                 </div>
             </div>
-        </div>
+
+            {/* Modals */}
+            <LimitModal
+                open={isLimitModalOpen}
+                onOpenChange={setIsLimitModalOpen}
+                feature={limitFeature}
+                onUpgrade={() => {
+                    setIsLimitModalOpen(false);
+                    setIsUpgradeModalOpen(true);
+                }}
+            />
+            <UpgradePlanModal
+                open={isUpgradeModalOpen}
+                onClose={() => setIsUpgradeModalOpen(false)}
+                currentPlan="Free"
+            />
+        </div >
     );
 }
