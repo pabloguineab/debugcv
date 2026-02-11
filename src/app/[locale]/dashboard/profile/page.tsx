@@ -373,20 +373,43 @@ export default function ProfilePage() {
         if (imageToCrop && croppedAreaPixels) {
             try {
                 const croppedImage = await getCroppedImg(imageToCrop, croppedAreaPixels);
-                setProfileImage(croppedImage);
 
-                // Save to backend
-                await updateProfile({ image_url: croppedImage });
+                // Convert Base64 to Blob for upload
+                const res = await fetch(croppedImage);
+                const blob = await res.blob();
+                const file = new File([blob], "avatar.jpg", { type: "image/jpeg" });
 
-                // Update session to reflect change in sidebar
-                await update({ image: croppedImage });
+                const formData = new FormData();
+                formData.append("file", file);
+
+                // Upload to Supabase Storage
+                const uploadResponse = await fetch("/api/profile/upload-image", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                if (!uploadResponse.ok) {
+                    throw new Error("Failed to upload image");
+                }
+
+                const { url } = await uploadResponse.json();
+
+                // Update local state with new URL
+                setProfileImage(url);
+
+                // Save URL to backend
+                await updateProfile({ image_url: url });
+
+                // Update session with URL
+                await update({ image: url });
 
                 await refreshCompletionStatus();
 
                 setIsCropDialogOpen(false);
                 setImageToCrop(null);
             } catch (e) {
-                console.error(e);
+                console.error("Failed to save cropped image:", e);
+                // Fallback: if upload fails, at least try to show the local base64 (though won't persist well)
             }
         }
     };

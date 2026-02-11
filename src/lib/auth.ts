@@ -137,10 +137,23 @@ export const authOptions: AuthOptions = {
     },
     callbacks: {
         async jwt({ token, account, profile, user, trigger, session }) {
-            // Handle session update (e.g. clearing isNewUser flag)
-            if (trigger === "update" && session?.isNewUser === false) {
-                console.log("[JWT] Clearing isNewUser flag via session update");
-                token.isNewUser = false;
+            // Handle session update (e.g. clearing isNewUser flag, updating profile image/name)
+            if (trigger === "update" && session) {
+                console.log("[JWT] Session update triggered:", session);
+
+                if (session.isNewUser === false) {
+                    token.isNewUser = false;
+                }
+
+                if (session.image) {
+                    token.identityPicture = session.image;
+                    token.picture = session.image;
+                }
+
+                if (session.name) {
+                    token.identityName = session.name;
+                    token.name = session.name;
+                }
             }
 
             // When account exists, it means this is a sign-in event
