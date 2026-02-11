@@ -20,8 +20,8 @@ export function ProjectItem({ item, onUpdate, onRemove }: ProjectItemProps) {
             value={item}
             dragListener={false}
             dragControls={controls}
-            whileDrag={{ scale: 1.02, zIndex: 50, boxShadow: "0 5px 15px rgba(0,0,0,0.1)" }}
-            className="border rounded-lg p-3 bg-white dark:bg-zinc-900 select-none"
+            whileDrag={{ scale: 1.02, zIndex: 999, boxShadow: "0 5px 15px rgba(0,0,0,0.1)" }}
+            className="border rounded-lg p-3 bg-white dark:bg-zinc-900 select-none relative"
         >
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
