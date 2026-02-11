@@ -447,13 +447,17 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                 </div>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
-                                    <DropdownMenuItem>
-                                        <User className="mr-2 h-4 w-4" />
-                                        Account
+                                    <DropdownMenuItem asChild>
+                                        <Link href="/dashboard/account" className="cursor-pointer">
+                                            <User className="mr-2 h-4 w-4" />
+                                            Account
+                                        </Link>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        <CreditCard className="mr-2 h-4 w-4" />
-                                        Billing
+                                    <DropdownMenuItem asChild>
+                                        <Link href="/dashboard/billing" className="cursor-pointer">
+                                            <CreditCard className="mr-2 h-4 w-4" />
+                                            Billing
+                                        </Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem>
                                         <Bell className="mr-2 h-4 w-4" />
