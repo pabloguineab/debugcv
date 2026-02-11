@@ -62,7 +62,17 @@ export function getCompanyDomain(company: string, website?: string): string {
     if (website) {
         try {
             const url = new URL(website.startsWith('http') ? website : `https://${website}`);
-            return url.hostname;
+            const hostname = url.hostname.replace(/^www\./, '');
+
+            // List of job board domains to avoid unless the company IS that job board
+            const jobBoards = ['linkedin.com', 'indeed.com', 'glassdoor.com', 'ziprecruiter.com', 'monster.com'];
+            const isJobBoard = jobBoards.some(jb => hostname.includes(jb));
+            const isCompanyJobBoard = jobBoards.some(jb => lowerCompany.includes(jb.split('.')[0]));
+
+            // Only use the website if it's NOT a job board, OR if the company itself IS the job board (e.g. working at LinkedIn)
+            if (!isJobBoard || isCompanyJobBoard) {
+                return hostname;
+            }
         } catch (e) {
             // invalid url, fall through
         }

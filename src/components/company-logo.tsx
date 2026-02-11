@@ -13,11 +13,14 @@ interface CompanyLogoProps {
     onLogoFallback?: () => void;
 }
 
-// Job board domains to filter out from API logos
-const JOB_BOARD_DOMAINS = ['linkedin', 'indeed', 'glassdoor', 'ziprecruiter', 'monster.com', 'infojobs'];
+// Job board domains to filter out
+const JOB_BOARD_DOMAINS = [
+    'linkedin', 'indeed', 'glassdoor', 'ziprecruiter', 'monster',
+    'infojobs', 'wellfound', 'angel.co', 'simplyhired', 'careerbuilder'
+];
 
-function isJobBoardLogo(url: string): boolean {
-    const lower = url.toLowerCase();
+function isJobBoardDomain(domain: string): boolean {
+    const lower = domain.toLowerCase();
     return JOB_BOARD_DOMAINS.some(d => lower.includes(d));
 }
 
@@ -41,14 +44,21 @@ function getDomain(company: string, website?: string): string {
         'twilio': 'twilio.com', 'hubspot': 'hubspot.com', 'accenture': 'accenture.com',
         'ravenpack': 'ravenpack.com', 'sngular': 'sngular.com', 'solera': 'solera.com',
         'welocalize': 'welocalize.com', 'dlocal': 'dlocal.com',
+        'nextlane': 'nextlane.com',
     };
 
     if (overrides[lowerCompany]) return overrides[lowerCompany];
 
+    // Try to extract from website if valid and NOT a job board
     if (website) {
         try {
             const url = new URL(website.startsWith('http') ? website : `https://${website}`);
-            return url.hostname.replace(/^www\./, '');
+            const hostname = url.hostname.replace(/^www\./, '');
+
+            // If the website is actually a job board (e.g. linkedin.com/jobs/...), DO NOT use it
+            if (!isJobBoardDomain(hostname)) {
+                return hostname;
+            }
         } catch {
             // invalid url, fall through
         }
@@ -76,13 +86,15 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
         const urls: string[] = [];
         const token = process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN || '';
 
-        // 1. API-provided logo (best source, from Google Images) - if not a job board logo
-        if (logo && !isJobBoardLogo(logo)) {
+        // 1. Logo.dev (ALWAYS FIRST - High quality & Reliable)
+        // We trust our getDomain() logic to filter out linkedin.com, so this should generally be the company domain.
+        urls.push(`https://img.logo.dev/${domain}?token=${token}&size=128&format=png`);
+
+        // 2. API-provided logo (Fallback)
+        // Only if it doesn't look like a direct job board asset
+        if (logo && !isJobBoardDomain(logo)) {
             urls.push(logo);
         }
-
-        // 2. Logo.dev (high quality logos with great coverage)
-        urls.push(`https://img.logo.dev/${domain}?token=${token}&size=128&format=png`);
 
         return urls;
     })();
