@@ -366,11 +366,9 @@ export default function AccountPage() {
                                 }, 300);
                             }
                         }}>
-                            <DialogTrigger asChild>
-                                <Button variant="destructive" size="sm" className="gap-2">
-                                    <Trash2 className="w-4 h-4" />
-                                    Delete Account
-                                </Button>
+                            <DialogTrigger className={buttonVariants({ variant: "destructive", size: "sm" }) + " gap-2"}>
+                                <Trash2 className="w-4 h-4" />
+                                Delete Account
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-md">
                                 <DialogHeader>
