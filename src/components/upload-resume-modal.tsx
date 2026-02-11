@@ -108,16 +108,33 @@ export function UploadResumeModal({
         if (!file) return;
 
         setIsUploading(true);
-        // Simulate upload delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        setError(null);
 
-        setIsUploading(false);
-        setIsSuccess(true);
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("terms", String(termsAccepted));
 
-        // Auto close after success? Or let user close.
-        setTimeout(() => {
-            onClose();
-        }, 1500);
+            const response = await fetch("/api/expert-review/upload", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.error || "Failed to upload file");
+            }
+
+            setIsSuccess(true);
+            setTimeout(() => {
+                onClose();
+            }, 2000);
+        } catch (err: any) {
+            console.error("Upload error:", err);
+            setError(err.message || "An error occurred while uploading. Please try again.");
+        } finally {
+            setIsUploading(false);
+        }
     };
 
     const removeFile = () => {
