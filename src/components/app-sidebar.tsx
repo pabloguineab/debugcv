@@ -448,13 +448,13 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
                                     <DropdownMenuItem asChild>
-                                        <Link href="/dashboard/account" className="cursor-pointer">
+                                        <Link href="/dashboard/account" className="cursor-pointer w-full flex items-center">
                                             <User className="mr-2 h-4 w-4" />
                                             Account
                                         </Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem asChild>
-                                        <Link href="/dashboard/billing" className="cursor-pointer">
+                                        <Link href="/dashboard/billing" className="cursor-pointer w-full flex items-center">
                                             <CreditCard className="mr-2 h-4 w-4" />
                                             Billing
                                         </Link>

@@ -1,6 +1,6 @@
+"use client";
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { useSession } from "next-auth/react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -11,16 +11,27 @@ import { Badge } from "@/components/ui/badge";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 
-export default async function AccountPage() {
-    const session = await getServerSession(authOptions);
+export default function AccountPage() {
+    const { data: session, status } = useSession();
 
-    if (!session) {
-        redirect("/auth/signin");
+    useEffect(() => {
+        if (status === "unauthenticated") {
+            redirect("/auth/signin");
+        }
+    }, [status]);
+
+    if (status === "loading") {
+        return <div className="p-10 text-center text-sm text-muted-foreground">Loading account...</div>;
     }
 
-    const user = session.user as any;
-    const provider = user.provider || "email";
+    if (!session?.user) {
+        return null;
+    }
+
+    const userData = session.user as any;
+    const provider = userData.provider || "email";
 
     // Determine provider status
     const isGoogle = provider === "google";
@@ -52,7 +63,7 @@ export default async function AccountPage() {
                             <div className="grid gap-2">
                                 <Label htmlFor="name">Display Name</Label>
                                 <div className="flex gap-2">
-                                    <Input id="name" defaultValue={user.name || ""} disabled className="bg-muted" />
+                                    <Input id="name" defaultValue={userData.name || ""} disabled className="bg-muted" />
                                     <Button variant="outline" size="icon" disabled>
                                         <Key className="w-4 h-4" />
                                     </Button>
@@ -62,7 +73,7 @@ export default async function AccountPage() {
                             <div className="grid gap-2">
                                 <Label htmlFor="email">Email Address</Label>
                                 <div className="flex gap-2">
-                                    <Input id="email" defaultValue={user.email || ""} disabled className="bg-muted" />
+                                    <Input id="email" defaultValue={userData.email || ""} disabled className="bg-muted" />
                                     <Button variant="outline" size="icon" disabled>
                                         <Mail className="w-4 h-4" />
                                     </Button>
@@ -73,7 +84,7 @@ export default async function AccountPage() {
                         <div className="md:w-1/3 flex flex-col items-center justify-center p-6 border rounded-lg bg-muted/20">
                             <div className="relative w-24 h-24 mb-4">
                                 <Image
-                                    src={user.image || "/placeholder-user.jpg"}
+                                    src={userData.image || "/placeholder-user.jpg"}
                                     alt="Profile"
                                     fill
                                     className="rounded-full object-cover border-2 border-background shadow-sm"

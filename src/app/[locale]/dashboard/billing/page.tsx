@@ -1,6 +1,6 @@
+"use client";
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { useSession } from "next-auth/react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -9,12 +9,23 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Progress } from "@/components/ui/progress";
 import { redirect } from "next/navigation";
+import { useEffect } from "react";
 
-export default async function BillingPage() {
-    const session = await getServerSession(authOptions);
+export default function BillingPage() {
+    const { data: session, status } = useSession();
+
+    useEffect(() => {
+        if (status === "unauthenticated") {
+            redirect("/auth/signin");
+        }
+    }, [status]);
+
+    if (status === "loading") {
+        return <div className="p-10 text-center text-sm text-muted-foreground">Loading billing details...</div>;
+    }
 
     if (!session) {
-        redirect("/auth/signin");
+        return null;
     }
 
     // Mock data for free plan
