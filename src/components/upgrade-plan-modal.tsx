@@ -33,17 +33,15 @@ export function UpgradePlanModal({
     }, [open, onClose]);
 
     const handleOverlayClick = (e: React.MouseEvent) => {
+        // Checking if the click was on the backdrop div (which we can identify by lack of propagation from child)
         if (e.target === overlayRef.current) {
             onClose();
         }
     };
 
     const handleSelectPlan = (planName: string) => {
-        // Here you would integrate with Stripe/Payment provider
         console.log("Selected plan:", planName);
-        // For now, just close or show success (if intended)
         if (planName !== currentPlan) {
-            // Redirect to checkout or something
             window.location.href = `/checkout?plan=${planName}`;
         }
     };
@@ -102,114 +100,123 @@ export function UpgradePlanModal({
         }
     ];
 
+    if (!open) return null;
+
     return (
         <AnimatePresence>
             {open && (
                 <motion.div
-                    ref={overlayRef}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.15 }}
-                    className="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-md p-4 left-0 md:left-[var(--sidebar-width)] transition-[left] duration-200"
-                    onClick={handleOverlayClick}
+                    className="absolute inset-0 z-50 pointer-events-auto"
                 >
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        transition={{ duration: 0.15 }}
-                        className="w-full max-w-5xl bg-background rounded-xl shadow-2xl border relative my-4 max-h-[90vh] overflow-y-auto"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="absolute right-4 top-4 rounded-full opacity-70 hover:opacity-100 z-10"
-                            onClick={onClose}
+                    <div className="sticky top-0 left-0 w-full h-[100dvh] flex items-center justify-center p-4">
+                        <div
+                            ref={overlayRef}
+                            className="absolute inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-md transition-all duration-300"
+                            onClick={(e) => {
+                                if (e.target === e.currentTarget) onClose();
+                            }}
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            transition={{ duration: 0.15 }}
+                            className="w-full max-w-5xl bg-background rounded-xl shadow-2xl border relative z-10 my-4 max-h-[90vh] overflow-y-auto"
+                            onClick={(e) => e.stopPropagation()}
                         >
-                            <X className="h-4 w-4" />
-                        </Button>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="absolute right-4 top-4 rounded-full opacity-70 hover:opacity-100 z-10"
+                                onClick={onClose}
+                            >
+                                <X className="h-4 w-4" />
+                            </Button>
 
-                        <div className="p-6 text-center space-y-1">
-                            <h2 className="text-2xl font-bold">Invest in Your Career</h2>
-                            <p className="text-muted-foreground text-sm">Choose the plan that fits your career goals.</p>
-                        </div>
+                            <div className="p-6 text-center space-y-1">
+                                <h2 className="text-2xl font-bold">Invest in Your Career</h2>
+                                <p className="text-muted-foreground text-sm">Choose the plan that fits your career goals.</p>
+                            </div>
 
-                        <div className="grid md:grid-cols-3 gap-4 p-5 pt-0">
-                            {plans.map((plan) => {
-                                const isCurrent = plan.name === currentPlan || (plan.name === "Break into Tech" && currentPlan === "Pro"); // Handle potential naming mismatch
-                                const Icon = plan.icon;
+                            <div className="grid md:grid-cols-3 gap-4 p-5 pt-0">
+                                {plans.map((plan) => {
+                                    const Icon = plan.icon;
+                                    const isCurrent = plan.name === "Starter" && currentPlan === "Starter" ? true : (currentPlan === "Pro" && plan.name === "Break into Tech");
 
-                                return (
-                                    <div
-                                        key={plan.name}
-                                        className={cn(
-                                            "relative flex flex-col p-5 rounded-lg border-2 transition-all duration-300 bg-card/50 hover:bg-card hover:shadow-xl hover:-translate-y-1",
-                                            plan.popular ? "border-primary/50 shadow-md scale-[1.02] z-10 bg-card" : "border-transparent hover:border-border/50",
-                                            isCurrent ? "ring-2 ring-primary border-primary bg-primary/5" : ""
-                                        )}
-                                    >
-                                        {plan.popular && (
-                                            <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                                                <Badge className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white border-0 shadow-lg px-3 py-0.5 text-xs">
-                                                    Most Popular
-                                                </Badge>
-                                            </div>
-                                        )}
-
-                                        <div className="flex items-center gap-3 mb-4">
-                                            <div className={cn("p-2 rounded-lg bg-muted/50 shadow-sm", plan.color.replace('text-', 'bg-').replace('500', '100 dark:bg-opacity-20'))}>
-                                                <Icon className={cn("w-5 h-5", plan.color)} />
-                                            </div>
-                                            <div>
-                                                <h3 className="font-semibold text-base leading-tight">{plan.name}</h3>
-                                                {plan.popular && <span className="text-[10px] text-primary font-medium uppercase tracking-wide">Recommended</span>}
-                                            </div>
-                                        </div>
-
-                                        <div className="mb-4 space-y-1">
-                                            <div className="flex items-baseline gap-1">
-                                                <span className="text-3xl font-bold tracking-tight">{plan.price}</span>
-                                                {plan.period && (
-                                                    <span className="text-muted-foreground font-medium text-sm">{plan.period}</span>
-                                                )}
-                                            </div>
-                                            <p className="text-xs text-muted-foreground leading-relaxed min-h-[32px]">{plan.description}</p>
-                                        </div>
-
-                                        <Button
+                                    return (
+                                        <div
+                                            key={plan.name}
                                             className={cn(
-                                                "w-full font-bold mb-6 shadow-sm transition-all h-9 text-sm",
-                                                plan.popular ? "bg-primary hover:bg-primary/90 text-primary-foreground shadow-primary/25 shadow-lg" : "",
-                                                !plan.popular && !isCurrent ? "bg-secondary/50 hover:bg-secondary text-secondary-foreground" : "",
-                                                isCurrent ? "bg-green-100 text-green-700 hover:bg-green-200 border-green-200 opacity-100" : ""
+                                                "rounded-xl border p-6 flex flex-col relative transition-all duration-200",
+                                                plan.popular ? "border-primary shadow-md bg-primary/5" : "bg-card hover:bg-accent/5",
+                                                isCurrent ? "ring-2 ring-primary border-primary bg-primary/5" : ""
                                             )}
-                                            variant={isCurrent ? "outline" : (plan.popular ? "default" : "outline")}
-                                            disabled={isCurrent}
-                                            onClick={() => handleSelectPlan(plan.name)}
                                         >
-                                            {isCurrent ? (
-                                                <>
-                                                    <Check className="w-3.5 h-3.5 mr-1.5" /> Current Plan
-                                                </>
-                                            ) : plan.buttonText}
-                                        </Button>
-
-                                        <div className="space-y-3 flex-1">
-                                            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">What's included</p>
-                                            {plan.features.map((feature, i) => (
-                                                <div key={i} className="flex items-start gap-2 text-xs group">
-                                                    <Check className={cn("w-3.5 h-3.5 mt-0.5 shrink-0 transition-colors group-hover:text-primary", plan.color)} />
-                                                    <span className="text-muted-foreground group-hover:text-foreground transition-colors">{feature}</span>
+                                            {plan.popular && (
+                                                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                                                    <Badge className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white border-0 shadow-lg px-3 py-0.5 text-xs">
+                                                        Most Popular
+                                                    </Badge>
                                                 </div>
-                                            ))}
+                                            )}
+
+                                            <div className="flex items-center gap-3 mb-4">
+                                                <div className={cn("p-2 rounded-lg bg-muted/50 shadow-sm", plan.color.replace('text-', 'bg-').replace('500', '100 dark:bg-opacity-20'))}>
+                                                    <Icon className={cn("w-5 h-5", plan.color)} />
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-semibold text-base leading-tight">{plan.name}</h3>
+                                                    {plan.popular && <span className="text-[10px] text-primary font-medium uppercase tracking-wide">Recommended</span>}
+                                                </div>
+                                            </div>
+
+                                            <div className="mb-4 space-y-1">
+                                                <div className="flex items-baseline gap-1">
+                                                    <span className="text-3xl font-bold tracking-tight">{plan.price}</span>
+                                                    {plan.period && (
+                                                        <span className="text-muted-foreground font-medium text-sm">{plan.period}</span>
+                                                    )}
+                                                </div>
+                                                <p className="text-xs text-muted-foreground leading-relaxed min-h-[32px]">{plan.description}</p>
+                                            </div>
+
+                                            <Button
+                                                className={cn(
+                                                    "w-full font-bold mb-6 shadow-sm transition-all h-9 text-sm",
+                                                    plan.popular ? "bg-primary hover:bg-primary/90 text-primary-foreground shadow-primary/25 shadow-lg" : "",
+                                                    !plan.popular && !isCurrent ? "bg-secondary/50 hover:bg-secondary text-secondary-foreground" : "",
+                                                    isCurrent ? "bg-green-100 text-green-700 hover:bg-green-200 border-green-200 opacity-100" : ""
+                                                )}
+                                                variant={isCurrent ? "outline" : (plan.popular ? "default" : "outline")}
+                                                disabled={isCurrent}
+                                                onClick={() => handleSelectPlan(plan.name)}
+                                            >
+                                                {isCurrent ? (
+                                                    <>
+                                                        <Check className="w-3.5 h-3.5 mr-1.5" /> Current Plan
+                                                    </>
+                                                ) : plan.buttonText}
+                                            </Button>
+
+                                            <div className="space-y-3 flex-1">
+                                                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">What's included</p>
+                                                {plan.features.map((feature, i) => (
+                                                    <div key={i} className="flex items-start gap-2 text-xs group">
+                                                        <Check className={cn("w-3.5 h-3.5 mt-0.5 shrink-0 transition-colors group-hover:text-primary", plan.color)} />
+                                                        <span className="text-muted-foreground group-hover:text-foreground transition-colors">{feature}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </motion.div>
+                                    );
+                                })}
+                            </div>
+                        </motion.div>
+                    </div>
                 </motion.div>
             )}
         </AnimatePresence>
