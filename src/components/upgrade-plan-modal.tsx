@@ -132,7 +132,7 @@ export function UpgradePlanModal({
                         </Button>
 
                         <div className="p-6 text-center space-y-1">
-                            <h2 className="text-2xl font-bold tracking-tight">Invest in Your Career</h2>
+                            <h2 className="text-2xl font-bold">Invest in Your Career</h2>
                             <p className="text-muted-foreground text-sm">Choose the plan that fits your career goals.</p>
                         </div>
 
@@ -163,14 +163,14 @@ export function UpgradePlanModal({
                                                 <Icon className={cn("w-5 h-5", plan.color)} />
                                             </div>
                                             <div>
-                                                <h3 className="font-bold text-base leading-tight">{plan.name}</h3>
+                                                <h3 className="font-semibold text-base leading-tight">{plan.name}</h3>
                                                 {plan.popular && <span className="text-[10px] text-primary font-medium uppercase tracking-wide">Recommended</span>}
                                             </div>
                                         </div>
 
                                         <div className="mb-4 space-y-1">
                                             <div className="flex items-baseline gap-1">
-                                                <span className="text-3xl font-black tracking-tight">{plan.price}</span>
+                                                <span className="text-3xl font-bold tracking-tight">{plan.price}</span>
                                                 {plan.period && (
                                                     <span className="text-muted-foreground font-medium text-sm">{plan.period}</span>
                                                 )}
