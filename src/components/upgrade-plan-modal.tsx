@@ -115,7 +115,7 @@ export function UpgradePlanModal({
                     <div className="sticky top-0 left-0 w-full h-[100dvh] flex items-center justify-center p-4">
                         <div
                             ref={overlayRef}
-                            className="absolute inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-md transition-all duration-300"
+                            className="absolute inset-0 bg-white/20 dark:bg-black/40 backdrop-blur-md transition-all duration-300"
                             onClick={(e) => {
                                 if (e.target === e.currentTarget) onClose();
                             }}

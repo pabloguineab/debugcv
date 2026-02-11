@@ -955,8 +955,8 @@ export default function ResumeBuilderPage() {
                 onOpenChange={setIsLimitModalOpen}
                 feature={limitFeature}
                 onUpgrade={() => {
-                    setIsLimitModalOpen(false);
                     setIsUpgradeModalOpen(true);
+                    setTimeout(() => setIsLimitModalOpen(false), 300);
                 }}
             />
             <UpgradePlanModal

@@ -18,7 +18,7 @@ export function LimitModal({ open, onOpenChange, onUpgrade, feature }: LimitModa
         <div className="absolute inset-0 z-50 flex items-center justify-center p-4 overflow-hidden">
             {/* Backdrop with Blur */}
             <div
-                className="absolute inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-md transition-all duration-300"
+                className="absolute inset-0 bg-white/20 dark:bg-black/40 backdrop-blur-md transition-all duration-300"
                 onClick={() => onOpenChange(false)}
             />
 
