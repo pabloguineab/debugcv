@@ -294,7 +294,7 @@ export default function CoverLetterBuilderPage() {
     }
 
     return (
-        <div className="flex flex-1 flex-col h-full">
+        <div className="flex flex-1 flex-col h-full relative">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b bg-background">
                 <div className="flex items-center gap-4">

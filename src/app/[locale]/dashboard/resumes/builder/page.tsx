@@ -819,7 +819,7 @@ export default function ResumeBuilderPage() {
     };
 
     return (
-        <div className="h-[calc(100vh-64px)] flex flex-col -mx-4 -mt-2 -mb-4">
+        <div className="h-[calc(100vh-64px)] flex flex-col -mx-4 -mt-2 -mb-4 relative">
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b bg-background shrink-0">
                 <div className="flex items-center gap-3">
