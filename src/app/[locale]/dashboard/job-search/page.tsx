@@ -676,8 +676,28 @@ export default function JobSearchPage() {
                             {/* Always fill empty grid slots with skeletons to keep layout 100% clean */}
                             {(() => {
                                 const currentCount = displayedJobs.slice(0, visibleCount).filter(job => !invalidJobIds.has(job.job_id)).length;
+
+                                let skeletonsNeeded = 0;
                                 const remainder = currentCount % 3;
-                                const skeletonsNeeded = remainder === 0 ? 0 : 3 - remainder;
+
+                                // 1. Fill the row
+                                if (remainder !== 0) {
+                                    skeletonsNeeded += (3 - remainder);
+                                }
+
+                                // 2. If we are actively loading more OR just have few jobs (auto-fill territory), show placeholders
+                                // This prevents the "white gap" while auto-fill effect is triggering
+                                if (currentCount < 15 && hasMore) {
+                                    const totalProjected = currentCount + skeletonsNeeded;
+                                    // Fill up to 15 slots (5 rows) visual buffer
+                                    if (totalProjected < 15) {
+                                        skeletonsNeeded += (15 - totalProjected);
+                                    }
+                                } else if (loadingMore) {
+                                    // If we have > 15 jobs but are loading even more (scrolling down), add a row of skeletons at the bottom
+                                    // to indicate action
+                                    skeletonsNeeded += 3;
+                                }
 
                                 if (skeletonsNeeded === 0) return null;
 
