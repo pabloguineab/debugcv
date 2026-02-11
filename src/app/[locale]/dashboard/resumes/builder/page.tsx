@@ -604,6 +604,9 @@ export default function ResumeBuilderPage() {
                     setLastSaved(new Date());
                 } else {
                     console.error("Failed to save resume:", result.error);
+                    if (result.error?.includes("limit")) {
+                        alert(result.error);
+                    }
                     setAutoSaveStatus("unsaved");
                 }
             } catch (error) {
@@ -773,6 +776,20 @@ export default function ResumeBuilderPage() {
     const handleDownload = async () => {
         setIsDownloading(true);
         try {
+            // Check & Track Usage Limit
+            const { trackUsageAction } = await import("@/lib/actions/usage");
+            const result = await trackUsageAction("download_resume");
+
+            if (!result.success) {
+                // Determine if user has Free plan to show upgrade message
+                if (result.error?.includes("limit reached")) {
+                    alert(result.error + " Upgrade to Pro for unlimited downloads.");
+                } else {
+                    alert(result.error || "Usage limit reached.");
+                }
+                return;
+            }
+
             await downloadResumePDF(resumeData);
         } catch (error) {
             console.error("Failed to generate PDF:", error);

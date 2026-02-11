@@ -8,6 +8,24 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 export async function POST(req: NextRequest) {
     try {
+        // Auth Check
+        const { getServerSession } = await import("next-auth");
+        const { authOptions } = await import("@/lib/auth");
+        const session = await getServerSession(authOptions);
+        if (!session?.user?.email) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        // Limit Check
+        const { checkUsageLimit, incrementUsage } = await import("@/lib/limits");
+        const allowed = await checkUsageLimit("ats_scan");
+        if (!allowed) {
+            return NextResponse.json(
+                { error: "ATS Scan limit reached (3 per month). Upgrade to Pro for unlimited scans." },
+                { status: 403 }
+            );
+        }
+
         const formData = await req.formData();
         const file = formData.get("file") as File | null;
         const jobDescription = formData.get("jobDescription") as string | null;
@@ -73,6 +91,9 @@ export async function POST(req: NextRequest) {
         text = text.replace(/```json/g, "").replace(/```/g, "").trim();
 
         const jsonResponse = JSON.parse(text);
+
+        // Increment usage after success
+        await incrementUsage("ats_scan");
 
         return NextResponse.json(jsonResponse);
 

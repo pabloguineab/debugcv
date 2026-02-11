@@ -137,7 +137,7 @@ export default function CoverLetterBuilderPage() {
 
         setIsSaving(true);
         try {
-            await saveCoverLetter(
+            const result = await saveCoverLetter(
                 coverLetterId,
                 name,
                 content,
@@ -146,8 +146,16 @@ export default function CoverLetterBuilderPage() {
                 targetCompany,
                 jobDescription
             );
-            setIsSaved(true);
-            setTimeout(() => setIsSaved(false), 2000);
+
+            if (result.success) {
+                setIsSaved(true);
+                setTimeout(() => setIsSaved(false), 2000);
+            } else {
+                console.error("Error saving:", result.error);
+                if (result.error?.includes("limit")) {
+                    alert(result.error);
+                }
+            }
         } catch (error) {
             console.error("Error saving:", error);
         } finally {
@@ -241,6 +249,19 @@ export default function CoverLetterBuilderPage() {
         if (!textContent) return;
 
         try {
+            // Check & Track Usage Limit
+            const { trackUsageAction } = await import("@/lib/actions/usage");
+            const result = await trackUsageAction("download_cover_letter");
+
+            if (!result.success) {
+                if (result.error?.includes("limit reached")) {
+                    alert(result.error + " Upgrade to Pro for unlimited downloads.");
+                } else {
+                    alert(result.error || "Usage limit reached.");
+                }
+                return;
+            }
+
             await downloadCoverLetterPDF(textContent, name);
         } catch (error) {
             console.error("Failed to download PDF:", error);

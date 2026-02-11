@@ -107,6 +107,14 @@ export async function saveResume(
 
         return { success: true, id };
     } else {
+        // limit check
+        // Check resume limit for free plan
+        const { checkUsageLimit } = await import("@/lib/limits");
+        const canCreate = await checkUsageLimit("create_resume");
+        if (!canCreate) {
+            return { success: false, error: "Free plan limit reached (3 resumes). Upgrade to create more." };
+        }
+
         // Insert new resume
         const { data, error } = await supabase
             .from("resumes")

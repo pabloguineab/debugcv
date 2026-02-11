@@ -109,6 +109,13 @@ export async function saveCoverLetter(
 
         return { success: true, id };
     } else {
+        // limit check
+        const { checkUsageLimit } = await import("@/lib/limits");
+        const canCreate = await checkUsageLimit("create_cover_letter");
+        if (!canCreate) {
+            return { success: false, error: "Free plan limit reached (3 cover letters). Upgrade to create more." };
+        }
+
         // Insert new
         const { data, error } = await supabase
             .from("cover_letters")
