@@ -74,20 +74,15 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
     // Build ordered list of logo URLs to try
     const logoUrls = (() => {
         const urls: string[] = [];
+        const token = process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN || '';
 
         // 1. API-provided logo (best source, from Google Images) - if not a job board logo
         if (logo && !isJobBoardLogo(logo)) {
             urls.push(logo);
         }
 
-        // 2. Clearbit (high quality logos)
-        urls.push(`https://logo.clearbit.com/${domain}`);
-
-        // 3. Unavatar (aggregates Clearbit, Google, DuckDuckGo, etc.)
-        urls.push(`https://unavatar.io/${domain}?fallback=false`);
-
-        // 4. Google Favicon (128px - decent quality for most sites)
-        urls.push(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`);
+        // 2. Logo.dev (high quality logos with great coverage)
+        urls.push(`https://img.logo.dev/${domain}?token=${token}&size=128&format=png`);
 
         return urls;
     })();
@@ -110,16 +105,14 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
     const handleImageLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
         const img = e.target as HTMLImageElement;
 
-        // Google Favicon returns a default 16x16 globe when domain has no favicon
-        // If image is very small AND it's from Google Favicons, skip it
-        const src = logoUrls[currentIndex] || '';
-        if (src.includes('google.com/s2/favicons') && img.naturalWidth <= 16) {
-            handleImageError(); // Skip tiny default favicons
+        // Reject tiny/pixelated images - initials look better than blurry icons
+        if (img.naturalWidth < 40 || img.naturalHeight < 40) {
+            handleImageError();
             return;
         }
 
         if (onLogoSuccess) onLogoSuccess();
-    }, [currentIndex, logoUrls, onLogoSuccess, handleImageError]);
+    }, [onLogoSuccess, handleImageError]);
 
     const sizeClasses = {
         sm: "w-8 h-8",

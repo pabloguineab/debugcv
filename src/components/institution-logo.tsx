@@ -84,8 +84,9 @@ export function InstitutionLogo({ name, website, size = "lg", className = "" }: 
 
     const handleImageError = () => {
         if (!triedFallback && domain) {
-            // Try Clearbit as fallback
-            setLogoSrc(`https://logo.clearbit.com/${domain}`);
+            // Try Logo.dev as fallback
+            const token = process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN || '';
+            setLogoSrc(`https://img.logo.dev/${domain}?token=${token}&size=128&format=png`);
             setTriedFallback(true);
         } else {
             setHasError(true);

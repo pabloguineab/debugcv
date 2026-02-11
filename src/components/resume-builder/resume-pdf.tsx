@@ -500,9 +500,10 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
     // Helper to generate a proxy URL that React-PDF can fetch safely
     const getSafeLogoUrl = (domain: string) => {
         const origin = window.location.origin;
-        const targetUrl = `https://logo.clearbit.com/${domain}`;
+        const token = process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN || '';
+        const targetUrl = `https://img.logo.dev/${domain}?token=${token}&size=128&format=png`;
         // We pass the proxy URL directly to the Image component. 
-        // React-PDF will fetch from our own API, which then fetches from Clearbit.
+        // React-PDF will fetch from our own API, which then fetches from Logo.dev.
         // This avoids CORS issues and complex base64 conversion logic.
         return `${origin}/api/image-proxy?url=${encodeURIComponent(targetUrl)}`;
     };
@@ -527,7 +528,8 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
                 // The previous logic had a fallback for safeDomain URLs.
                 const domain = getCompanyDomain(exp.company, exp.companyUrl);
                 if (domain) {
-                    const safeUrl = `https://logo.clearbit.com/${domain}`;
+                    const token = process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN || '';
+                    const safeUrl = `https://img.logo.dev/${domain}?token=${token}&size=128&format=png`;
                     exp.logoUrl = await resolveImageToPngBase64(safeUrl);
                 }
             }
@@ -545,7 +547,8 @@ export async function downloadResumePDF(originalData: ResumeData): Promise<void>
             if (!edu.logoUrl && (edu.website || edu.institution)) {
                 const domain = getInstitutionDomain(edu.institution, edu.website);
                 if (domain) {
-                    const safeUrl = `https://logo.clearbit.com/${domain}`;
+                    const token = process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN || '';
+                    const safeUrl = `https://img.logo.dev/${domain}?token=${token}&size=128&format=png`;
                     edu.logoUrl = await resolveImageToPngBase64(safeUrl);
                 }
             }

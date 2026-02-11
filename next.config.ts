@@ -61,6 +61,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
         pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "img.logo.dev",
+        pathname: "**",
       }
     ],
   },

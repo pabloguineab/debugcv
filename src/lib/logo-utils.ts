@@ -138,12 +138,14 @@ export function getInstitutionDomain(name: string, website?: string): string {
 // Preferred logo sources
 export function getCompanyLogoUrl(company: string, website?: string): string {
     const domain = getCompanyDomain(company, website);
-    // Prefer Clearbit for consistency and PNG format (better for PDF)
-    return `https://logo.clearbit.com/${domain}`;
+    const token = process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN || '';
+    // Use Logo.dev for consistency and PNG format (better for PDF)
+    return `https://img.logo.dev/${domain}?token=${token}&size=128&format=png`;
 }
 
 export function getInstitutionLogoUrl(name: string, website?: string): string {
     const domain = getInstitutionDomain(name, website);
-    // Use Clearbit for institutions too as it reliably returns PNGs
-    return `https://logo.clearbit.com/${domain}`;
+    const token = process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN || '';
+    // Use Logo.dev for institutions too as it reliably returns PNGs
+    return `https://img.logo.dev/${domain}?token=${token}&size=128&format=png`;
 }

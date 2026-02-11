@@ -3,7 +3,7 @@ import { getCompanyDomain, getInstitutionDomain } from "@/lib/logo-utils";
 /**
  * Attempts to fetch a logo for a given company or institution name.
  * Returns a Base64 encoded PNG string on success, or null on failure.
- * Prioritizes direct browser fetch (Clearbit, Brandfetch, Google) to avoid server-side DNS issues.
+ * Prioritizes direct browser fetch (Logo.dev, Brandfetch, Google) to avoid server-side DNS issues.
  * Ensures the result is always a formatted PNG Data URI compatible with React-PDF.
  */
 export async function fetchLogoAndReturnBase64(
@@ -47,10 +47,10 @@ export async function fetchLogoAndReturnBase64(
             });
         };
 
+        const token = process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN || '';
         const strategies = [
-            `https://logo.clearbit.com/${domain}`,
+            `https://img.logo.dev/${domain}?token=${token}&size=128&format=png`,
             `https://cdn.brandfetch.io/${domain}/w/400/h/400`,
-            `https://www.google.com/s2/favicons?domain=${domain}&sz=128`
         ];
 
         for (const url of strategies) {
