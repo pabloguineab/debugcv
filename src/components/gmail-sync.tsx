@@ -53,7 +53,7 @@ export function GmailSync({ onApplicationsImported }: GmailSyncProps) {
 
             if (response.status === 401 && data.requiresConnect) {
                 setSyncStatus('error');
-                setMessage('You need to connect your Google account first.');
+                setMessage('Permission required. Please reconnect Google.');
                 return;
             }
 
@@ -76,7 +76,9 @@ export function GmailSync({ onApplicationsImported }: GmailSyncProps) {
         } catch (error) {
             console.error('Gmail sync error:', error);
             setSyncStatus('error');
-            setMessage('❌ Failed to sync. Please try again.');
+            if (message !== 'Permission required. Please reconnect Google.') {
+                setMessage('❌ Failed to sync. Please try again.');
+            }
         } finally {
             setIsSyncing(false);
         }
@@ -95,6 +97,25 @@ export function GmailSync({ onApplicationsImported }: GmailSyncProps) {
             </Button>
         );
     }
+
+    if (message.includes('Permission required')) {
+        return (
+            <div className="flex items-center gap-2">
+                <span className="text-red-500 text-xs">Permission missing</span>
+                <Button
+                    onClick={handleConnectGoogle}
+                    variant="outline"
+                    size="sm"
+                    className="gap-1 border-red-200 hover:bg-red-100 dark:border-red-800"
+                >
+                    <Mail className="w-3 h-3" />
+                    Give Access
+                </Button>
+            </div>
+        );
+    }
+
+    // ... rest of render logic ...
 
     if (syncStatus === 'success') {
         return (
