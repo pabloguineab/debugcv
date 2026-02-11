@@ -36,7 +36,7 @@ export default function BillingPage() {
     };
 
     return (
-        <div className="space-y-6 max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div className="space-y-6 w-full py-6 px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center">
                 <div>
                     <h3 className="text-2xl font-semibold tracking-tight">Billing & Plans</h3>

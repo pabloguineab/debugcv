@@ -40,7 +40,7 @@ export default function AccountPage() {
     const isEmail = provider === "email" || provider === "credentials" || provider === "email-password";
 
     return (
-        <div className="space-y-6 max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div className="space-y-6 w-full py-6 px-4 sm:px-6 lg:px-8">
             <div>
                 <h3 className="text-2xl font-semibold tracking-tight">Account</h3>
                 <p className="text-sm text-muted-foreground mt-1">Manage your account settings and preferences.</p>
