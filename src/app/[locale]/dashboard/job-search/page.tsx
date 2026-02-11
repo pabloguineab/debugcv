@@ -817,87 +817,85 @@ function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds
             className="font-sans" // Explicitly enforce Poppins
         >
             <Card className={cn(
-                "h-full flex flex-col transition-all duration-300 group relative overflow-hidden bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 rounded-xl",
-                "hover:shadow-lg hover:-translate-y-1",
-                hoverBorderColor
+                "h-full flex flex-col transition-all duration-300 group relative overflow-hidden bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-2xl",
+                "hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-200 dark:hover:border-blue-800",
+                "hover:-translate-y-1"
             )}>
-                {/* Match Score Badge - Positioned Absolute Top Right */}
+                {/* Match Score Badge - Glassmorphism Style */}
                 <div className={cn(
-                    "absolute top-4 right-4 px-2 py-0.5 rounded-full text-[10px] font-bold border flex items-center gap-1 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-sm",
-                    scoreColor
+                    "absolute top-4 right-4 px-2.5 py-1 rounded-full text-[11px] font-bold border flex items-center gap-1.5 z-10 backdrop-blur-md shadow-sm",
+                    matchScore >= 90 ? "bg-emerald-50/80 border-emerald-200 text-emerald-700"
+                        : matchScore >= 80 ? "bg-blue-50/80 border-blue-200 text-blue-700"
+                            : "bg-amber-50/80 border-amber-200 text-amber-700"
                 )}>
-                    <Sparkles className="w-2.5 h-2.5" />
+                    <Sparkles className="w-3 h-3" />
                     {matchScore}% Match
                 </div>
 
-                <CardContent className="p-6 flex-grow">
-                    <div className="flex flex-col gap-4">
-                        {/* Header with Logo and Title */}
-                        <div className="flex items-start gap-4">
-                            <div className="shrink-0">
-                                <CompanyLogo
-                                    company={job.employer_name}
-                                    logo={job.employer_logo || undefined}
-                                    website={job.employer_website || undefined}
-                                    size="lg"
-                                    className="bg-white dark:bg-gray-800 rounded-lg shadow-sm w-12 h-12 object-contain p-1"
-                                    onLogoSuccess={() => setLogoStatus('valid')}
-                                    onLogoFallback={() => setLogoStatus('invalid')}
-                                />
-                            </div>
-                            <div className="min-w-0 flex-1 pt-0.5 pr-16"> {/* pr-16 to avoid overlapping absolute match badge */}
-                                <h3 className="font-semibold text-lg leading-tight line-clamp-2 mb-1.5 group-hover:text-blue-600 transition-colors tracking-tight text-slate-900 dark:text-slate-100">
-                                    {job.job_title}
-                                </h3>
-                                <p className="text-sm text-slate-500 dark:text-slate-400 font-medium truncate flex items-center gap-1.5">
-                                    <Building2 className="w-3.5 h-3.5" />
-                                    {job.employer_name}
-                                </p>
-                            </div>
+                <CardContent className="p-6 flex-grow flex flex-col gap-5">
+                    {/* Header with Logo and Title */}
+                    <div className="flex items-start gap-4">
+                        <div className="shrink-0 relative group-hover:scale-105 transition-transform duration-300">
+                            <CompanyLogo
+                                company={job.employer_name}
+                                logo={job.employer_logo || undefined}
+                                website={job.employer_website || undefined}
+                                size="lg"
+                                className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 w-14 h-14 object-contain p-1.5"
+                                onLogoSuccess={() => setLogoStatus('valid')}
+                                onLogoFallback={() => setLogoStatus('invalid')}
+                            />
                         </div>
-
-                        {/* Badges / Meta Info */}
-                        <div className="flex flex-wrap gap-2 mt-2">
-                            <Badge variant="secondary" className="rounded-full px-3 font-normal bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">
-                                <MapPin className="h-3 w-3 mr-1.5 text-slate-400" />
-                                <span className="truncate max-w-[140px]">
-                                    {job.job_city ? `${job.job_city}, ${job.job_country}` : "Location n/a"}
-                                </span>
-                            </Badge>
-
-                            <Badge variant="secondary" className="rounded-full px-3 font-normal bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">
-                                <Briefcase className="h-3 w-3 mr-1.5 text-slate-400" />
-                                <span className="capitalize">
-                                    {job.job_employment_type?.toLowerCase().replace('_', ' ') || 'Full time'}
-                                </span>
-                            </Badge>
-
-                            {job.job_is_remote && (
-                                <Badge variant="outline" className="rounded-full px-3 font-medium bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/50">
-                                    <Globe className="h-3 w-3 mr-1.5" />
-                                    Remote
-                                </Badge>
-                            )}
-
-                            <span className="text-xs text-slate-400 flex items-center ml-auto pt-1">
-                                {formatJobDate(job.job_posted_at_timestamp)}
-                            </span>
+                        <div className="min-w-0 flex-1 pt-1 pr-20"> {/* pr-20 to clear badge */}
+                            <h3 className="font-bold text-[17px] leading-snug line-clamp-2 mb-1 text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors tracking-tight">
+                                {job.job_title}
+                            </h3>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium truncate flex items-center gap-1.5">
+                                <Building2 className="w-3.5 h-3.5 text-slate-400" />
+                                {job.employer_name}
+                            </p>
                         </div>
+                    </div>
+
+                    {/* Meta Info - Refined Pills */}
+                    <div className="flex flex-wrap gap-2 mt-auto">
+                        {job.job_city && (
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 group-hover:border-slate-300 transition-colors">
+                                <MapPin className="w-3 h-3 text-slate-400" />
+                                {job.job_city}, {job.job_country}
+                            </div>
+                        )}
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 group-hover:border-slate-300 transition-colors">
+                            <Briefcase className="w-3 h-3 text-slate-400" />
+                            {job.job_employment_type || 'Full-time'}
+                        </div>
+                        {job.job_is_remote && (
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400">
+                                <Globe className="w-3 h-3" />
+                                Remote
+                            </div>
+                        )}
                     </div>
                 </CardContent>
 
-                <CardFooter className="p-4 pt-0 mt-auto">
+                <CardFooter className="p-5 pt-0 mt-auto border-t border-slate-50 dark:border-slate-800/50 bg-slate-50/30 dark:bg-slate-900/20 backdrop-blur-sm">
                     <a
                         href={job.job_apply_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={cn(
-                            buttonVariants({ variant: providerInfo.variant as any }),
-                            `w-full h-11 rounded-lg font-semibold shadow-sm transition-all hover:shadow-md hover:translate-y-[-1px] active:translate-y-[0px] ${providerInfo.buttonClass}`
-                        )}
+                        className="w-full"
                     >
-                        Apply on {providerInfo.name}
-                        <ArrowDown className="w-4 h-4 ml-2 -rotate-90" />
+                        <Button
+                            className={cn(
+                                "w-full h-11 text-sm font-semibold shadow-md transition-all duration-300",
+                                "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500",
+                                "hover:shadow-blue-500/25 hover:scale-[1.01] active:scale-[0.99]",
+                                "border-0"
+                            )}
+                        >
+                            Apply on {providerInfo.name}
+                            <ArrowDown className="w-4 h-4 ml-2 -rotate-90 opacity-70" />
+                        </Button>
                     </a>
                 </CardFooter>
             </Card>
