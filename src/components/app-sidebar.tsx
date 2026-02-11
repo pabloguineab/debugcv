@@ -459,10 +459,7 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                             Billing
                                         </Link>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        <Bell className="mr-2 h-4 w-4" />
-                                        Notifications
-                                    </DropdownMenuItem>
+
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/auth/signin" })}>
