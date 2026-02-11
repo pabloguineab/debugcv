@@ -80,6 +80,15 @@ export default function JobSearchPage() {
     }, [loading, loadingMore, hasMore, jobs, visibleCount]);
 
 
+    // Auto-fill barrier: If we have few jobs and stopped loading, fetch more automatically
+    // This handles the case where initial results don't fill the screen, so the footer sentinel might be visible but ignored or simply to improve UX
+    useEffect(() => {
+        if (!loading && !loadingMore && hasMore && displayedJobs.length > 0 && displayedJobs.length < 10) {
+            // console.log("Auto-filling jobs because list is short...");
+            handleLoadMore();
+        }
+    }, [loading, loadingMore, hasMore, displayedJobs.length]);
+
     useEffect(() => {
         if (status === "unauthenticated") {
             router.replace("/auth/signin");
