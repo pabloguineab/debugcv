@@ -89,7 +89,7 @@ const sortByDateDesc = <T extends {
 };
 
 export default function ProfilePage() {
-    const { data: session } = useSession();
+    const { data: session, update } = useSession();
     const { refreshCompletionStatus } = useProfileCompletion();
     const [username, setUsername] = useState("lourdesbuendia");
     const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -377,6 +377,10 @@ export default function ProfilePage() {
 
                 // Save to backend
                 await updateProfile({ image_url: croppedImage });
+
+                // Update session to reflect change in sidebar
+                await update({ image: croppedImage });
+
                 await refreshCompletionStatus();
 
                 setIsCropDialogOpen(false);

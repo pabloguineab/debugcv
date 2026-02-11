@@ -12,7 +12,8 @@ import {
     Bell,
     Check,
 } from "lucide-react";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+
 import { LordIcon } from "@/components/icons/lord-icon";
 import {
     Accordion,
@@ -134,7 +135,15 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props }: AppSidebarProps) {
     const router = useRouter();
     const pathname = usePathname();
+    const { data: session } = useSession();
     const { status } = useProfileCompletion();
+
+    // Prefer session image as it updates dynamically
+    const displayUser = {
+        ...user,
+        image: session?.user?.image || user?.image,
+        name: session?.user?.name || user?.name
+    };
 
     const [dashboardHovered, setDashboardHovered] = useState(false);
     const [profileHovered, setProfileHovered] = useState(false);
@@ -387,16 +396,16 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                                         className="flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring cursor-pointer h-12 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:!p-0 group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:justify-center"
                                     >
                                         <Avatar className="h-8 w-8 rounded-lg">
-                                            <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
+                                            <AvatarImage src={displayUser.image || ""} alt={displayUser.name || ""} />
                                             <AvatarFallback className="rounded-lg">
-                                                {user?.name ? user.name.charAt(0).toUpperCase() : <User className="size-4" />}
+                                                {displayUser.name ? displayUser.name.charAt(0).toUpperCase() : <User className="size-4" />}
                                             </AvatarFallback>
                                         </Avatar>
                                         <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-                                            {user?.name ? (
+                                            {displayUser.name ? (
                                                 <>
-                                                    <span className="truncate font-semibold">{user.name}</span>
-                                                    <span className="truncate text-xs text-muted-foreground">{user.email}</span>
+                                                    <span className="truncate font-semibold">{displayUser.name}</span>
+                                                    <span className="truncate text-xs text-muted-foreground">{displayUser.email}</span>
                                                 </>
                                             ) : (
                                                 <div className="flex flex-col gap-1">
@@ -417,16 +426,16 @@ export function AppSidebar({ user, onOpenReferModal, onOpenUploadModal, ...props
                             >
                                 <div className="flex items-center gap-2 px-2 py-1.5 text-left text-sm">
                                     <Avatar className="h-8 w-8 rounded-lg">
-                                        <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
+                                        <AvatarImage src={displayUser.image || ""} alt={displayUser.name || ""} />
                                         <AvatarFallback className="rounded-lg">
-                                            {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                                            {displayUser.name?.charAt(0)?.toUpperCase() || "U"}
                                         </AvatarFallback>
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
-                                        {user?.name ? (
+                                        {displayUser.name ? (
                                             <>
-                                                <span className="truncate font-semibold">{user.name}</span>
-                                                <span className="truncate text-xs text-muted-foreground">{user.email}</span>
+                                                <span className="truncate font-semibold">{displayUser.name}</span>
+                                                <span className="truncate text-xs text-muted-foreground">{displayUser.email}</span>
                                             </>
                                         ) : (
                                             <div className="flex flex-col gap-1">
