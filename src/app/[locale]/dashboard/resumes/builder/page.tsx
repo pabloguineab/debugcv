@@ -154,160 +154,114 @@ function extractJobKeywordsPure(text: string): Set<string> {
 }
 
 // Pure function to calculate resume score - can be used during load and in component
+// Pure function to calculate resume score - can be used during load and in component
 function calculateResumeScorePure(data: ResumeData, jobDesc: string): number {
     const jobKeywords = extractJobKeywordsPure(jobDesc || '');
     const hasJobDescription = jobKeywords.size > 5;
 
     let totalScore = 0;
 
-    // === PERSONAL INFO (10 points max) ===
+    // === PERSONAL INFO (15 points max) ===
+    // Boosted baseline: Easy points for contact info
     const { personalInfo } = data;
     let personalScore = 0;
-    if (personalInfo.fullName) personalScore += 3;
-    if (personalInfo.email) personalScore += 3;
-    if (personalInfo.phone) personalScore += 2;
-    if (personalInfo.location) personalScore += 1;
-    if (personalInfo.profileUrl) personalScore += 1;
-    totalScore += Math.min(personalScore, 10);
+    if (personalInfo.fullName) personalScore += 5;
+    if (personalInfo.email) personalScore += 4;
+    if (personalInfo.phone) personalScore += 3;
+    if (personalInfo.location) personalScore += 2;
+    if (personalInfo.profileUrl || personalInfo.linkedin) personalScore += 5; // Bonus
+    totalScore += Math.min(personalScore, 15);
 
-    // === PROFESSIONAL SUMMARY (15 points max) ===
+    // === PROFESSIONAL SUMMARY (20 points max) ===
     let summaryScore = 0;
     if (data.summary) {
         const wordCount = data.summary.split(/\s+/).length;
-        if (wordCount >= 30 && wordCount <= 60) summaryScore += 8;
-        else if (wordCount >= 20 && wordCount < 30) summaryScore += 6;
-        else if (wordCount > 60 && wordCount <= 100) summaryScore += 6;
-        else if (wordCount >= 10) summaryScore += 4;
-        else if (wordCount > 0) summaryScore += 2;
+        // Granular scoring for length
+        if (wordCount >= 20) summaryScore += 10;
+        else if (wordCount > 5) summaryScore += 5;
 
+        // Keyword matching
         if (hasJobDescription) {
             const summaryLower = data.summary.toLowerCase();
             let matchCount = 0;
             jobKeywords.forEach(keyword => {
                 if (summaryLower.includes(keyword)) matchCount++;
             });
-            const matchRatio = matchCount / Math.max(jobKeywords.size, 1);
-            summaryScore += Math.round(matchRatio * 7);
+            if (matchCount > 0) summaryScore += 5 + Math.min(matchCount * 2, 5);
         } else {
-            summaryScore += 5;
+            summaryScore += 5; // Autoboost if no JD
         }
     }
-    totalScore += Math.min(summaryScore, 15);
+    totalScore += Math.min(summaryScore, 20);
 
-    // === SKILLS MATCHING (25 points max) ===
+    // === SKILLS MATCHING (30 points max) ===
+    // Granular: 2 points per skill to ensure reactivity when adding/removing
     let skillScore = 0;
     const skillCount = data.skills.length;
-    const skillsLower = data.skills.map(s => s.toLowerCase());
 
-    if (hasJobDescription && skillCount > 0) {
-        let skillMatches = 0;
-        jobKeywords.forEach(keyword => {
-            if (skillsLower.some(skill => skill.includes(keyword) || keyword.includes(skill))) {
-                skillMatches++;
-            }
-        });
-        const matchRatio = skillMatches / Math.min(jobKeywords.size, 20);
-        skillScore += Math.round(matchRatio * 20);
-        if (skillCount >= 8 && skillCount <= 15) skillScore += 5;
-        else if (skillCount >= 5) skillScore += 3;
-        else if (skillCount > 0) skillScore += 1;
-    } else if (skillCount > 0) {
-        if (skillCount >= 8 && skillCount <= 15) skillScore = 20;
-        else if (skillCount >= 5 && skillCount < 8) skillScore = 15;
-        else if (skillCount >= 3) skillScore = 10;
-        else skillScore = 5;
+    if (skillCount > 0) {
+        skillScore += skillCount * 2; // e.g. 5 skills = 10pts
+
+        if (hasJobDescription) {
+            const skillsLower = data.skills.map(s => s.toLowerCase());
+            let skillMatches = 0;
+            jobKeywords.forEach(keyword => {
+                if (skillsLower.some(skill => skill.includes(keyword) || keyword.includes(skill))) {
+                    skillMatches++;
+                }
+            });
+            skillScore += skillMatches * 2; // Bonus for matches
+        }
     }
-    totalScore += Math.min(skillScore, 25);
+    totalScore += Math.min(skillScore, 30);
 
-    // === EXPERIENCE (25 points max) ===
+    // === EXPERIENCE (30 points max) ===
+    // Granular: Points per bullet point
     let expScore = 0;
     if (data.experience.length > 0) {
-        expScore += Math.min(data.experience.length * 4, 10);
-        let totalBullets = 0;
-        let qualityBullets = 0;
-        let jobMatchingBullets = 0;
+        expScore += 5; // Base for having any experience
 
         data.experience.forEach(exp => {
+            expScore += 2; // Per role
             const bullets = exp.bullets || [];
-            totalBullets += bullets.length;
+            expScore += bullets.length * 1.5; // 1.5 pts per bullet
+
             bullets.forEach(bullet => {
-                const bulletLower = bullet.toLowerCase();
-                if (bullet.length >= 30 && bullet.length <= 150) qualityBullets++;
+                // Quality matches
+                if (bullet.length >= 20 && bullet.length <= 200) expScore += 0.5;
+
                 if (hasJobDescription) {
+                    const bulletLower = bullet.toLowerCase();
                     let hasMatch = false;
                     jobKeywords.forEach(keyword => {
                         if (bulletLower.includes(keyword)) hasMatch = true;
                     });
-                    if (hasMatch) jobMatchingBullets++;
+                    if (hasMatch) expScore += 1;
                 }
             });
         });
-
-        if (totalBullets >= 8) expScore += 5;
-        else if (totalBullets >= 4) expScore += 3;
-        else if (totalBullets > 0) expScore += 1;
-
-        if (qualityBullets >= 4) expScore += 3;
-        else if (qualityBullets >= 2) expScore += 2;
-
-        if (hasJobDescription && totalBullets > 0) {
-            const bulletMatchRatio = jobMatchingBullets / totalBullets;
-            expScore += Math.round(bulletMatchRatio * 5);
-        } else {
-            expScore += 2;
-        }
     }
-    totalScore += Math.min(expScore, 25);
+    totalScore += Math.min(expScore, 30);
 
     // === EDUCATION (10 points max) ===
     let eduScore = 0;
     if (data.education.length > 0) {
-        eduScore += 6;
-        const hasCompleteEdu = data.education.some(
-            edu => edu.institution && edu.degree && edu.field
-        );
-        if (hasCompleteEdu) eduScore += 4;
+        eduScore += 8;
+        if (data.education.some(e => e.degree)) eduScore += 2;
     }
     totalScore += Math.min(eduScore, 10);
 
-    // === PROJECTS (10 points max) ===
-    let projScore = 0;
-    if (data.projects.length > 0) {
-        projScore += Math.min(data.projects.length * 3, 6);
-        const hasCompleteProj = data.projects.some(
-            proj => proj.name && proj.description && proj.technologies?.length > 0
-        );
-        if (hasCompleteProj) projScore += 2;
+    // === PROJECTS & CERTIFICATIONS (15 points max) ===
+    let extraScore = 0;
+    if (data.projects.length > 0) extraScore += 5 + (data.projects.length * 2);
+    if (data.certifications.length > 0) extraScore += 3 + (data.certifications.length * 2);
+    totalScore += Math.min(extraScore, 15);
 
-        if (hasJobDescription) {
-            let projectMatches = 0;
-            data.projects.forEach(proj => {
-                const techLower = (proj.technologies || []).map(t => t.toLowerCase());
-                const descLower = (proj.description || '').toLowerCase();
-                jobKeywords.forEach(keyword => {
-                    if (techLower.some(t => t.includes(keyword)) || descLower.includes(keyword)) {
-                        projectMatches++;
-                    }
-                });
-            });
-            if (projectMatches >= 3) projScore += 2;
-            else if (projectMatches >= 1) projScore += 1;
-        }
-    }
-    totalScore += Math.min(projScore, 10);
+    // === CONSISTENCY BOOST ===
+    // Ensure the score feels fair (approx +10-15 boost request)
+    if (totalScore > 10) totalScore += 5;
 
-    // === CERTIFICATIONS (5 points max) ===
-    let certScore = 0;
-    if (data.certifications.length > 0) {
-        certScore += Math.min(data.certifications.length * 2, 4);
-        const hasCompleteCert = data.certifications.some(
-            cert => cert.name && cert.issuer
-        );
-        if (hasCompleteCert) certScore += 1;
-    }
-    totalScore += Math.min(certScore, 5);
-
-    return Math.min(totalScore, 100);
+    return Math.min(Math.round(totalScore), 100);
 }
 
 export default function ResumeBuilderPage() {
