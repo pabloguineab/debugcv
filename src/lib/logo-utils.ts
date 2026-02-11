@@ -40,6 +40,7 @@ export function getCompanyDomain(company: string, website?: string): string {
         'tiktok': 'tiktok.com',
         'snap': 'snap.com',
         'snapchat': 'snap.com',
+        'tecdata': 'tecdata.es',
         'linkedin': 'linkedin.com',
         'indeed': 'indeed.com',
         'paypal': 'paypal.com',

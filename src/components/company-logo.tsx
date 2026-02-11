@@ -45,6 +45,7 @@ function getDomain(company: string, website?: string): string {
         'ravenpack': 'ravenpack.com', 'sngular': 'sngular.com', 'solera': 'solera.com',
         'welocalize': 'welocalize.com', 'dlocal': 'dlocal.com',
         'nextlane': 'nextlane.com',
+        'tecdata': 'tecdata.es',
     };
 
     if (overrides[lowerCompany]) return overrides[lowerCompany];
@@ -78,6 +79,7 @@ function getDomain(company: string, website?: string): string {
 export function CompanyLogo({ company, logo, website, size = "md", className = "", onLogoSuccess, onLogoFallback }: CompanyLogoProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [hasError, setHasError] = useState(false);
+    const [retryWithSearch, setRetryWithSearch] = useState(false);
 
     const domain = getDomain(company, website);
 
@@ -86,12 +88,12 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
         const urls: string[] = [];
         const token = process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN || '';
 
-        // 1. Logo.dev (ALWAYS FIRST - High quality & Reliable)
-        // We trust our getDomain() logic to filter out linkedin.com, so this should generally be the company domain.
+        // 1. Logo.dev using provided or guessed domain
+        // Add a timestamp to bust cache if we are retrying with a new domain found via search
+        // (Logic handled in useEffect below, here we just push the base one)
         urls.push(`https://img.logo.dev/${domain}?token=${token}&size=128&format=png`);
 
         // 2. API-provided logo (Fallback)
-        // Only if it doesn't look like a direct job board asset
         if (logo && !isJobBoardDomain(logo)) {
             urls.push(logo);
         }
@@ -102,17 +104,72 @@ export function CompanyLogo({ company, logo, website, size = "md", className = "
     useEffect(() => {
         setCurrentIndex(0);
         setHasError(false);
+        setRetryWithSearch(false);
     }, [logo, company, website, domain]);
 
-    const handleImageError = useCallback(() => {
+    // Function to search for correct domain via Logo.dev Search API
+    const findCorrectDomain = async (companyName: string) => {
+        try {
+            const token = process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN;
+            if (!token) return null;
+
+            const res = await fetch(`https://api.logo.dev/search?q=${encodeURIComponent(companyName)}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!res.ok) return null;
+
+            const data = await res.json();
+            // data is Array<{ domain: string, name: string, ... }>
+
+            if (Array.isArray(data) && data.length > 0) {
+                // Return first domain that is NOT a job board
+                const validMatch = data.find((item: any) => !isJobBoardDomain(item.domain));
+                return validMatch ? validMatch.domain : null;
+            }
+            return null;
+        } catch (err) {
+            console.error("Logo search failed", err);
+            return null;
+        }
+    };
+
+    const handleImageError = useCallback(async () => {
         const nextIndex = currentIndex + 1;
+
         if (nextIndex < logoUrls.length) {
             setCurrentIndex(nextIndex);
+        } else if (!retryWithSearch) {
+            // All URLs failed, try to SEARCH for the domain
+            setRetryWithSearch(true); // Prevent infinite loop
+            const correctDomain = await findCorrectDomain(company);
+
+            if (correctDomain && correctDomain !== domain) {
+                // Found a better domain! Try loading that image directly
+                const token = process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN || '';
+                const newUrl = `https://img.logo.dev/${correctDomain}?token=${token}&size=128&format=png`;
+
+                // Manually set this new URL as the one to try. 
+                // We can't push to logoUrls since it's derived, but we can restart the chain or just force render?
+                // Easier: Create a state for 'foundLogoUrl'
+                setFoundLogoUrl(newUrl);
+            } else {
+                setHasError(true);
+                if (onLogoFallback) onLogoFallback();
+            }
         } else {
             setHasError(true);
             if (onLogoFallback) onLogoFallback();
         }
-    }, [currentIndex, logoUrls.length, onLogoFallback]);
+    }, [currentIndex, logoUrls.length, retryWithSearch, company, domain, onLogoFallback]);
+
+    // State for a discovered logo URL (via search)
+    const [foundLogoUrl, setFoundLogoUrl] = useState<string | null>(null);
+
+    // If we found a logo via search, use that instead of the list
+    const activeUrl = foundLogoUrl || logoUrls[currentIndex];
 
     const handleImageLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
         const img = e.target as HTMLImageElement;
