@@ -821,12 +821,12 @@ function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds
                 "hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-200 dark:hover:border-blue-800",
                 "hover:-translate-y-1"
             )}>
-                {/* Match Score Badge - Glassmorphism Style */}
+                {/* Match Score Badge - Integrated Pill Style */}
                 <div className={cn(
-                    "absolute top-4 right-4 px-2.5 py-1 rounded-full text-[11px] font-bold border flex items-center gap-1.5 z-10 backdrop-blur-md shadow-sm",
-                    matchScore >= 90 ? "bg-emerald-50/80 border-emerald-200 text-emerald-700"
-                        : matchScore >= 80 ? "bg-blue-50/80 border-blue-200 text-blue-700"
-                            : "bg-amber-50/80 border-amber-200 text-amber-700"
+                    "absolute top-6 right-6 px-3 py-1 rounded-full text-[11px] font-bold border flex items-center gap-1.5 z-10 shadow-sm",
+                    matchScore >= 90 ? "bg-emerald-50 text-emerald-700 border-emerald-200" // Mint Green
+                        : matchScore >= 80 ? "bg-blue-50 text-blue-700 border-blue-200" // Soft Blue
+                            : "bg-amber-50 text-amber-700 border-amber-200" // Soft Amber
                 )}>
                     <Sparkles className="w-3 h-3" />
                     {matchScore}% Match
@@ -846,7 +846,7 @@ function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds
                                 onLogoFallback={() => setLogoStatus('invalid')}
                             />
                         </div>
-                        <div className="min-w-0 flex-1 pt-1 pr-20"> {/* pr-20 to clear badge */}
+                        <div className="min-w-0 flex-1 pt-1 pr-28"> {/* Increased padding-right to accommodate integrated badge */}
                             <h3 className="font-bold text-[17px] leading-snug line-clamp-2 mb-1 text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors tracking-tight">
                                 {job.job_title}
                             </h3>
