@@ -34,7 +34,7 @@ export async function GET(req: Request) {
             return NextResponse.json({ status: "none", isPro: false });
         }
 
-        const sub = subscriptions.data[0];
+        const sub = subscriptions.data[0] as any;
         const price = sub.items.data[0].price;
         const productName = price.nickname || "Pro Plan";
 
