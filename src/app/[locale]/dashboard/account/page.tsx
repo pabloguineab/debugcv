@@ -1,26 +1,140 @@
+
 "use client";
 
-import { useSession } from "next-auth/react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { useSession, signOut } from "next-auth/react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { User, Mail, Shield, Check, X, AlertTriangle, Key, Trash2, Smartphone } from "lucide-react";
+import { User, Mail, Shield, Check, AlertTriangle, Key, Trash2, CreditCard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function AccountPage() {
     const { data: session, status } = useSession();
+
+    // Subscription State
+    const [subscription, setSubscription] = useState<any>(null);
+    const [loadingSubscription, setLoadingSubscription] = useState(true);
+    const [isCancellingSub, setIsCancellingSub] = useState(false);
+
+    // Delete Account State
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [deleteStep, setDeleteStep] = useState<'confirm' | 'otp'>('confirm');
+    const [otp, setOtp] = useState("");
+    const [isSendingOtp, setIsSendingOtp] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [deleteError, setDeleteError] = useState("");
 
     useEffect(() => {
         if (status === "unauthenticated") {
             redirect("/auth/signin");
         }
     }, [status]);
+
+    // Fetch Subscription Status
+    useEffect(() => {
+        if (session?.user) {
+            fetch("/api/subscription/status")
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "active") {
+                        setSubscription(data);
+                    }
+                    setLoadingSubscription(false);
+                })
+                .catch(err => {
+                    console.error("Error fetching subscription:", err);
+                    setLoadingSubscription(false);
+                });
+        }
+    }, [session]);
+
+    const handleCancelSubscription = async () => {
+        if (!confirm("Are you sure you want to cancel your subscription? You will lose access to premium features at the end of the current billing cycle.")) return;
+
+        setIsCancellingSub(true);
+        try {
+            const res = await fetch("/api/subscription/cancel", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subscriptionId: subscription.subscriptionId }),
+            });
+
+            if (res.ok) {
+                // Update local state to reflect cancellation
+                setSubscription((prev: any) => ({ ...prev, cancelAtPeriodEnd: true }));
+                alert("Subscription cancelled successfully.");
+            } else {
+                alert("Failed to cancel subscription. Please contact support.");
+            }
+        } catch (error) {
+            console.error("Error cancelling subscription:", error);
+            alert("An error occurred.");
+        } finally {
+            setIsCancellingSub(false);
+        }
+    };
+
+    const handleSendDeleteOtp = async () => {
+        setIsSendingOtp(true);
+        setDeleteError("");
+        try {
+            const res = await fetch("/api/auth/send-delete-otp", { method: "POST" });
+            if (res.ok) {
+                setDeleteStep('otp');
+            } else {
+                setDeleteError("Failed to send OTP. Please try again.");
+            }
+        } catch (error) {
+            setDeleteError("Network error. Please try again.");
+        } finally {
+            setIsSendingOtp(false);
+        }
+    };
+
+    const handleVerifyAndDelete = async () => {
+        if (!otp || otp.length < 6) {
+            setDeleteError("Please enter a valid 6-digit code.");
+            return;
+        }
+
+        setIsDeleting(true);
+        setDeleteError("");
+        try {
+            const res = await fetch("/api/auth/delete-account", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ otp }),
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                // Sign out immediately
+                await signOut({ callbackUrl: "/" });
+            } else {
+                setDeleteError(data.error || "Failed to delete account. Invalid OTP?");
+            }
+        } catch (error) {
+            console.error("Delete error:", error);
+            setDeleteError("An error occurred while deleting your account.");
+        } finally {
+            setIsDeleting(false);
+        }
+    };
 
     if (status === "loading") {
         return <div className="p-10 text-center text-sm text-muted-foreground">Loading account...</div>;
@@ -36,7 +150,6 @@ export default function AccountPage() {
     // Determine provider status
     const isGoogle = provider === "google";
     const isLinkedIn = provider === "linkedin";
-    const isGitHub = provider === "github";
     const isEmail = provider === "email" || provider === "credentials" || provider === "email-password";
 
     return (
@@ -101,6 +214,49 @@ export default function AccountPage() {
                 </CardContent>
             </Card>
 
+            {/* Subscription Section (Only if active) */}
+            {subscription && (
+                <Card className="border-blue-200 bg-blue-50/20 dark:border-blue-900/50 dark:bg-blue-950/10">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <CreditCard className="w-5 h-5 text-blue-600" />
+                            Active Subscription
+                        </CardTitle>
+                        <CardDescription>Manage your billing plan.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div>
+                                <h4 className="font-semibold text-lg">{subscription.plan}</h4>
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                                    <span>{(subscription.amount).toFixed(2)} {subscription.currency ? subscription.currency.toUpperCase() : 'USD'} / {subscription.interval}</span>
+                                    {subscription.cancelAtPeriodEnd ? (
+                                        <Badge variant="outline" className="text-yellow-600 border-yellow-200 bg-yellow-50">
+                                            Cancels on {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
+                                        </Badge>
+                                    ) : (
+                                        <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50">
+                                            Active
+                                        </Badge>
+                                    )}
+                                </div>
+                            </div>
+
+                            {!subscription.cancelAtPeriodEnd && (
+                                <Button
+                                    variant="outline"
+                                    className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
+                                    onClick={handleCancelSubscription}
+                                    disabled={isCancellingSub}
+                                >
+                                    {isCancellingSub ? "Processing..." : "Cancel Subscription"}
+                                </Button>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
+
             {/* Security / Connected Accounts */}
             <Card>
                 <CardHeader>
@@ -136,7 +292,7 @@ export default function AccountPage() {
                         )}
                     </div>
 
-                    {/* LinkedIn - Placeholder if not used */}
+                    {/* LinkedIn */}
                     <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/5 transition-colors">
                         <div className="flex items-center space-x-4">
                             <div className="bg-[#0077b5] p-2 rounded-full border shadow-sm">
@@ -174,7 +330,7 @@ export default function AccountPage() {
                                 <Badge variant="outline" className="border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-50 flex gap-1">
                                     <Check className="w-3 h-3" /> Active
                                 </Badge>
-                                <Button variant="ghost" size="sm" className="h-6 text-xs">Change Password</Button>
+                                <Button variant="ghost" size="sm" className="h-6 text-xs">Change</Button>
                             </div>
                         ) : (
                             <Badge variant="secondary" className="text-xs">Not used</Badge>
@@ -196,12 +352,101 @@ export default function AccountPage() {
                     <div className="flex items-center justify-between">
                         <div className="space-y-1">
                             <p className="font-medium text-sm">Delete Account</p>
-                            <p className="text-xs text-muted-foreground">Permanently remove your Personal Account and all of its contents from the DebugCV platform. This action is not reversible, so please continue with caution.</p>
+                            <p className="text-xs text-muted-foreground">Permanently remove your Personal Account and all contents. This action is not reversible.</p>
                         </div>
-                        <Button variant="destructive" size="sm" className="gap-2">
-                            <Trash2 className="w-4 h-4" />
-                            Delete Account
-                        </Button>
+
+                        <Dialog open={isDeleteDialogOpen} onOpenChange={(open) => {
+                            setIsDeleteDialogOpen(open);
+                            if (!open) {
+                                // Reset state when closing
+                                setTimeout(() => {
+                                    setDeleteStep('confirm');
+                                    setOtp("");
+                                    setDeleteError("");
+                                }, 300);
+                            }
+                        }}>
+                            <DialogTrigger asChild>
+                                <Button variant="destructive" size="sm" className="gap-2">
+                                    <Trash2 className="w-4 h-4" />
+                                    Delete Account
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-md">
+                                <DialogHeader>
+                                    <DialogTitle>Delete Account</DialogTitle>
+                                    <DialogDescription>
+                                        This process is <strong>irreversible</strong>. We will permanently delete all your data including applications, scans, and disconnect your accounts.
+                                    </DialogDescription>
+                                </DialogHeader>
+
+                                {deleteStep === 'confirm' ? (
+                                    <div className="py-4 space-y-4">
+                                        <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-md text-sm">
+                                            Warning: Subscriptions must be cancelled separately if paid via third-party, but we will attempt to cancel if managed here.
+                                        </div>
+                                        <p className="text-sm text-gray-600">
+                                            To confirm deletion, we need to verify your identity. Click below to receive a verification code at <strong>{session?.user?.email}</strong>.
+                                        </p>
+                                        {deleteError && <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{deleteError}</p>}
+                                        <div className="flex flex-col gap-2">
+                                            <Button
+                                                onClick={handleSendDeleteOtp}
+                                                disabled={isSendingOtp}
+                                                className="w-full"
+                                            >
+                                                {isSendingOtp ? "Sending Code..." : "Send Verification Code"}
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                onClick={() => setIsDeleteDialogOpen(false)}
+                                                className="w-full"
+                                            >
+                                                Cancel
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="py-4 space-y-4">
+                                        <p className="text-sm text-gray-600">
+                                            Enter the 6-digit code sent to your email.
+                                        </p>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="otp">Verification Code</Label>
+                                            <Input
+                                                id="otp"
+                                                placeholder="123456"
+                                                value={otp}
+                                                onChange={(e) => setOtp(e.target.value)}
+                                                maxLength={6}
+                                                className="text-center text-lg tracking-widest uppercase"
+                                            />
+                                        </div>
+                                        {deleteError && (
+                                            <div className="text-sm text-red-600 bg-red-50 p-2 rounded flex items-center gap-2">
+                                                <AlertTriangle className="w-4 h-4" /> {deleteError}
+                                            </div>
+                                        )}
+                                        <Button
+                                            variant="destructive"
+                                            className="w-full"
+                                            onClick={handleVerifyAndDelete}
+                                            disabled={isDeleting || otp.length < 6}
+                                        >
+                                            {isDeleting ? "Deleting Account..." : "Confirm & Delete Forever"}
+                                        </Button>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="w-full text-xs text-muted-foreground"
+                                            onClick={() => setDeleteStep('confirm')}
+                                        >
+                                            Back
+                                        </Button>
+                                    </div>
+                                )}
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 </CardContent>
             </Card>
