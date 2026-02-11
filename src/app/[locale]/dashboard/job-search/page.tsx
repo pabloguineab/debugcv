@@ -682,13 +682,31 @@ export default function JobSearchPage() {
                                 if (skeletonsNeeded === 0) return null;
 
                                 return Array.from({ length: skeletonsNeeded }).map((_, i) => (
-                                    <Card key={`skeleton-fill-${i}`} className="h-full border border-slate-200 dark:border-slate-800 shadow-sm bg-slate-50/50 dark:bg-slate-900/50 opacity-50">
-                                        <CardContent className="p-6 space-y-4 flex flex-col items-center justify-center h-full min-h-[250px] text-center">
-                                            <div className="w-12 h-12 bg-slate-200 dark:bg-slate-800 rounded-full mb-2" />
-                                            <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-2/3 mx-auto" />
-                                            <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded w-1/2 mx-auto" />
-                                        </CardContent>
-                                    </Card>
+                                    <div key={`skeleton-fill-${i}`} className="animate-pulse">
+                                        <Card className="h-full border border-slate-200 dark:border-slate-800 shadow-sm bg-white dark:bg-gray-800">
+                                            <CardContent className="p-6 space-y-6">
+                                                {/* Header & Logo */}
+                                                <div className="flex gap-4">
+                                                    <div className="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-xl shrink-0" />
+                                                    <div className="space-y-3 flex-1 pt-1">
+                                                        <div className="h-5 bg-slate-100 dark:bg-slate-700 rounded w-3/4" />
+                                                        <div className="h-4 bg-slate-100 dark:bg-slate-700 rounded w-1/2" />
+                                                    </div>
+                                                </div>
+
+                                                {/* Meta Info (Badges) */}
+                                                <div className="flex flex-wrap gap-2 pt-2">
+                                                    <div className="h-6 w-24 bg-slate-100 dark:bg-slate-700 rounded-full" />
+                                                    <div className="h-6 w-32 bg-slate-100 dark:bg-slate-700 rounded-full" />
+                                                </div>
+                                            </CardContent>
+
+                                            {/* Footer Button */}
+                                            <CardFooter className="p-6 pt-0 mt-auto">
+                                                <div className="h-11 w-full bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800/30" />
+                                            </CardFooter>
+                                        </Card>
+                                    </div>
                                 ));
                             })()}
                         </div>
