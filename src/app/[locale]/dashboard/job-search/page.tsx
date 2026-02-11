@@ -62,22 +62,8 @@ export default function JobSearchPage() {
     }, []);
 
     // Infinite scroll: auto-load more when scrolling to bottom
-    useEffect(() => {
-        const sentinel = loadMoreRef.current;
-        if (!sentinel) return;
+    // Infinite scroll removed in favor of manual "Load More" button per user request
 
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries[0].isIntersecting && !loading && !loadingMore && hasMore) {
-                    handleLoadMore();
-                }
-            },
-            { threshold: 0.1, rootMargin: '200px' }
-        );
-
-        observer.observe(sentinel);
-        return () => observer.disconnect();
-    }, [loading, loadingMore, hasMore]);
 
     useEffect(() => {
         if (status === "unauthenticated") {
@@ -197,21 +183,28 @@ export default function JobSearchPage() {
 
     const setAllQueriesAndRunFirstBatch = async (queries: string[], mainQuery: string, locationVal: string) => {
         setSearchQueries(queries);
-        // Run only 1 query initially to avoid hitting rate limits immediately
-        const queriesToRun = queries.slice(0, 1);
-        if (queriesToRun.length === 0) queriesToRun.push(mainQuery);
-        setNextQueryIndex(1);
         setPage(1);
         setVisibleCount(20);
         setHasMore(true);
 
-        const count = await runBatchSearch(queriesToRun, locationVal, true, 1);
+        // Aggressively try to load at least 15 jobs initially
+        let collectedJobs = 0;
+        let currentQueryIndex = 0;
 
-        if (count < 20 && queries.length > 1) {
-            const nextBatch = queries.slice(1, 2);
-            setNextQueryIndex(2);
-            await runBatchSearch(nextBatch, locationVal, false, 1);
+        // Initial search with the first query
+        const count = await runBatchSearch([queries[0] || mainQuery], locationVal, true, 1);
+        collectedJobs += count;
+        currentQueryIndex = 1;
+
+        // If we didn't get enough jobs, keep trying next queries immediately
+        while (collectedJobs < 15 && currentQueryIndex < queries.length) {
+            const nextQ = queries[currentQueryIndex];
+            const added = await runBatchSearch([nextQ], locationVal, false, 1);
+            collectedJobs += added;
+            currentQueryIndex++;
         }
+
+        setNextQueryIndex(currentQueryIndex);
     };
 
     const runBatchSearch = async (queriesToRun: string[], locationVal: string, resetJobs: boolean, pageNum: number = 1): Promise<number> => {
@@ -333,13 +326,14 @@ export default function JobSearchPage() {
     };
 
     const handleLoadMore = async () => {
-        if (loading || loadingMore || !hasMore) return;
-        const remainingHidden = displayedJobs.length - visibleCount;
+        if (loading || loadingMore) return;
 
-        // If we have enough hidden jobs, just show more
-        if (remainingHidden >= 20) {
+        // If we have hidden jobs, show them first
+        const remainingHidden = displayedJobs.length - visibleCount;
+        if (remainingHidden > 0) {
             setVisibleCount(prev => prev + 20);
-            return;
+            // If we still have a lot hidden, don't fetch yet
+            if (remainingHidden > 20) return;
         }
 
         setLoadingMore(true);
@@ -349,39 +343,45 @@ export default function JobSearchPage() {
             let attempts = 0;
             let localNextQueryIndex = nextQueryIndex;
             let localPage = page;
-            const MAX_ATTEMPTS = 3; // Reduced to avoid too many API calls
+            const MAX_ATTEMPTS = 5; // Aggressive fetching
 
             // Try to fetch more jobs
-            while (jobsFound < 1 && attempts < MAX_ATTEMPTS) {
+            while (jobsFound < 5 && attempts < MAX_ATTEMPTS) {
                 attempts++;
                 let count = 0;
 
+                // Priority: Next query variation > Next page of current query
                 if (localNextQueryIndex < searchQueries.length) {
-                    const nextBatch = searchQueries.slice(localNextQueryIndex, localNextQueryIndex + 1);
+                    // Try next query from our generated list
+                    const nextQ = searchQueries[localNextQueryIndex];
                     localNextQueryIndex += 1;
                     setNextQueryIndex(localNextQueryIndex);
-                    count = await runBatchSearch(nextBatch, location, false, 1);
+                    // Reset page to 1 for the new query
+                    count = await runBatchSearch([nextQ], location, false, 1);
                 } else {
+                    // Out of query variations, go deeper into pagination (broad search)
+                    // Use the original broad query or first query
                     localPage++;
                     setPage(localPage);
-                    count = await runBatchSearch([query], location, false, localPage);
+                    // Use the first query as it's usually the most relevant but broader
+                    const mainQ = searchQueries[0] || query;
+                    count = await runBatchSearch([mainQ], location, false, localPage);
                 }
 
                 jobsFound += count;
             }
 
-            // Update visible count if we have any jobs to show
-            if (jobsFound > 0 || remainingHidden > 0) {
-                setVisibleCount(prev => prev + 20);
-            }
+            // Show newly fetched jobs immediately
+            setVisibleCount(prev => prev + 20);
 
-            // If we got 0 results after all attempts, stop infinite scroll
-            if (jobsFound === 0) {
-                setHasMore(false);
+            // If we struggled to find anything after multiple attempts, maybe stop
+            if (jobsFound === 0 && attempts >= MAX_ATTEMPTS) {
+                // Don't disable hasMore completely, user might want to try again (e.g. temporary network issue)
+                // But in this logic, it means we really ran out of relevant stuff.
+                // Let's keep it enabled so they can force-try deeper pages.
             }
         } catch (error) {
             console.error("Load more failed", error);
-            setHasMore(false); // Stop on error too
         } finally {
             setLoadingMore(false);
         }
@@ -647,14 +647,28 @@ export default function JobSearchPage() {
                             ))}
                         </div>
 
-                        {/* Infinite scroll sentinel */}
+                        {/* Manual Load More Button */}
                         {hasMore && (
-                            <div ref={loadMoreRef} className="flex justify-center py-8">
-                                {loadingMore ? (
-                                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
-                                ) : (
-                                    <div className="h-8" />
-                                )}
+                            <div className="flex justify-center py-8">
+                                <Button
+                                    onClick={handleLoadMore}
+                                    disabled={loadingMore}
+                                    variant="outline"
+                                    size="lg"
+                                    className="min-w-[200px] h-12 text-base font-medium shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-all border-slate-200"
+                                >
+                                    {loadingMore ? (
+                                        <>
+                                            <Spinner className="w-5 h-5 mr-2 text-blue-600" />
+                                            Finding more jobs...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <ArrowDown className="w-5 h-5 mr-2 text-slate-500" />
+                                            Load More Jobs
+                                        </>
+                                    )}
+                                </Button>
                             </div>
                         )}
                     </>
