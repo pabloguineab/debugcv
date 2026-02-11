@@ -823,17 +823,17 @@ function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds
             )}>
                 {/* Match Score Badge - Corner "Blob" Style */}
                 <div className={cn(
-                    "absolute -top-6 -right-6 w-24 h-24 rounded-full flex items-end justify-start z-10 shadow-sm transition-transform duration-300 group-hover:scale-110",
+                    "absolute -top-6 -right-6 w-24 h-24 rounded-full flex items-center justify-center z-10 shadow-sm transition-transform duration-300 group-hover:scale-110 pt-4 pr-4",
                     matchScore >= 90 ? "bg-emerald-100 text-emerald-900"
                         : matchScore >= 80 ? "bg-blue-100 text-blue-900"
                             : "bg-amber-100 text-amber-900"
                 )}>
-                    <div className="pl-5 pb-5 w-full flex flex-col items-center justify-end pr-5 pt-5">
+                    <div className="flex flex-col items-center justify-center">
                         <div className="flex items-center gap-0.5">
-                            <Sparkles className="w-3 h-3 opacity-60" />
+                            <Sparkles className="w-3.5 h-3.5 opacity-70" />
                             <span className="font-black text-sm leading-none">{matchScore}%</span>
                         </div>
-                        <span className="text-[9px] font-bold uppercase opacity-60 leading-tight mt-0.5">Match</span>
+                        <span className="text-[10px] font-bold uppercase opacity-70 leading-tight mt-0.5">Match</span>
                     </div>
                 </div>
 
