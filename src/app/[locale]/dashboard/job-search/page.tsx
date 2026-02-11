@@ -811,9 +811,9 @@ function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
+            transition={{ duration: 0.2 }}
             className="font-sans" // Explicitly enforce Poppins
         >
             <Card className={cn(
