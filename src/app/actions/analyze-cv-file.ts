@@ -33,26 +33,31 @@ export async function analyzeCvFile(formData: FormData): Promise<CVCriteria | nu
 
         const prompt = `
             You are an expert Job Search Assistant.
-            Analyze the provided CV document to create EFFECTIVE search queries for finding relevant jobs.
+            Analyze the provided CV document to create EFFECTIVE, BROAD search queries for finding relevant jobs on major job boards (Indeed, LinkedIn, Google Jobs).
             
             Extract:
-            1. "role": The SIMPLEST, most common job title that matches the candidate (e.g. "Software Engineer", "Data Scientist", "Product Manager"). Avoid overly specific titles.
+            1. "role": The SIMPLEST, most common job title that matches the candidate (e.g. "Software Engineer", "Data Scientist", "Product Manager").
             2. "skills": Top 3-5 most relevant technical skills.
-            3. "location": The candidate's CURRENT residency (City, Country). STRICTLY infer from the Header/Contact section (e.g., "Madrid, Spain" near name/email) or current job location. Do NOT use Education location.
+            3. "location": The candidate's CURRENT residency (City, Country). STRICTLY infer from the Header/Contact section (e.g., "Madrid, Spain" near name/email).
             4. "level": Seniority level (Junior, Mid, Senior, Staff, Lead).
 
-            Construct 5 distinct "search_queries" - use SIMPLE, COMMON job titles that job boards recognize:
-            1. Base query: "[Level] [Simple Role] in [City]" (e.g. "Senior Software Engineer in Madrid")
-            2. Broader: "[Simple Role] in [City]" without level (e.g. "Software Engineer in Madrid")
-            3. Alternative title: Use a synonym/alternative common title (e.g. "Developer" instead of "Engineer", "Data Analyst" instead of "Data Scientist")
-            4. Industry specific: "[Role] [Industry/Domain]" if applicable (e.g. "Backend Developer Fintech")
-            5. Remote option: "[Level] [Role] Remote"
+            Construct 5 distinct "search_queries" - use STANDARD JOB TITLES ONLY.
             
-            IMPORTANT: 
-            - Use SIMPLE, COMMON job titles that return many results (avoid niche terms like "LangChain", "RAG", specific frameworks)
-            - Keep queries SHORT (2-4 words + location)
-            - Focus on roles that exist on job boards, not cutting-edge titles
+            CRITICAL RULES:
+            - DO NOT include specific technologies or frameworks in the query (e.g. NEVER use "LangChain", "RAG", "React", "Python" in the query string).
+            - ONLY use standard Job Titles (e.g. "Machine Learning Engineer", "Software Developer", "Data Analyst").
+            - Format: "[Level] [Standard Role] in [City]"
             
+            Queries to generate:
+            1. Primary: "[Level] [Standard Role] in [City]" (e.g. "Senior Machine Learning Engineer in Madrid")
+            2. General: "[Standard Role] in [City]" (e.g. "Machine Learning Engineer in Madrid")
+            3. Broader Synonym: "[Alternative Standard Role] in [City]" (e.g. "AI Engineer in Madrid" or "Data Scientist in Madrid")
+            4. Simplest: "[Role Noun] in [City]" (e.g. "Developer in Madrid" or "Engineer in Madrid")
+            5. Remote: "[Level] [Standard Role] Remote"
+            
+            Example of BAD query: "NLP Engineer LangChain RAG" (Too specific, returns 0 results)
+            Example of GOOD query: "Machine Learning Engineer" (Standard, returns many results)
+
             Return JSON ONLY:
             {
                 "role": "string",

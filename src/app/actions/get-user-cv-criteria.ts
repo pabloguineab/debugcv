@@ -84,17 +84,27 @@ export async function getUserCvCriteria(): Promise<CVCriteria | null> {
 
         const prompt = `
             You are an expert Job Search Assistant.
-            Analyze the following USER PROFILE to create the BEST search queries for finding a relevant job.
+            Analyze the following USER PROFILE to create EFFECTIVE, BROAD search queries for finding relevant jobs on major job boards (Indeed, LinkedIn, Google Jobs).
             
             Extract:
-            1. "role": The most accurate job title based on their experience and bio (e.g. "Senior Frontend Developer").
-            2. "skills": Top 3-5 most relevant technical skills from their stack and experience.
+            1. "role": The SIMPLEST, most common job title that matches the candidate (e.g. "Software Engineer", "Data Scientist", "Product Manager").
+            2. "skills": Top 3-5 most relevant technical skills.
             3. "location": The candidate's CURRENT residency (City, Country). If not explicitly stated, infer from most recent experience location.
             4. "level": Seniority level (Junior, Mid, Senior, Staff, Lead).
 
-            Construct 2 distinct "search_queries":
-            1. Broad/Standard: Role + Location (e.g. "Machine Learning Engineer in Toronto")
-            2. Specific/Niche: Role + Top Skill (e.g. "Machine Learning Engineer Python")
+            Construct 5 distinct "search_queries" - use STANDARD JOB TITLES ONLY.
+            
+            CRITICAL RULES:
+            - DO NOT include specific technologies, libraries or frameworks in the query (e.g. NEVER use "LangChain", "RAG", "React", "Python" in the query string).
+            - ONLY use standard Job Titles (e.g. "Machine Learning Engineer", "Software Developer", "Data Analyst").
+            - Format: "[Level] [Standard Role] in [City]"
+            
+            Queries to generate:
+            1. Primary: "[Level] [Standard Role] in [City]" (e.g. "Senior Machine Learning Engineer in Madrid")
+            2. General: "[Standard Role] in [City]" (e.g. "Machine Learning Engineer in Madrid")
+            3. Broader Synonym: "[Alternative Standard Role] in [City]" (e.g. "AI Engineer in Madrid" or "Data Scientist in Madrid")
+            4. Simplest: "[Role Noun] in [City]" (e.g. "Developer in Madrid" or "Engineer in Madrid")
+            5. Remote: "[Level] [Standard Role] Remote"
             
             USER PROFILE CONTEXT:
             ${contextText.substring(0, 15000)}
