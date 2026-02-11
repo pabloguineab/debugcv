@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useSession } from "next-auth/react";
@@ -9,10 +10,12 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Progress } from "@/components/ui/progress";
 import { redirect } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { UpgradePlanModal } from "@/components/upgrade-plan-modal";
 
 export default function BillingPage() {
     const { data: session, status } = useSession();
+    const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
     useEffect(() => {
         if (status === "unauthenticated") {
@@ -42,13 +45,13 @@ export default function BillingPage() {
                     <h3 className="text-2xl font-semibold tracking-tight">Billing & Plans</h3>
                     <p className="text-sm text-muted-foreground mt-1">Manage your subscription and payment details.</p>
                 </div>
-                <Link
-                    href="/pricing"
-                    className={buttonVariants({ className: "flex items-center gap-2" })}
+                <Button
+                    onClick={() => setIsUpgradeModalOpen(true)}
+                    className="flex items-center gap-2"
                 >
                     <Zap className="w-4 h-4 fill-current" />
                     Upgrade Plan
-                </Link>
+                </Button>
             </div>
 
             <Separator />
@@ -87,7 +90,12 @@ export default function BillingPage() {
                         </ul>
                     </CardContent>
                     <CardFooter className="pt-0">
-                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-md">Upgrade to Pro</Button>
+                        <Button
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-md"
+                            onClick={() => setIsUpgradeModalOpen(true)}
+                        >
+                            Upgrade to Pro
+                        </Button>
                     </CardFooter>
                 </Card>
 
@@ -160,6 +168,12 @@ export default function BillingPage() {
                     </div>
                 </CardContent>
             </Card>
+
+            <UpgradePlanModal
+                open={isUpgradeModalOpen}
+                onClose={() => setIsUpgradeModalOpen(false)}
+                currentPlan="Starter"
+            />
         </div>
     );
 }
