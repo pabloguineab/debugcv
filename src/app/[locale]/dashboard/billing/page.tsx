@@ -2,7 +2,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { CreditCard, Check, Zap, Download, FileText, BarChart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -31,12 +31,13 @@ export default async function BillingPage() {
                     <h3 className="text-2xl font-semibold tracking-tight">Billing & Plans</h3>
                     <p className="text-sm text-muted-foreground mt-1">Manage your subscription and payment details.</p>
                 </div>
-                <Button asChild>
-                    <Link href="/pricing" className="flex items-center gap-2">
-                        <Zap className="w-4 h-4 fill-current" />
-                        Upgrade Plan
-                    </Link>
-                </Button>
+                <Link
+                    href="/pricing"
+                    className={buttonVariants({ className: "flex items-center gap-2" })}
+                >
+                    <Zap className="w-4 h-4 fill-current" />
+                    Upgrade Plan
+                </Link>
             </div>
 
             <Separator />

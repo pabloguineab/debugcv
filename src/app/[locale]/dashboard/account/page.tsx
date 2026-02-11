@@ -4,12 +4,13 @@ import { authOptions } from "@/lib/auth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { User, Mail, Shield, Check, X, AlertTriangle, Key, Trash2, Smartphone } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { redirect } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
 export default async function AccountPage() {
     const session = await getServerSession(authOptions);
@@ -78,9 +79,12 @@ export default async function AccountPage() {
                                     className="rounded-full object-cover border-2 border-background shadow-sm"
                                 />
                             </div>
-                            <Button variant="outline" size="sm" asChild>
-                                <a href="/dashboard/profile">Change Avatar</a>
-                            </Button>
+                            <Link
+                                href="/dashboard/profile"
+                                className={buttonVariants({ variant: "outline", size: "sm" })}
+                            >
+                                Change Avatar
+                            </Link>
                         </div>
                     </div>
                 </CardContent>
