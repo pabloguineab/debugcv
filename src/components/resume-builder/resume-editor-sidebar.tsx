@@ -402,25 +402,25 @@ export function ResumeEditorSidebar({
                 </div>
 
                 {/* Target Job Details */}
-                <div className={cn("border-b pb-4", activeSection === "targetJob" && "ring-2 ring-primary rounded-lg p-2")}>
-                    <SectionHeader title="Target Job Details" section="targetJob" />
-                    {expandedSections.targetJob && (
-                        <div className="space-y-3 mt-3">
-                            <div className="flex items-center space-x-2 pb-2">
-                                <Checkbox
-                                    id="tailor-resume"
-                                    checked={data.isTailored || false}
-                                    onCheckedChange={(checked) => onUpdate({ isTailored: checked as boolean })}
-                                />
-                                <Label
-                                    htmlFor="tailor-resume"
-                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                >
-                                    Tailor to a specific job description
-                                </Label>
-                            </div>
+                {data.isTailored && (
+                    <div className={cn("border-b pb-4", activeSection === "targetJob" && "ring-2 ring-primary rounded-lg p-2")}>
+                        <SectionHeader title="Target Job Details" section="targetJob" />
+                        {expandedSections.targetJob && (
+                            <div className="space-y-3 mt-3">
+                                <div className="flex items-center space-x-2 pb-2">
+                                    <Checkbox
+                                        id="tailor-resume"
+                                        checked={data.isTailored || false}
+                                        onCheckedChange={(checked) => onUpdate({ isTailored: checked as boolean })}
+                                    />
+                                    <Label
+                                        htmlFor="tailor-resume"
+                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    >
+                                        Tailor to a specific job description
+                                    </Label>
+                                </div>
 
-                            {data.isTailored && (
                                 <div className="space-y-3 pl-2 border-l-2 border-muted ml-1">
                                     <div>
                                         <Label className="text-xs text-muted-foreground">Target Job Title</Label>
@@ -452,10 +452,10 @@ export function ResumeEditorSidebar({
                                         </div>
                                     )}
                                 </div>
-                            )}
-                        </div>
-                    )}
-                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 {/* Personal Info */}
                 <div className={cn("border-b pb-4", activeSection === "personal" && "ring-2 ring-primary rounded-lg p-2")}>
