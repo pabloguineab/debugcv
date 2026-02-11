@@ -821,15 +821,20 @@ function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds
                 "hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-200 dark:hover:border-blue-800",
                 "hover:-translate-y-1"
             )}>
-                {/* Match Score Badge - Integrated Pill Style */}
+                {/* Match Score Badge - Corner "Blob" Style */}
                 <div className={cn(
-                    "absolute top-6 right-6 px-3 py-1 rounded-full text-[11px] font-bold border flex items-center gap-1.5 z-10 shadow-sm",
-                    matchScore >= 90 ? "bg-emerald-50 text-emerald-700 border-emerald-200" // Mint Green
-                        : matchScore >= 80 ? "bg-blue-50 text-blue-700 border-blue-200" // Soft Blue
-                            : "bg-amber-50 text-amber-700 border-amber-200" // Soft Amber
+                    "absolute -top-6 -right-6 w-24 h-24 rounded-full flex items-end justify-start z-10 shadow-sm transition-transform duration-300 group-hover:scale-110",
+                    matchScore >= 90 ? "bg-emerald-100 text-emerald-900"
+                        : matchScore >= 80 ? "bg-blue-100 text-blue-900"
+                            : "bg-amber-100 text-amber-900"
                 )}>
-                    <Sparkles className="w-3 h-3" />
-                    {matchScore}% Match
+                    <div className="pl-5 pb-5 w-full flex flex-col items-center justify-end pr-5 pt-5">
+                        <div className="flex items-center gap-0.5">
+                            <Sparkles className="w-3 h-3 opacity-60" />
+                            <span className="font-black text-sm leading-none">{matchScore}%</span>
+                        </div>
+                        <span className="text-[9px] font-bold uppercase opacity-60 leading-tight mt-0.5">Match</span>
+                    </div>
                 </div>
 
                 <CardContent className="p-6 flex-grow flex flex-col gap-5">
@@ -846,7 +851,7 @@ function JobCard({ job, index, query, onJobValidated, validJobIds, invalidJobIds
                                 onLogoFallback={() => setLogoStatus('invalid')}
                             />
                         </div>
-                        <div className="min-w-0 flex-1 pt-1 pr-28"> {/* Increased padding-right to accommodate integrated badge */}
+                        <div className="min-w-0 flex-1 pt-1 pr-12"> {/* Padding adjusted for corner blob */}
                             <h3 className="font-bold text-[17px] leading-snug line-clamp-2 mb-1 text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors tracking-tight">
                                 {job.job_title}
                             </h3>
