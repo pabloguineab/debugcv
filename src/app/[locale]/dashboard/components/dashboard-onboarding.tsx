@@ -102,28 +102,36 @@ export function DashboardOnboarding({ profileProgress, hasResumes, hasCoverLette
     }
 
     return (
-        <div className="flex flex-col gap-6">
-            {/* Welcome Header */}
-            <div>
-                <h1 className="text-2xl font-semibold tracking-tight">Welcome, {userName}! 🚀</h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                    Let's get you set up to land your dream job. Follow these steps to unlock the full power of the dashboard.
-                </p>
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {/* Header with Progress */}
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+                <div className="space-y-2">
+                    <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 dark:from-white dark:via-gray-300 dark:to-gray-500 bg-clip-text text-transparent">
+                        Welcome, {userName}! 👋
+                    </h1>
+                    <p className="text-muted-foreground max-w-2xl text-base">
+                        Your journey to your dream job starts here. Complete these steps to unlock AI superpowers.
+                    </p>
+                </div>
+
+                <div className="w-full lg:w-1/3 bg-white dark:bg-slate-900/50 p-4 rounded-xl border shadow-sm">
+                    <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-muted-foreground">Onboarding Progress</span>
+                        <span className="text-sm font-bold text-primary">{Math.round(overallProgress)}%</span>
+                    </div>
+                    <div className="h-2.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <motion.div
+                            className="h-full bg-gradient-to-r from-blue-600 to-indigo-500"
+                            initial={{ width: 0 }}
+                            animate={{ width: `${overallProgress}%` }}
+                            transition={{ duration: 1.5, ease: "circOut" }}
+                        />
+                    </div>
+                </div>
             </div>
 
-            {/* Main Progress Card */}
-            <Card className="border-blue-100 bg-blue-50/50 dark:bg-blue-950/10 dark:border-blue-900">
-                <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-blue-700 dark:text-blue-300">Setup Progress</span>
-                        <span className="text-sm font-bold text-blue-700 dark:text-blue-300">{Math.round(overallProgress)}%</span>
-                    </div>
-                    <Progress value={overallProgress} className="h-2" />
-                </CardContent>
-            </Card>
-
             {/* Steps Grid */}
-            <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5">
+            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-5">
                 {steps.map((step, index) => {
                     const isActive = step.isCurrent;
                     const isDone = step.isCompleted;
@@ -133,77 +141,94 @@ export function DashboardOnboarding({ profileProgress, hasResumes, hasCoverLette
                             key={step.id}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1 }}
+                            transition={{ delay: index * 0.15, duration: 0.5 }}
+                            className="h-full"
                         >
-                            <Card className={cn(
-                                "h-full flex flex-col relative overflow-hidden transition-all duration-300",
-                                isActive ? "border-blue-500 shadow-md ring-1 ring-blue-500 bg-white dark:bg-slate-900"
-                                    : isDone ? "bg-slate-50 dark:bg-slate-900/50 opacity-80"
-                                        : "opacity-60 bg-slate-50/50 dark:bg-slate-900/30"
-                            )}>
-                                {isActive && (
-                                    <div className="absolute top-0 right-0 p-3">
-                                        <span className="relative flex h-3 w-3">
-                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                                            <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
-                                        </span>
-                                    </div>
-                                )}
+                            <Link href={step.href} className={cn("block h-full group", !isActive && !isDone && "pointer-events-none")}>
+                                <div className={cn(
+                                    "h-full flex flex-col relative p-5 rounded-2xl border transition-all duration-300",
+                                    isActive
+                                        ? "bg-white dark:bg-slate-900 border-blue-500/50 ring-4 ring-blue-500/10 shadow-xl scale-[1.02] z-10"
+                                        : isDone
+                                            ? "bg-slate-50/50 dark:bg-slate-900/20 border-green-500/20 hover:border-green-500/40 hover:bg-slate-50 dark:hover:bg-slate-900/40"
+                                            : "bg-slate-50/30 dark:bg-slate-900/10 border-slate-200/50 dark:border-slate-800/50 grayscale opacity-70"
+                                )}>
 
-                                <CardHeader className="pb-2">
+                                    {/* Status Indicator */}
+                                    <div className="absolute top-4 right-4">
+                                        {isDone ? (
+                                            <div className="bg-green-100 dark:bg-green-900/30 p-1 rounded-full text-green-600 dark:text-green-400">
+                                                <CheckCircle2 className="w-4 h-4" />
+                                            </div>
+                                        ) : isActive ? (
+                                            <span className="relative flex h-3 w-3">
+                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                                <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                                            </span>
+                                        ) : (
+                                            <div className="bg-slate-100 dark:bg-slate-800 p-1 rounded-full text-slate-400">
+                                                <Circle className="w-4 h-4" />
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Icon */}
                                     <div className={cn(
-                                        "w-10 h-10 rounded-lg flex items-center justify-center mb-3",
-                                        isDone ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
-                                            : isActive ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
-                                                : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+                                        "w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-colors duration-300",
+                                        isActive ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30" :
+                                            isDone ? "bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400" :
+                                                "bg-slate-100 text-slate-400 dark:bg-slate-800"
                                     )}>
                                         <step.icon className="w-6 h-6" />
                                     </div>
-                                    <CardTitle className={cn(
-                                        "text-lg",
-                                        isDone && "text-green-700 dark:text-green-500",
-                                        isActive && "text-blue-700 dark:text-blue-400"
-                                    )}>
-                                        {step.title}
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent className="flex-1 flex flex-col justify-between pt-0">
-                                    <CardDescription className="mb-4 text-xs">
-                                        {step.description}
-                                    </CardDescription>
 
-                                    <div className="mt-auto">
-                                        {isDone ? (
-                                            <div className="flex items-center text-green-600 dark:text-green-400 font-medium text-xs bg-green-50 dark:bg-green-900/30 p-2 rounded-md w-fit">
-                                                <CheckCircle2 className="w-3 h-3 mr-1.5" />
-                                                Done
-                                            </div>
-                                        ) : isActive ? (
-                                            <Link href={step.href} className="w-full">
-                                                <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700 shadow-sm group text-xs dark:bg-blue-600 dark:text-white dark:hover:bg-blue-500">
-                                                    {step.cta}
-                                                    <ArrowRight className="w-3 h-3 ml-1.5 group-hover:translate-x-1 transition-transform" />
-                                                </Button>
-                                            </Link>
+                                    {/* Content */}
+                                    <div className="space-y-2 mb-4">
+                                        <h3 className={cn(
+                                            "font-semibold leading-tight",
+                                            isActive ? "text-lg text-slate-900 dark:text-white" :
+                                                isDone ? "text-base text-slate-700 dark:text-slate-300" :
+                                                    "text-base text-muted-foreground"
+                                        )}>
+                                            {step.title}
+                                        </h3>
+                                        <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
+                                            {step.description}
+                                        </p>
+                                    </div>
+
+                                    {/* Action (Pushed to bottom) */}
+                                    <div className="mt-auto pt-4">
+                                        {isActive ? (
+                                            <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700 shadow-md group-hover:shadow-lg transition-all rounded-lg text-xs">
+                                                {step.cta}
+                                                <ArrowRight className="w-3.5 h-3.5 ml-2 group-hover:translate-x-1 transition-transform" />
+                                            </Button>
                                         ) : (
-                                            <span className="text-xs text-muted-foreground font-medium flex items-center gap-1">
-                                                <Circle className="w-3 h-3" /> Locked
-                                            </span>
+                                            <div className={cn(
+                                                "text-xs font-medium px-3 py-2 rounded-lg text-center border border-dashed transition-colors",
+                                                isDone ? "border-green-200 bg-green-50 text-green-700 dark:bg-green-900/10 dark:border-green-900/30 dark:text-green-400" :
+                                                    "border-slate-200 bg-slate-50 text-slate-400 dark:border-slate-800 dark:bg-slate-900/20"
+                                            )}>
+                                                {isDone ? "Completed" : "Locked"}
+                                            </div>
                                         )}
                                     </div>
-                                </CardContent>
-                            </Card>
+                                </div>
+                            </Link>
                         </motion.div>
                     );
                 })}
             </div>
-            {/* Tip/Footer */}
+
+            {/* Footer Tip */}
             {completedStepsCount > 0 && completedStepsCount < 5 && (
-                <div className="mt-4 p-4 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
-                    <p className="text-sm text-center text-muted-foreground flex items-center justify-center gap-2">
+                <div className="flex items-center justify-center">
+                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border border-amber-200/50 dark:border-amber-800/30 px-4 py-2 rounded-full inline-flex items-center gap-2 text-sm text-amber-800 dark:text-amber-200 shadow-sm animate-pulse">
                         <Sparkles className="w-4 h-4 text-amber-500" />
-                        Tip: Completing the onboarding unlocks your personalized AI Job Coach and Analytics Dashboard.
-                    </p>
+                        <span className="font-medium">Pro Tip:</span>
+                        <span className="opacity-90">Finish onboarding to activate your AI Job Coach</span>
+                    </div>
                 </div>
             )}
         </div>
