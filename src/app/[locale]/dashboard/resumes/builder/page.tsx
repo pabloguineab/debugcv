@@ -161,18 +161,17 @@ function calculateResumeScorePure(data: ResumeData, jobDesc: string): number {
 
     let totalScore = 0;
 
-    // === PERSONAL INFO (15 points max) ===
-    // Boosted baseline: Easy points for contact info
+    // === PERSONAL INFO (10 points max) ===
     const { personalInfo } = data;
     let personalScore = 0;
-    if (personalInfo.fullName) personalScore += 5;
-    if (personalInfo.email) personalScore += 4;
-    if (personalInfo.phone) personalScore += 3;
-    if (personalInfo.location) personalScore += 2;
-    if (personalInfo.profileUrl || personalInfo.linkedin) personalScore += 5; // Bonus
-    totalScore += Math.min(personalScore, 15);
+    if (personalInfo.fullName) personalScore += 3;
+    if (personalInfo.email) personalScore += 3;
+    if (personalInfo.phone) personalScore += 2;
+    if (personalInfo.location) personalScore += 1;
+    if (personalInfo.profileUrl || personalInfo.linkedin) personalScore += 3; // Bonus
+    totalScore += Math.min(personalScore, 10);
 
-    // === PROFESSIONAL SUMMARY (20 points max) ===
+    // === PROFESSIONAL SUMMARY (15 points max) ===
     let summaryScore = 0;
     if (data.summary) {
         const wordCount = data.summary.split(/\s+/).length;
@@ -192,15 +191,15 @@ function calculateResumeScorePure(data: ResumeData, jobDesc: string): number {
             summaryScore += 5; // Autoboost if no JD
         }
     }
-    totalScore += Math.min(summaryScore, 20);
+    totalScore += Math.min(summaryScore, 15);
 
-    // === SKILLS MATCHING (30 points max) ===
+    // === SKILLS MATCHING (25 points max) ===
     // Granular: 2 points per skill to ensure reactivity when adding/removing
     let skillScore = 0;
     const skillCount = data.skills.length;
 
     if (skillCount > 0) {
-        skillScore += skillCount * 2; // e.g. 5 skills = 10pts
+        skillScore += skillCount * 1;
 
         if (hasJobDescription) {
             const skillsLower = data.skills.map(s => s.toLowerCase());
@@ -213,7 +212,7 @@ function calculateResumeScorePure(data: ResumeData, jobDesc: string): number {
             skillScore += skillMatches * 2; // Bonus for matches
         }
     }
-    totalScore += Math.min(skillScore, 30);
+    totalScore += Math.min(skillScore, 25);
 
     // === EXPERIENCE (30 points max) ===
     // Granular: Points per bullet point
@@ -224,7 +223,7 @@ function calculateResumeScorePure(data: ResumeData, jobDesc: string): number {
         data.experience.forEach(exp => {
             expScore += 2; // Per role
             const bullets = exp.bullets || [];
-            expScore += bullets.length * 1.5; // 1.5 pts per bullet
+            expScore += bullets.length * 1.0; // 1 pt per bullet
 
             bullets.forEach(bullet => {
                 // Quality matches
@@ -251,15 +250,21 @@ function calculateResumeScorePure(data: ResumeData, jobDesc: string): number {
     }
     totalScore += Math.min(eduScore, 10);
 
-    // === PROJECTS & CERTIFICATIONS (15 points max) ===
-    let extraScore = 0;
-    if (data.projects.length > 0) extraScore += 5 + (data.projects.length * 2);
-    if (data.certifications.length > 0) extraScore += 3 + (data.certifications.length * 2);
-    totalScore += Math.min(extraScore, 15);
+    // === PROJECTS (10 points max) ===
+    let projScore = 0;
+    if (data.projects.length > 0) {
+        projScore += Math.min(data.projects.length * 3, 9);
+        if (data.projects.some(p => p.technologies?.length > 0)) projScore += 1;
+    }
+    totalScore += Math.min(projScore, 10);
 
-    // === CONSISTENCY BOOST ===
-    // Ensure the score feels fair (approx +10-15 boost request)
-    if (totalScore > 10) totalScore += 5;
+    // === CERTIFICATIONS (5 points max) ===
+    let certScore = 0;
+    if (data.certifications.length > 0) {
+        certScore += Math.min(data.certifications.length * 2, 4);
+        if (data.certifications.length > 0) certScore += 1;
+    }
+    totalScore += Math.min(certScore, 5);
 
     return Math.min(Math.round(totalScore), 100);
 }
