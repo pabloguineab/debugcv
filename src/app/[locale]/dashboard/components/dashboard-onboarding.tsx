@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, Circle, ArrowRight, UserCircle, FileText, Mail, Sparkles, type LucideIcon, Search, Layout } from "lucide-react";
+import { CheckCircle2, Circle, ArrowRight, UserCircle, FileText, Mail, Sparkles, type LucideIcon, Search, Layout, Target, PieChart } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -191,14 +191,51 @@ export function DashboardOnboarding({ profileProgress, hasResumes, hasCoverLette
             </div>
 
             {/* Footer - Minimalist */}
-            {completedStepsCount > 0 && completedStepsCount < 5 && (
-                <div className="flex justify-center pt-4">
-                    <p className="text-xs text-muted-foreground/80 inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-border/40 bg-muted/20">
-                        <Sparkles className="w-3 h-3 text-amber-500/70" />
-                        Finish setup to unlock your AI Job Coach
-                    </p>
+            {/* Value Proposition / Upcoming Features */}
+            <div className="pt-8">
+                <div className="flex items-center gap-2 mb-4">
+                    <Sparkles className="w-4 h-4 text-primary" />
+                    <h3 className="text-sm font-medium text-muted-foreground">Unlock Premium Features</h3>
                 </div>
-            )}
+
+                <div className="grid gap-4 md:grid-cols-3">
+                    <div className="p-4 rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm hover:bg-card/50 transition-colors">
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="p-2 rounded-lg bg-orange-500/10 text-orange-600 dark:text-orange-400">
+                                <Sparkles className="w-4 h-4" />
+                            </div>
+                            <span className="font-semibold text-sm">AI Job Coach</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                            Personalized career advice and resume critiques powered by advanced AI algorithms.
+                        </p>
+                    </div>
+
+                    <div className="p-4 rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm hover:bg-card/50 transition-colors">
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="p-2 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                                <Target className="w-4 h-4" />
+                            </div>
+                            <span className="font-semibold text-sm">Smart Matching</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                            Automatically tailor your resume keywords to job descriptions for higher ATS scores.
+                        </p>
+                    </div>
+
+                    <div className="p-4 rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm hover:bg-card/50 transition-colors">
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="p-2 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400">
+                                <PieChart className="w-4 h-4" />
+                            </div>
+                            <span className="font-semibold text-sm">Analytics</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                            Track your application velocity and conversion rates with detailed charts.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
