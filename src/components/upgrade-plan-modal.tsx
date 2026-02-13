@@ -224,7 +224,7 @@ export function UpgradePlanModal({
                             {/* ===== PAYMENT VIEW ===== */}
                             {selectedPlan && selectedPlanDetails ? (
                                 <div className="p-5 pt-4 flex flex-col items-center">
-                                    <Logo className="w-28 h-auto mb-3" />
+                                    <Logo className="w-36 h-auto mb-3" />
 
                                     <h2 className="text-lg font-bold mb-0.5">Subscribe to {selectedPlanDetails.name}</h2>
                                     <p className="text-muted-foreground text-xs mb-4">Complete your payment below</p>
