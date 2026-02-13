@@ -1,0 +1,58 @@
+<svg viewBox="0 0 190 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="DebugCV Logo">
+    <g transform="translate(2, 2) scale(0.9)">
+        <!-- Shield Outline -->
+        <path
+            d="M18 2L4 6V13L9 17L4 21V26L18 34L32 26V21L27 17L32 13V6L18 2Z"
+            stroke="#0F172A"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            fill="none"
+        />
+
+        <!-- Brackets Accent -->
+        <path
+            d="M4 13L9 17L4 21 M32 13L27 17L32 21"
+            stroke="#0F172A"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        />
+
+        <!-- Magnifying Glass -->
+        <circle
+            cx="18"
+            cy="17"
+            r="7"
+            stroke="#0EA5E9"
+            stroke-width="2.5"
+            fill="none"
+        />
+        <path
+            d="M24 23L29 28"
+            stroke="#0EA5E9"
+            stroke-width="2.5"
+            stroke-linecap="round"
+        />
+        <!-- Reflection on glass -->
+        <path
+            d="M15 14C15 13 16 12 17 12"
+            stroke="rgba(14, 165, 233, 0.5)"
+            stroke-width="2"
+            stroke-linecap="round"
+        />
+    </g>
+
+    <!-- Text: DebugCV -->
+    <text
+        x="48"
+        y="29"
+        font-family="'Poppins', system-ui, -apple-system, sans-serif"
+        font-weight="800"
+        font-size="28"
+        fill="#0F172A"
+        style="letter-spacing: -0.02em;"
+    >
+        Debug<tspan fill="#0EA5E9">CV</tspan>
+    </text>
+</svg>

@@ -852,10 +852,7 @@ export default function ResumeBuilderPage() {
                             </>
                         )}
                     </div>
-                    <Button variant="outline" size="sm" className="gap-1">
-                        <MessageCircle className="w-4 h-4" />
-                        Chat
-                    </Button>
+
                     <Button onClick={handleDownload} className="gap-1" disabled={isDownloading}>
                         {isDownloading ? (
                             <>
