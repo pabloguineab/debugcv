@@ -149,7 +149,7 @@ export function UpgradePlanModal({
         {
             name: "Climb the Ladder",
             price: "$149",
-            period: "/monthly",
+            period: "/yearly",
             description: "Personalized strategy and expert human feedback.",
             features: [
                 "Everything in Pro Toolkit",
