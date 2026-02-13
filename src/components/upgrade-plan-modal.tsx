@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Check, X, Zap, Crown, Rocket, ArrowLeft, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Logo } from "@/components/Logo";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "@/components/CheckoutForm";
@@ -222,21 +223,19 @@ export function UpgradePlanModal({
 
                             {/* ===== PAYMENT VIEW ===== */}
                             {selectedPlan && selectedPlanDetails ? (
-                                <div className="p-6 flex flex-col items-center">
-                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center mb-4">
-                                        <Zap className="w-6 h-6 text-white" />
-                                    </div>
+                                <div className="p-5 pt-4 flex flex-col items-center">
+                                    <Logo className="w-28 h-auto mb-3" />
 
-                                    <h2 className="text-xl font-bold mb-1">Subscribe to {selectedPlanDetails.name}</h2>
-                                    <p className="text-muted-foreground text-sm mb-6">Complete your payment below</p>
+                                    <h2 className="text-lg font-bold mb-0.5">Subscribe to {selectedPlanDetails.name}</h2>
+                                    <p className="text-muted-foreground text-xs mb-4">Complete your payment below</p>
 
                                     {/* Plan summary */}
-                                    <div className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl p-4 mb-6">
-                                        <div className="flex justify-between items-center mb-2">
+                                    <div className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-lg p-3 mb-4">
+                                        <div className="flex justify-between items-center">
                                             <span className="text-sm font-medium">{selectedPlanDetails.name}</span>
-                                            <span className="text-primary font-bold">{selectedPlanDetails.price}{selectedPlanDetails.period}</span>
+                                            <span className="text-primary font-bold text-sm">{selectedPlanDetails.price}{selectedPlanDetails.period}</span>
                                         </div>
-                                        <div className="text-xs text-muted-foreground">
+                                        <div className="text-[11px] text-muted-foreground mt-1">
                                             Recurring monthly subscription. Cancel anytime.
                                         </div>
                                     </div>
