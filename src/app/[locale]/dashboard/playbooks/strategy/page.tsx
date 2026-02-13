@@ -3,6 +3,7 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Logo } from "@/components/Logo";
 import {
     Building2,
     Briefcase,
@@ -466,9 +467,7 @@ function StrategyContent() {
                                 </div>
 
                                 <div className="flex flex-col items-center text-center mt-2">
-                                    <div className="w-16 h-16 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-indigo-500/30">
-                                        <Lock className="w-8 h-8 text-white" />
-                                    </div>
+                                    <Logo className="w-24 h-auto mb-6" />
 
                                     <h3 className="text-xl font-bold text-slate-900 mb-2">{t('payment_modal.title')}</h3>
                                     <p className="text-slate-500 text-sm mb-6 leading-relaxed">
@@ -488,7 +487,10 @@ function StrategyContent() {
                                     <div className="space-y-3 w-full">
                                         {/* Auto-load Stripe Elements */}
                                         {clientSecret ? (
-                                            <Elements options={{ clientSecret, appearance: { theme: 'stripe' } }} stripe={stripePromise}>
+                                            <Elements
+                                                options={{ clientSecret, appearance: { theme: 'stripe' }, locale: 'en' }}
+                                                stripe={stripePromise}
+                                            >
                                                 <CheckoutForm
                                                     onSuccess={() => {
                                                         setShowPayment(false);
