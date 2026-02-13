@@ -35,7 +35,9 @@ export function UpgradePlanModal({
             });
 
             if (!response.ok) {
-                console.error("Failed to create checkout session");
+                const errorText = await response.text();
+                console.error("Failed to create checkout session:", errorText);
+                alert(`Error: ${errorText || "Could not start checkout. Please try again."}`);
                 setLoadingPlan(null);
                 return;
             }
@@ -44,10 +46,13 @@ export function UpgradePlanModal({
             if (url) {
                 window.location.href = url;
             } else {
+                console.error("No URL returned from checkout session");
+                alert("Something went wrong. Please check your network connection.");
                 setLoadingPlan(null);
             }
         } catch (error) {
             console.error("Error creating checkout session:", error);
+            alert("An unexpected error occurred. Please try again.");
             setLoadingPlan(null);
         }
     };
