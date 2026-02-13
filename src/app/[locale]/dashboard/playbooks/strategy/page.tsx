@@ -467,7 +467,7 @@ function StrategyContent() {
                                 </div>
 
                                 <div className="flex flex-col items-center text-center mt-2">
-                                    <Logo className="w-24 h-auto mb-6" />
+                                    <Logo className="w-36 h-auto mb-6" />
 
                                     <h3 className="text-xl font-bold text-slate-900 mb-2">{t('payment_modal.title')}</h3>
                                     <p className="text-slate-500 text-sm mb-6 leading-relaxed">
