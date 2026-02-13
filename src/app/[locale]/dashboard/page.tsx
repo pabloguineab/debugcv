@@ -175,10 +175,14 @@ export default function DashboardPage() {
     }, [applications]);
 
     const stats = useMemo(() => {
-        const total = applications.length;
-        // Active = applied, interview, offer (everything except wishlist/rejected)
-        const active = applications.filter(a => !['rejected', 'wishlist'].includes(a.status)).length;
-        const interviews = applications.filter(a => ['interview', 'offer'].includes(a.status)).length;
+        // Exclude wishlist from "sent" applications
+        const actualApplications = applications.filter(a => a.status !== 'wishlist');
+        const total = actualApplications.length;
+
+        // Active = applied, interview, offer (everything except rejected from the actual sent ones)
+        const active = actualApplications.filter(a => a.status !== 'rejected').length;
+
+        const interviews = actualApplications.filter(a => ['interview', 'offer'].includes(a.status)).length;
         const interviewRate = total > 0 ? ((interviews / total) * 100).toFixed(1) : "0";
 
         let totalScore = 0;
