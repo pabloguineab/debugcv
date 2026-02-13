@@ -17,6 +17,8 @@ export default function BillingPage() {
     const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState<any>(null);
+    const [billingData, setBillingData] = useState<any>(null);
+    const [billingLoading, setBillingLoading] = useState(true);
 
     useEffect(() => {
         if (status === "unauthenticated") {
@@ -35,6 +37,21 @@ export default function BillingPage() {
                 .catch(err => {
                     console.error(err);
                     setLoading(false);
+                });
+        }
+    }, [session]);
+
+    useEffect(() => {
+        if (session) {
+            fetch("/api/subscription/billing")
+                .then(res => res.json())
+                .then(data => {
+                    setBillingData(data);
+                    setBillingLoading(false);
+                })
+                .catch(err => {
+                    console.error(err);
+                    setBillingLoading(false);
                 });
         }
     }, [session]);
@@ -176,17 +193,36 @@ export default function BillingPage() {
                     <CardDescription>Manage your payment details.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex items-center justify-between p-4 border rounded-lg bg-muted/20">
-                        <div className="flex items-center gap-4">
-                            <div className="bg-muted p-2 rounded border">
-                                <CreditCard className="w-6 h-6 text-muted-foreground" />
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                                No payment method added.
+                    {billingLoading ? (
+                        <div className="text-sm text-muted-foreground py-4 text-center">Loading...</div>
+                    ) : billingData?.paymentMethod ? (
+                        <div className="flex items-center justify-between p-4 border rounded-lg bg-muted/20">
+                            <div className="flex items-center gap-4">
+                                <div className="bg-muted p-2 rounded border">
+                                    <CreditCard className="w-6 h-6 text-muted-foreground" />
+                                </div>
+                                <div>
+                                    <div className="text-sm font-medium capitalize">
+                                        {billingData.paymentMethod.brand} •••• {billingData.paymentMethod.last4}
+                                    </div>
+                                    <div className="text-xs text-muted-foreground">
+                                        Expires {String(billingData.paymentMethod.expMonth).padStart(2, '0')}/{billingData.paymentMethod.expYear}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <Button variant="outline" size="sm">Add Method</Button>
-                    </div>
+                    ) : (
+                        <div className="flex items-center justify-between p-4 border rounded-lg bg-muted/20">
+                            <div className="flex items-center gap-4">
+                                <div className="bg-muted p-2 rounded border">
+                                    <CreditCard className="w-6 h-6 text-muted-foreground" />
+                                </div>
+                                <div className="text-sm text-muted-foreground">
+                                    No payment method added.
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </CardContent>
             </Card>
 
@@ -197,11 +233,54 @@ export default function BillingPage() {
                     <CardDescription>View and download past invoices.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="rounded-md border border-dashed p-8 text-center bg-muted/10">
-                        <FileText className="w-10 h-10 mx-auto mb-3 text-muted-foreground/50" />
-                        <h3 className="text-sm font-medium mb-1">No invoices yet</h3>
-                        <p className="text-xs text-muted-foreground">Invoices will appear here once you make a payment.</p>
-                    </div>
+                    {billingLoading ? (
+                        <div className="text-sm text-muted-foreground py-4 text-center">Loading...</div>
+                    ) : billingData?.invoices && billingData.invoices.length > 0 ? (
+                        <div className="space-y-2">
+                            {billingData.invoices.map((invoice: any) => (
+                                <div key={invoice.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/20 transition-colors">
+                                    <div className="flex items-center gap-3">
+                                        <FileText className="w-5 h-5 text-muted-foreground" />
+                                        <div>
+                                            <div className="text-sm font-medium">
+                                                {invoice.number || "Invoice"}
+                                            </div>
+                                            <div className="text-xs text-muted-foreground">
+                                                {new Date(invoice.date * 1000).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-4">
+                                        <div className="text-right">
+                                            <div className="text-sm font-medium">
+                                                {(invoice.amount / 100).toLocaleString('en-US', { style: 'currency', currency: invoice.currency })}
+                                            </div>
+                                            <Badge variant="outline" className={
+                                                invoice.status === "paid" ? "bg-green-50 text-green-700 border-green-200 text-[10px]" :
+                                                    invoice.status === "open" ? "bg-yellow-50 text-yellow-700 border-yellow-200 text-[10px]" :
+                                                        "text-[10px]"
+                                            }>
+                                                {invoice.status === "paid" ? "Paid" : invoice.status === "open" ? "Pending" : invoice.status}
+                                            </Badge>
+                                        </div>
+                                        {invoice.pdfUrl && (
+                                            <a href={invoice.pdfUrl} target="_blank" rel="noopener noreferrer">
+                                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                                    <Download className="w-4 h-4" />
+                                                </Button>
+                                            </a>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="rounded-md border border-dashed p-8 text-center bg-muted/10">
+                            <FileText className="w-10 h-10 mx-auto mb-3 text-muted-foreground/50" />
+                            <h3 className="text-sm font-medium mb-1">No invoices yet</h3>
+                            <p className="text-xs text-muted-foreground">Invoices will appear here once you make a payment.</p>
+                        </div>
+                    )}
                 </CardContent>
             </Card>
 
