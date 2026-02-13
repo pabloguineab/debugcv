@@ -49,6 +49,15 @@ export async function POST(req: Request) {
             customerId = customer.id;
         }
 
+        // Cancel any existing incomplete subscriptions to avoid orphaned invoices
+        const existingSubs = await stripe.subscriptions.list({
+            customer: customerId,
+            status: "incomplete",
+        });
+        for (const sub of existingSubs.data) {
+            await stripe.subscriptions.cancel(sub.id);
+        }
+
         // Create subscription with incomplete payment
         // This returns a clientSecret we can use with Stripe Elements
         const subscription = await stripe.subscriptions.create({

@@ -60,22 +60,24 @@ export async function GET() {
             }
         }
 
-        // Get invoices
+        // Get invoices - only paid ones or open with real amounts
         const stripeInvoices = await stripe.invoices.list({
             customer: customer.id,
-            limit: 10,
+            limit: 20,
         });
 
-        const invoices = stripeInvoices.data.map((inv) => ({
-            id: inv.id,
-            number: inv.number,
-            date: inv.created,
-            amount: inv.amount_paid,
-            currency: inv.currency,
-            status: inv.status,
-            pdfUrl: inv.invoice_pdf,
-            hostedUrl: inv.hosted_invoice_url,
-        }));
+        const invoices = stripeInvoices.data
+            .filter((inv) => inv.status === "paid" || (inv.status === "open" && (inv.amount_due || 0) > 0))
+            .map((inv) => ({
+                id: inv.id,
+                number: inv.number,
+                date: inv.created,
+                amount: inv.amount_paid || inv.amount_due || 0,
+                currency: inv.currency,
+                status: inv.status,
+                pdfUrl: inv.invoice_pdf,
+                hostedUrl: inv.hosted_invoice_url,
+            }));
 
         return NextResponse.json({
             paymentMethod,
