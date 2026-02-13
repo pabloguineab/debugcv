@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Check, X, Zap, Crown, Rocket } from "lucide-react";
@@ -19,6 +19,39 @@ export function UpgradePlanModal({
     onClose,
     currentPlan = "Starter",
 }: UpgradePlanModalProps) {
+    const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+
+    const handleSelectPlan = async (planName: string) => {
+        if (planName === currentPlan) return;
+
+        try {
+            setLoadingPlan(planName);
+            const response = await fetch("/api/subscription/checkout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ plan: planName }),
+            });
+
+            if (!response.ok) {
+                console.error("Failed to create checkout session");
+                setLoadingPlan(null);
+                return;
+            }
+
+            const { url } = await response.json();
+            if (url) {
+                window.location.href = url;
+            } else {
+                setLoadingPlan(null);
+            }
+        } catch (error) {
+            console.error("Error creating checkout session:", error);
+            setLoadingPlan(null);
+        }
+    };
+
     const overlayRef = useRef<HTMLDivElement>(null);
 
     // Close on escape key
@@ -39,12 +72,7 @@ export function UpgradePlanModal({
         }
     };
 
-    const handleSelectPlan = (planName: string) => {
-        console.log("Selected plan:", planName);
-        if (planName !== currentPlan) {
-            window.location.href = `/checkout?plan=${planName}`;
-        }
-    };
+
 
     const plans = [
         {
@@ -192,14 +220,14 @@ export function UpgradePlanModal({
                                                     isCurrent ? "bg-green-100 text-green-700 hover:bg-green-200 border-green-200 opacity-100" : ""
                                                 )}
                                                 variant={isCurrent ? "outline" : (plan.popular ? "default" : "outline")}
-                                                disabled={isCurrent}
+                                                disabled={isCurrent || loadingPlan !== null}
                                                 onClick={() => handleSelectPlan(plan.name)}
                                             >
                                                 {isCurrent ? (
                                                     <>
                                                         <Check className="w-3.5 h-3.5 mr-1.5" /> Current Plan
                                                     </>
-                                                ) : plan.buttonText}
+                                                ) : (loadingPlan === plan.name ? "Processing..." : plan.buttonText)}
                                             </Button>
 
                                             <div className="space-y-3 flex-1">
