@@ -44,6 +44,9 @@ function StrategyContent() {
     const [clientSecret, setClientSecret] = useState("");
     const [loadingPayment, setLoadingPayment] = useState(false);
     const [isUnlocked, setIsUnlocked] = useState(false);
+    const [priceDisplay, setPriceDisplay] = useState("1.99€");
+    const [paymentAmount, setPaymentAmount] = useState(199);
+    const [paymentCurrency, setPaymentCurrency] = useState("eur");
 
     const handleCardPayment = async () => {
         setLoadingPayment(true);
@@ -51,9 +54,17 @@ function StrategyContent() {
             const res = await fetch("/api/create-payment-intent", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ amount: 199 }), // 1.99 EUR
+                body: JSON.stringify({ amount: 199 }), // Default fallback
             });
             const data = await res.json();
+
+            if (data.amount && data.currency) {
+                const formatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: data.currency }).format(data.amount / 100);
+                setPriceDisplay(formatted);
+                setPaymentAmount(data.amount);
+                setPaymentCurrency(data.currency);
+            }
+
             setClientSecret(data.clientSecret);
         } catch (error) {
             console.error("Error creating payment intent:", error);
@@ -467,7 +478,7 @@ function StrategyContent() {
                                     <div className="w-full bg-slate-50 border border-slate-100 rounded-xl p-4 mb-6">
                                         <div className="flex justify-between items-center mb-2">
                                             <span className="text-slate-600 font-medium">{t('payment_modal.full_report')}</span>
-                                            <span className="text-indigo-600 font-bold">1.99€</span>
+                                            <span className="text-indigo-600 font-bold">{priceDisplay}</span>
                                         </div>
                                         <div className="text-xs text-slate-400 text-left">
                                             {t('payment_modal.price_desc')}
@@ -483,7 +494,8 @@ function StrategyContent() {
                                                         setShowPayment(false);
                                                         setIsUnlocked(true);
                                                     }}
-                                                    amount={199} // 1.99 EUR
+                                                    amount={paymentAmount}
+                                                    currency={paymentCurrency}
                                                     clientSecret={clientSecret}
                                                 />
                                             </Elements>

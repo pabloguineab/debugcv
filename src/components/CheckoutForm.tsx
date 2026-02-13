@@ -11,7 +11,7 @@ import { Lock, Loader2, CreditCard, ArrowLeft } from 'lucide-react';
 import { PaymentRequest } from '@stripe/stripe-js';
 import { useTranslations } from 'next-intl';
 
-export default function CheckoutForm({ onSuccess, amount = 199, clientSecret }: { onSuccess?: () => void, amount?: number, clientSecret: string }) {
+export default function CheckoutForm({ onSuccess, amount = 199, currency = 'eur', clientSecret }: { onSuccess?: () => void, amount?: number, currency?: string, clientSecret: string }) {
     const t = useTranslations('playbook.strategy.checkout');
     const stripe = useStripe();
     const elements = useElements();
@@ -27,7 +27,7 @@ export default function CheckoutForm({ onSuccess, amount = 199, clientSecret }: 
 
         const pr = stripe.paymentRequest({
             country: 'ES',
-            currency: 'eur',
+            currency: currency,
             total: {
                 label: 'DebugCV Strategy Report',
                 amount: amount,
