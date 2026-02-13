@@ -6,12 +6,13 @@ import { useSession } from "next-auth/react";
 import type { Application } from "@/types/application";
 import type { SavedResume } from "@/lib/actions/resumes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Send, Flame, Target, TrendingUp, Calendar, Bot, FileText, Mail, ArrowRight, Clock, Briefcase, Loader2 } from "lucide-react";
+import { Send, Flame, Target, TrendingUp, Calendar, Bot, FileText, Mail, ArrowRight, Clock, Briefcase, Loader2, Info } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DashboardLineChart, DashboardRadarChart, DashboardRadialChart } from "./components/dashboard-charts";
 import { Link } from "@/i18n/routing";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { CompanyLogo } from "@/components/company-logo";
 import { useProfileCompletion } from "@/contexts/profile-completion-context";
 import { getResumes } from "@/lib/actions/resumes";
@@ -336,7 +337,17 @@ export default function DashboardPage() {
                 {/* Interview Rate */}
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 py-1 px-3">
-                        <CardTitle className="text-sm font-medium">Interview Rate</CardTitle>
+                        <div className="flex items-center gap-1">
+                            <CardTitle className="text-sm font-medium">Interview Rate</CardTitle>
+                            <Tooltip>
+                                <TooltipTrigger>
+                                    <Info className="h-3 w-3 text-muted-foreground cursor-help opacity-70 hover:opacity-100" />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p className="max-w-[200px] text-center">Calculated as (Interviews + Offers) divided by Total Applications Sent (excluding Wishlist).</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
                         <TrendingUp className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent className="pb-1.5 px-3 pt-0">
