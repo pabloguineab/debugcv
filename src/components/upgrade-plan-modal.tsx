@@ -247,6 +247,7 @@ export function UpgradePlanModal({
                                                 options={{
                                                     clientSecret,
                                                     appearance: { theme: "stripe" },
+                                                    locale: "en",
                                                 }}
                                                 stripe={stripePromise}
                                             >
