@@ -107,7 +107,7 @@ export default function CheckoutForm({ onSuccess, amount = 199, clientSecret }: 
 
                     <button
                         onClick={() => setView('card')}
-                        className="w-full py-3.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20"
+                        className="w-full py-3.5 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/25"
                     >
                         <CreditCard className="w-5 h-5" />
                         <span>{t('pay_card')}</span>
