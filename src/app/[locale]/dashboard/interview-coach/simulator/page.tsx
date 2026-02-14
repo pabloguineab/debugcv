@@ -313,24 +313,65 @@ function SimulatorContent() {
                         </div>
                     )}
 
-                    {/* Idle State - Start Button */}
+                    {/* Idle State - Waiting Room Design */}
                     <AnimatePresence>
                         {!isActive && !isConnecting && !sessionError && (
                             <motion.div
                                 initial={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900/90 backdrop-blur-md z-20"
+                                className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900 z-20 overflow-hidden"
                             >
-                                <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={startSession}
-                                    className="group relative px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold text-lg shadow-xl shadow-indigo-500/20 transition-all flex items-center gap-3"
+                                {/* Background Patterns */}
+                                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20" />
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[100px]" />
+
+                                {/* Content */}
+                                <motion.div
+                                    initial={{ y: 20, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ delay: 0.1 }}
+                                    className="relative z-10 flex flex-col items-center text-center p-8 max-w-md"
                                 >
-                                    <Video className="w-6 h-6" />
-                                    Start Interview
-                                    <div className="absolute inset-0 rounded-2xl ring-2 ring-white/20 group-hover:ring-white/40 transition-all" />
-                                </motion.button>
+                                    {/* Icon */}
+                                    <div className="relative mb-8">
+                                        <div className="absolute inset-0 bg-indigo-500 blur-xl opacity-20 animate-pulse-slow" />
+                                        <div className="relative w-20 h-20 rounded-3xl bg-slate-800 border border-slate-700 flex items-center justify-center shadow-2xl">
+                                            <Cpu className="w-10 h-10 text-indigo-400" />
+                                        </div>
+                                    </div>
+
+                                    <h2 className="text-2xl font-bold text-white mb-2">
+                                        Ready for your session?
+                                    </h2>
+                                    <p className="text-slate-400 mb-8 text-sm leading-relaxed">
+                                        Your AI coach is online. For the best experience, please ensure you are in a quiet environment.
+                                    </p>
+
+                                    <motion.button
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        onClick={startSession}
+                                        className="group relative px-8 py-3.5 bg-white text-slate-900 hover:bg-indigo-50 rounded-xl font-semibold text-base shadow-xl shadow-indigo-500/10 transition-all flex items-center gap-3 w-full justify-center sm:w-auto"
+                                    >
+                                        <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center">
+                                            <Video className="w-4 h-4" />
+                                        </div>
+                                        <span>Start Interview</span>
+                                        <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/20 group-hover:ring-indigo-200/50 transition-all" />
+                                    </motion.button>
+
+                                    <div className="mt-6 flex items-center gap-4 text-xs text-slate-500 font-medium">
+                                        <div className="flex items-center gap-1.5">
+                                            <Mic className="w-3.5 h-3.5" />
+                                            <span>Microphone required</span>
+                                        </div>
+                                        <div className="w-1 h-1 rounded-full bg-slate-700" />
+                                        <div className="flex items-center gap-1.5">
+                                            <Video className="w-3.5 h-3.5" />
+                                            <span>Camera optional</span>
+                                        </div>
+                                    </div>
+                                </motion.div>
                             </motion.div>
                         )}
                     </AnimatePresence>
