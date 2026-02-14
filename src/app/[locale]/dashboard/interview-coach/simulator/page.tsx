@@ -332,14 +332,6 @@ function SimulatorContent() {
                                     transition={{ delay: 0.1 }}
                                     className="relative z-10 flex flex-col items-center text-center p-8 max-w-md"
                                 >
-                                    {/* Icon */}
-                                    <div className="relative mb-8">
-                                        <div className="absolute inset-0 bg-indigo-500 blur-xl opacity-20 animate-pulse-slow" />
-                                        <div className="relative w-20 h-20 rounded-3xl bg-slate-800 border border-slate-700 flex items-center justify-center shadow-2xl">
-                                            <Cpu className="w-10 h-10 text-indigo-400" />
-                                        </div>
-                                    </div>
-
                                     <h2 className="text-2xl font-bold text-white mb-2">
                                         Ready for your session?
                                     </h2>
