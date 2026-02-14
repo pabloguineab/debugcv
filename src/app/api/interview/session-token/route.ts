@@ -19,12 +19,13 @@ export async function POST(request: Request) {
             // Body might be empty
         }
 
-        const apiKey = process.env.LIVE_AVATAR_API_KEY;
-        const avatarId = process.env.LIVE_AVATAR_ID;
-        const defaultContextId = process.env.LIVE_AVATAR_CONTEXT_ID;
+        const apiKey = process.env.LIVE_AVATAR_API_KEY?.trim();
+        const avatarId = process.env.LIVE_AVATAR_ID?.trim();
+        const defaultContextId = process.env.LIVE_AVATAR_CONTEXT_ID?.trim();
 
         console.log('Session token request:', {
             hasApiKey: !!apiKey,
+            apiKeyLength: apiKey?.length,
             hasAvatarId: !!avatarId,
             hasContextId: !!defaultContextId,
             contextIdOverride: contextId
@@ -33,7 +34,7 @@ export async function POST(request: Request) {
         if (!apiKey || !avatarId) {
             console.error('Missing env vars:', { apiKey: !!apiKey, avatarId: !!avatarId });
             return NextResponse.json(
-                { error: 'LiveAvatar API key or Avatar ID not configured' },
+                { error: 'Configuration Error: LiveAvatar API key or ID missing in Vercel.' },
                 { status: 500 }
             );
         }

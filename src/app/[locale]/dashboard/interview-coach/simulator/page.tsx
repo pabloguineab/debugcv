@@ -109,7 +109,10 @@ function SimulatorContent() {
             if (!tokenRes.ok) {
                 const errorData = await tokenRes.json();
                 console.error("Token creation failed:", errorData);
-                throw new Error(errorData.error || 'Failed to create session token');
+                const errorMessage = errorData.details && typeof errorData.details === 'string'
+                    ? errorData.details
+                    : (errorData.error || 'Failed to create session token');
+                throw new Error(errorMessage);
             }
 
             const { sessionToken } = await tokenRes.json();
