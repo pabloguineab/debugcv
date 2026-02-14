@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mic, MicOff, Video, PhoneOff, Volume2, ArrowLeft, Cpu, Signal } from 'lucide-react';
+import { Mic, MicOff, Video, PhoneOff, Volume2, ArrowLeft, Cpu, Signal, Loader2 } from 'lucide-react';
 import { useRouter, useSearchParams, useParams } from 'next/navigation';
-import { CompanyLogo } from '@/components/CompanyLogo';
+import { CompanyLogo } from '@/components/company-logo';
 
 interface Application {
     id: string;
@@ -12,7 +12,6 @@ interface Application {
     company: string;
     status: string;
     location?: string;
-    salary?: string;
     jobDescription?: string;
 }
 
@@ -21,10 +20,7 @@ export default function SimulatorPage() {
     return (
         <Suspense fallback={
             <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-                <div className="text-white text-center">
-                    <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-slate-400">Cargando simulador...</p>
-                </div>
+                <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
             </div>
         }>
             <SimulatorContent />
@@ -37,11 +33,17 @@ function SimulatorContent() {
     const [isMicOn, setIsMicOn] = useState(true);
     const [application, setApplication] = useState<Application | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    // const [embedId, setEmbedId] = useState<string>(""); // Store dynamic ID -> Disabled to force stable embed
+    const [isConnecting, setIsConnecting] = useState(false);
+    const [connectionStatus, setConnectionStatus] = useState<string>('Ready');
+    const [sessionError, setSessionError] = useState<string | null>(null);
+
     const router = useRouter();
     const searchParams = useSearchParams();
     const params = useParams();
     const jobId = searchParams.get('jobId');
+
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const sessionRef = useRef<any>(null);
 
     useEffect(() => {
         const fetchApplication = async () => {
@@ -51,7 +53,7 @@ function SimulatorContent() {
             setIsLoading(true);
             try {
                 // 1. Fetch application details
-                const res = await fetch(`/api/job-tracker/${jobId}`);
+                const res = await fetch(`/api/applications/${jobId}`);
                 if (res.ok) {
                     const data = await res.json();
                     console.log("Simulator: Application data received:", data);
@@ -74,8 +76,7 @@ function SimulatorContent() {
                 if (setupRes.ok) {
                     const setupData = await setupRes.json();
                     if (setupData.contextId) {
-                        console.log("Simulator: Context/Embed ID received:", setupData.contextId);
-                        // setEmbedId(setupData.contextId); // Context ID != Embed ID often. Sticking to known working Embed ID.
+                        console.log("Simulator: Context ID received:", setupData.contextId);
                     }
                 }
 
@@ -89,35 +90,121 @@ function SimulatorContent() {
         fetchApplication();
     }, [jobId, params.locale]);
 
-    // Use stable ID provided by user
-    const EMBED_ID = "883e7954-fc94-4e8b-a7d7-9a67eeff0d6c";
-    // const targetEmbedId = embedId || EMBED_ID; 
-    const embedUrl = `https://embed.liveavatar.com/v1/${EMBED_ID}`;
+    const startSession = useCallback(async () => {
+        setIsConnecting(true);
+        setSessionError(null);
+        setConnectionStatus('Creating session...');
 
-    const startSession = () => {
-        setIsActive(true);
-    };
+        try {
+            // 1. Get session token from our backend
+            console.log("Requesting session token...");
+            const tokenRes = await fetch('/api/interview/session-token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    // Only send contextId if we have one explicitly via env var for frontend override,
+                    // otherwise let backend use its default.
+                    // For now, we rely on backend having the contextId from setup step or env.
+                }),
+            });
 
-    const endSession = () => {
+            if (!tokenRes.ok) {
+                const errorData = await tokenRes.json();
+                console.error("Token creation failed:", errorData);
+                throw new Error(errorData.error || 'Failed to create session token');
+            }
+
+            const { sessionToken } = await tokenRes.json();
+            console.log("Session token received");
+
+            setConnectionStatus('Conectando con el avatar...');
+
+            // 2. Create LiveAvatar session using SDK dynamically imported
+            const { LiveAvatarSession, SessionEvent, SessionState } = await import('@heygen/liveavatar-web-sdk');
+
+            const session = new LiveAvatarSession(sessionToken, {
+                voiceChat: true,
+            });
+
+            sessionRef.current = session;
+
+            // 3. Listen for events
+            session.on(SessionEvent.SESSION_STATE_CHANGED, (state: any) => {
+                console.log("Session state changed:", state);
+                if (state === SessionState.CONNECTED) {
+                    setConnectionStatus('Conectado');
+                    setIsConnecting(false);
+                    setIsActive(true);
+                } else if (state === SessionState.CONNECTING) {
+                    setConnectionStatus('Conectando...');
+                } else if (state === SessionState.DISCONNECTED) {
+                    setConnectionStatus('Desconectado');
+                    setIsActive(false);
+                    setIsConnecting(false);
+                }
+            });
+
+            session.on(SessionEvent.SESSION_STREAM_READY, () => {
+                console.log("Stream ready, attaching to video element");
+                if (videoRef.current) {
+                    session.attach(videoRef.current);
+                }
+            });
+
+            session.on(SessionEvent.SESSION_DISCONNECTED, (reason: any) => {
+                console.log("Session disconnected, reason:", reason);
+                setIsActive(false);
+                setIsConnecting(false);
+                setConnectionStatus('Desconectado');
+            });
+
+            // 4. Start the session
+            await session.start();
+
+        } catch (error: any) {
+            console.error("Error starting LiveAvatar session:", error);
+            setSessionError(error.message || 'Error al iniciar la sesión');
+            setIsConnecting(false);
+            setConnectionStatus('Error');
+        }
+    }, []);
+
+    const endSession = useCallback(async () => {
+        try {
+            if (sessionRef.current) {
+                await sessionRef.current.stop();
+                sessionRef.current = null;
+            }
+        } catch (error) {
+            console.error("Error stopping session:", error);
+        }
         setIsActive(false);
-        router.push('/dashboard/playbooks'); // Redirect to playbooks dashboard
-    };
+        setIsConnecting(false);
+        setConnectionStatus('Ready');
+        router.push('/dashboard/playbooks');
+    }, [router]);
 
-    const toggleMic = () => {
+    const toggleMic = useCallback(() => {
+        if (sessionRef.current && isActive) {
+            if (isMicOn) {
+                sessionRef.current.stopListening();
+            } else {
+                sessionRef.current.startListening();
+            }
+        }
         setIsMicOn(!isMicOn);
-    };
+    }, [isMicOn, isActive]);
 
-    // Show loading if we're fetching job data
-    if (jobId && isLoading) {
-        return (
-            <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-                <div className="text-white text-center">
-                    <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-slate-400">Cargando datos de la entrevista...</p>
-                </div>
-            </div>
-        );
-    }
+    // Cleanup on unmount
+    useEffect(() => {
+        return () => {
+            if (sessionRef.current) {
+                sessionRef.current.stop().catch(console.error);
+                sessionRef.current = null;
+            }
+        };
+    }, []);
+
 
     return (
         <div className="min-h-screen bg-slate-950 text-white overflow-hidden font-sans selection:bg-indigo-500/30">
@@ -139,23 +226,18 @@ function SimulatorContent() {
                         <ArrowLeft className="w-5 h-5" />
                     </button>
 
-                    {/* Company Logo or Default Icon */}
-                    {application?.company ? (
-                        <CompanyLogo company={application.company} size="sm" />
-                    ) : (
-                        <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                            <Cpu className="w-6 h-6 text-white" />
-                        </div>
-                    )}
+                    <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                        <Cpu className="w-6 h-6 text-white" />
+                    </div>
 
                     <div>
                         <h1 className="font-bold text-lg tracking-tight">
-                            {application ? `${application.title} - ${application.company}` : 'AI Interview Simulator'}
+                            Roleplay Simulator
                         </h1>
                         <div className="flex items-center gap-2">
-                            <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-green-500 animate-pulse' : 'bg-slate-600'}`} />
+                            <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-green-500 animate-pulse' : isConnecting ? 'bg-yellow-500 animate-pulse' : 'bg-slate-600'}`} />
                             <span className="text-xs text-slate-400 font-mono uppercase tracking-wider">
-                                {isActive ? 'Live' : 'Ready'}
+                                {isActive ? 'Live' : isConnecting ? connectionStatus : 'Ready'}
                             </span>
                         </div>
                     </div>
@@ -178,20 +260,46 @@ function SimulatorContent() {
                     animate={{ scale: 1, opacity: 1 }}
                     className="relative w-full max-w-5xl aspect-video bg-slate-900/80 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl shadow-black/50 backdrop-blur-sm"
                 >
-                    {/* Iframe (se carga cuando isActive = true) */}
-                    {isActive && (
-                        <iframe
-                            src={embedUrl}
-                            allow="microphone; camera; autoplay; encrypted-media; fullscreen"
-                            title="LiveAvatar Embed"
-                            className="absolute inset-0 w-full h-full bg-slate-900 z-10"
-                            style={{ border: 'none' }}
-                        />
+                    {/* Video element for LiveAvatar SDK */}
+                    <video
+                        ref={videoRef}
+                        autoPlay
+                        playsInline
+                        className="absolute inset-0 w-full h-full object-cover bg-slate-900 z-10"
+                        style={{ display: isActive ? 'block' : 'none' }}
+                    />
+
+                    {/* Connecting State */}
+                    {isConnecting && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90 backdrop-blur-md z-20">
+                            <Loader2 className="w-10 h-10 text-indigo-500 animate-spin mb-4" />
+                            <p className="text-sm text-slate-400 font-medium">{connectionStatus}</p>
+                        </div>
                     )}
 
-                    {/* Idle State - Botón de inicio */}
+                    {/* Error State */}
+                    {sessionError && !isConnecting && !isActive && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90 backdrop-blur-md z-20">
+                            <div className="text-center max-w-sm">
+                                <div className="w-12 h-12 rounded-full bg-red-900/30 flex items-center justify-center mx-auto mb-3">
+                                    <PhoneOff className="w-6 h-6 text-red-500" />
+                                </div>
+                                <p className="text-sm text-red-400 font-medium mb-4">{sessionError}</p>
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={startSession}
+                                    className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-medium text-sm transition-all"
+                                >
+                                    Try Again
+                                </motion.button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Idle State - Start Button */}
                     <AnimatePresence>
-                        {!isActive && (
+                        {!isActive && !isConnecting && !sessionError && (
                             <motion.div
                                 initial={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
@@ -204,7 +312,7 @@ function SimulatorContent() {
                                     className="group relative px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold text-lg shadow-xl shadow-indigo-500/20 transition-all flex items-center gap-3"
                                 >
                                     <Video className="w-6 h-6" />
-                                    Iniciar Entrevista
+                                    Start Roleplay
                                     <div className="absolute inset-0 rounded-2xl ring-2 ring-white/20 group-hover:ring-white/40 transition-all" />
                                 </motion.button>
                             </motion.div>
@@ -224,13 +332,13 @@ function SimulatorContent() {
                                         AI
                                     </div>
                                     <div>
-                                        <h3 className="text-white font-bold text-lg">Entrevistador Senior</h3>
+                                        <h3 className="text-white font-bold text-lg">Roleplay Partner</h3>
                                         <div className="flex items-center gap-2">
                                             <span className="flex h-3 w-3">
                                                 <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-indigo-400 opacity-75"></span>
                                                 <span className="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
                                             </span>
-                                            <span className="text-indigo-300 text-sm font-medium">Escuchando...</span>
+                                            <span className="text-indigo-300 text-sm font-medium">Listening...</span>
                                         </div>
                                     </div>
                                 </div>
@@ -251,7 +359,7 @@ function SimulatorContent() {
                     )}
                 </motion.div>
 
-                {/* Controls Bar - Justo debajo del video */}
+                {/* Controls Bar */}
                 <AnimatePresence>
                     {isActive && (
                         <motion.div
@@ -278,7 +386,7 @@ function SimulatorContent() {
                                 className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-red-600/20"
                             >
                                 <PhoneOff className="w-5 h-5" />
-                                Finalizar
+                                End Session
                             </button>
                         </motion.div>
                     )}
